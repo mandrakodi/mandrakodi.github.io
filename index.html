@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Sito in costruzione</title>
+<meta name="description" content="">
+<meta name="author" content="">
+<link href='https://fonts.googleapis.com/css?family=Lato:400,300italic,300,100italic,100,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
+<!--[if lt IE 9]>
+<script src="//im.altervista.org/site_index/html5shiv.js"></script>
+<![endif]-->
+
+<style type="text/css">
+/*
+ * normalize.css | MIT License | git.io/normalize
+ */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* Clearing */
+
+.clear:before,
+.clear:after,
+.row:before,
+.row:after,
+.container:before,
+.container:after {
+	content: '';
+	display: table;
+}
+
+.clear:after,
+.row:after,
+.container:after {
+	clear: both;
+}
+
+/* Grid */
+
+.container {
+	max-width: 1000px;
+	margin: auto;
+	-webkit-transition: all 0.5s ease-in-out 0s;
+	transition: all 0.5s ease-in-out 0s;
+}
+
+.row {
+	margin: auto;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+[class^="col-"] {
+	position: relative;
+	float: left;
+	min-height: 1px;
+	padding: 0 1.5em;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.col-12 {
+	width: 100%;
+}
+.col-11 {
+	width: 91.66666667%;
+}
+.col-10 {
+	width: 83.33333333%;
+}
+.col-9 {
+	width: 75%;
+}
+.col-8 {
+	width: 66.66666667%;
+}
+.col-7 {
+	width: 58.33333333%;
+}
+.col-6 {
+	width: 50%;
+}
+.col-5 {
+	width: 41.66666667%;
+}
+.col-4 {
+	width: 33.33333333%;
+}
+.col-3 {
+	width: 25%;
+}
+.col-2 {
+	width: 16.66666667%;
+}
+.col-1 {
+	width: 8.33333333%;
+}
+.col-offset-12 {
+	margin-left: 100%;
+}
+.col-offset-11 {
+	margin-left: 91.66666667%;
+}
+.col-offset-10 {
+	margin-left: 83.33333333%;
+}
+.col-offset-9 {
+	margin-left: 75%;
+}
+.col-offset-8 {
+	margin-left: 66.66666667%;
+}
+.col-offset-7 {
+	margin-left: 58.33333333%;
+}
+.col-offset-6 {
+	margin-left: 50%;
+}
+.col-offset-5 {
+	margin-left: 41.66666667%;
+}
+.col-offset-4 {
+	margin-left: 33.33333333%;
+}
+.col-offset-3 {
+	margin-left: 25%;
+}
+.col-offset-2 {
+	margin-left: 16.66666667%;
+}
+.col-offset-1 {
+	margin-left: 8.33333333%;
+}
+.col-offset-0 {
+	margin-left: 0;
+}
+
+.row {
+	padding: 1.5em 0;
+}
+
+.nofloat {
+	float: none;
+	margin: auto;
+}
+
+/* Main */
+	
+body {
+font-family: 'Lato', sans-serif;
+font-size: 16px;
+color: #555;
+line-height: 1.6;
+background-color: #fff;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+
+a {
+color: #e88b00;
+text-decoration: none;
+}
+
+a:hover {
+text-decoration: underline;
+}
+
+a:focus, input {
+outline: 0 none;
+}
+
+img {
+border: 0;
+max-width: 100%;
+height: auto;
+}
+
+.align-center {
+display: block;
+margin: 1.5em auto;
+}
+
+.align-left {
+float: left;
+margin: 0 1em 1em 0;
+}
+
+.align-right {
+float: right;
+margin: 0 0 1em 1em;
+}
+
+p {
+margin: 0 0 1.5em 0;
+padding: 0;
+}
+
+ul {
+list-style-type: disc;
+margin: 0 1.5em 0 2em;
+padding: 0;
+}
+
+ul li {	
+padding: 0.5em 0;
+margin: 0;
+}
+
+[class^="col-"] p:last-child,
+[class^="col-"] ul:last-child {
+	margin-bottom: 0;
+}
+
+/* Typography */
+
+h1,
+h2,
+h3,
+h4 {
+color: #202228;
+line-height: 1.4;
+margin: 1em 0 0.5em;
+padding: 0;
+}
+
+h1  {
+font-size: 3.25em;
+font-weight: 300;
+line-height: 1.2;
+}
+
+h1.site-title {
+margin: 0 0 0.5em;
+text-align: center;
+position: relative;
+padding-bottom: 0.5em;
+color: #fff;
+}
+
+h1.site-title:before {
+content: "";
+display: block;
+position: absolute;
+bottom: 0;
+width: 80px;
+left: 50%;
+margin-left: -40px;
+height: 2px;
+background-color: rgba(255,255,255,0.5);
+}
+
+h2 {
+font-size: 1.75em;
+font-weight: 400;
+}
+
+.site-tagline {
+font-size: 1.25em;
+color: #fff;
+text-align: center;
+line-height: 1.4;
+}
+
+/* Header */
+
+.site-header {
+background-color: #4174ab;
+}
+
+.site-header .row {
+padding: 1em 0;
+}
+
+.site-header .welcome {
+min-height: 360px;
+padding: 2em 0;
+background: url('//im.altervista.org/site_index/welcome-bg.png') repeat-x center bottom;
+}
+
+.logo {
+margin: 2em auto 1em;
+text-align: center;
+}
+
+.logo a {
+display: inline-block;
+}
+
+.logo svg {
+float: left;
+display: block;
+fill: currentColor;
+}
+
+.logo .altervista-icon {
+width: 50px;
+height: 40px;
+background-color: #fff;
+margin-right: 1em;
+color: #f79400;
+}
+
+.logo .altervista {
+width: 138px;
+height: 26px;
+margin: 5px 0 0 0;
+color: #fff;
+}
+
+/* Content */
+
+.button {
+display: inline-block;
+padding: 12px 24px 11px;
+margin: 1.5em 0;
+background-color: #47b247;
+color: #FFFFFF;
+font-size: 14px;
+font-weight: 900;
+text-transform: uppercase;
+text-align: center;
+text-decoration: none;
+-webkit-border-radius: 3px;
+border-radius: 3px;
+-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+cursor: pointer;
+}
+
+.button:hover {
+text-decoration: none;
+background-color: #41a341;
+}
+
+.goodby {
+text-align: center;
+font-style: italic;
+color: #777;
+}
+
+.sep {
+display: inline-block;
+padding: 0 0.25em;
+color: #aaa;
+}
+
+.site-footer {
+text-align: center;
+color: #777;
+font-size: 0.875em;
+padding: 1em 0;
+background-color: #f4f4f4;
+}
+
+.site-footer a {
+color: #777;
+}
+
+.site-footer a:hover {
+color: #333;
+text-decoration: none;
+}
+
+@media screen and (min-width: 1540px) {
+.container {max-width: 1200px;}
+}
+@media screen and (max-width: 768px) {
+.container {
+margin: auto;
+}
+.logo {
+margin: 0 auto 1em;
+padding-bottom: 1em;
+border-bottom: 1px solid rgba(255,255,255,0.25);
+}
+[class^="col-"] {
+width: 100%;
+float: none;
+margin: auto;
+}
+.main-navigation ul, .site-footer {text-align: center;}
+}
+@media screen and (max-width: 320px) {
+h1 {font-size: 2.75em;}
+}
+</style>
+</head>
+<body>
+
+<header id="header" class="site-header">
+	<div class="row">
+		<div class="col-12">
+			<div id="logo" class="logo">
+				<a href="//it.altervista.org/" title="Altervista" class="clear" rel="nofollow">
+					<svg class="altervista-icon" viewBox="0 0 180 144" preserveAspectRatio="xMinYMid meet">
+						<path d="M76.545,84.95c-0.575,9.498,8.331,12.522,17.59,12.522L103.392,112c0.009,0,0.608,0,0.608,0V73.105
+							C90,74.044,77.099,75.788,76.545,84.95z"/>
+						<path d="M0,0v144h180V0H0z M122,106.916c-3,2.488-10,4.355-18,5.154v0.044l-0.317-0.041c-3.069,0.275-6.581,0.426-10.328,0.426
+							c-24.503,0-36.85-11.083-36.85-26.714C56.505,66.39,79,61.57,104,59.476v-4.42c0-7.814-6.261-10.02-15.212-10.02
+							c-8.167,0-16.638,2.372-22.135,4.605L66.547,37.22c5.968-2.232,10.69-5.72,25.612-5.72c19.16,0,29.842,7.117,29.842,27.492V106.916
+							z"/>
+					</svg>
+					<svg class="altervista" viewBox="0 0 720 136" preserveAspectRatio="xMinYMid meet">
+						<rect x="106.219" y="2" width="25.515" height="129.924"/>
+						<path d="M178.609,133.249c-21.048,0-26.631-12.083-26.631-25.821V26.649l25.515-9.588v23.882h22.145l-4.914,16.715h-17.232v47.783
+							c0,6.789,2.795,10.427,9.312,10.427c2.423,0,3.725-0.329,6.148-0.99v15.888C190.53,131.759,185.315,133.249,178.609,133.249"/>
+						<path d="M608.448,133.249c-21.048,0-26.631-12.083-26.631-25.821V26.649l25.515-9.588v23.882h22.145l-4.914,16.715h-17.232v47.783
+							c0,6.789,2.795,10.427,9.312,10.427c2.423,0,3.725-0.329,6.148-0.99v15.888C620.37,131.759,615.154,133.249,608.448,133.249"/>
+						<path d="M232.444,96.341c2.051,13.075,9.501,19.529,24.216,19.529c11.735,0,20.675-2.317,26.079-4.8l-0.012,15.762
+							c-7.826,3.477-12.469,6.747-29.419,6.747c-30.734,0-48.431-18.04-48.431-46.509c0-27.969,16.39-46.009,45.264-46.009
+							c29.06,0,43.776,17.544,42.469,47.667L232.444,96.341z M249.024,56.288c-11.921,0-19.373,9.102-18.443,27.473l35.019-4.635
+							C265.601,63.238,259.639,56.288,249.024,56.288"/>
+						<path d="M349.893,64.589c-7.08-2.648-13.596-2.158-18.441-0.172v67.505h-27.286V58.361c11.177-4.796,25.049-16.355,52.063-15.198
+							L349.893,64.589z"/>
+						<path d="M417.491,131.924h-21.039l-32.222-89.207h27.189l14.344,51.305c1.86,6.954,2.237,13.573,2.237,13.573h0.372
+							c0,0,0.558-6.454,2.609-13.573l14.712-51.305h23.654L417.491,131.924z"/>
+						<rect x="461.544" y="42.717" width="25.51" height="89.207"/>
+						<path d="M531.292,133.415c-12.293,0-22.567-2.813-28.717-6.456l5.391-16.386c3.725,2.648,11.965,5.133,19.228,5.133
+							c7.45,0,12.479-4.136,12.479-9.767c0-5.958-3.539-9.267-12.851-12.577c-18.441-6.456-22.54-15.558-22.54-24.827
+							c0-15.225,13.414-27.475,33.531-27.475c12.479,0,18.315,2.152,26.135,6.454l-4.341,14.733c-2.981-2.154-8.756-4.637-15.274-4.637
+							c-7.638,0-11.549,4.141-11.549,9.271c0,5.958,5.029,9.267,12.851,12.246c19.373,7.283,23.842,15.723,23.842,26.15
+							C569.478,120.836,555.135,133.415,531.292,133.415"/>
+						<path d="M49.504,134c-29.068,0-43.974-9.604-43.974-28.147c0-23.01,25.901-29.8,56.085-32.283V69.43
+							c0-9.269-7.082-11.919-17.701-11.919c-9.689,0-19.565,2.815-26.087,5.464l-0.039-14.735c7.08-2.65,13.829-6.786,31.53-6.786
+							c22.73,0,37.675,8.442,37.675,32.614v53.308C78.607,131.35,66.83,134,49.504,134 M61.615,85.492
+							C44.1,86.98,29.391,90.621,29.391,104.861c0,10.431,10.873,14.898,22.424,14.898l9.8,13.782V85.492z"/>
+						<path d="M676.981,134c-29.068,0-43.974-9.604-43.974-28.147c0-23.01,25.901-29.8,56.085-32.283V69.43
+							c0-9.269-7.082-11.919-17.701-11.919c-9.689,0-19.565,2.815-26.087,5.464l-0.039-14.735c7.08-2.65,13.829-6.786,31.53-6.786
+							c22.73,0,37.675,8.442,37.675,32.614v53.308C706.084,131.35,694.307,134,676.981,134 M689.092,85.492
+							c-17.515,1.488-32.225,5.129-32.225,19.369c0,10.431,10.873,14.898,22.424,14.898l9.8,13.782V85.492z"/>
+					</svg>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="row welcome">
+		<div class="col-12 nofloat">
+			<h1 class="site-title">Benvenuto su Altervista</h1>
+			<p class="site-tagline">
+				Puoi costruire il sito che vuoi,<br>
+				con strumenti avanzati semplici da usare.<br>
+				<a href="https://aa.altervista.org/index.php?client_id=altervista&response_type=code&lang=it&redirect_uri=http%3A%2F%2Fit.altervista.org%2Fcplogin.php" rel="nofollow" class="button">Vai al pannello di controllo</a>
+			</p>
+		</div>
+	</div>
+</header>
+
+<section class="section help">
+	<div class="container">
+		<div class="row">
+			<div class="col-6">
+				<h2>Suggerimenti Utili</h2>
+				<ul>
+					<li>Conserva l'email di iscrizione  e l'indirizzo email associato al tuo profilo</li>
+					<li>In generale nei <strong>nomi dei file</strong> cerca di evitare le maiuscole,
+					gli spazi e tutti quei caratteri che non siano quelli alfanumerici oltre a _ (underscore) e - (trattino)</li>
+					<li>Rispetta il <a href="//it.altervista.org/regolamento.php" target="_blank" rel="nofollow">regolamento</a></li>
+				</ul>
+			</div>
+			<div class="col-6">
+				<h2>Cerchi Aiuto?</h2>
+				<ul>
+					<li>
+					Per ricevere supporto vai sul <a href="//forum.it.altervista.org/" target="_blank" rel="nofollow">Forum</a>, puoi partecipare alle discussioni in corso e aprirne di nuove 
+					</li>
+					<li>
+					Se hai dubbi consulta le <a href="//it.help.altervista.org/w/FAQ" target="_blank" rel="nofollow">FAQ</a> (domande frequenti)
+					</li>
+				</ul>
+			</div>
+		</div><!-- .row -->
+	</div>
+</section>
+
+<section class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-12 nofloat">
+				<p class="goodby">Buon lavoro e divertiti!</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="site-footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-12 nofloat">
+				<a href="//it.altervista.org/" title="Altervista" rel="nofollow">Altervista</a>
+				<span class="sep">|</span> 
+				<a href="//it.altervista.org/supporto.php" title="Supporto" rel="nofollow">Supporto</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+</body>
+</html>
