@@ -28,6 +28,20 @@
          "thumbnail":"https://pbs.twimg.com/profile_images/961912570201493505/3CpUaKz4.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"MONTALBANO"
+      },
+      {
+         "title":"[COLOR yellow]BUD & TERENCE[/COLOR]",
+         "externallink":"http://testphp765.herokuapp.com/mandrakodi/getJson.php?numFile=26",
+         "thumbnail":"https://e7.pngegg.com/pngimages/234/107/png-clipart-altrimenti-ci-arrabbiamo-il-cinema-di-bud-spencer-e-terence-hill-double-trouble-bud-spencer-a-terence-hill-film-others-television-film-thumbnail.png",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"MONTALBANO"
+      },
+      {
+         "title":"[COLOR yellow]TOTO'[/COLOR]",
+         "externallink":"http://testphp765.herokuapp.com/mandrakodi/getJson.php?numFile=27",
+         "thumbnail":"https://www.partinicolive.it/home1/wp-content/uploads/2017/12/toto-sindaco-1.png",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"MONTALBANO"
       }
    ]
 }
