@@ -64,6 +64,19 @@ Dazn3 ES@@noEvents^noEvents|noEpg@@acestream://21529c8ecb67d567d733bfcc8a294e049
 Dazn4 ES@@noEvents^noEvents|noEpg@@acestream://05cb87aecf1268acb385f22ba6afdc741c616ad4
 Laliga@@noEvents^noEvents|noEpg@@acestream://63845ced1e890156e0e7c80d5b580a72042f1352
 Gol TV@@noEvents^noEvents|noEpg@@acestream://d138d976408332173469b1557ea84278c4fc0ed1
+TVC DEPORTES@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/tv32.php?c=264_&f=.m3u8
+Claro Sports@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio2.php?c=claro&f=.m3u8
+ESPN MX@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio2.php?c=espn1mx&f=.m3u8
+ESPN 2 MX@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio2.php?c=espn2mx&f=.m3u8
+ESPN 3 MX@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio2.php?c=espn3mx&f=.m3u8
+ESPN EXTRA@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/tv32.php?c=258_&f=.m3u8
+ESPN DEPORTES@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio2.php?c=espndep&f=.m3u8
+FOX SPORTS 1 MX@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio2.php?c=foxsport1mx&f=.m3u8
+FOX SPORTS 2 MX@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio2.php?c=foxsport2mx&f=.m3u8
+FOX SPORTS 3 MX@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio2.php?c=foxsport3mx&f=.m3u8
+GOLTV@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio2.php?c=goltv&f=.m3u8
+TUDN MX@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio2.php?c=tudnmx&f=.m3u8
+TUDN US@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio2.php?c=tudnus&f=.m3u8
 STOP_LOOP
 
 
