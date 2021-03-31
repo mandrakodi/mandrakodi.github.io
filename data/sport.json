@@ -2,14 +2,14 @@
    "SetViewMode":"500",
    "items":[
       {
-         "title":"[COLOR lime]LISTA EVENTI[/COLOR]",
+         "title":"[COLOR lime]EVENTI[/COLOR]",
          "externallink":"http://testphp765.herokuapp.com/mandrakodi/getJson.php?numFile=11",
          "thumbnail":"https://www.insidesport.co/wp-content/uploads/2020/04/aaa-1-696x464.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Eventi del giorno"
       },
       {
-         "title":"[COLOR aqua]LISTA CANALI[/COLOR]",
+         "title":"[COLOR aqua]CANALI[/COLOR]",
          "externallink":"http://testphp765.herokuapp.com/mandrakodi/getJson.php?numFile=12",
          "thumbnail":"https://i.pinimg.com/originals/6c/b2/a3/6cb2a3d5d15d57bc38819d21af80f582.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
@@ -35,7 +35,7 @@
          "thumbnail":"https://www.hotel-desalpes.it/wp-content/uploads/2017/11/lastminute.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Link Last Minute",
-         "enabled":"False"
+         "enabled":False
       }
    ]
 }
