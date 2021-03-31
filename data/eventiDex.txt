@@ -1,0 +1,32 @@
+SYDNEY FC vs MELBOURNE VICTORY|2021-03-31 10:35|BT Sport 1|http://77.83.117.60:8888/02_BTSPORTHD_1_720p/chunklist.m3u8
+WOLFSBURG vs CHELSEA FC|2021-03-31 14:00|BT Sport 1|http://77.83.117.60:8888/02_BTSPORTHD_1_720p/chunklist.m3u8
+MANCHESTER CITY vs BARCELONA|2021-03-31 17:00|BT Sport 2|http://77.83.117.60:8888/02_BTSPORTHD_2_720p/chunklist.m3u8
+BOSNIA AND HERZEGOVINA vs FRANCE|2021-03-31 20:45|Match Arena - ACE|acestream://77d6d3be3203cdbd22ad679b380e20edab71e82c
+BOSNIA AND HERZEGOVINA vs FRANCE|2021-03-31 20:45|Sony Six|http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/01d25ef273031cf.m3u8
+ENGLAND vs POLAND|2021-03-31 20:45|Belarus 5 - ACE|acestream://f7d884a3131387319b30bf5fac036445d3768c30
+ENGLAND vs POLAND|2021-03-31 20:45|Belarus 5|https://185-198-56-56.livesports24.online/belarusss5.m3u8
+ENGLAND vs POLAND|2021-03-31 20:45|Belarus 5 - OPZ 2|https://46-166-139-70.livesports24.online/belarusss5.m3u8
+ENGLAND vs POLAND|2021-03-31 20:45|Futbol 2 - ACE|acestream://9f511bff4e950c784a4e09da6e9549c465e5b15c
+ENGLAND vs POLAND|2021-03-31 20:45|Futbol 2|https://185-198-56-56.livesports24.online/fooootball2.m3u8
+ENGLAND vs POLAND|2021-03-31 20:45|Futbol 2 - OPZ 2|https://46-166-139-70.livesports24.online/fooootball2.m3u8
+ENGLAND vs POLAND|2021-03-31 20:45|Match TV - ACE|acestream://493cdbeb9463e19bb2ec72e60357d60072e3f908
+ENGLAND vs POLAND|2021-03-31 20:45|Match TV|https://185-198-56-56.livesports24.online/ooomatch.m3u8
+ENGLAND vs POLAND|2021-03-31 20:45|Match TV - OPZ 2|https://46-166-139-70.livesports24.online/ooomatch.m3u8
+ENGLAND vs POLAND|2021-03-31 20:45|Sony Ten 1|http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/f56168cc96f1153.m3u8
+ENGLAND vs POLAND|2021-03-31 20:45|Sport TV 1|http://77.83.117.60:8888/02_SPORTTV_1_720p/chunklist.m3u8
+GERMANY vs NORTH MACEDONIA|2021-03-31 20:45|Futbol 3 - ACE|acestream://3a6ea471d35d383ba088140a5685ce41793eb977
+GERMANY vs NORTH MACEDONIA|2021-03-31 20:45|Futbol 3|https://185-198-56-56.livesports24.online/football3ua.m3u8
+GERMANY vs NORTH MACEDONIA|2021-03-31 20:45|Futbol 3 - OPZ 2|https://46-166-139-70.livesports24.online/football3ua.m3u8
+GERMANY vs NORTH MACEDONIA|2021-03-31 20:45|Match Arena - ACE|acestream://77d6d3be3203cdbd22ad679b380e20edab71e82c
+GERMANY vs NORTH MACEDONIA|2021-03-31 20:45|Sport TV 3|http://77.83.117.60:8888/02_SPORTTV_3_720p/chunklist.m3u8
+LITHUANIA vs ITALY|2021-03-31 20:45|Match Futbol 2 - ACE|acestream://636aacd9b73d46399fdc525ec3cb7e243a271d1b
+LITHUANIA vs ITALY|2021-03-31 20:45|Match Futbol 2|https://185-198-56-56.livesports24.online/mfootball2rus.m3u8
+LITHUANIA vs ITALY|2021-03-31 20:45|Match Futbol 2 - OPZ 2|https://46-166-139-70.livesports24.online/mfootball2rus.m3u8
+SPAIN vs KOSOVO|2021-03-31 20:45|Match Futbol 1 - ACE|acestream://2b37d683900749f8ba7a520e3f06f012127980d4
+SPAIN vs KOSOVO|2021-03-31 20:45|Match Futbol 1|https://185-198-56-56.livesports24.online/ntvmatchfoot1.m3u8
+SPAIN vs KOSOVO|2021-03-31 20:45|Match Futbol 1 - OPZ 2|https://46-166-139-70.livesports24.online/ntvmatchfoot1.m3u8
+SPAIN vs KOSOVO|2021-03-31 20:45|Sony Ten 2|http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/6fcd730970b191d.m3u8
+SPAIN vs KOSOVO|2021-03-31 20:45|Sport TV 2|http://77.83.117.60:8888/02_SPORTTV_2_720p/chunklist.m3u8
+UKRAINE vs KAZAKHSTAN|2021-03-31 20:45|Futbol 1 - ACE|acestream://afc3cfb74616ca5359319f45fafb0848658439e6
+UKRAINE vs KAZAKHSTAN|2021-03-31 20:45|Futbol 1|https://185-198-56-56.livesports24.online/uafootballua1.m3u8
+UKRAINE vs KAZAKHSTAN|2021-03-31 20:45|Futbol 1 - OPZ 2|https://46-166-139-70.livesports24.online/uafootballua1.m3u8
