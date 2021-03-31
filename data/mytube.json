@@ -30,6 +30,13 @@
          "info":"Euro News"
       },
       {
+         "title":"[COLOR gold]METEO[/COLOR]",
+         "externallink":"http://testphp765.herokuapp.com/mandrakodi/getJson.php?numFile=62",
+         "thumbnail":"https://www.ticinonotizie.it/wp-content/uploads/2015/09/meteo5.gif",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Euro News"
+      },
+      {
          "title":"[COLOR gold]SEARCH YOUTUBE[/COLOR]",
          "externallink2":"http://testphp765.herokuapp.com/mandrakodi/searchYT.php?query=",
          "thumbnail":"https://www.wearediagram.com/hubfs/YouTube_Search.jpg",
