@@ -1,0 +1,19 @@
+{
+	"SetViewMode":"500",
+	"items":[
+		{
+			"title":"RSI LA1",
+			"myresolve":"rsi:LA1",
+			"thumbnail":"https://www.tvdream.net/img/rsi-la1_476x249.jpg",
+			"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+			"info":"RSI LA1"
+		},
+		{
+			"title":"RSI LA2",
+			"myresolve":"rsi",
+			"thumbnail":"https://www.tvdream.net/img/rsi-la2.jpg",
+			"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+			"info":"RSI LA2"
+		}
+	]
+}
