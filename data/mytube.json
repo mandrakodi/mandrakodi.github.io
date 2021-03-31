@@ -2,8 +2,8 @@
    "SetViewMode":"500",
    "items":[
       {
-         "title":"[COLOR gold]PLAY MY LINK[/COLOR]",
-         "externallink2":"http://testphp765.herokuapp.com/mandrakodi/playLink.php?url=",
+         "title":"[COLOR gold]TG REGIONALI[/COLOR]",
+         "externallink":"http://testphp765.herokuapp.com/mandrakodi/tgr.php",
          "thumbnail":"https://i0.wp.com/ilnuovo.rn.it/wp2/wp-content/uploads/2015/08/computer-Bart.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Play your link"
@@ -16,26 +16,18 @@
          "info":"Play your link"
       },
       {
-         "title":"[COLOR lime]SEARCH YOUTUBE[/COLOR]",
-         "externallink2":"http://testphp765.herokuapp.com/mandrakodi/searchYT.php?query=",
-         "thumbnail":"https://www.wearediagram.com/hubfs/YouTube_Search.jpg",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"Play your link"
-      },
-      {
          "title":"[COLOR aqua]RSI[/COLOR]",
          "externallink":"http://testphp765.herokuapp.com/mandrakodi/getJson.php?numFile=61",
          "thumbnail":"https://pbs.twimg.com/profile_images/871609532379783168/kB0DQhpH_400x400.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"RSI"
       },
-	  {
-		"title":"[COLOR lime]TestRegEx[/COLOR]",
-		"thumbnail":"https://us.123rf.com/450wm/alexwhite/alexwhite1501/alexwhite150104236/35605908-ic%C3%B4ne-de-test.jpg",
-		"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-		"info":"No Info",
-		"regexPage":"https://www.rainews.it/tgr/lazio/notiziari/index.html?/tgr/rainews.html",
-		"regexExpres":"data-mediaurl=\"(.*?)\""
-	}
+      {
+         "title":"[COLOR lime]SEARCH YOUTUBE[/COLOR]",
+         "externallink2":"http://testphp765.herokuapp.com/mandrakodi/searchYT.php?query=",
+         "thumbnail":"https://www.wearediagram.com/hubfs/YouTube_Search.jpg",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Play your link"
+      }
    ]
 }

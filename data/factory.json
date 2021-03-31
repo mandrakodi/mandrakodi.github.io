@@ -1,0 +1,20 @@
+{
+    "SetViewMode":"500",
+    "items":[
+        {
+          "title":"[COLOR aqua]RSI[/COLOR]",
+          "externallink":"http://testphp765.herokuapp.com/mandrakodi/getJson.php?numFile=61",
+          "thumbnail":"https://pbs.twimg.com/profile_images/871609532379783168/kB0DQhpH_400x400.jpg",
+          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+          "info":"RSI"
+       },
+       {
+         "title":"[COLOR lime]TestRegEx[/COLOR]",
+         "thumbnail":"https://us.123rf.com/450wm/alexwhite/alexwhite1501/alexwhite150104236/35605908-ic%C3%B4ne-de-test.jpg",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"No Info",
+         "regexPage":"https://www.rainews.it/tgr/lazio/notiziari/index.html?/tgr/rainews.html",
+         "regexExpres":"data-mediaurl=\"(.*?)\""
+     }
+    ]
+ }
