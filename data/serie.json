@@ -1,0 +1,19 @@
+{
+   "SetViewMode":"500",
+   "items":[
+      {
+         "title":"[COLOR lime]ELENCO SERIE TV[/COLOR]",
+         "externallink":"http://testphp765.herokuapp.com/mandrakodi/movieScript.php?mode=2",
+         "thumbnail":"https://e1.pngegg.com/pngimages/416/981/png-clipart-netflix-tv-series-folder-icon-stranger2-stranger-things-folder-icon-thumbnail.png",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Elenco"
+      },
+      {
+         "title":"[COLOR aqua]CERCA SERIE TV[/COLOR]",
+         "externallink2":"http://testphp765.herokuapp.com/mandrakodi/movieScript.php?mode=2&search=",
+         "thumbnail":"https://e7.pngegg.com/pngimages/491/104/png-clipart-open-sherlock-holmes-free-content-cartoon-inspector-clouseau-food-text-thumbnail.png",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Ricerca"
+      }
+   ]
+}

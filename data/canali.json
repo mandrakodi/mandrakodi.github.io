@@ -1,0 +1,26 @@
+{
+    "SetViewMode":"500",
+    "items":[
+       {
+          "title":"[COLOR lime]LISTA CANALI 1[/COLOR]",
+          "externallink":"http://testphp765.herokuapp.com/mandrakodi/sportScript.php?mode=1",
+          "thumbnail":"https:\/\/deartpolistirolo.it\/113-large_default\/numero-1-primo-compleanno.jpg",
+          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+          "info":"Lista 1"
+       },
+       {
+          "title":"[COLOR aqua]LISTA CANALI 2[/COLOR]",
+          "externallink":"http://testphp765.herokuapp.com/mandrakodi/getJson.php?numFile=13",
+          "thumbnail":"https:\/\/losnumeroseningles.net\/wp-content\/uploads\/2012\/11\/numero21.jpg",
+          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+          "info":"Lista 2"
+       },
+       {
+          "title":"[COLOR red]LISTA CANALI ACE[/COLOR]",
+          "externallink":"http://testphp765.herokuapp.com/mandrakodi/sportScript.php?mode=2",
+          "thumbnail":"https://www.technipages.com/wp-content/uploads/2020/01/Ace-Stream-600x360.jpg",
+          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+          "info":"Live acestream channels"
+       }
+    ]
+ }
