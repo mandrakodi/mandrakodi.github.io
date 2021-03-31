@@ -35,7 +35,7 @@
          "thumbnail":"https://www.hotel-desalpes.it/wp-content/uploads/2017/11/lastminute.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Link Last Minute",
-         "enabled":False
+         "enabled":false
       }
    ]
 }
