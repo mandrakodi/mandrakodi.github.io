@@ -9,14 +9,14 @@
          "info":"Eventi del giorno"
       },
       {
-         "title":"[COLOR aqua]CANALI[/COLOR]",
+         "title":"[COLOR lime]CANALI[/COLOR]",
          "externallink":"http://testphp765.herokuapp.com/mandrakodi/getJson.php?numFile=12",
          "thumbnail":"https://i.pinimg.com/originals/6c/b2/a3/6cb2a3d5d15d57bc38819d21af80f582.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Live channels"
       },
       {
-         "title":"[COLOR red]WISEPLAY ROJADIRECTA[/COLOR]",
+         "title":"[COLOR lime]WISEPLAY ROJADIRECTA[/COLOR]",
          "externallink":"http://testphp765.herokuapp.com/mandrakodi/getJson.php?numFile=14",
          "thumbnail":"https://media.diariorepublica.com/cms/wp-content/uploads/2015/03/roja.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
@@ -26,6 +26,13 @@
          "title":"[COLOR lime]WISEPLAY LINKS[/COLOR]",
          "externallink":"http://testphp765.herokuapp.com/mandrakodi/listeWise.php",
          "thumbnail":"https://reports.exodus-privacy.eu.org/en/reports/53674/icon/",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Wiseplay List"
+      },
+      {
+         "title":"[COLOR lime]WWE MANIACS[/COLOR]",
+         "externallink":"http://testphp765.herokuapp.com/mandrakodi/getJson.php?numFile=15",
+         "thumbnail":"http://watchwrestling.la/wp-content/uploads/2019/10/AEW-Wrestling-Dynamite.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Wiseplay List"
       }
