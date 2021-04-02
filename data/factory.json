@@ -3,6 +3,7 @@
     "items":[
       {
         "title":"[COLOR aqua]Wrestler MyStream - Parte 1 (YATSE)[/COLOR]",
+        "myresolve":"myStream:00v2c41e7ey8",
         "yatse":"https://embed.mystream.to/00v2c41e7ey8",
         "thumbnail":"http://watchwrestling.la/wp-content/uploads/2019/10/AEW-Wrestling-Dynamite.jpg",
         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
@@ -10,7 +11,7 @@
      },
      {
       "title":"[COLOR aqua]Wrestler MyStream - Parte 2 (YATSE)[/COLOR]",
-      "yatse":"https://embed.mystream.to/7xm3s6gi1pa2",
+      "myresolve":"myStream:7xm3s6gi1pa2",
       "thumbnail":"http://watchwrestling.la/wp-content/uploads/2019/10/AEW-Wrestling-Dynamite.jpg",
       "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
       "info":"WWE"
