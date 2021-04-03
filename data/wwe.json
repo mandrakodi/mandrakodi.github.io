@@ -1,40 +1,94 @@
 {
-    "SetViewMode":"500",
-    "items":[
-      {
-        "title":"[COLOR aqua]31/03/21 WWE - NXT[/COLOR][CR][COLOR lime](by @ilblasco88)[/COLOR]",
-        "myresolve":"myStream:v8dhc6or1dl",
-        "thumbnail":"https://static0.thesportsterimages.com/wordpress/wp-content/uploads/2019/12/nxt.jpg",
-        "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-        "info":"WWE - NXT"
-      },
-      {
-        "title":"[COLOR aqua]31/03/21 AEW - Dynamite[/COLOR][CR][COLOR lime](by @ilblasco88)[/COLOR]",
-        "myresolve":"myStream:7dmkwlrkl25t",
-        "thumbnail":"https://mlmvmn1gjpje.i.optimole.com/gvp6958-XnDKCUAc/w:auto/h:auto/q:auto/https://www.paolosartorio.com/wp-content/uploads/2021/01/AEW-1240x800-620x400-1.jpg",
-        "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-        "info":"AEW"
-      },
-      {
-        "title":"[COLOR aqua]30/03/21 IMPACT[/COLOR][CR][COLOR lime](by @ilblasco88)[/COLOR]",
-        "myresolve":"myStream:zwucsov5xj53",
-        "thumbnail":"https://zonawrestling.net/wp-content/uploads/2021/01/27/impact-wrestling-logo.jpg",
-        "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-        "info":"IMPACT"
-      },
-      {
-        "title":"[COLOR aqua]26/03/21 NJPW[/COLOR][CR][COLOR lime](by @ilblasco88)[/COLOR]",
-        "myresolve":"myStream:u4lxrtpcriyt",
-        "thumbnail":"https://upload.wikimedia.org/wikipedia/en/thumb/1/1c/New_Japan_Pro_Wrestling_Logo_2.svg/1200px-New_Japan_Pro_Wrestling_Logo_2.svg.png",
-        "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-        "info":"NJPW"
-      },
-      {
-        "title":"[COLOR aqua]21/03/21 NJPW - Final Cup[/COLOR][CR][COLOR lime](by @ilblasco88)[/COLOR]",
-        "myresolve":"myStream:ief2hcy0hq29",
-        "thumbnail":"https://www.tuttowrestling.com/wp-content/uploads/2021/01/New-Japan-Cup-2021-1200x800.png",
-        "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-        "info":"NJPW - Final Cup"
-      }
-    ]
-  }
+  "channels":[
+     {
+        "name":"[COLOR yellow]AEW[\/COLOR]",
+        "thumbnail":"http:\/\/www.onlineworldofwrestling.com\/wp-content\/uploads\/2019\/02\/16591c8039892b6e-600x338.jpeg",
+        "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+        "info":"(by @ilblasco88)",
+        "items":[
+           {
+              "title":"[COLOR lime]2021-03-31 DYNAMITE[\/COLOR]",
+              "thumbnail":"https:\/\/www.paolosartorio.com\/wp-content\/uploads\/2021\/01\/AEW-1240x800-620x400-1.jpg",
+              "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+              "info":"(by @ilblasco88)",
+              "link":"https:\/\/uptostream.com\/xzv396yigxeq"
+           }
+        ]
+     },
+     {
+        "name":"[COLOR yellow]NJPW@2021-04-02[\/COLOR]",
+        "thumbnail":"",
+        "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+        "info":"(by @ilblasco88)",
+        "items":[
+           {
+              "title":"[COLOR lime]NJPWSTRONG https:\/\/uptostream.com\/qxzqy2gq0k2g[\/COLOR]",
+              "thumbnail":"Uptobox\r",
+              "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+              "info":"(by @ilblasco88)",
+              "link":""
+           }
+        ]
+     },
+     {
+        "name":"[COLOR yellow]NJPW[\/COLOR]",
+        "thumbnail":"https:\/\/d.newsweek.com\/en\/full\/1303809\/njpw-logo.jpg",
+        "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+        "info":"(by @ilblasco88)",
+        "items":[
+           {
+              "title":"[COLOR lime]2021-03-21 FINALCUP[\/COLOR]",
+              "thumbnail":"https:\/\/burnorfade.com\/wp-content\/uploads\/2021\/03\/Watch-NJPW-NEW-Japan-Cup-2021-Online-Full-Show-Free.jpg",
+              "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+              "info":"(by @ilblasco88)",
+              "link":"https:\/\/uptostream.com\/tl3w6abiczei"
+           }
+        ]
+     },
+     {
+        "name":"[COLOR yellow]ROH[\/COLOR]",
+        "thumbnail":"http:\/\/media.ticketmaster.com\/en-us\/dam\/a\/376\/d1f66841-4e96-4e38-8f1d-31010ac99376_123451_CUSTOM.jpg",
+        "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+        "info":"(by @ilblasco88)",
+        "items":[
+           {
+              "title":"[COLOR lime]2021-03-28 ROH[\/COLOR]",
+              "thumbnail":"http:\/\/watchwrestling.la\/wp-content\/uploads\/2019\/02\/roh-wrestling.jpg",
+              "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+              "info":"(by @ilblasco88)",
+              "link":"https:\/\/uptostream.com\/izctu1xn0uuo"
+           }
+        ]
+     },
+     {
+        "name":"[COLOR yellow]TNA[\/COLOR]",
+        "thumbnail":"https:\/\/theringreport.com\/images\/articles\/banners\/6606.jpg",
+        "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+        "info":"(by @ilblasco88)",
+        "items":[
+           {
+              "title":"[COLOR lime]2021-03-30 IMPACT[\/COLOR]",
+              "thumbnail":"https:\/\/zonawrestling.net\/wp-content\/uploads\/2021\/01\/27\/impact-wrestling-logo.jpg",
+              "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+              "info":"(by @ilblasco88)",
+              "link":"https:\/\/uptostream.com\/l37yquioszz7"
+           }
+        ]
+     },
+     {
+        "name":"[COLOR yellow]WWE[\/COLOR]",
+        "thumbnail":"https:\/\/zonawrestling.net\/wp-content\/uploads\/2014\/05\/WWE_2014_NewLogo.jpg",
+        "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+        "info":"(by @ilblasco88)",
+        "items":[
+           {
+              "title":"[COLOR lime]2021-04-02 SMACKDOWN[\/COLOR]",
+              "thumbnail":"http:\/\/watchwrestling.la\/wp-content\/uploads\/2019\/10\/WWE-Friday-Night-SmackDown-Fox-logo-2019.jpg",
+              "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+              "info":"(by @ilblasco88)",
+              "link":"https:\/\/uptostream.com\/pyfby01h3aip"
+           }
+        ]
+     }
+  ]
+}
