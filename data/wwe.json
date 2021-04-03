@@ -2,18 +2,39 @@
     "SetViewMode":"500",
     "items":[
       {
-        "title":"[COLOR aqua]WWE - Parte 1[/COLOR] [COLOR lime](by blasco88)[/COLOR]",
-        "myresolve":"myStream:00v2c41e7ey8",
-        "thumbnail":"http://watchwrestling.la/wp-content/uploads/2019/10/AEW-Wrestling-Dynamite.jpg",
+        "title":"[COLOR aqua]31/03/21 WWE - NXT[/COLOR] [COLOR lime](by blasco88)[/COLOR]",
+        "myresolve":"myStream:v8dhc6or1dl",
+        "thumbnail":"https://static0.thesportsterimages.com/wordpress/wp-content/uploads/2019/12/nxt.jpg",
         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-        "info":"WWE"
+        "info":"WWE - NXT"
       },
       {
-        "title":"[COLOR aqua]WWE - Parte 2[/COLOR] [COLOR lime](by blasco88)[/COLOR]",
-        "myresolve":"myStream:7xm3s6gi1pa2",
-        "thumbnail":"http://watchwrestling.la/wp-content/uploads/2019/10/AEW-Wrestling-Dynamite.jpg",
+        "title":"[COLOR aqua]31/03/21 AEW - Dynamite[/COLOR] [COLOR lime](by blasco88)[/COLOR]",
+        "myresolve":"myStream:7dmkwlrkl25t",
+        "thumbnail":"https://mlmvmn1gjpje.i.optimole.com/gvp6958-XnDKCUAc/w:auto/h:auto/q:auto/https://www.paolosartorio.com/wp-content/uploads/2021/01/AEW-1240x800-620x400-1.jpg",
         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-        "info":"WWE"
+        "info":"AEW"
+      },
+      {
+        "title":"[COLOR aqua]30/03/21 IMPACT[/COLOR] [COLOR lime](by blasco88)[/COLOR]",
+        "myresolve":"myStream:zwucsov5xj53",
+        "thumbnail":"https://zonawrestling.net/wp-content/uploads/2021/01/27/impact-wrestling-logo.jpg",
+        "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+        "info":"IMPACT"
+      },
+      {
+        "title":"[COLOR aqua]26/03/21 NJPW[/COLOR] [COLOR lime](by blasco88)[/COLOR]",
+        "myresolve":"myStream:u4lxrtpcriyt",
+        "thumbnail":"https://upload.wikimedia.org/wikipedia/en/thumb/1/1c/New_Japan_Pro_Wrestling_Logo_2.svg/1200px-New_Japan_Pro_Wrestling_Logo_2.svg.png",
+        "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+        "info":"NJPW"
+      },
+      {
+        "title":"[COLOR aqua]21/03/21 NJPW - Final Cup[/COLOR] [COLOR lime](by blasco88)[/COLOR]",
+        "myresolve":"myStream:ief2hcy0hq29",
+        "thumbnail":"https://www.tuttowrestling.com/wp-content/uploads/2021/01/New-Japan-Cup-2021-1200x800.png",
+        "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+        "info":"NJPW - Final Cup"
       }
     ]
   }
