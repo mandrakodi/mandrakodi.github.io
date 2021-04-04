@@ -2,8 +2,15 @@
   "SetViewMode":"500",
   "items":[
     {
-      "title":"[COLOR aqua]TEST KOD[/COLOR]",
+      "title":"[COLOR aqua]TEST KOD MYSTREA[/COLOR]",
       "link":"plugin://plugin.video.kod/?ewogICAgImFjdGlvbiI6InBsYXkiLAogICAgImNoYW5uZWwiOiJjb21tdW5pdHkiLAogICAgImZhbmFydCI6Imh0dHBzOi8vd3d3LnN0YWRpb3RhcmRpbmkuaXQvd3AtY29udGVudC91cGxvYWRzLzIwMTYvMTIvbWFuZHJha2F0YS5qcGciLAogICAgImZ1bGx0aXRsZSI6IkZVTExfVElUTEUiLAogICAgImxhbmd1YWdlIjoiIiwKICAgICJwYXRoIjoiIiwKICAgICJwZXJzb25hbF9wbG90IjoiIiwKICAgICJyZWZlcmVyIjoiIiwKICAgICJzZXJ2ZXIiOiJteXN0cmVhbSIsCiAgICAidGh1bWJuYWlsIjoiaHR0cHM6Ly9pLnBvc3RpbWcuY2MveDFud1hnYkcvbWFuZHJha29kLnBuZyIsCiAgICAidGl0bGUiOiJUSVRPTE9fTElOSyIsCiAgICAidXJsIjoiaHR0cHM6Ly9lbWJlZC5teXN0cmVhbS50by8wMHYyYzQxZTdleTgiLAogICAgImluZm9MYWJlbHMiOnsKICAgICAgICJtZWRpYXR5cGUiOiJtb3ZpZSIsCiAgICAgICAicGxvdCI6IiIsCiAgICAgICAicXVhbGl0eSI6IlFVQUxJVFkiLAogICAgICAgInRpdGxlIjoiTEFCRUxfVElUTEUiLAogICAgICAgInRtZGJfaWQiOiIiLAogICAgICAgInR2c2hvd3RpdGxlIjoiIiwKICAgICAgICJ5ZWFyIjoiIgogICAgfQp9",
+      "thumbnail":"https://infotelematico.com/wp-content/uploads/Kodi-on-Demand-1.png",
+      "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+      "info":"WWE"
+    },
+    {
+      "title":"[COLOR aqua]TEST KOD WSTREAM[/COLOR]",
+      "link":"plugin://plugin.video.kod/?ewogICAgImFjdGlvbiI6InBsYXkiLAogICAgImNoYW5uZWwiOiJjb21tdW5pdHkiLAogICAgImZhbmFydCI6Imh0dHBzOi8vd3d3LnN0YWRpb3RhcmRpbmkuaXQvd3AtY29udGVudC91cGxvYWRzLzIwMTYvMTIvbWFuZHJha2F0YS5qcGciLAogICAgImZ1bGx0aXRsZSI6IkZVTExfVElUTEUiLAogICAgImxhbmd1YWdlIjoiIiwKICAgICJwYXRoIjoiIiwKICAgICJwZXJzb25hbF9wbG90IjoiIiwKICAgICJyZWZlcmVyIjoiIiwKICAgICJzZXJ2ZXIiOiJ3c3RyZWFtIiwKICAgICJ0aHVtYm5haWwiOiJodHRwczovL2kucG9zdGltZy5jYy94MW53WGdiRy9tYW5kcmFrb2QucG5nIiwKICAgICJ0aXRsZSI6IlRJVE9MT19MSU5LIiwKICAgICJ1cmwiOiJodHRwczovL3ZjcnlwdC5uZXQvd3NzL2Q1bDdjaXV0YWEweiIsCiAgICAiaW5mb0xhYmVscyI6ewogICAgICAgIm1lZGlhdHlwZSI6Im1vdmllIiwKICAgICAgICJwbG90IjoiIiwKICAgICAgICJxdWFsaXR5IjoiUVVBTElUWSIsCiAgICAgICAidGl0bGUiOiJMQUJFTF9USVRMRSIsCiAgICAgICAidG1kYl9pZCI6IiIsCiAgICAgICAidHZzaG93dGl0bGUiOiIiLAogICAgICAgInllYXIiOiIiCiAgICB9Cn0%3D",
       "thumbnail":"https://infotelematico.com/wp-content/uploads/Kodi-on-Demand-1.png",
       "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
       "info":"WWE"
@@ -17,4 +24,4 @@
       "regexExpres":"data-mediaurl=\"(.*?)\""
     }
   ]
-}
+}https://vcrypt.net/wss/d5l7ciutaa0z
