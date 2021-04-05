@@ -1,47 +1,32 @@
-Belarus 5@@belarus-5^belarus-5|noEpg@@https://185-198-56-56.livesports24.online/belarusss5.m3u8|https://46-166-139-70.livesports24.online/belarusss5.m3u8
-EuroSport 1 RU@@noEvents^noEvents|noEpg@@https://185-198-56-56.livesports24.online/eurosport1ru.m3u8|https://46-166-139-70.livesports24.online/eurosport1ru.m3u8
-EuroSport 2 RU@@noEvents^noEvents|noEpg@@https://185-198-56-56.livesports24.online/ruseurosport2.m3u8|https://46-166-139-70.livesports24.online/ruseurosport2.m3u8
-Futbol 1@@futbol-ukraine^football-1|futbol-ukr@@https://185-198-56-56.livesports24.online/uafootballua1.m3u8|https://46-166-139-70.livesports24.online/uafootballua1.m3u8
-Futbol 2@@futbol-2-ukraine^football-2|futbol-plus@@https://185-198-56-56.livesports24.online/fooootball2.m3u8|https://46-166-139-70.livesports24.online/fooootball2.m3u8
-Futbol 3@@futbol-3^football-3|futbol3-ukr@@https://185-198-56-56.livesports24.online/football3ua.m3u8|https://46-166-139-70.livesports24.online/football3ua.m3u8
-Match Futbol 1@@match-tv-football-1-russia^match-football-1|ntv-football-1@@https://185-198-56-56.livesports24.online/ntvmatchfoot1.m3u8|https://46-166-139-70.livesports24.online/ntvmatchfoot1.m3u8
-Match Futbol 2@@match-tv-football-2-russia^match-football-2|ntv-football-2@@https://185-198-56-56.livesports24.online/mfootball2rus.m3u8|https://46-166-139-70.livesports24.online/mfootball2rus.m3u8
-Match Futbol 3@@match-tv-football-3-russia^match-football-3|ntv-football-3@@https://185-198-56-56.livesports24.online/rumatchf3.m3u8|https://46-166-139-70.livesports24.online/rumatchf3.m3u8
-Match Igra@@match-game-russia^match-game|ntv-game@@https://185-198-56-56.livesports24.online/migra.m3u8|https://46-166-139-70.livesports24.online/migra.m3u8
-Match TV@@match-tv-game-russia^match-tv|match@@https://185-198-56-56.livesports24.online/ooomatch.m3u8|https://46-166-139-70.livesports24.online/ooomatch.m3u8
-Match Arena@@NoEvents^NoEvents|NoEpg@@https://185-198-56-56.livesports24.online/rumatcharena.m3u8|https://46-166-139-70.livesports24.online/rumatcharena.m3u8
-Setanta Sport 1@@setanta-sports-euro-asia^@ua-setanta-eurasia|setanta-sport@@https://185-198-56-56.livesports24.online/rusetantaeurasia.m3u8|https://46-166-139-70.livesports24.online/rusetantaeurasia.m3u8|http://92.43.140.204:80/s81/index.m3u8
-Setanta Sport 2@@setanta-sports-eurasia-plus^ua-setanta-eurasia-plus|setanta-sport-plus@@https://185-198-56-56.livesports24.online/setantaplusru.m3u8|https://46-166-139-70.livesports24.online/setantaplusru.m3u8|http://92.43.140.200/s82/04.m3u8
-Setanta Sport UA@@setanta-sports-ukraine^@ua-setanta-eurasia|setanta-sport@@https://185-198-56-56.livesports24.online/setantaukraine.m3u8|https://46-166-139-70.livesports24.online/setantaukraine.m3u8
-Sport 1 UA@@sport-1-ukraine^sport-1-uakraine|noEpg@@https://185-198-56-56.livesports24.online/sport1ua.m3u8|https://46-166-139-70.livesports24.online/sport1ua.m3u8
+Belarus 5@@belarus-5^belarus-5|noEpg@@https://185-198-56-56.livesports24.online/belarusss5.m3u8|https://5-61-37-44.livesports24.online/belarusss5.m3u8
+EuroSport 1 RU@@noEvents^noEvents|noEpg@@https://185-198-56-56.livesports24.online/eurosport1ru.m3u8|https://5-61-37-44.livesports24.online/eurosport1ru.m3u8
+EuroSport 2 RU@@noEvents^noEvents|noEpg@@https://185-198-56-56.livesports24.online/ruseurosport2.m3u8|https://5-61-37-44.livesports24.online/ruseurosport2.m3u8
+Futbol 1@@futbol-ukraine^football-1|futbol-ukr@@https://185-198-56-56.livesports24.online/uafootballua1.m3u8|https://5-61-37-44.livesports24.online/uafootballua1.m3u8
+Futbol 2@@futbol-2-ukraine^football-2|futbol-plus@@https://185-198-56-56.livesports24.online/fooootball2.m3u8|https://5-61-37-44.livesports24.online/fooootball2.m3u8
+Futbol 3@@futbol-3^football-3|futbol3-ukr@@https://185-198-56-56.livesports24.online/football3ua.m3u8|https://5-61-37-44.livesports24.online/football3ua.m3u8
+Match Futbol 1@@match-tv-football-1-russia^match-football-1|ntv-football-1@@https://185-198-56-56.livesports24.online/ntvmatchfoot1.m3u8|https://5-61-37-44.livesports24.online/ntvmatchfoot1.m3u8
+Match Futbol 2@@match-tv-football-2-russia^match-football-2|ntv-football-2@@https://185-198-56-56.livesports24.online/mfootball2rus.m3u8|https://5-61-37-44.livesports24.online/mfootball2rus.m3u8
+Match Futbol 3@@match-tv-football-3-russia^match-football-3|ntv-football-3@@https://185-198-56-56.livesports24.online/rumatchf3.m3u8|https://5-61-37-44.livesports24.online/rumatchf3.m3u8
+Match Igra@@match-game-russia^match-game|ntv-game@@https://185-198-56-56.livesports24.online/migra.m3u8|https://5-61-37-44.livesports24.online/migra.m3u8
+Match TV@@match-tv-game-russia^match-tv|match@@https://185-198-56-56.livesports24.online/ooomatch.m3u8|https://5-61-37-44.livesports24.online/ooomatch.m3u8
+Match Arena@@NoEvents^NoEvents|NoEpg@@https://185-198-56-56.livesports24.online/rumatcharena.m3u8|https://5-61-37-44.livesports24.online/rumatcharena.m3u8
+Setanta Sport 1@@setanta-sports-euro-asia^@ua-setanta-eurasia|setanta-sport@@https://185-198-56-56.livesports24.online/rusetantaeurasia.m3u8|https://5-61-37-44.livesports24.online/rusetantaeurasia.m3u8|http://92.43.140.204:80/s81/index.m3u8
+Setanta Sport 2@@setanta-sports-eurasia-plus^ua-setanta-eurasia-plus|setanta-sport-plus@@https://185-198-56-56.livesports24.online/setantaplusru.m3u8|https://5-61-37-44.livesports24.online/setantaplusru.m3u8|http://92.43.140.200/s82/04.m3u8
+Setanta Sport UA@@setanta-sports-ukraine^@ua-setanta-eurasia|setanta-sport@@https://185-198-56-56.livesports24.online/setantaukraine.m3u8|https://5-61-37-44.livesports24.online/setantaukraine.m3u8
+Sport 1 UA@@sport-1-ukraine^sport-1-uakraine|noEpg@@https://185-198-56-56.livesports24.online/sport1ua.m3u8|https://5-61-37-44.livesports24.online/sport1ua.m3u8
 BT Sport 1@@bt-sport-1-uk^bt-sport-1|BTSport1.uk@@http://77.83.117.60:8888/02_BTSPORTHD_1_720p/chunklist.m3u8
 BT Sport 2@@bt-sport-2-uk^bt-sport-2|BTSport2.uk@@http://77.83.117.60:8888/02_BTSPORTHD_2_720p/chunklist.m3u8
-BT Sport 2@@bt-sport-2-uk^bt-sport-2|BTSport2.uk@@http://77.83.117.60:8888/02_BTSPORTHD_3_720p/chunklist.m3u8
+BT Sport 3@@bt-sport-3-uk^bt-sport-3|BTSport2.uk@@http://77.83.117.60:8888/02_BTSPORTHD_3_720p/chunklist.m3u8
 EuroSport 1 EN@@noEvents^noEvents|noEpg@@http://77.83.117.60:8888/02_EUROHD1_720p/chunklist.m3u8
 EuroSport 2 EN@@noEvents^noEvents|noEpg@@http://77.83.117.60:8888/02_EUROHD2_720p/chunklist.m3u8
 Sport TV 1@@sport-tv1^pt-sport-tv-1|sporttv1.pt@@http://77.83.117.60:8888/02_SPORTTV_1_720p/chunklist.m3u8
 Sport TV 2@@sport-tv2^pt-sport-tv-2|sporttv2.pt@@http://77.83.117.60:8888/02_SPORTTV_2_720p/chunklist.m3u8
 Sport TV 3@@sport-tv3^pt-sport-tv-3|sporttv3.pt@@http://77.83.117.60:8888/02_SPORTTV_3_720p/chunklist.m3u8
 Sport TV 4@@sport-tv4^pt-sport-tv-4|sporttv4.pt@@http://77.83.117.60:8888/02_SPORTTV_4_720p/chunklist.m3u8
-Arena Sport 1@@arena-sport-1-serbia^rs-arena-sport-1|ArenaSport1.rs@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/197cf3f448f47b1.m3u8
-Arena Sport 2@@arena-sport-2-serbia^rs-arena-sport-2|ArenaSport2.rs@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/00490feacaf3646.m3u8
-Arena Sport 3@@arena-sport-3-serbia^rs-arena-sport-3|ArenaSport3.rs@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/5835b824e88919b.m3u8
-Arena Sport 4@@arena-sport-4-serbia^rs-arena-sport-4|ArenaSport4.rs@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/ce220746856cda4.m3u8
-DiGiSport 1@@digi-sport-1-romania^ro-digi-sport-1|DigiSport1.ro@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/49c69ce8f94fcc8.m3u8
-DiGiSport 2@@digi-sport-2-romania^ro-digi-sport-2|DigiSport2.ro@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/fcc6add807df1ea.m3u8
-DiGiSport 3@@digi-sport-3-romania^ro-digi-sport-3|DigiSport3.ro@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/3bc983629503a65.m3u8
-DiGiSport 4@@digi-sport-4-romania^ro-digi-sport-4|DigiSport4.ro@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/f405dc55686b645.m3u8
-Sony Six@@sony-six-india^noEvents|SonySix.in@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/01d25ef273031cf.m3u8
-Sony Ten 1@@ten-1-india^ten-1|TenSports.in@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/f56168cc96f1153.m3u8@@http://103.157.249.122:5005/play/a057/index.m3u8
-Sony Ten 2@@ten-2-india^ten-2|TenAction.in@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/6fcd730970b191d.m3u8@@http://103.157.249.122:5005/play/a05m/index.m3u8
-Sony Ten 3@@ten-3-india^ten-3|NoEpg@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/e860f923649becf.m3u8@@http://103.157.249.122:5005/play/a05n/index.m3u8
-Premier Sports 1@@premier-sports^premier-sports|PremierSports.uk@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/173a5b4af389537.m3u8
-Premier Sports 2@@premier-sports-2^premier-sports-2|PremierSports2.uk@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/c9747cf86596a77.m3u8
-Fox Sport 1 NL@@fox-sports-1-eredivisie^nl-fox-sports-1|foxsports1.nl@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/6009dca9169ebfa.m3u8
-Fox Sport 2 NL@@fox-sports-2-netherlands^nl-fox-sports-2|foxsports2.nl@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/e64bde85ba112d0.m3u8
-Fox Sport 3 NL@@fox-sports-3-eredivisie^nl-fox-sports-3|foxsports3.nl@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/1236845a015707e.m3u8
-Fox Sport 4 NL@@fox-sports-4-netherlands^nl-fox-sports-4|foxsports4.nl@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/e987cd56b65c195.m3u8
-Fox Sport 5 NL@@fox-sports-5-eredivisie^nl-fox-sports-5|foxsports5.nl@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/51702187c4f2a28.m3u8
+Arena Sport 1@@arena-sport-1-serbia^rs-arena-sport-1|ArenaSport1.rs@@http://85.14.32.15:8800/udp/239.10.10.51:5000
+Arena Sport 2@@arena-sport-2-serbia^rs-arena-sport-2|ArenaSport2.rs@@h@@http://85.14.32.15:8800/udp/239.10.10.52:5000
+Arena Sport 3@@arena-sport-3-serbia^rs-arena-sport-3|ArenaSport3.rs@@@@http://85.14.32.15:8800/udp/239.10.10.53:5000
+Arena Sport 4@@arena-sport-4-serbia^rs-arena-sport-4|ArenaSport4.rs@@hhttp://85.14.32.15:8800/udp/239.10.10.54:5000
 Futbol 1@@futbol-ukraine^football-1|futbol-ukr@@acestream://afc3cfb74616ca5359319f45fafb0848658439e6
 Futbol 2@@futbol-2-ukraine^football-2|futbol-plus@@acestream://9f511bff4e950c784a4e09da6e9549c465e5b15c
 Futbol 3@@futbol-3^football-3|futbol3-ukr@@acestream://3a6ea471d35d383ba088140a5685ce41793eb977
@@ -79,6 +64,26 @@ TUDN MX@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio
 TUDN US@@noEvents^noEvents|noEpg@@http://ipeteve.com/php/REGIO_PLAY_456654/regio2.php?c=tudnus&f=.m3u8
 STOP_LOOP
 
+
+Arena Sport 1@@arena-sport-1-serbia^rs-arena-sport-1|ArenaSport1.rs@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/197cf3f448f47b1.m3u8
+Arena Sport 2@@arena-sport-2-serbia^rs-arena-sport-2|ArenaSport2.rs@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/00490feacaf3646.m3u8
+Arena Sport 3@@arena-sport-3-serbia^rs-arena-sport-3|ArenaSport3.rs@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/5835b824e88919b.m3u8
+Arena Sport 4@@arena-sport-4-serbia^rs-arena-sport-4|ArenaSport4.rs@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/ce220746856cda4.m3u8
+DiGiSport 1@@digi-sport-1-romania^ro-digi-sport-1|DigiSport1.ro@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/49c69ce8f94fcc8.m3u8
+DiGiSport 2@@digi-sport-2-romania^ro-digi-sport-2|DigiSport2.ro@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/fcc6add807df1ea.m3u8
+DiGiSport 3@@digi-sport-3-romania^ro-digi-sport-3|DigiSport3.ro@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/3bc983629503a65.m3u8
+DiGiSport 4@@digi-sport-4-romania^ro-digi-sport-4|DigiSport4.ro@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/f405dc55686b645.m3u8
+Sony Six@@sony-six-india^noEvents|SonySix.in@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/01d25ef273031cf.m3u8
+Sony Ten 1@@ten-1-india^ten-1|TenSports.in@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/f56168cc96f1153.m3u8@@http://103.157.249.122:5005/play/a057/index.m3u8
+Sony Ten 2@@ten-2-india^ten-2|TenAction.in@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/6fcd730970b191d.m3u8@@http://103.157.249.122:5005/play/a05m/index.m3u8
+Sony Ten 3@@ten-3-india^ten-3|NoEpg@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/e860f923649becf.m3u8@@http://103.157.249.122:5005/play/a05n/index.m3u8
+Premier Sports 1@@premier-sports^premier-sports|PremierSports.uk@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/173a5b4af389537.m3u8
+Premier Sports 2@@premier-sports-2^premier-sports-2|PremierSports2.uk@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/c9747cf86596a77.m3u8
+Fox Sport 1 NL@@fox-sports-1-eredivisie^nl-fox-sports-1|foxsports1.nl@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/6009dca9169ebfa.m3u8
+Fox Sport 2 NL@@fox-sports-2-netherlands^nl-fox-sports-2|foxsports2.nl@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/e64bde85ba112d0.m3u8
+Fox Sport 3 NL@@fox-sports-3-eredivisie^nl-fox-sports-3|foxsports3.nl@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/1236845a015707e.m3u8
+Fox Sport 4 NL@@fox-sports-4-netherlands^nl-fox-sports-4|foxsports4.nl@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/e987cd56b65c195.m3u8
+Fox Sport 5 NL@@fox-sports-5-eredivisie^nl-fox-sports-5|foxsports5.nl@@http://4ce5e2d62ee2c10e43c709f9b87c44d5.streamhost.cc/m3u8/Sports/51702187c4f2a28.m3u8
 
 Adjara Sport TV@@adjarasport-tv^noEvents|adjara.ge@@http://receiver.adjara.com/adjarasport_live/LiveTV/index.m3u8
 CBC Sport@@cbc-sport-azerbaijan^cbc-sport|NoEpg@@http://streams2.livetv.az/azerbaijan/cbc_sport_hd/playlist.m3u8
