@@ -2,6 +2,13 @@
    "SetViewMode":"500",
    "items":[
       {
+         "title":"[COLOR gold]RAI PLAY[/COLOR]",
+         "externallink":"http://testphp765.herokuapp.com/mandrakodi/getJson.php?numFile=63",
+         "thumbnail":"https://www.enciclopedica.com/images/tv-162002_640.png",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"TG Regionali (ultima edizione)"
+      },
+      {
          "title":"[COLOR gold]TG REGIONALI[/COLOR]",
          "externallink":"http://testphp765.herokuapp.com/mandrakodi/tgr.php",
          "thumbnail":"https://www.affaritaliani.it/static/upl2017/tgr-/tgr-ape10.jpg",
