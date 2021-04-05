@@ -38,11 +38,18 @@
       "regexExpres":"data-mediaurl=\"(.*?)\""
     },
     {
-      "title":"[COLOR lime]TestRegEx[/COLOR]",
+      "title":"[COLOR lime]MedPlay[/COLOR]",
       "thumbnail":"https://us.123rf.com/450wm/alexwhite/alexwhite1501/alexwhite150104236/35605908-ic%C3%B4ne-de-test.jpg",
       "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
       "info":"No Info",
       "externallink":"http://testphp765.herokuapp.com/mandrakodi/mp.php"
+    },
+    {
+      "title":"[COLOR lime]Railay[/COLOR]",
+      "thumbnail":"https://us.123rf.com/450wm/alexwhite/alexwhite1501/alexwhite150104236/35605908-ic%C3%B4ne-de-test.jpg",
+      "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+      "info":"No Info",
+      "externallink":"http://testphp765.herokuapp.com/mandrakodi/raiplay.php"
     }  
   ]
 }
