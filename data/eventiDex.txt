@@ -1,48 +1,81 @@
-ROTHERHAM UNITED vs WYCOMBE WANDERERS|2021-04-05 16:00|Setanta Sport 2 - ACE|acestream://442d82a001a3160d895b93c1d6efb6e746faf755
-ROTHERHAM UNITED vs WYCOMBE WANDERERS|2021-04-05 16:00|Setanta Sport 2|https://185-198-56-56.livesports24.online/setantaplusru.m3u8
-ROTHERHAM UNITED vs WYCOMBE WANDERERS|2021-04-05 16:00|Setanta Sport 2 - OPZ 2|https://5-61-37-44.livesports24.online/setantaplusru.m3u8
-ROTHERHAM UNITED vs WYCOMBE WANDERERS|2021-04-05 16:00|Setanta Sport 2 - OPZ 3|http://92.43.140.200/s82/04.m3u8
-ZULTE WAREGEM vs AS EUPEN|2021-04-05 16:00|Arena Sport 2|h
-FENERBAHCE vs DENIZLISPOR|2021-04-05 18:00|Sport TV 1|http://77.83.117.60:8888/02_SPORTTV_1_720p/chunklist.m3u8
-OLIMPIC SARAJEVO vs VELEZ|2021-04-05 18:00|Arena Sport 1|http://85.14.32.15:8800/udp/239.10.10.51:5000
-ANTWERP vs ANDERLECHT|2021-04-05 18:15|Setanta Sport 1 - ACE|acestream://9ca74a6d12df5b27cbfccf369b2bac073f3cea7a
-ANTWERP vs ANDERLECHT|2021-04-05 18:15|Setanta Sport 1|https://185-198-56-56.livesports24.online/rusetantaeurasia.m3u8
-ANTWERP vs ANDERLECHT|2021-04-05 18:15|Setanta Sport 1 - OPZ 2|https://5-61-37-44.livesports24.online/rusetantaeurasia.m3u8
-ANTWERP vs ANDERLECHT|2021-04-05 18:15|Setanta Sport 1 - OPZ 3|http://92.43.140.204:80/s81/index.m3u8
-SHEFFIELD WEDNESDAY vs CARDIFF CITY|2021-04-05 18:30|Setanta Sport 2 - ACE|acestream://442d82a001a3160d895b93c1d6efb6e746faf755
-SHEFFIELD WEDNESDAY vs CARDIFF CITY|2021-04-05 18:30|Setanta Sport 2|https://185-198-56-56.livesports24.online/setantaplusru.m3u8
-SHEFFIELD WEDNESDAY vs CARDIFF CITY|2021-04-05 18:30|Setanta Sport 2 - OPZ 2|https://5-61-37-44.livesports24.online/setantaplusru.m3u8
-SHEFFIELD WEDNESDAY vs CARDIFF CITY|2021-04-05 18:30|Setanta Sport 2 - OPZ 3|http://92.43.140.200/s82/04.m3u8
-STOCKPORT COUNTY vs BROMLEY|2021-04-05 18:30|BT Sport 1|http://77.83.117.60:8888/02_BTSPORTHD_1_720p/chunklist.m3u8
-EVERTON vs CRYSTAL PALACE|2021-04-05 19:00|Sport TV 2|http://77.83.117.60:8888/02_SPORTTV_2_720p/chunklist.m3u8
-FARENSE vs SPORTING BRAGA|2021-04-05 19:45|Sport TV 3|http://77.83.117.60:8888/02_SPORTTV_3_720p/chunklist.m3u8
-BENFICA vs MARITIMO|2021-04-05 20:00|Arena Sport 3|
-BENFICA vs MARITIMO|2021-04-05 20:00|Sport 1 UA|https://185-198-56-56.livesports24.online/sport1ua.m3u8
-BENFICA vs MARITIMO|2021-04-05 20:00|Sport 1 UA - OPZ 2|https://5-61-37-44.livesports24.online/sport1ua.m3u8
-ST PAULI vs EINTRACHT BRAUNSCHWEIG|2021-04-05 20:30|BT Sport 2|http://77.83.117.60:8888/02_BTSPORTHD_2_720p/chunklist.m3u8
-AUXERRE vs LE HAVRE|2021-04-05 20:45|Arena Sport 4|hhttp://85.14.32.15:8800/udp/239.10.10.54:5000
-BARCELONA vs REAL VALLADOLID|2021-04-05 21:00|Setanta Sport 1 - ACE|acestream://9ca74a6d12df5b27cbfccf369b2bac073f3cea7a
-BARCELONA vs REAL VALLADOLID|2021-04-05 21:00|Setanta Sport 1|https://185-198-56-56.livesports24.online/rusetantaeurasia.m3u8
-BARCELONA vs REAL VALLADOLID|2021-04-05 21:00|Setanta Sport 1 - OPZ 2|https://5-61-37-44.livesports24.online/rusetantaeurasia.m3u8
-BARCELONA vs REAL VALLADOLID|2021-04-05 21:00|Setanta Sport 1 - OPZ 3|http://92.43.140.204:80/s81/index.m3u8
-WOLVERHAMPTON WANDERERS vs WEST HAM UNITED|2021-04-05 21:15|Sport TV 2|http://77.83.117.60:8888/02_SPORTTV_2_720p/chunklist.m3u8
-MOREIRENSE vs SPORTING CP|2021-04-05 22:00|Arena Sport 1|http://85.14.32.15:8800/udp/239.10.10.51:5000
-MOREIRENSE vs SPORTING CP|2021-04-05 22:00|Sport 1 UA|https://185-198-56-56.livesports24.online/sport1ua.m3u8
-MOREIRENSE vs SPORTING CP|2021-04-05 22:00|Sport 1 UA - OPZ 2|https://5-61-37-44.livesports24.online/sport1ua.m3u8
-MOREIRENSE vs SPORTING CP|2021-04-05 22:00|Sport TV 1|http://77.83.117.60:8888/02_SPORTTV_1_720p/chunklist.m3u8
-WESTERN SYDNEY WANDERERS vs CENTRAL COAST MARINERS|2021-04-06 11:05|Arena Sport 4|hhttp://85.14.32.15:8800/udp/239.10.10.54:5000
-WESTERN SYDNEY WANDERERS vs CENTRAL COAST MARINERS|2021-04-06 11:05|BT Sport 1|http://77.83.117.60:8888/02_BTSPORTHD_1_720p/chunklist.m3u8
-BORAC BANJA LUKA vs KLIS BUTUROVIC POLJE|2021-04-06 18:00|Arena Sport 1|http://85.14.32.15:8800/udp/239.10.10.51:5000
-TRABZONSPOR vs KAYSERISPOR|2021-04-06 18:00|Sport TV 2|http://77.83.117.60:8888/02_SPORTTV_2_720p/chunklist.m3u8
-MONACO vs METZ|2021-04-06 18:45|Sport TV 3|http://77.83.117.60:8888/02_SPORTTV_3_720p/chunklist.m3u8
-CASA PIA vs CHAVES|2021-04-06 20:00|Sport TV 1|http://77.83.117.60:8888/02_SPORTTV_1_720p/chunklist.m3u8
-NORWICH CITY vs HUDDERSFIELD TOWN|2021-04-06 20:45|Setanta Sport 2 - ACE|acestream://442d82a001a3160d895b93c1d6efb6e746faf755
-NORWICH CITY vs HUDDERSFIELD TOWN|2021-04-06 20:45|Setanta Sport 2|https://185-198-56-56.livesports24.online/setantaplusru.m3u8
-NORWICH CITY vs HUDDERSFIELD TOWN|2021-04-06 20:45|Setanta Sport 2 - OPZ 2|https://5-61-37-44.livesports24.online/setantaplusru.m3u8
-NORWICH CITY vs HUDDERSFIELD TOWN|2021-04-06 20:45|Setanta Sport 2 - OPZ 3|http://92.43.140.200/s82/04.m3u8
-MANCHESTER CITY vs BORUSSIA DORTMUND|2021-04-06 21:00|Arena Sport 2|h
+MANCHESTER CITY vs BORUSSIA DORTMUND|2021-04-06 21:00|Arena Sport 2|http://85.14.32.15:8800/udp/239.10.10.51:5000
+MANCHESTER CITY vs BORUSSIA DORTMUND|2021-04-06 21:00|BeIn Sport|https://33872.liveplay.myqcloud.com/live/33872_ph-live-1341783454079488-2053764.m3u8
+MANCHESTER CITY vs BORUSSIA DORTMUND|2021-04-06 21:00|ESPN Sport|http://23.237.78.54/live-1000/263/playlist.m3u8
+MANCHESTER CITY vs BORUSSIA DORTMUND|2021-04-06 21:00|FOX Sport|http://balancer1.ottmex.com:8081/tecno/FoxSports2.BKR/chunks.m3u8
 REAL MADRID vs LIVERPOOL|2021-04-06 21:00|Arena Sport 1|http://85.14.32.15:8800/udp/239.10.10.51:5000
 REAL MADRID vs LIVERPOOL|2021-04-06 21:00|BT Sport 2|http://77.83.117.60:8888/02_BTSPORTHD_2_720p/chunklist.m3u8
+REAL MADRID vs LIVERPOOL|2021-04-06 21:00|BT Sport 2|http://main.mazystreams.xyz:80/live/streamsd/chunks.m3u8
 REAL MADRID vs LIVERPOOL|2021-04-06 21:00|Belarus 5 - ACE|acestream://f7d884a3131387319b30bf5fac036445d3768c30
 REAL MADRID vs LIVERPOOL|2021-04-06 21:00|Belarus 5|https://185-198-56-56.livesports24.online/belarusss5.m3u8
 REAL MADRID vs LIVERPOOL|2021-04-06 21:00|Belarus 5 - OPZ 2|https://5-61-37-44.livesports24.online/belarusss5.m3u8
+EMELEC vs MACARA|2021-04-07 00:15|Sport TV 1|http://77.83.117.60:8888/02_SPORTTV_1_720p/chunklist.m3u8
+SAN LORENZO vs SANTOS|2021-04-07 02:30|Arena Sport 2|h
+SAN LORENZO vs SANTOS|2021-04-07 02:30|Sport TV 1|http://77.83.117.60:8888/02_SPORTTV_1_720p/chunklist.m3u8
+SYDNEY FC vs PERTH GLORY|2021-04-07 11:05|BT Sport 2|http://77.83.117.60:8888/02_BTSPORTHD_2_720p/chunklist.m3u8
+TUZLA CITY vs SARAJEVO|2021-04-07 14:00|Arena Sport 1|http://85.14.32.15:8800/udp/239.10.10.51:5000
+SEDAN vs ANGERS SCO|2021-04-07 16:45|Match Futbol 3 - ACE|acestream://485546bddda35f4d0ab5aba150978f600614c1a6
+SEDAN vs ANGERS SCO|2021-04-07 16:45|Match Futbol 3|https://185-198-56-56.livesports24.online/rumatchf3.m3u8
+SEDAN vs ANGERS SCO|2021-04-07 16:45|Match Futbol 3 - OPZ 2|https://5-61-37-44.livesports24.online/rumatchf3.m3u8
+SEDAN vs ANGERS SCO|2021-04-07 16:45|Sport TV 2|http://77.83.117.60:8888/02_SPORTTV_2_720p/chunklist.m3u8
+CRVENA ZVEZDA vs PARTIZAN|2021-04-07 18:00|Arena Sport 1|http://85.14.32.15:8800/udp/239.10.10.51:5000
+NEMAN GRODNO vs SHAKHTYOR|2021-04-07 18:00|Sport 1 UA|https://185-198-56-56.livesports24.online/sport1ua.m3u8
+NEMAN GRODNO vs SHAKHTYOR|2021-04-07 18:00|Sport 1 UA - OPZ 2|https://5-61-37-44.livesports24.online/sport1ua.m3u8
+ZHEMCHUZHINA SOCHI vs LOKOMOTIV MOSKVA|2021-04-07 18:00|Match TV - ACE|acestream://493cdbeb9463e19bb2ec72e60357d60072e3f908
+ZHEMCHUZHINA SOCHI vs LOKOMOTIV MOSKVA|2021-04-07 18:00|Match TV|https://185-198-56-56.livesports24.online/ooomatch.m3u8
+ZHEMCHUZHINA SOCHI vs LOKOMOTIV MOSKVA|2021-04-07 18:00|Match TV - OPZ 2|https://5-61-37-44.livesports24.online/ooomatch.m3u8
+JUVENTUS vs NAPOLI|2021-04-07 18:20|Sport TV 1|http://77.83.117.60:8888/02_SPORTTV_1_720p/chunklist.m3u8
+JAHN REGENSBURG vs WERDER BREMEN|2021-04-07 18:30|Arena Sport 4|hhttp://85.14.32.15:8800/udp/239.10.10.54:5000
+JAHN REGENSBURG vs WERDER BREMEN|2021-04-07 18:30|Match Futbol 2 - ACE|acestream://636aacd9b73d46399fdc525ec3cb7e243a271d1b
+JAHN REGENSBURG vs WERDER BREMEN|2021-04-07 18:30|Match Futbol 2|https://185-198-56-56.livesports24.online/mfootball2rus.m3u8
+JAHN REGENSBURG vs WERDER BREMEN|2021-04-07 18:30|Match Futbol 2 - OPZ 2|https://5-61-37-44.livesports24.online/mfootball2rus.m3u8
+JAHN REGENSBURG vs WERDER BREMEN|2021-04-07 18:30|Sport TV 3|http://77.83.117.60:8888/02_SPORTTV_3_720p/chunklist.m3u8
+INTER vs SASSUOLO|2021-04-07 18:45|Arena Sport 3|
+INTER vs SASSUOLO|2021-04-07 18:45|Futbol 1 - ACE|acestream://afc3cfb74616ca5359319f45fafb0848658439e6
+INTER vs SASSUOLO|2021-04-07 18:45|Futbol 1|https://185-198-56-56.livesports24.online/uafootballua1.m3u8
+INTER vs SASSUOLO|2021-04-07 18:45|Futbol 1 - OPZ 2|https://5-61-37-44.livesports24.online/uafootballua1.m3u8
+INTER vs SASSUOLO|2021-04-07 18:45|Match Futbol 3 - ACE|acestream://485546bddda35f4d0ab5aba150978f600614c1a6
+INTER vs SASSUOLO|2021-04-07 18:45|Match Futbol 3|https://185-198-56-56.livesports24.online/rumatchf3.m3u8
+INTER vs SASSUOLO|2021-04-07 18:45|Match Futbol 3 - OPZ 2|https://5-61-37-44.livesports24.online/rumatchf3.m3u8
+INTER vs SASSUOLO|2021-04-07 18:45|Setanta Sport 2 - ACE|acestream://442d82a001a3160d895b93c1d6efb6e746faf755
+INTER vs SASSUOLO|2021-04-07 18:45|Setanta Sport 2|https://185-198-56-56.livesports24.online/setantaplusru.m3u8
+INTER vs SASSUOLO|2021-04-07 18:45|Setanta Sport 2 - OPZ 2|https://5-61-37-44.livesports24.online/setantaplusru.m3u8
+INTER vs SASSUOLO|2021-04-07 18:45|Setanta Sport 2 - OPZ 3|http://92.43.140.200/s82/04.m3u8
+INTER vs SASSUOLO|2021-04-07 18:45|Sport TV 2|http://77.83.117.60:8888/02_SPORTTV_2_720p/chunklist.m3u8
+JUVENTUS vs NAPOLI|2021-04-07 18:45|Arena Sport 2|h
+JUVENTUS vs NAPOLI|2021-04-07 18:45|Futbol 3 - ACE|acestream://3a6ea471d35d383ba088140a5685ce41793eb977
+JUVENTUS vs NAPOLI|2021-04-07 18:45|Futbol 3|https://185-198-56-56.livesports24.online/football3ua.m3u8
+JUVENTUS vs NAPOLI|2021-04-07 18:45|Futbol 3 - OPZ 2|https://5-61-37-44.livesports24.online/football3ua.m3u8
+JUVENTUS vs NAPOLI|2021-04-07 18:45|Match Futbol 1 - ACE|acestream://2b37d683900749f8ba7a520e3f06f012127980d4
+JUVENTUS vs NAPOLI|2021-04-07 18:45|Match Futbol 1|https://185-198-56-56.livesports24.online/ntvmatchfoot1.m3u8
+JUVENTUS vs NAPOLI|2021-04-07 18:45|Match Futbol 1 - OPZ 2|https://5-61-37-44.livesports24.online/ntvmatchfoot1.m3u8
+JUVENTUS vs NAPOLI|2021-04-07 18:45|Setanta Sport 1 - ACE|acestream://9ca74a6d12df5b27cbfccf369b2bac073f3cea7a
+JUVENTUS vs NAPOLI|2021-04-07 18:45|Setanta Sport 1|https://185-198-56-56.livesports24.online/rusetantaeurasia.m3u8
+JUVENTUS vs NAPOLI|2021-04-07 18:45|Setanta Sport 1 - OPZ 2|https://5-61-37-44.livesports24.online/rusetantaeurasia.m3u8
+JUVENTUS vs NAPOLI|2021-04-07 18:45|Setanta Sport 1 - OPZ 3|http://92.43.140.204:80/s81/index.m3u8
+BAYERN M NCHEN vs PSG|2021-04-07 21:00|Belarus 5 - ACE|acestream://f7d884a3131387319b30bf5fac036445d3768c30
+BAYERN M NCHEN vs PSG|2021-04-07 21:00|Belarus 5|https://185-198-56-56.livesports24.online/belarusss5.m3u8
+BAYERN M NCHEN vs PSG|2021-04-07 21:00|Belarus 5 - OPZ 2|https://5-61-37-44.livesports24.online/belarusss5.m3u8
+BAYERN M NCHEN vs PSG|2021-04-07 21:00|Futbol 2 - ACE|acestream://9f511bff4e950c784a4e09da6e9549c465e5b15c
+BAYERN M NCHEN vs PSG|2021-04-07 21:00|Futbol 2|https://185-198-56-56.livesports24.online/fooootball2.m3u8
+BAYERN M NCHEN vs PSG|2021-04-07 21:00|Futbol 2 - OPZ 2|https://5-61-37-44.livesports24.online/fooootball2.m3u8
+BAYERN M NCHEN vs PSG|2021-04-07 21:00|Match Futbol 2 - ACE|acestream://636aacd9b73d46399fdc525ec3cb7e243a271d1b
+BAYERN M NCHEN vs PSG|2021-04-07 21:00|Match Futbol 2|https://185-198-56-56.livesports24.online/mfootball2rus.m3u8
+BAYERN M NCHEN vs PSG|2021-04-07 21:00|Match Futbol 2 - OPZ 2|https://5-61-37-44.livesports24.online/mfootball2rus.m3u8
+BAYERN M NCHEN vs PSG|2021-04-07 21:00|Match TV - ACE|acestream://493cdbeb9463e19bb2ec72e60357d60072e3f908
+BAYERN M NCHEN vs PSG|2021-04-07 21:00|Match TV|https://185-198-56-56.livesports24.online/ooomatch.m3u8
+BAYERN M NCHEN vs PSG|2021-04-07 21:00|Match TV - OPZ 2|https://5-61-37-44.livesports24.online/ooomatch.m3u8
+PORTO vs CHELSEA|2021-04-07 21:00|Arena Sport 1|http://85.14.32.15:8800/udp/239.10.10.51:5000
+PORTO vs CHELSEA|2021-04-07 21:00|BT Sport 2|http://77.83.117.60:8888/02_BTSPORTHD_2_720p/chunklist.m3u8
+PORTO vs CHELSEA|2021-04-07 21:00|Futbol 1 - ACE|acestream://afc3cfb74616ca5359319f45fafb0848658439e6
+PORTO vs CHELSEA|2021-04-07 21:00|Futbol 1|https://185-198-56-56.livesports24.online/uafootballua1.m3u8
+PORTO vs CHELSEA|2021-04-07 21:00|Futbol 1 - OPZ 2|https://5-61-37-44.livesports24.online/uafootballua1.m3u8
+PORTO vs CHELSEA|2021-04-07 21:00|Match Futbol 1 - ACE|acestream://2b37d683900749f8ba7a520e3f06f012127980d4
+PORTO vs CHELSEA|2021-04-07 21:00|Match Futbol 1|https://185-198-56-56.livesports24.online/ntvmatchfoot1.m3u8
+PORTO vs CHELSEA|2021-04-07 21:00|Match Futbol 1 - OPZ 2|https://5-61-37-44.livesports24.online/ntvmatchfoot1.m3u8
+REAL SOCIEDAD vs ATHLETIC CLUB|2021-04-07 21:00|Match Futbol 3 - ACE|acestream://485546bddda35f4d0ab5aba150978f600614c1a6
+REAL SOCIEDAD vs ATHLETIC CLUB|2021-04-07 21:00|Match Futbol 3|https://185-198-56-56.livesports24.online/rumatchf3.m3u8
+REAL SOCIEDAD vs ATHLETIC CLUB|2021-04-07 21:00|Match Futbol 3 - OPZ 2|https://5-61-37-44.livesports24.online/rumatchf3.m3u8
+REAL SOCIEDAD vs ATHLETIC CLUB|2021-04-07 21:00|Setanta Sport 1 - ACE|acestream://9ca74a6d12df5b27cbfccf369b2bac073f3cea7a
+REAL SOCIEDAD vs ATHLETIC CLUB|2021-04-07 21:00|Setanta Sport 1|https://185-198-56-56.livesports24.online/rusetantaeurasia.m3u8
+REAL SOCIEDAD vs ATHLETIC CLUB|2021-04-07 21:00|Setanta Sport 1 - OPZ 2|https://5-61-37-44.livesports24.online/rusetantaeurasia.m3u8
+REAL SOCIEDAD vs ATHLETIC CLUB|2021-04-07 21:00|Setanta Sport 1 - OPZ 3|http://92.43.140.204:80/s81/index.m3u8
