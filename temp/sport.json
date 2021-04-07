@@ -42,11 +42,11 @@
          "info":"Wiseplay List"
       },
       {
-         "enabled":0,
          "title":"[COLOR lime]WWE MANIACS[/COLOR][CR][COLOR aqua](by @ilblasco88)[/COLOR]",
          "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=15",
          "thumbnail":"http://watchwrestling.la/wp-content/uploads/2019/10/AEW-Wrestling-Dynamite.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "enabled":1,
          "info":"Wiseplay List"
       }
    ]
