@@ -1,19 +1,19 @@
-Belarus 5@@belarus-5^belarus-5|noEpg@@https://185-198-56-56.livesports24.online/belarusss5.m3u8|https://5-61-37-44.livesports24.online/belarusss5.m3u8
-EuroSport 1 RU@@noEvents^noEvents|noEpg@@https://185-198-56-56.livesports24.online/eurosport1ru.m3u8|https://5-61-37-44.livesports24.online/eurosport1ru.m3u8
-EuroSport 2 RU@@noEvents^noEvents|noEpg@@https://185-198-56-56.livesports24.online/ruseurosport2.m3u8|https://5-61-37-44.livesports24.online/ruseurosport2.m3u8
-Futbol 1@@futbol-ukraine^football-1|futbol-ukr@@https://185-198-56-56.livesports24.online/uafootballua1.m3u8|https://5-61-37-44.livesports24.online/uafootballua1.m3u8
-Futbol 2@@futbol-2-ukraine^football-2|futbol-plus@@https://185-198-56-56.livesports24.online/fooootball2.m3u8|https://5-61-37-44.livesports24.online/fooootball2.m3u8
-Futbol 3@@futbol-3^football-3|futbol3-ukr@@https://185-198-56-56.livesports24.online/football3ua.m3u8|https://5-61-37-44.livesports24.online/football3ua.m3u8
-Match Futbol 1@@match-tv-football-1-russia^match-football-1|ntv-football-1@@https://185-198-56-56.livesports24.online/ntvmatchfoot1.m3u8|https://5-61-37-44.livesports24.online/ntvmatchfoot1.m3u8
-Match Futbol 2@@match-tv-football-2-russia^match-football-2|ntv-football-2@@https://185-198-56-56.livesports24.online/mfootball2rus.m3u8|https://5-61-37-44.livesports24.online/mfootball2rus.m3u8
-Match Futbol 3@@match-tv-football-3-russia^match-football-3|ntv-football-3@@https://185-198-56-56.livesports24.online/rumatchf3.m3u8|https://5-61-37-44.livesports24.online/rumatchf3.m3u8
-Match Igra@@match-game-russia^match-game|ntv-game@@https://185-198-56-56.livesports24.online/migra.m3u8|https://5-61-37-44.livesports24.online/migra.m3u8
-Match TV@@match-tv-game-russia^match-tv|match@@https://185-198-56-56.livesports24.online/ooomatch.m3u8|https://5-61-37-44.livesports24.online/ooomatch.m3u8
-Match Arena@@NoEvents^NoEvents|NoEpg@@https://185-198-56-56.livesports24.online/rumatcharena.m3u8|https://5-61-37-44.livesports24.online/rumatcharena.m3u8
-Setanta Sport 1@@setanta-sports-euro-asia^@ua-setanta-eurasia|setanta-sport@@https://185-198-56-56.livesports24.online/rusetantaeurasia.m3u8|https://5-61-37-44.livesports24.online/rusetantaeurasia.m3u8|http://92.43.140.204:80/s81/index.m3u8
-Setanta Sport 2@@setanta-sports-eurasia-plus^ua-setanta-eurasia-plus|setanta-sport-plus@@https://185-198-56-56.livesports24.online/setantaplusru.m3u8|https://5-61-37-44.livesports24.online/setantaplusru.m3u8|http://92.43.140.200/s82/04.m3u8
-Setanta Sport UA@@setanta-sports-ukraine^@ua-setanta-eurasia|setanta-sport@@https://185-198-56-56.livesports24.online/setantaukraine.m3u8|https://5-61-37-44.livesports24.online/setantaukraine.m3u8
-Sport 1 UA@@sport-1-ukraine^sport-1-uakraine|noEpg@@https://185-198-56-56.livesports24.online/sport1ua.m3u8|https://5-61-37-44.livesports24.online/sport1ua.m3u8
+Belarus 5@@belarus-5^belarus-5|noEpg@@https://95-213-224-173.livesports24.online/belarusss5.m3u8|https://5-61-37-44.livesports24.online/belarusss5.m3u8
+EuroSport 1 RU@@noEvents^noEvents|noEpg@@https://95-213-224-173.livesports24.online/eurosport1ru.m3u8|https://5-61-37-44.livesports24.online/eurosport1ru.m3u8
+EuroSport 2 RU@@noEvents^noEvents|noEpg@@https://95-213-224-173.livesports24.online/ruseurosport2.m3u8|https://5-61-37-44.livesports24.online/ruseurosport2.m3u8
+Futbol 1@@futbol-ukraine^football-1|futbol-ukr@@https://95-213-224-173.livesports24.online/uafootballua1.m3u8|https://5-61-37-44.livesports24.online/uafootballua1.m3u8
+Futbol 2@@futbol-2-ukraine^football-2|futbol-plus@@https://95-213-224-173.livesports24.online/fooootball2.m3u8|https://5-61-37-44.livesports24.online/fooootball2.m3u8
+Futbol 3@@futbol-3^football-3|futbol3-ukr@@https://95-213-224-173.livesports24.online/football3ua.m3u8|https://5-61-37-44.livesports24.online/football3ua.m3u8
+Match Futbol 1@@match-tv-football-1-russia^match-football-1|ntv-football-1@@https://95-213-224-173.livesports24.online/ntvmatchfoot1.m3u8|https://5-61-37-44.livesports24.online/ntvmatchfoot1.m3u8
+Match Futbol 2@@match-tv-football-2-russia^match-football-2|ntv-football-2@@https://95-213-224-173.livesports24.online/mfootball2rus.m3u8|https://5-61-37-44.livesports24.online/mfootball2rus.m3u8
+Match Futbol 3@@match-tv-football-3-russia^match-football-3|ntv-football-3@@https://95-213-224-173.livesports24.online/rumatchf3.m3u8|https://5-61-37-44.livesports24.online/rumatchf3.m3u8
+Match Igra@@match-game-russia^match-game|ntv-game@@https://95-213-224-173.livesports24.online/migra.m3u8|https://5-61-37-44.livesports24.online/migra.m3u8
+Match TV@@match-tv-game-russia^match-tv|match@@https://95-213-224-173.livesports24.online/ooomatch.m3u8|https://5-61-37-44.livesports24.online/ooomatch.m3u8
+Match Arena@@NoEvents^NoEvents|NoEpg@@https://95-213-224-173.livesports24.online/rumatcharena.m3u8|https://5-61-37-44.livesports24.online/rumatcharena.m3u8
+Setanta Sport 1@@setanta-sports-euro-asia^@ua-setanta-eurasia|setanta-sport@@https://95-213-224-173.livesports24.online/rusetantaeurasia.m3u8|https://5-61-37-44.livesports24.online/rusetantaeurasia.m3u8|http://92.43.140.204:80/s81/index.m3u8
+Setanta Sport 2@@setanta-sports-eurasia-plus^ua-setanta-eurasia-plus|setanta-sport-plus@@https://95-213-224-173.livesports24.online/setantaplusru.m3u8|https://5-61-37-44.livesports24.online/setantaplusru.m3u8|http://92.43.140.200/s82/04.m3u8
+Setanta Sport UA@@setanta-sports-ukraine^@ua-setanta-eurasia|setanta-sport@@https://95-213-224-173.livesports24.online/setantaukraine.m3u8|https://5-61-37-44.livesports24.online/setantaukraine.m3u8
+Sport 1 UA@@sport-1-ukraine^sport-1-uakraine|noEpg@@https://95-213-224-173.livesports24.online/sport1ua.m3u8|https://5-61-37-44.livesports24.online/sport1ua.m3u8
 BT Sport 1@@bt-sport-1-uk^bt-sport-1|BTSport1.uk@@http://77.83.117.60:8888/02_BTSPORTHD_1_720p/chunklist.m3u8
 BT Sport 2@@bt-sport-2-uk^bt-sport-2|BTSport2.uk@@http://77.83.117.60:8888/02_BTSPORTHD_2_720p/chunklist.m3u8
 BT Sport 3@@bt-sport-3-uk^bt-sport-3|BTSport2.uk@@http://77.83.117.60:8888/02_BTSPORTHD_3_720p/chunklist.m3u8
@@ -24,9 +24,9 @@ Sport TV 2@@sport-tv2^pt-sport-tv-2|sporttv2.pt@@http://77.83.117.60:8888/02_SPO
 Sport TV 3@@sport-tv3^pt-sport-tv-3|sporttv3.pt@@http://77.83.117.60:8888/02_SPORTTV_3_720p/chunklist.m3u8
 Sport TV 4@@sport-tv4^pt-sport-tv-4|sporttv4.pt@@http://77.83.117.60:8888/02_SPORTTV_4_720p/chunklist.m3u8
 Arena Sport 1@@arena-sport-1-serbia^rs-arena-sport-1|ArenaSport1.rs@@http://85.14.32.15:8800/udp/239.10.10.51:5000
-Arena Sport 2@@arena-sport-2-serbia^rs-arena-sport-2|ArenaSport2.rs@@h@@http://85.14.32.15:8800/udp/239.10.10.52:5000
-Arena Sport 3@@arena-sport-3-serbia^rs-arena-sport-3|ArenaSport3.rs@@@@http://85.14.32.15:8800/udp/239.10.10.53:5000
-Arena Sport 4@@arena-sport-4-serbia^rs-arena-sport-4|ArenaSport4.rs@@hhttp://85.14.32.15:8800/udp/239.10.10.54:5000
+Arena Sport 2@@arena-sport-2-serbia^rs-arena-sport-2|ArenaSport2.rs@@http://85.14.32.15:8800/udp/239.10.10.52:5000
+Arena Sport 3@@arena-sport-3-serbia^rs-arena-sport-3|ArenaSport3.rs@@http://85.14.32.15:8800/udp/239.10.10.53:5000
+Arena Sport 4@@arena-sport-4-serbia^rs-arena-sport-4|ArenaSport4.rs@@http://85.14.32.15:8800/udp/239.10.10.54:5000
 Futbol 1@@futbol-ukraine^football-1|futbol-ukr@@acestream://afc3cfb74616ca5359319f45fafb0848658439e6
 Futbol 2@@futbol-2-ukraine^football-2|futbol-plus@@acestream://9f511bff4e950c784a4e09da6e9549c465e5b15c
 Futbol 3@@futbol-3^football-3|futbol3-ukr@@acestream://3a6ea471d35d383ba088140a5685ce41793eb977
