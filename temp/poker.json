@@ -1,0 +1,21 @@
+{
+    "SetViewMode":"500",
+    "items":[
+       {
+            "title":"[COLOR lime]POKER STARS[/COLOR]",
+            "yatse":"https://www.youtube.com/watch?v=lUbcaQ6x9nY",
+            "thumbnail":"https://i.ytimg.com/vi/lUbcaQ6x9nY/hqdefault.jpg",
+            "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+            "enabled":1,
+            "info":"WWE"
+       },
+       {
+            "title":"[COLOR lime]PARTY POKER TV[/COLOR]",
+            "yatse":"https://www.youtube.com/watch?v=gLFROX7xGRQ",
+            "thumbnail":"https://i.ytimg.com/vi/gLFROX7xGRQ/hqdefault.jpg",
+            "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+            "enabled":1,
+            "info":"WWE"
+        }
+    ]
+ }
