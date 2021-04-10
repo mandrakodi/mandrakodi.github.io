@@ -7,7 +7,7 @@
             "thumbnail":"https://i.ytimg.com/vi/lUbcaQ6x9nY/hqdefault.jpg",
             "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
             "enabled":1,
-            "info":"WWE"
+            "info":"POKER STARS"
        },
        {
             "title":"[COLOR lime]PARTY POKER TV[/COLOR]",
@@ -15,7 +15,23 @@
             "thumbnail":"https://i.ytimg.com/vi/gLFROX7xGRQ/hqdefault.jpg",
             "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
             "enabled":1,
-            "info":"WWE"
+            "info":"PARTY POKER TV"
+        },
+       {
+            "title":"[COLOR lime]LET'S POKER TV[/COLOR]",
+            "yatse":"https://www.twitch.tv/letspoker247",
+            "thumbnail":"https://static-cdn.jtvnw.net/jtv_user_pictures/bcd4eaa1-c708-46ad-9595-7c28b0ed5f71-profile_image-300x300.png",
+            "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+            "enabled":1,
+            "info":"LET'S POKER TV"
+        },
+       {
+            "title":"[COLOR lime]WORLD POKER TOUR[/COLOR]",
+            "yatse":"https://www.twitch.tv/worldpokertour247",
+            "thumbnail":"https://pnimg.net/w/articles/4/525/328a49bb81.jpg",
+            "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+            "enabled":1,
+            "info":"WORLD POKER TOUR"
         }
     ]
  }
