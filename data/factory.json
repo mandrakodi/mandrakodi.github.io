@@ -16,8 +16,8 @@
       "info":"WWE"
     },
     {
-      "title":"[COLOR lime]KOD SERIETV ONLINE[/COLOR]",
-      "link":"plugin://plugin.video.kod/?ewogICAgImFjdGlvbiI6ICJwZWxpY3VsYXMiLCAKICAgICJhcmdzIjogInF1YWxjb3NhIiwgCiAgICAiY2hhbm5lbCI6ICJzZXJpZXR2b25saW5lIiwgCiAgICAiZXh0cmEiOiAidHZzaG93IiwgCiAgICAiaW5mb0xhYmVscyI6IHsKICAgICAgICAibWVkaWF0eXBlIjogInR2c2hvdyIKICAgIH0sIAogICAgInRodW1ibmFpbCI6ICJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20va29kaW9uZGVtYW5kL21lZGlhL21hc3Rlci90aGVtZXMvZGVmYXVsdC90aHVtYl90dnNob3cucG5nIiwgCiAgICAidGl0bGUiOiAiXHUyMDIyXHUyMDIyIFR1dHRlIiwgCiAgICAidXJsIjogImh0dHBzOi8vc2VyaWV0dm9ubGluZS5waW5rL2xpc3RhLXNlcmllLXR2LyIKfQ%3d%3d",
+      "title":"[COLOR lime]FILM[/COLOR]",
+      "externallink":"https://mandrakodi.github.io/data/cinema1.json",
       "plgfolder":"on",
       "thumbnail":"https://infotelematico.com/wp-content/uploads/Kodi-on-Demand-1.png",
       "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
