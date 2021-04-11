@@ -16,8 +16,8 @@
       "info":"WWE"
     },
     {
-      "title":"[COLOR lime]FILM[/COLOR]",
-      "externallink":"https://mandrakodi.github.io/data/cinema1.json",
+      "title":"[COLOR lime]KOD ENTER HERE[/COLOR]",
+      "link":"plugin://plugin.video.kod/",
       "plgfolder":"on",
       "thumbnail":"https://infotelematico.com/wp-content/uploads/Kodi-on-Demand-1.png",
       "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
