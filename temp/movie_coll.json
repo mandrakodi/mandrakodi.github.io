@@ -34,12 +34,19 @@
          "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=26",
          "thumbnail":"https://e7.pngegg.com/pngimages/234/107/png-clipart-altrimenti-ci-arrabbiamo-il-cinema-di-bud-spencer-e-terence-hill-double-trouble-bud-spencer-a-terence-hill-film-others-television-film-thumbnail.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"MONTALBANO"
+         "info":"BUD & TERENCE"
       },
       {
          "title":"[COLOR yellow]TOTO'[/COLOR]",
          "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=27",
          "thumbnail":"https://www.partinicolive.it/home1/wp-content/uploads/2017/12/toto-sindaco-1.png",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"TOTO'"
+      },
+      {
+         "title":"[COLOR lime]YOUTUBE MOVIES[/COLOR][CR][COLOR aqua](by @fatshotty)[/COLOR]",
+         "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=28",
+         "thumbnail":"https://cdn.osxdaily.com/wp-content/uploads/2018/11/watch-full-movies-youtube-610x456.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"MONTALBANO"
       }
