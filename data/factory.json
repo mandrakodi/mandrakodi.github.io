@@ -62,10 +62,10 @@
     },
     {
       "title":"[COLOR lime]TORRENT[/COLOR]",
-      "thumbnail":"https://us.123rf.com/450wm/alexwhite/alexwhite1501/alexwhite150104236/35605908-ic%C3%B4ne-de-test.jpg",
+      "thumbnail":"https://e7.pngegg.com/pngimages/281/494/png-clipart-4k-resolution-display-resolution-ultra-high-definition-television-computer-monitors-logo-others-angle-text-thumbnail.png",
       "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
       "info":"No Info",
-      "link":"plugin://plugin.video.elementum/play?uri=magnet:?xt=urn:btih:d55a5ebe5e15502533087c420324a5b1f7b2220a"
+      "externallink":"https://mandrakodi.github.io/temp/tor4k"
     },
     {
       "title":"[COLOR lime]RaiPlay[/COLOR]",
