@@ -1,0 +1,18 @@
+{
+    "items":[
+        {
+          "title":"[COLOR lime]MOVIES 4K[/COLOR]",
+          "thumbnail":"https://e7.pngegg.com/pngimages/281/494/png-clipart-4k-resolution-display-resolution-ultra-high-definition-television-computer-monitors-logo-others-angle-text-thumbnail.png",
+          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+          "info":"4K Torrent Movies",
+          "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=29"
+        },
+       {
+          "title":"[COLOR lime]CARTOON[\/COLOR]",
+          "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=31",
+          "thumbnail":"https://e7.pngegg.com/pngimages/757/111/png-clipart-ankoku-daishogun-mazinger-z-mikenes-drawing-anime-mazinga-horse-mammal-thumbnail.png",
+          "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+          "info":"TORRENT TOONS"
+       }
+    ]
+}
