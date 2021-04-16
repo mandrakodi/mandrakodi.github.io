@@ -66,6 +66,15 @@
          "info":"POKER"
       },
       {
+         "title":"[COLOR lime]LAST MINUTE[/COLOR]",
+         "externallink":"http://mandrakodi.000webhostapp.com/addEvent.php?mode=read",
+         "thumbnail":"https://asterixclub.files.wordpress.com/2020/06/circolo-asterix-club-montebelluna-torneo-2020-poker-chip-leader-opening-treviso.jpg",
+         "thumbnail":"https://chichestergolf.com/wp-content/uploads/2018/05/last-minute-availability.png",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "enabled":1,
+         "info":"POKER"
+	   },
+      {
          "title":"[COLOR lime]PLAY MY LINK[/COLOR]",
          "externallink2":"http://ercavalierenero.herokuapp.com/mandrakodi/playLink.php?url=",
          "thumbnail":"https://i.kym-cdn.com/photos/images/facebook/000/925/410/4cc.jpg",
