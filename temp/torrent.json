@@ -1,5 +1,4 @@
 {
-    "SetViewMode":"500",
     "items":[
         {
           "title":"[COLOR lime]MOVIES 4K[/COLOR]",
@@ -8,12 +7,19 @@
           "info":"4K Torrent Movies",
           "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=29"
         },
-       {
-          "title":"[COLOR lime]CARTOON[\/COLOR]",
-          "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=31",
-          "thumbnail":"https://e7.pngegg.com/pngimages/757/111/png-clipart-ankoku-daishogun-mazinger-z-mikenes-drawing-anime-mazinga-horse-mammal-thumbnail.png",
-          "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
-          "info":"TORRENT TOONS"
-       }
+        {
+           "title":"[COLOR lime]CARTOON[\/COLOR]",
+           "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=31",
+           "thumbnail":"https://e7.pngegg.com/pngimages/757/111/png-clipart-ankoku-daishogun-mazinger-z-mikenes-drawing-anime-mazinga-horse-mammal-thumbnail.png",
+           "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+           "info":"TORRENT TOONS"
+        },
+        {
+           "title":"[COLOR lime]CARTOON (AMNIS)[\/COLOR]",
+           "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=32",
+           "thumbnail":"https://e7.pngegg.com/pngimages/165/855/png-clipart-daisuke-umon-super-robot-phantom-f-harlock-ii-animation-chogokin-grendizer-fictional-character-painting-thumbnail.png",
+           "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+           "info":"TORRENT TOONS"
+        }
     ]
 }
