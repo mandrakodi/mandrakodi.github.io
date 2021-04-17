@@ -57,6 +57,13 @@
          "thumbnail":"https://www.radicalifvg.org/wp/wp-content/uploads/2012/04/radioradicale.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Archivo Radio Radicale"
+      },
+      {
+         "title":"[COLOR gold]Sheep In The Big City[/COLOR]",
+         "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=64",
+         "thumbnail":"https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/Sheepinthebigcity.png/250px-Sheepinthebigcity.png",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Meteo"
       }
    ]
 }
