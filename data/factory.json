@@ -16,12 +16,11 @@
       "info":"WWE"
     },
     {
-      "title":"[COLOR yellow]KOD LOG[/COLOR]",
-      "link":"plugin://plugin.video.kod/?ewogICAgImFjdGlvbiI6ICJyZXBvcnRfc2VuZCIsIAogICAgImNoYW5uZWwiOiAic2V0dGluZyIsIAogICAgImZvbGRlciI6IGZhbHNlLCAKICAgICJpbmZvTGFiZWxzIjoge30sIAogICAgInRodW1ibmFpbCI6ICJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20va29kaW9uZGVtYW5kL21lZGlhL21hc3Rlci90aGVtZXMvZGVmYXVsdC90aHVtYl9lcnJvci5wbmciLCAKICAgICJ0aXRsZSI6ICIzKSBjbGljY2EgcXVpIHBlciBjcmVhcmUgaWwgcmVwb3J0Igp9",
-      "plgfolder":"on",
-      "thumbnail":"https://infotelematico.com/wp-content/uploads/Kodi-on-Demand-1.png",
+      "title":"[COLOR yellow]HELP[/COLOR]",
+      "externallink":"https://mandrakodi.github.io/temp/logger.json",
+      "thumbnail":"https://e7.pngegg.com/pngimages/43/258/png-clipart-customer-service-help-desk-call-centre-technical-support-business-telephone-call-service-thumbnail.png",
       "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-      "info":"WWE"
+      "info":"HELP"
     },
     {
       "title":"[COLOR lime]KOD SERIETV 22.11.63[/COLOR]",
