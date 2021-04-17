@@ -16,11 +16,11 @@
          "info":"Canali Vari"
       },
       {
-         "title":"[COLOR gold]RSI[/COLOR]",
+         "title":"[COLOR gold]RSI CH[/COLOR]",
          "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=61",
          "thumbnail":"https://pbs.twimg.com/profile_images/871609532379783168/kB0DQhpH_400x400.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":0,
+         "enabled":1,
          "info":"RSI"
       },
       {
