@@ -91,12 +91,11 @@
       "regexExpres":"source: '(.*?m3u8.*?)'"
     },
     {
-      "title":"[COLOR lime]mullaz - mazystreams[/COLOR]",
+      "title":"[COLOR lime]DADDYLIVE (RESOLVE)[/COLOR]",
       "thumbnail":"https://us.123rf.com/450wm/alexwhite/alexwhite1501/alexwhite150104236/35605908-ic%C3%B4ne-de-test.jpg",
       "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
       "info":"No Info",
-      "regexPage":"http://mazystreams.xyz/event/arsenal-vs-liverpool/s1.php",
-      "regexExpres":"source = '(.*?m3u8.*?)'"
+      "myresolve":"daddy@@https://daddylive.co/channels/stream-32.php"
     }  
   ]
 }
