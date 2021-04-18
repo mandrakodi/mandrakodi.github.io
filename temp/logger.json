@@ -65,7 +65,14 @@
          "info":"NEW VERSION"
       },
 	  {
-         "title":"[COLOR gold]=====[/COLOR][COLOR lime]CLICCA QUI PER INVIARE IL LOG SUL WEB[/COLOR][COLOR gold]=====[/COLOR]",
+         "title":"[COLOR red]=====[/COLOR] [COLOR aqua]CLICCA [B]QUI[/B] PER UN VIDEO DIMOSTRATIVO[/COLOR] [COLOR red]=====[/COLOR]",
+         "link":"https://mandrakodi.github.io/temp/log.mp4",
+         "thumbnail":"https://e7.pngegg.com/pngimages/908/570/png-clipart-white-and-blue-gear-logo-technical-support-information-technology-customer-service-tech-electronics-company-thumbnail.png",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"NEW VERSION"
+      },
+	  {
+         "title":"[COLOR gold]=====[/COLOR] [COLOR lime]CLICCA [B]QUI[/B] PER INVIARE IL LOG SUL WEB[/COLOR][COLOR gold]=====[/COLOR]",
          "link":"plugin://plugin.video.kod/?ewogICAgImFjdGlvbiI6ICJyZXBvcnRfc2VuZCIsIAogICAgImNoYW5uZWwiOiAic2V0dGluZyIsIAogICAgImZvbGRlciI6IGZhbHNlLCAKICAgICJpbmZvTGFiZWxzIjoge30sIAogICAgInRodW1ibmFpbCI6ICJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20va29kaW9uZGVtYW5kL21lZGlhL21hc3Rlci90aGVtZXMvZGVmYXVsdC90aHVtYl9lcnJvci5wbmciLCAKICAgICJ0aXRsZSI6ICIzKSBjbGljY2EgcXVpIHBlciBjcmVhcmUgaWwgcmVwb3J0Igp9",
          "thumbnail":"https://e7.pngegg.com/pngimages/908/570/png-clipart-white-and-blue-gear-logo-technical-support-information-technology-customer-service-tech-electronics-company-thumbnail.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
