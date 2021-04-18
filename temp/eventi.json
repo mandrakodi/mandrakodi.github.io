@@ -2,8 +2,8 @@
     "SetViewMode":"500",
     "items":[
        {
-          "title":"[COLOR gold]LISTA EVENTI[/COLOR]",
-          "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/sspp.php",
+          "title":"[COLOR gold]LISTE EVENTI[/COLOR]",
+          "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=19",
           "thumbnail":"https://www.insidesport.co/wp-content/uploads/2020/04/aaa-1-696x464.jpg",
           "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
           "info":"Eventi del giorno"
