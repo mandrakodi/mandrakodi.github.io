@@ -2,6 +2,13 @@
    "SetViewMode":"500",
    "items":[
       {
+         "title":"[COLOR gold]SKY SPORT 24[/COLOR]",
+         "link":"https://skyanywhere3-i.akamaihd.net/hls/live/510697/interactive/playlist.m3u8",
+         "thumbnail":"https://banner2.cleanpng.com/20180720/epb/kisspng-logo-sky-sports-sky-sport-24-1-samuel-24-5b52704cbcd4d0.3783718815321293567735.jpg",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"TG Regionali (ultima edizione)"
+      },
+      {
          "title":"[COLOR gold]TG REGIONALI[/COLOR]",
          "externallink":"http://testphp765.herokuapp.com/mandrakodi/tgr.php",
          "thumbnail":"https://www.affaritaliani.it/static/upl2017/tgr-/tgr-ape10.jpg",
