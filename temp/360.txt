@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-81 -*-
 
 from resources.lib import kodilogging
 from resources.lib import plugin
