@@ -2,20 +2,20 @@
 	"SetViewMode":"500",
 	"items":[
 		{
-			"title":"RSI LA1",
+			"title":"RSI LA1[CR](Resolver)",
 			"myresolve":"rsi:LA1",
 			"thumbnail":"https://www.tvdream.net/img/rsi-la1_476x249.jpg",
 			"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
 			"info":"RSI LA1",
-			"enabled":0
+			"enabled":1
 		},
 		{
-			"title":"RSI LA2",
+			"title":"RSI LA2[CR](Resolver)",
 			"myresolve":"rsi",
 			"thumbnail":"https://www.tvdream.net/img/rsi-la2.jpg",
 			"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
 			"info":"RSI LA2",
-			"enabled":0
+			"enabled":1
 		},
 		{
 			"title":"RSI LA1",
