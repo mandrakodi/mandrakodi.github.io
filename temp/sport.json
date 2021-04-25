@@ -14,24 +14,8 @@
          "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=12",
          "thumbnail":"https://i.pinimg.com/originals/6c/b2/a3/6cb2a3d5d15d57bc38819d21af80f582.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":0,
-         "info":"Live channels"
-      },
-      {
-         "title":"[COLOR lime]LISTA CANALI[/COLOR]",
-         "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=13",
-         "thumbnail":"https://i.pinimg.com/originals/6c/b2/a3/6cb2a3d5d15d57bc38819d21af80f582.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
          "info":"Live channels"
-      },
-      {
-         "title":"[COLOR lime]LISTA CANALI 2[/COLOR]",
-         "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=17",
-         "thumbnail":"https://i.pinimg.com/474x/8b/ea/8b/8bea8b6a9cd953a8fa88b4b1eee6b4a1.jpg",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
-         "info":"Live channels 2"
       },
       {
          "title":"[COLOR lime]WISEPLAY ROJADIRECTA[/COLOR]",
