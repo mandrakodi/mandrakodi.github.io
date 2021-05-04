@@ -2,7 +2,7 @@
    "SetViewMode":"500",
    "items":[
       {
-         "title":"[COLOR lime]ELENCO FILM[/COLOR][CR][COLOR red]OffLine[/COLOR]",
+         "title":"[COLOR lime]ELENCO FILM[/COLOR]",
          "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=33",
          "thumbnail":"https://e7.pngegg.com/pngimages/177/1011/png-clipart-graphic-film-movie-camera-drawing-cinema-camera-camera-lens-photography-thumbnail.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
@@ -14,7 +14,7 @@
          "thumbnail":"https://e7.pngegg.com/pngimages/491/104/png-clipart-open-sherlock-holmes-free-content-cartoon-inspector-clouseau-food-text-thumbnail.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Cerca Film",
-         "enabled":0
+         "enabled":1
       },
       {
          "title":"[COLOR yellow]FILM COLLECTION[/COLOR]",
