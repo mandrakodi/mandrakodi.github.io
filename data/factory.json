@@ -81,12 +81,12 @@
        "info":"TORRENT TOONS"
     },
     {
-      "title":"[COLOR lime]RaiPlay[/COLOR]",
-      "thumbnail":"https://us.123rf.com/450wm/alexwhite/alexwhite1501/alexwhite150104236/35605908-ic%C3%B4ne-de-test.jpg",
+      "title":"[COLOR lime]CARTOONS[/COLOR]",
+      "thumbnail":"https://e7.pngegg.com/pngimages/291/1020/png-clipart-disney-taz-illustration-tasmanian-devil-daffy-duck-bugs-bunny-animation-food-vertebrate-thumbnail.png",
       "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
       "info":"No Info",
-      "enabled":0,
-      "externallink":"http://testphp765.herokuapp.com/mandrakodi/raiplay.php"
+      "enabled":1,
+      "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=34"
     },
     {
       "title":"[COLOR lime]mullaz - uhdstreams[/COLOR]",
