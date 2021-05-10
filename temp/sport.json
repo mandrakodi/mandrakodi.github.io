@@ -38,7 +38,7 @@
          "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=15",
          "thumbnail":"http://watchwrestling.la/wp-content/uploads/2019/10/AEW-Wrestling-Dynamite.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
+         "enabled":0,
          "info":"WWE"
       },
       {
@@ -46,7 +46,7 @@
          "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=16",
          "thumbnail":"https://asterixclub.files.wordpress.com/2020/06/circolo-asterix-club-montebelluna-torneo-2020-poker-chip-leader-opening-treviso.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
+         "enabled":0,
          "info":"POKER"
       },
       {
@@ -54,7 +54,7 @@
          "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=73",
          "thumbnail":"https://footballia.net/assets/logo-c08b913542390c1a1c3a50819feac888.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
+         "enabled":0,
          "info":"POKER"
       },
       {
@@ -70,7 +70,7 @@
          "externallink2":"http://ercavalierenero2.herokuapp.com/mandrakodi/playLink.php?url=",
          "thumbnail":"https://i.kym-cdn.com/photos/images/facebook/000/925/410/4cc.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
+         "enabled":0,
          "info":"Wiseplay List"
       }
    ]
