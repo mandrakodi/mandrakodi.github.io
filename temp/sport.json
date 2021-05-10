@@ -3,7 +3,7 @@
    "items":[
       {
          "title":"[COLOR lime]EVENTI[/COLOR]",
-         "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=11",
+         "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=11",
          "thumbnail":"https://www.insidesport.co/wp-content/uploads/2020/04/aaa-1-696x464.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
@@ -11,7 +11,7 @@
       },
       {
          "title":"[COLOR lime]CANALI[/COLOR]",
-         "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=12",
+         "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=12",
          "thumbnail":"https://i.pinimg.com/originals/6c/b2/a3/6cb2a3d5d15d57bc38819d21af80f582.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
@@ -19,7 +19,7 @@
       },
       {
          "title":"[COLOR lime]WISEPLAY ROJADIRECTA[/COLOR]",
-         "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=14",
+         "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=14",
          "thumbnail":"https://media.diariorepublica.com/cms/wp-content/uploads/2015/03/roja.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
@@ -27,7 +27,7 @@
       },
       {
          "title":"[COLOR lime]WISEPLAY LINKS[/COLOR]",
-         "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/listeWise.php",
+         "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/listeWise.php",
          "thumbnail":"https://reports.exodus-privacy.eu.org/en/reports/53674/icon/",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
@@ -35,7 +35,7 @@
       },
       {
          "title":"[COLOR lime]WWE MANIACS[/COLOR][CR][COLOR aqua](by @ilblasco88)[/COLOR]",
-         "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=15",
+         "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=15",
          "thumbnail":"http://watchwrestling.la/wp-content/uploads/2019/10/AEW-Wrestling-Dynamite.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
@@ -43,7 +43,7 @@
       },
       {
          "title":"[COLOR lime]POKER TV[/COLOR]",
-         "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=16",
+         "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=16",
          "thumbnail":"https://asterixclub.files.wordpress.com/2020/06/circolo-asterix-club-montebelluna-torneo-2020-poker-chip-leader-opening-treviso.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
@@ -51,7 +51,7 @@
       },
       {
          "title":"[COLOR lime]FOOTBALLIA REPLAY[/COLOR]",
-         "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=73",
+         "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=73",
          "thumbnail":"https://footballia.net/assets/logo-c08b913542390c1a1c3a50819feac888.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
@@ -59,7 +59,7 @@
       },
       {
          "title":"[COLOR lime]LAST MINUTE[/COLOR]",
-         "externallink":"http://ercavalierenero.herokuapp.com/mandrakodi/doJob.php?job=18",
+         "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=18",
          "thumbnail":"https://chichestergolf.com/wp-content/uploads/2018/05/last-minute-availability.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
@@ -67,7 +67,7 @@
 	   },
       {
          "title":"[COLOR lime]PLAY MY LINK[/COLOR]",
-         "externallink2":"http://ercavalierenero.herokuapp.com/mandrakodi/playLink.php?url=",
+         "externallink2":"http://ercavalierenero2.herokuapp.com/mandrakodi/playLink.php?url=",
          "thumbnail":"https://i.kym-cdn.com/photos/images/facebook/000/925/410/4cc.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
