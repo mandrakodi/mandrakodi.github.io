@@ -6,13 +6,15 @@
          "link":"https://skyanywhere3-i.akamaihd.net/hls/live/510697/interactive/playlist.m3u8",
          "thumbnail":"https://banner2.cleanpng.com/20180720/epb/kisspng-logo-sky-sports-sky-sport-24-1-samuel-24-5b52704cbcd4d0.3783718815321293567735.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"TG Regionali (ultima edizione)"
+         "enabled":1,
+         "info":"SKY SPORT 24"
       },
       {
          "title":"[COLOR gold]TG REGIONALI[/COLOR]",
          "externallink":"http://testphp765.herokuapp.com/mandrakodi/tgr.php",
          "thumbnail":"https://www.affaritaliani.it/static/upl2017/tgr-/tgr-ape10.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "enabled":1,
          "info":"TG Regionali (ultima edizione)"
       },
       {
@@ -20,6 +22,7 @@
          "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/myTv.php",
          "thumbnail":"https://cdn.pixabay.com/photo/2014/03/25/15/25/television-296783_960_720.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "enabled":0,
          "info":"Canali Vari"
       },
       {
@@ -35,13 +38,15 @@
          "link":"https://tivustream.website/urls/la7",
          "thumbnail":"http://patbuweb.com/tivustream/chanlogoz/ita/la7.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"RSI"
+         "enabled":1,
+         "info":"LA 7"
       },
       {
          "title":"[COLOR gold]EURO NEWS[/COLOR] [COLOR lime](yatse)[/COLOR]",
          "yatse":"https://www.dailymotion.com/video/x2j7h84",
          "thumbnail":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Euronews._2016_alternative_logo.png/600px-Euronews._2016_alternative_logo.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "enabled":1,
          "info":"Euro News"
       },
       {
@@ -49,6 +54,7 @@
          "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=62",
          "thumbnail":"https://www.ticinonotizie.it/wp-content/uploads/2015/09/meteo5.gif",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "enabled":1,
          "info":"Meteo"
       },
       {
@@ -56,6 +62,7 @@
          "externallink2":"http://testphp765.herokuapp.com/mandrakodi/searchYT.php?query=",
          "thumbnail":"https://www.wearediagram.com/hubfs/YouTube_Search.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "enabled":0,
          "info":"Cerca video su YouTube"
       },
       {
@@ -63,6 +70,7 @@
          "externallink":"http://testphp765.herokuapp.com/mandrakodi/radioRadicale.php",
          "thumbnail":"https://www.radicalifvg.org/wp/wp-content/uploads/2012/04/radioradicale.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "enabled":1,
          "info":"Archivo Radio Radicale"
       },
       {
@@ -70,6 +78,7 @@
          "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=64",
          "thumbnail":"https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/Sheepinthebigcity.png/250px-Sheepinthebigcity.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "enabled":0,
          "info":"Meteo"
       },
       {
@@ -77,6 +86,7 @@
          "externallink":"http://ercavalierenero2.herokuapp.com/mandrakodi/doJob.php?job=46",
          "thumbnail":"https://pbs.twimg.com/profile_images/1232637389908140033/Wv1hBc_r_400x400.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "enabled":1,
          "info":"Meteo"
       }
    ]
