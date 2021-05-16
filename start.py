@@ -1,4 +1,4 @@
-versione='1.0.0'
+versione='1.0.1'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -62,17 +62,14 @@ def makeRequest(url, hdr=None):
     return html
 
 def getSource():
-    home = ''
-    if PY3:
-        home = xbmc.translatePath(selfAddon.getAddonInfo('path'))
-    else:
-        home = xbmc.translatePath(selfAddon.getAddonInfo('path').decode('utf-8'))
-    
+    startUrl = "https://www.dropbox.com/s/igyq58cnpjq0fq4/disclaimer.json?dl=1"
     try:
-        start_file = os.path.join(home, 'start.json')
-        resF = open(start_file)
-        strSource = resF.read()
-        resF.close()
+        strSource = makeRequest(startUrl)
+        if strSource is None or strSource == "":
+            logga('We failed to get source from '+startUrl)
+            strSource = getTxtMessage("um.txt")
+        else:
+            logga('OK SOURCE ')
     except:
         logga('Errore getSource')
         strSource = getTxtMessage("um.txt")
@@ -149,6 +146,7 @@ def jsonToItems(strJson):
         is_myresolve = False
         is_regex = False
         is_chrome = False
+        is_yatse = False
         is_pvr = False
         is_enabled = True
 
@@ -209,6 +207,11 @@ def jsonToItems(strJson):
             is_folder = True
             link = item["chrome"]
 
+        if 'yatse' in item:
+            is_yatse = True
+            is_folder = True
+            link = item["yatse"]
+
         if 'magnet' in item:
             is_magnet = True
             link = item["magnet"]
@@ -233,6 +236,9 @@ def jsonToItems(strJson):
             url = get_url(action='myresolve', url=link, parIn=resolverPar)
         elif is_pvr == True:
             url = get_url(action='pvr', url=link)
+        elif is_yatse == True:
+            list_item.setProperty('IsPlayable', 'true')
+            url = get_urlYatse(action='share', type='unresolvedurl', data=link)
         elif is_magnet == True:
             list_item.setProperty('IsPlayable', 'true')
             url = get_urlMagnet(uri=link)
@@ -263,6 +269,9 @@ def get_urlMagnet(**kwargs):
 
 def get_urlChrome(**kwargs):
     return '{0}?{1}'.format("plugin://plugin.program.browser.launcher/", urlencode(kwargs))
+
+def get_urlYatse(**kwargs):
+    return '{0}?{1}'.format("plugin://script.mandra.kodi/", urlencode(kwargs))
 
 def parameters_string_to_dict(parameters):
     params = dict(parse_qsl(parameters.split('?')[1]))
@@ -399,11 +408,77 @@ def setPvr(urlM3u):
         errMsg="ERRORE: {0}".format(err)
         raise ValueError(errMsg)
 
+def checkResolver():
+    home = ''
+    if PY3:
+        home = xbmc.translatePath(selfAddon.getAddonInfo('path'))
+    else:
+        home = xbmc.translatePath(selfAddon.getAddonInfo('path').decode('utf-8'))
+    resolver_file = os.path.join(home, 'myResolver.py')
+    if os.path.exists(resolver_file)==True:
+        resF = open(resolver_file)
+        resolver_content = resF.read()
+        resF.close()
+        local_vers = re.findall("versione='(.*)'",resolver_content)[0]
+        logga('local_vers '+local_vers)
+        remoteResolverUrl = "https://www.dropbox.com/s/ekj8p56ersff7r4/myResolver.py?dl=1"
+        strSource = makeRequest(remoteResolverUrl)
+        if strSource is None or strSource == "":
+            logga('We failed to get source from '+remoteResolverUrl)
+            remote_vers = local_vers
+        else:
+            if PY3:
+                strSource = strSource.decode('utf-8')		
+            remote_vers = re.findall("versione='(.*)'",strSource)[0]
+        logga('remote_vers '+remote_vers)
+        if local_vers != remote_vers:
+            logga('TRY TO UPDATE VERSION')
+            f = open(resolver_file, "w")
+            f.write(strSource)
+            f.close()
+            logga('VERSION UPDATE')
+
+def checkDns():
+    ip = xbmc.getIPAddress()
+    dns1 = xbmc.getInfoLabel('Network.DNS1Address')
+    dns2 = xbmc.getInfoLabel('Network.DNS2Address')
+    logga("############ START NETWORK INFO ############")
+    logga("## IP: %s" %  (ip))
+    logga("## DNS1: %s" %  (dns1))
+    logga("## DNS2: %s" %  (dns2))
+    logga("############# END NETWORK INFO #############")
+    okDns=False
+    if dns1 == "1.1.1.1" or dns1 == "8.8.8.8":
+        okDns=True
+    elif dns1 == "1.0.0.1" or dns1 == "8.8.4.4":
+        okDns=True
+    elif dns2 == "1.1.1.1" or dns2 == "8.8.8.8":
+        okDns=True
+    elif dns2 == "1.1.1.1" or dns2 == "8.8.4.4":
+        okDns=True
+
+    if okDns == False:
+        dialog = xbmcgui.Dialog()
+        mess = "Con i DNS attualmente impostati, "+dns1+" - "+dns2+",\npotresti avere problemi a recuperare i link da alcuni siti.\nSe puoi, utilizza quelli di CloudFlare [1.1.1.1 - 1.0.0.1]"
+        return dialog.ok("Mandrakodi", mess)
+
+def checkMandraScript():
+    have_mandra_plugin = '"enabled":true' in xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"Addons.GetAddonDetails","id":1,"params":{"addonid":"script.mandra.kodi", "properties": ["enabled"]}}')
+    if have_mandra_plugin == False:
+        dialog = xbmcgui.Dialog()
+        mess = "Il plugin script.mandra.kodi non risulta installato.\nAlcune funzionalita' non saranno disponibili."
+        return dialog.ok("Mandrakodi", mess)
+
+
+
 
 def run():
     try:
         if not sys.argv[2]:
             logga("=== ADDON START ===")
+            checkResolver()
+            checkDns()
+            checkMandraScript()
             getSource()
         else:
             params = parameters_string_to_dict(sys.argv[2])
