@@ -1,4 +1,4 @@
-versione='1.0.1'
+versione='1.0.2'
 # Module: default
 # Author: ElSupremo
 # Created on: 12.05.2021
@@ -706,8 +706,11 @@ def updateMandraLista():
         resF = open(launcher_file)
         resolver_content = resF.read()
         resF.close()
-        local_vers = re.findall("versi-(.*)-versi",resolver_content)[0]
-        msgBox('local_vers '+local_vers)
+        local_vers ="1.0.0"
+        try:
+            local_vers = re.findall("versi-(.*)-versi",resolver_content)[0]
+        except:
+            pass
         remoteLauncherUrl = "http://ercavalierenero2.herokuapp.com/mandrakodi/test33.php?par=120"
         strSource = makeRequest(remoteLauncherUrl)
         if strSource is None or strSource == "":
@@ -717,7 +720,6 @@ def updateMandraLista():
             if PY3:
                 strSource = strSource.decode('utf-8')		
             remote_vers = re.findall("versi-(.*)-versi",strSource)[0]
-        msgBox('remote_vers '+remote_vers)
         if local_vers != remote_vers:
             logga('TRY TO UPDATE VERSION')
             f = open(launcher_file, "w")
