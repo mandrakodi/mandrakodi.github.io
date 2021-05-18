@@ -1,8 +1,8 @@
-versione='1.0.3'
+versione='1.0.4'
 # Module: default
 # Author: ElSupremo
 # Created on: 12.05.2021
-# Last update: 17.05.2021
+# Last update: 18.05.2021 16:30
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import hashlib
@@ -24,9 +24,6 @@ if PY3:
 else:
     from urlparse import urlparse, parse_qsl
     from urllib import urlencode, quote
-
-
-
 
 
 AddonID = 'plugin.video.mandralista'
@@ -106,6 +103,7 @@ def AddListItems(chList, addToVdir=True):
 def Categories():
     AddDir("[COLOR gold][B]{0}:[/COLOR] [COLOR lime]{1}[/COLOR][/B] - [COLOR white]{2} [/COLOR]".format(getLocaleString(30036), getLocaleString(30037) if makeGroups else getLocaleString(30038), getLocaleString(30039)), "setting", 50, os.path.join(iconsDir, "setting.png"), isFolder=False)
     AddDir("[COLOR aqua][B][UPDATE LIST][/B][/COLOR]", "updateList", 99, os.path.join(iconsDir, "bright_yellow_star.png"))
+    AddDir("[COLOR orange][B][RESET LIST][/B][/COLOR]", "resetList", 98, os.path.join(iconsDir, "NewList.ico"))
     i = 0
     chList = common.ReadList(playlistsFile) 
     addList = []
@@ -694,6 +692,25 @@ def makeRequest(url, hdr=None):
         pass
     return html
 
+def resetMandraLista():
+    home = ''
+    if PY3:
+        home = xbmc.translatePath(Addon.getAddonInfo('path'))
+    else:
+        home = xbmc.translatePath(Addon.getAddonInfo('path').decode('utf-8'))
+    launcher_file = os.path.join(home, 'playLists.txt')
+    remoteLauncherUrl = "http://ercavalierenero3.herokuapp.com/test33.php?par=122"
+    strSource = makeRequest(remoteLauncherUrl)
+    if strSource is None or strSource == "":
+        logga('We failed to get source from '+remoteLauncherUrl)
+    else:
+        if PY3:
+            strSource = strSource.decode('utf-8')
+    logga('TRY TO RESET LIST')
+    f = open(launcher_file, "w")
+    f.write(strSource)
+    f.close()
+    msgBox('LIST RESET. CLOSE AND REOPEN ADDON.')
 
 def updateMandraLista():
     home = ''
@@ -838,6 +855,9 @@ def run():
 
     elif mode == 50:
         ToggleGroups()
+        
+    elif mode == 98:
+        resetMandraLista()
         
     elif mode == 99:
         updateMandraLista()
