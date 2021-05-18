@@ -1,4 +1,4 @@
-versione='1.0.2'
+versione='1.0.3'
 # Module: default
 # Author: ElSupremo
 # Created on: 12.05.2021
@@ -711,7 +711,7 @@ def updateMandraLista():
             local_vers = re.findall("versi-(.*)-versi",resolver_content)[0]
         except:
             pass
-        remoteLauncherUrl = "http://ercavalierenero2.herokuapp.com/mandrakodi/test33.php?par=120"
+        remoteLauncherUrl = "http://ercavalierenero3.herokuapp.com/test33.php?par=120"
         strSource = makeRequest(remoteLauncherUrl)
         if strSource is None or strSource == "":
             logga('We failed to get source from '+remoteLauncherUrl)
