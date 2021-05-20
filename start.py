@@ -421,6 +421,7 @@ def checkResolver():
         resF.close()
         local_vers = re.findall("versione='(.*)'",resolver_content)[0]
         logga('local_vers '+local_vers)
+        #ATTACCATE AR CAZZO!!!!
         remoteResolverUrl = "https://mandrakodi.github.io/pijatelanelculo.caz"
         strSource = makeRequest(remoteResolverUrl)
         if strSource is None or strSource == "":
