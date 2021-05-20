@@ -1,0 +1,374 @@
+versione='1.0.11'
+# Module: myResolve
+# Author: ElSupremo
+# Created on: 10.04.2021
+# Last update: 08.05.2021
+# License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
+
+import re, requests, sys, logging
+import xbmcplugin
+import xbmcgui
+
+PY3 = sys.version_info[0] == 3
+
+def rsi(parIn=None):
+    chName="rsilajuve"
+    chRef="zzz.php"
+
+    if parIn == "LA1":
+        chName="RsiLa1Live"
+        chRef="RsiLa1.php"
+    source = requests.get('https://www.janjua.tv/hembedplayer/'+chName+'/3/800/456',headers={'user-agent':'Mozilla/5.0','referer':'https://easysite.one/z/Player/embed/Native/'+chRef,'accept':'*/*'}).content
+    if PY3:
+        source = source.decode('utf-8')
+    tok,lhtml,ids = re.findall('enableVideo.[\'"]([^\'"]+)[\w\W]+?ajax..url.+?[\'"](.+?\?(\d+))',source)[0]
+    source2 = requests.get(lhtml,headers={'user-agent':'Mozilla/5.0','referer':'https://www.janjua.tv/hembedplayer/'+chName+'/3/800/456','accept':'*/*'}).content
+    if PY3:
+        source2 = source2.decode('utf-8')
+    m3u8 = 'https://'+re.findall('=(.*)',source2)[0]+':8088/live/'+chName+'/playlist.m3u8?id=%s&pk=%s'%(ids,tok)
+    return m3u8
+
+def rocktalk(parIn=None):
+    from base64 import b64encode, b64decode
+    from binascii import a2b_hex
+    from Cryptodome.Cipher import PKCS1_v1_5 as Cipher_PKCS1_v1_5
+    from Cryptodome.Cipher import DES
+    from Cryptodome.PublicKey import RSA
+    from Cryptodome.Util.Padding import unpad
+
+    user_agent = 'USER-AGENT-tvtap-APP-V2'
+    headers = {
+        'User-Agent': user_agent,
+        'app-token': '37a6259cc0c1dae299a7866489dff0bd',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Host': 'taptube.net',
+	}
+    
+    _pubkey2 = RSA.importKey(
+        a2b_hex(
+            "30819f300d06092a864886f70d010101050003818d003081890281"
+            "8100bfa5514aa0550688ffde568fd95ac9130fcdd8825bdecc46f1"
+            "8f6c6b440c3685cc52ca03111509e262dba482d80e977a938493ae"
+            "aa716818efe41b84e71a0d84cc64ad902e46dbea2ec61071958826"
+            "4093e20afc589685c08f2d2ae70310b92c04f9b4c27d79c8b5dbb9"
+            "bd8f2003ab6a251d25f40df08b1c1588a4380a1ce8030203010001"
+        )
+    )
+    _msg2 = a2b_hex(
+        "7b224d4435223a22695757786f45684237686167747948392b58563052513d3d5c6e222c22534"
+        "84131223a2242577761737941713841327678435c2f5450594a74434a4a544a66593d5c6e227d"
+    )
+    cipher = Cipher_PKCS1_v1_5.new(_pubkey2)	
+    tkn2 =  b64encode(cipher.encrypt(_msg2))
+    ch_id = parIn
+    r2 = requests.post('https://rocktalk.net/tv/index.php?case=get_channel_link_with_token_latest', 
+        headers=headers,
+        data={"payload": tkn2, "channel_id": ch_id, "username": "603803577"},
+        timeout=15)
+
+    from pyDes import des, PAD_PKCS5
+    key = b"98221122"
+    links = []
+    jch = r2.json()["msg"]["channel"][0]
+    for stream in jch.keys():
+        if "stream" in stream or "chrome_cast" in stream:
+            d = des(key)
+            link = d.decrypt(b64decode(jch[stream]), padmode=PAD_PKCS5)
+            if link:
+                link = link.decode("utf-8")
+                if not link == "dummytext" and link not in links:
+                    links.append((link, ""))
+
+    return links
+
+
+
+def myStream(parIn=None):
+    video_urls = []
+    page_url = "https://embed.mystream.to/"+parIn
+    logging.warning('CALL: '+page_url)
+    page_data = requests.get(page_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    page_decode = decodeMyStream(page_data)
+    video_url = preg_match(page_decode, r"'src',\s*'([^']+)")
+    logging.warning('video_url '+video_url)
+    video_urls.append((video_url, ""))
+    return video_urls
+
+
+def decodeMyStream(data):
+    # adapted from MyStream.py code - https://github.com/kodiondemand/addon/blob/master/servers/mystream.py
+    first_group = preg_match(data, r'"\\"("\+.*?)"\\""\)\(\)\)\(\)')
+    match = preg_match(first_group, r"(\(!\[\]\+\"\"\)\[.+?\]\+)")
+    if match:
+        first_group = first_group.replace(match, 'l').replace('$.__+', 't').replace('$._+', 'u').replace('$._$+', 'o')
+
+        tmplist = []
+        js = preg_match(data, r'(\$={.+?});')
+        if js:
+            js_group = js[3:][:-1]
+            second_group = js_group.split(',')
+
+            i = -1
+            for x in second_group:
+                a, b = x.split(':')
+
+                if b == '++$':
+                    i += 1
+                    tmplist.append(("$.{}+".format(a), i))
+
+                elif b == '(![]+"")[$]':
+                    tmplist.append(("$.{}+".format(a), 'false'[i]))
+
+                elif b == '({}+"")[$]':
+                    tmplist.append(("$.{}+".format(a), '[object Object]'[i]))
+
+                elif b == '($[$]+"")[$]':
+                    tmplist.append(("$.{}+".format(a), 'undefined'[i]))
+
+                elif b == '(!""+"")[$]':
+                    tmplist.append(("$.{}+".format(a), 'true'[i]))
+
+            tmplist = sorted(tmplist, key=lambda z: str(z[1]))
+            for x in tmplist:
+                first_group = first_group.replace(x[0], str(x[1]))
+
+            first_group = first_group.replace('\\"', '\\').replace("\"\\\\\\\\\"", "\\\\").replace('\\"', '\\').replace('"', '').replace("+", "")
+    return first_group.encode('ascii').decode('unicode-escape').encode('ascii').decode('unicode-escape')
+
+def wizhd(parIn=None):
+    video_urls = []
+    page_url = "http://wizhdsports.net/"+parIn
+    logging.warning('CALL: '+page_url)
+    page_data = requests.get(page_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'http://wizhdsports.net/'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
+    logging.warning('IFRAME: '+iframe_url)
+    page_data2 = requests.get(iframe_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*','referer':'http://wizhdsports.net/'}).content
+    if PY3:
+        page_data2 = page_data2.decode('utf-8')
+    video_url = preg_match(page_data2, r'source:\s*"([^"]+)')
+    vUrl= video_url + '|User-Agent=Mozilla/5.0&Referer=https://www.wmsxx.com/'
+    logging.warning('video_url '+vUrl)
+    video_urls.append((vUrl, ""))
+    return video_urls
+
+def daddy(parIn=None):
+    video_urls = []
+    logging.warning('PAR: '+parIn)
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    page_video = preg_match(page_data, r'iframe.+?src="([^"]+)')
+    if page_video == "":
+        page_video = preg_match(page_data, r"iframe.+?src='([^']+)")
+    if page_video.startswith("//"):
+        page_video = "https:"+page_video
+    logging.warning('page_video: '+page_video)
+    page_data2 = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','referer':parIn,'accept':'*/*'}).content
+    if PY3:
+        page_data2 = page_data2.decode('utf-8')
+    video_url = preg_match(page_data2, r'source\s*:\s*"([^"]+)')
+    logging.warning('video_url '+video_url)
+    video_urls.append((video_url, ""))
+    return video_urls
+
+def wigi(parIn=None):
+    video_urls = []
+    logging.warning('PAR: '+parIn)
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    #page_video = preg_match(page_data, r'iframe.+?src="([^"]+)')
+    page_video = preg_match(page_data, "<iframe src='(.*?)' width='100%'")
+    if page_video == "":
+        page_video = preg_match(page_data, r"iframe.+?src='([^']+)")
+    if page_video.startswith("//"):
+        page_video = "https:"+page_video
+    logging.warning('page_video: '+page_video)
+    if "buzztv" in page_video:
+        page_data2 = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','referer':parIn,'accept':'*/*'}).content
+        if PY3:
+            page_data2 = page_data2.decode('utf-8')
+        page_video2 = preg_match(page_data2, r'iframe.+?src="([^"]+)')
+        if page_video2 == "":
+            page_video2 = preg_match(page_data2, r"iframe.+?src='([^']+)")
+        if page_video2.startswith("//"):
+            page_video2 = "https:"+page_video2
+        logging.warning('page_video2: '+page_video2)
+        page_data3 = requests.get(page_video2,headers={'user-agent':'Mozilla/5.0','referer':page_video,'accept':'*/*'}).content
+    else:
+       page_data3 = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','referer':parIn,'accept':'*/*'}).content 
+    if PY3:
+        page_data3 = page_data3.decode('utf-8')
+    video_url = preg_match(page_data3, r'source\s*:\s*"([^"]+)')
+    logging.warning('video_url '+video_url)
+    video_urls.append((video_url, ""))
+    return video_urls
+
+def urlsolver(url):
+    video_urls = []
+    try:
+        import resolveurl
+    except:
+        logging.warning('NO RESOLVEURL')
+        import urlresolver as resolveurl
+
+    if resolveurl.HostedMediaFile(url).valid_url():
+        resolved = resolveurl.resolve(url)
+    else:
+        dialog = xbmcgui.Dialog()
+        mess = "Sorry, ResolveUrl does not support this domain."
+        dialog.ok("Mandrakodi", mess)
+        resolved = ""
+    logging.warning('video_url '+resolved)
+    video_urls.append((resolved, ""))
+    return video_urls
+
+def streamingcommunity(parIn=None):
+    video_urls = []
+    
+    def calculateToken():
+        from time import time
+        from base64 import b64encode as b64
+        import hashlib
+        page_video = "https://streamingcommunity.one/client-address"
+        page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+        if PY3:
+            page_data = page_data.decode('utf-8')
+        logging.warning('IP_community '+page_data)
+        o = 48
+        i = 'Yc8U6r8KjAKAepEA'
+        t = int(time() + (3600 * o))
+        l = '{}{} {}'.format(t, page_data, i)
+        md5 = hashlib.md5(l.encode())
+        s = '?token={}&expires={}'.format(b64(md5.digest()).decode().replace('=', '').replace('+', "-").replace('\\', "_"), t)
+        return s
+
+    token = calculateToken()
+    video_url = "https://streamingcommunity.one/videos/master/"+parIn+"/480p"+token
+    logging.warning('video_community '+video_url)
+    video_urls.append((video_url, ""))
+    return video_urls
+
+def darkIptv(parIn=None):
+    video_urls = []
+    video_url = "http://temporary.mine.nu:8000/movie/Direct2Movie/r3ow52c4P4/"+parIn
+    video_urls.append((video_url, ""))
+    return video_urls
+
+def sky(parIn=None):
+    logging.warning('PAR_IN_SKY '+parIn)
+    video_urls = []
+    base_url = "http://albanica.online:88/iptv.flash/84fh5hf875hd/"
+    video_url = ""
+    if (parIn == "0"):
+        video_url = base_url + "31015"
+    elif  (parIn == "1"):
+        video_url = base_url + "25439"
+    elif  (parIn == "2"):
+        video_url = base_url + "25475"
+    elif  (parIn == 3):
+        video_url = base_url + "25476"
+    elif  (parIn == 4):
+        video_url = base_url + "25477"
+    elif  (parIn == 5):
+        video_url = base_url + "25478"
+    elif  (parIn == 6):
+        video_url = base_url + "25479"
+    elif  (parIn == 7):
+        video_url = base_url + "25480"
+    elif  (parIn == 8):
+        video_url = base_url + "25888"
+    elif  (parIn == 9):
+        video_url = base_url + "25889"
+    elif (parIn == 10):
+        video_url = base_url + "7119"
+    elif  (parIn == 11):
+        video_url = base_url + "7118"
+    elif  (parIn == 12):
+        video_url = base_url + "7117"
+    elif  (parIn == 13):
+        video_url = base_url + "7116"
+    elif  (parIn == 14):
+        video_url = base_url + "7115"
+    elif  (parIn == 15):
+        video_url = base_url + "7114"
+    elif  (parIn == 16):
+        video_url = base_url + "7113"
+    elif  (parIn == 17):
+        video_url = base_url + "7112"
+    elif  (parIn == 18):
+        video_url = base_url + "7111"
+    elif  (parIn == 19):
+        video_url = base_url + "7110"
+    elif (parIn == 20):
+        video_url = base_url + "7109"
+    elif  (parIn == 21):
+        video_url = base_url + "8258"
+    elif  (parIn == 22):
+        video_url = base_url + "8256"
+    elif  (parIn == 23):
+        video_url = base_url + "25322"
+    elif  (parIn == 24):
+        video_url = base_url + "25323"
+    elif  (parIn == 25):
+        video_url = base_url + "25324"
+    elif  (parIn == 26):
+        video_url = base_url + "25325"
+    elif  (parIn == 27):
+        video_url = base_url + "25326"
+    elif  (parIn == 28):
+        video_url = base_url + "36909"
+    
+    video_urls.append((video_url, ""))
+    return video_urls
+
+def preg_match(data, patron, index=0):
+    try:
+        matches = re.findall(patron, data, flags=re.DOTALL)
+        return matches[index]
+    except:
+        return ""
+
+
+def preg_match_all(data, patron, index=0):
+    try:
+        if index == 0:
+            matches = re.search(patron, data, flags=re.DOTALL)
+            if matches:
+                if len(matches.groups()) == 1:
+                    return matches.group(1)
+                elif len(matches.groups()) > 1:
+                    return matches.groups()
+                else:
+                    return matches.group()
+            else:
+                return ""
+        else:
+            matches = re.findall(patron, data, flags=re.DOTALL)
+            return matches[index]
+    except:
+        return ""
+
+
+def run (action, params=None):
+    logging.warning('Run version '+versione)
+    commands = {
+        'rsi': rsi,
+        'myStream': myStream,
+        'wizhd': wizhd,
+        'daddy': daddy,
+        'wigi': wigi,
+        'risolvi': urlsolver,
+        'strco': streamingcommunity,
+        'dark': darkIptv,
+        'sky': sky,
+        'rocktalk': rocktalk
+    }
+    if action in commands:
+        return commands[action](params)
+    else:
+        raise ValueError('Invalid command: {0}!'.action)
