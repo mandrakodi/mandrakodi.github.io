@@ -1,4 +1,4 @@
-versione='1.0.12'
+versione='1.0.13'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -177,9 +177,10 @@ def daddy(parIn=None):
 
 def wigi(parIn=None):
     #Massimo della Pena, succhiami lo scroto
+    wigiUrl = "https://wigilive.com/embed.php?id="+parIn
     video_urls = []
     logging.warning('PAR: '+parIn)
-    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    page_data = requests.get(wigiUrl,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     #page_video = preg_match(page_data, r'iframe.+?src="([^"]+)')
