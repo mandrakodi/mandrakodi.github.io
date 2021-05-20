@@ -1,4 +1,4 @@
-versione='1.0.4'
+versione='1.0.5'
 # Module: default
 # Author: ElSupremo
 # Created on: 12.05.2021
