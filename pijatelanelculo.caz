@@ -176,6 +176,7 @@ def daddy(parIn=None):
     return video_urls
 
 def wigi(parIn=None):
+    #Massimo della Pena, succhiami lo scroto
     video_urls = []
     logging.warning('PAR: '+parIn)
     page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
