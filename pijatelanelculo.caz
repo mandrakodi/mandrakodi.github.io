@@ -1,4 +1,4 @@
-versione='1.0.13'
+versione='1.0.14'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -202,7 +202,7 @@ def wigi(parIn=None):
         logging.warning('page_video2: '+page_video2)
         page_data3 = requests.get(page_video2,headers={'user-agent':'Mozilla/5.0','referer':page_video,'accept':'*/*'}).content
     else:
-       page_data3 = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','referer':parIn,'accept':'*/*'}).content 
+       page_data3 = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','referer':wigiUrl,'accept':'*/*'}).content 
     if PY3:
         page_data3 = page_data3.decode('utf-8')
     video_url = preg_match(page_data3, r'source\s*:\s*"([^"]+)')
