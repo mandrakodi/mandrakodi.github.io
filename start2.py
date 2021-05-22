@@ -1,8 +1,8 @@
-versione='1.0.5'
+versione='1.0.6'
 # Module: default
 # Author: ElSupremo
 # Created on: 12.05.2021
-# Last update: 18.05.2021 16:30
+# Last update: 22.05.2021 02:30
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import hashlib
@@ -699,7 +699,7 @@ def resetMandraLista():
     else:
         home = xbmc.translatePath(Addon.getAddonInfo('path').decode('utf-8'))
     launcher_file = os.path.join(home, 'playLists.txt')
-    remoteLauncherUrl = "http://ercavalierenero4.herokuapp.com/test33.php?par=122"
+    remoteLauncherUrl = "http://test33422345667434345.herokuapp.com/test33.php?par=122"
     strSource = makeRequest(remoteLauncherUrl)
     if strSource is None or strSource == "":
         logga('We failed to get source from '+remoteLauncherUrl)
@@ -728,7 +728,7 @@ def updateMandraLista():
             local_vers = re.findall("versi-(.*)-versi",resolver_content)[0]
         except:
             pass
-        remoteLauncherUrl = "http://ercavalierenero4.herokuapp.com/test33.php?par=120"
+        remoteLauncherUrl = "http://test33422345667434345.herokuapp.com/test33.php?par=120"
         strSource = makeRequest(remoteLauncherUrl)
         if strSource is None or strSource == "":
             logga('We failed to get source from '+remoteLauncherUrl)
