@@ -1,8 +1,8 @@
-versione='1.0.14'
+versione='1.0.15'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 08.05.2021
+# Last update: 29.05.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -272,57 +272,57 @@ def sky(parIn=None):
         video_url = base_url + "25439"
     elif  (parIn == "2"):
         video_url = base_url + "25475"
-    elif  (parIn == 3):
+    elif  (parIn == "3"):
         video_url = base_url + "25476"
-    elif  (parIn == 4):
+    elif  (parIn == "4"):
         video_url = base_url + "25477"
-    elif  (parIn == 5):
+    elif  (parIn == "5"):
         video_url = base_url + "25478"
-    elif  (parIn == 6):
+    elif  (parIn == "6"):
         video_url = base_url + "25479"
-    elif  (parIn == 7):
+    elif  (parIn == "7"):
         video_url = base_url + "25480"
-    elif  (parIn == 8):
+    elif  (parIn == "8"):
         video_url = base_url + "25888"
-    elif  (parIn == 9):
+    elif  (parIn == "9"):
         video_url = base_url + "25889"
-    elif (parIn == 10):
+    elif (parIn == "10"):
         video_url = base_url + "7119"
-    elif  (parIn == 11):
+    elif  (parIn == "11"):
         video_url = base_url + "7118"
-    elif  (parIn == 12):
+    elif  (parIn == "12"):
         video_url = base_url + "7117"
-    elif  (parIn == 13):
+    elif  (parIn == "13"):
         video_url = base_url + "7116"
-    elif  (parIn == 14):
+    elif  (parIn == "14"):
         video_url = base_url + "7115"
-    elif  (parIn == 15):
+    elif  (parIn == "15"):
         video_url = base_url + "7114"
-    elif  (parIn == 16):
+    elif  (parIn == "16"):
         video_url = base_url + "7113"
-    elif  (parIn == 17):
+    elif  (parIn == "17"):
         video_url = base_url + "7112"
-    elif  (parIn == 18):
+    elif  (parIn == "18"):
         video_url = base_url + "7111"
-    elif  (parIn == 19):
+    elif  (parIn == "19"):
         video_url = base_url + "7110"
-    elif (parIn == 20):
+    elif (parIn == "20"):
         video_url = base_url + "7109"
-    elif  (parIn == 21):
+    elif  (parIn == "21"):
         video_url = base_url + "8258"
-    elif  (parIn == 22):
+    elif  (parIn == "22"):
         video_url = base_url + "8256"
-    elif  (parIn == 23):
+    elif  (parIn == "23"):
         video_url = base_url + "25322"
-    elif  (parIn == 24):
+    elif  (parIn == "24"):
         video_url = base_url + "25323"
-    elif  (parIn == 25):
+    elif  (parIn == "25"):
         video_url = base_url + "25324"
-    elif  (parIn == 26):
+    elif  (parIn == "26"):
         video_url = base_url + "25325"
-    elif  (parIn == 27):
+    elif  (parIn == "27"):
         video_url = base_url + "25326"
-    elif  (parIn == 28):
+    elif  (parIn == "28"):
         video_url = base_url + "36909"
     
     video_urls.append((video_url, ""))
