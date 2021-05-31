@@ -1,8 +1,8 @@
-versione='1.0.15'
+versione='1.0.16'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 29.05.2021
+# Last update: 31.05.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -258,6 +258,10 @@ def streamingcommunity(parIn=None):
 def darkIptv(parIn=None):
     video_urls = []
     video_url = "http://temporary.mine.nu:8000/movie/Direct2Movie/r3ow52c4P4/"+parIn
+    if "." in parIn:
+        video_url = "http://temporary.mine.nu:8000/movie/Direct2Movie/r3ow52c4P4/"+parIn
+    else:
+        video_url = "http://temporary.mine.nu:8000/Direct2Movie/r3ow52c4P4/"+parIn
     video_urls.append((video_url, ""))
     return video_urls
 
