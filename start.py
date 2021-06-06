@@ -1,4 +1,4 @@
-versione='1.0.3'
+versione='1.0.4'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -148,6 +148,7 @@ def jsonToItems(strJson):
         is_chrome = False
         is_yatse = False
         is_pvr = False
+        is_log = False
         is_enabled = True
 
         if 'enabled' in item:
@@ -220,6 +221,11 @@ def jsonToItems(strJson):
             is_pvr = True
             link = item["pvr"]
 
+        if 'log' in item:
+            is_log = True
+            is_folder = True
+            link = "ignore"
+
         list_item = xbmcgui.ListItem(label=titolo)
         list_item.setInfo('video', {'title': titolo,'genre': genre,'mediatype': 'video'})
         list_item.setArt({'thumb': thumb, 'icon': thumb, 'fanart': fanart})
@@ -236,6 +242,8 @@ def jsonToItems(strJson):
             url = get_url(action='myresolve', url=link, parIn=resolverPar)
         elif is_pvr == True:
             url = get_url(action='pvr', url=link)
+        elif is_log == True:
+            url = get_url(action='log', url=link)
         elif is_yatse == True:
             list_item.setProperty('IsPlayable', 'true')
             url = get_urlYatse(action='share', type='unresolvedurl', data=link)
@@ -443,20 +451,20 @@ def checkDns():
     ip = xbmc.getIPAddress()
     dns1 = xbmc.getInfoLabel('Network.DNS1Address')
     dns2 = xbmc.getInfoLabel('Network.DNS2Address')
-    logging.warning("CHECK_DNS:'OK'")
+    logging.warning("MANDRA_DNS")
     logga("############ START NETWORK INFO ############")
     logga("## IP: %s" %  (ip))
     logga("## DNS1: %s" %  (dns1))
     logga("## DNS2: %s" %  (dns2))
     logga("############# END NETWORK INFO #############")
     okDns=False
-    if dns1 == "1.1.1.1" or dns1 == "8.8.8.8":
+    if dns1 == "1.1.1.1" or dns1 == "8.8.8.8" or dns1 == "192.168.0.1" or dns1 == "127.0.0.1":
         okDns=True
-    elif dns1 == "1.0.0.1" or dns1 == "8.8.4.4":
+    elif dns1 == "1.0.0.1" or dns1 == "8.8.4.4" or dns1 == "192.168.1.1" or dns1 == "192.168.1.254":
         okDns=True
-    elif dns2 == "1.1.1.1" or dns2 == "8.8.8.8":
+    elif dns2 == "1.1.1.1" or dns2 == "8.8.8.8" or dns2 == "192.168.0.1" or dns2 == "127.0.0.1":
         okDns=True
-    elif dns2 == "1.1.1.1" or dns2 == "8.8.4.4":
+    elif dns2 == "1.1.1.1" or dns2 == "8.8.4.4" or dns2 == "192.168.1.1" or dns2 == "192.168.1.254":
         okDns=True
 
     if okDns == False:
@@ -479,11 +487,34 @@ def checkMsgOnLog():
         logF = open(log_file)
         log_content = logF.read()
         logF.close()
-        log_msg = re.findall("CHECK_DNS:'(.*)'",log_content)[0]
-        if log_msg == "":
+        log_msg = re.findall("MANDRA_DNS",log_content)
+        if (log_msg):
             return False
         else:
-            return true
+            return True
+
+def uploadLog():
+    from xbmcaddon import Addon
+    addon_log_uploader = None
+    try:
+        addon_log_uploader = Addon('script.kodi.loguploader')
+    except:
+        logga.info('loguploader seems to be not installed or disabled')
+
+    if not addon_log_uploader:
+        xbmc.executebuiltin('InstallAddon(script.kodi.loguploader)', wait=True)
+        xbmc.executeJSONRPC('{"jsonrpc": "2.0", "id":1, "method": "Addons.SetAddonEnabled", "params": { "addonid": "script.kodi.loguploader", "enabled": true }}')
+        try:
+            addon_log_uploader = Addon('script.kodi.loguploader')
+        except:
+            logga.info('Logfile Uploader cannot be found')
+
+    if not addon_log_uploader:
+        logga('Cannot send log because Logfile Uploader cannot be found')
+        return False
+
+    xbmc.executebuiltin('RunScript(script.kodi.loguploader)')
+    return True
 
 
 def run():
@@ -548,6 +579,8 @@ def run():
                 play_video(url)
             elif action == 'pvr':
                 setPvr(url)
+            elif action == 'log':
+                uploadLog()
             else:
                 raise ValueError('Invalid paramstring: {0}!'.format(params))
     except Exception as err:
