@@ -1,4 +1,4 @@
-versione='1.0.4'
+versione='1.0.5'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -484,13 +484,16 @@ def checkMsgOnLog():
     LOGPATH = xbmc.translatePath('special://logpath')
     log_file = os.path.join(LOGPATH, 'kodi.log')
     if os.path.exists(log_file)==True:
-        logF = open(log_file)
-        log_content = logF.read()
-        logF.close()
-        log_msg = re.findall("MANDRA_DNS",log_content)
-        if (log_msg):
-            return False
-        else:
+        try:
+            logF = open(log_file)
+            log_content = logF.read()
+            logF.close()
+            log_msg = re.findall("MANDRA_DNS",log_content)
+            if (log_msg):
+                return False
+            else:
+                return True
+        except:
             return True
 
 def uploadLog():
