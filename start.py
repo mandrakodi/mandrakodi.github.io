@@ -1,8 +1,8 @@
-versione='1.0.2'
+versione='1.0.3'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 20.05.2021
+# Last update: 06.06.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -443,6 +443,7 @@ def checkDns():
     ip = xbmc.getIPAddress()
     dns1 = xbmc.getInfoLabel('Network.DNS1Address')
     dns2 = xbmc.getInfoLabel('Network.DNS2Address')
+    logging.warning("CHECK_DNS:'OK'")
     logga("############ START NETWORK INFO ############")
     logga("## IP: %s" %  (ip))
     logga("## DNS1: %s" %  (dns1))
@@ -471,6 +472,18 @@ def checkMandraScript():
         return dialog.ok("Mandrakodi", mess)
 
 
+def checkMsgOnLog():
+    LOGPATH = xbmc.translatePath('special://logpath')
+    log_file = os.path.join(LOGPATH, 'kodi.log')
+    if os.path.exists(log_file)==True:
+        logF = open(log_file)
+        log_content = logF.read()
+        logF.close()
+        log_msg = re.findall("CHECK_DNS:'(.*)'",log_content)[0]
+        if log_msg == "":
+            return False
+        else:
+            return true
 
 
 def run():
@@ -478,8 +491,9 @@ def run():
         if not sys.argv[2]:
             logga("=== ADDON START ===")
             checkResolver()
-            checkDns()
-            checkMandraScript()
+            if (checkMsgOnLog()):
+                checkDns()
+                checkMandraScript()
             getSource()
         else:
             params = parameters_string_to_dict(sys.argv[2])
