@@ -1,4 +1,4 @@
-versione='1.0.5'
+versione='1.0.6'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -14,6 +14,7 @@ import xbmcplugin
 import xbmcaddon
 import json
 import re
+import xbmcvfs
 
 # Get the plugin url in plugin:// notation.
 _url = sys.argv[0]
@@ -149,6 +150,7 @@ def jsonToItems(strJson):
         is_yatse = False
         is_pvr = False
         is_log = False
+        is_copyXml = False
         is_enabled = True
 
         if 'enabled' in item:
@@ -226,6 +228,11 @@ def jsonToItems(strJson):
             is_folder = True
             link = "ignore"
 
+        if 'copyXml' in item:
+            is_copyXml = True
+            is_folder = True
+            link = "ignore"
+
         list_item = xbmcgui.ListItem(label=titolo)
         list_item.setInfo('video', {'title': titolo,'genre': genre,'mediatype': 'video'})
         list_item.setArt({'thumb': thumb, 'icon': thumb, 'fanart': fanart})
@@ -244,6 +251,8 @@ def jsonToItems(strJson):
             url = get_url(action='pvr', url=link)
         elif is_log == True:
             url = get_url(action='log', url=link)
+        elif is_copyXml == True:
+            url = get_url(action='copyXml', url=link)
         elif is_yatse == True:
             list_item.setProperty('IsPlayable', 'true')
             url = get_urlYatse(action='share', type='unresolvedurl', data=link)
@@ -519,6 +528,41 @@ def uploadLog():
     xbmc.executebuiltin('RunScript(script.kodi.loguploader)')
     return True
 
+def copyPlayerCoreFactory():
+    XMLPATH = xbmc.translatePath('special://profile')
+    xml_file = os.path.join(XMLPATH, 'playercorefactory.xml')
+    dialog = xbmcgui.Dialog()
+    if (xbmc.getCondVisibility("system.platform.android")):
+        remoteXmlUrl = "https://mandrakodi.github.io/pcf.xml"
+        strSource = makeRequest(remoteXmlUrl)
+        if strSource is None or strSource == "":
+            mess = "Impossibile recuperare il file"
+            logga('We failed to get source from '+remoteXmlUrl)
+        else:
+            if PY3:
+                strSource = strSource.decode('utf-8')
+            try:
+                mess = "Si vuole sostituire il file playercorefactory.xml?"
+                risposta = dialog.yesno("Mandrakodi", mess, nolabel="Annulla", yeslabel="Procedi")
+                if risposta:
+                    if (saveFile(xml_file, strSource)):
+                        mess = "File salvato correttamente.\nChiudere e riaprire Kodi"
+                    else:
+                        mess = "Impossibile salvare il file"    
+            except:
+                mess = "Errore nel salvare il file"
+    else:
+        mess = "Opzione disponibile solo per sistemi Android"
+    dialog.ok("Mandrakodi", mess)
+
+def saveFile(fileName, text):
+    try:
+	    f = xbmcvfs.File(fileName, 'w')
+	    f.write(text)
+	    f.close()
+    except:
+	    return False
+    return True
 
 def run():
     try:
@@ -584,6 +628,8 @@ def run():
                 setPvr(url)
             elif action == 'log':
                 uploadLog()
+            elif action == 'copyXml':
+                copyPlayerCoreFactory()
             else:
                 raise ValueError('Invalid paramstring: {0}!'.format(params))
     except Exception as err:
