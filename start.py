@@ -1,8 +1,8 @@
-versione='1.0.6'
+versione='1.0.7'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 06.06.2021
+# Last update: 12.06.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -146,6 +146,7 @@ def jsonToItems(strJson):
         is_magnet = False
         is_myresolve = False
         is_regex = False
+        is_m3u = False
         is_chrome = False
         is_yatse = False
         is_pvr = False
@@ -215,6 +216,11 @@ def jsonToItems(strJson):
             is_folder = True
             link = item["yatse"]
 
+        if 'm3u' in item:
+            is_m3u = True
+            is_folder = True
+            link = item["m3u"]
+
         if 'magnet' in item:
             is_magnet = True
             link = item["magnet"]
@@ -251,6 +257,8 @@ def jsonToItems(strJson):
             url = get_url(action='pvr', url=link)
         elif is_log == True:
             url = get_url(action='log', url=link)
+        elif is_m3u == True:
+            url = get_url(action='m3u', url=link)
         elif is_copyXml == True:
             url = get_url(action='copyXml', url=link)
         elif is_yatse == True:
@@ -425,6 +433,25 @@ def setPvr(urlM3u):
         errMsg="ERRORE: {0}".format(err)
         raise ValueError(errMsg)
 
+def checkJsunpack():
+    home = ''
+    if PY3:
+        home = xbmc.translatePath(selfAddon.getAddonInfo('path'))
+    else:
+        home = xbmc.translatePath(selfAddon.getAddonInfo('path').decode('utf-8'))
+    resolver_file = os.path.join(home, 'jsunpack.py')
+    if os.path.exists(resolver_file)==False:
+        remoteResolverUrl = "https://mandrakodi.github.io/jsunpack.py"
+        strSource = makeRequest(remoteResolverUrl)
+        if strSource is None or strSource == "":
+            logga('We failed to get source from '+remoteResolverUrl)
+            remote_vers = local_vers
+        else:
+            if PY3:
+                strSource = strSource.decode('utf-8')
+            saveFile(resolver_file, strSource)
+            
+
 def checkResolver():
     home = ''
     if PY3:
@@ -564,11 +591,51 @@ def saveFile(fileName, text):
 	    return False
     return True
 
+def m3u2json(src):
+    import re
+    m3uSource = makeRequest(src)
+    if m3uSource is None or m3uSource == "":
+        logga('We failed to get source from '+src)
+    else:
+        if PY3:
+            m3uSource = m3uSource.decode('utf-8')		
+    
+    regex = r'#EXTINF:.*?tvg-logo=\"([^\"]+|)\".*?,(.*?)$\s(http.*?//.*?)$'
+		
+    matches = re.compile(regex, re.MULTILINE).findall(m3uSource)
+    strJson = '{"items":['
+    numIt=0
+    for match in matches:
+        img = str(match[0]).strip()
+        title = str(match[1]).strip()
+        link = str(match[2]).strip()
+        if (img == ""):
+            img = "https://e7.pngegg.com/pngimages/349/361/png-clipart-silver-and-blue-tv-digital-art-television-channel-card-sharing-iptv-front-splash-background-cartoon-tv-television-blue-thumbnail.png"
+
+        if (numIt > 0):
+            strJson += ','
+        strJson += '{'
+        strJson += '"title":"'+title+'",'
+        strJson += '"thumbnail":"'+img+'",'
+        strJson += '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        if link.endswith(".m3u"):
+            strJson += '"externallink":"'+link+'",'
+        else:
+            strJson += '"link":"'+link+'",'
+        strJson += '"info":"NO INFO"'
+        strJson += '}'
+        numIt += 1
+
+    strJson += ']}'
+    logga(strJson)
+    jsonToItems(strJson)
+
 def run():
     try:
         if not sys.argv[2]:
             logga("=== ADDON START ===")
             checkResolver()
+            checkJsunpack()
             if (checkMsgOnLog()):
                 checkDns()
                 checkMandraScript()
@@ -624,6 +691,8 @@ def run():
                     xbmc.executebuiltin('RunAddon("'+pl+'")')
             elif action == 'play':
                 play_video(url)
+            elif action == 'm3u':
+                m3u2json(url)
             elif action == 'pvr':
                 setPvr(url)
             elif action == 'log':
