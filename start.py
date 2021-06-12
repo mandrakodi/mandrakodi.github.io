@@ -1,4 +1,4 @@
-versione='1.0.10'
+versione='1.0.11'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -660,7 +660,12 @@ def run():
             if action == 'getExtData':
                 getExternalJson(url)
             elif action == 'getExtData2':
-                keyboard = xbmc.Keyboard('','Insert string')
+                clipB=""
+                if (xbmc.getCondVisibility("system.platform.android")):
+                    from androidhelper import Android
+                    droid = Android()
+                    clipB = droid.getClipboard().result
+                keyboard = xbmc.Keyboard(clipB,'Insert string')
                 keyboard.doModal()
                 if not (keyboard.isConfirmed() == False):
                     userInput = keyboard.getText()
