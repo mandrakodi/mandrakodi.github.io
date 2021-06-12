@@ -1,8 +1,8 @@
-versione='1.0.16'
+versione='1.0.17'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 31.05.2021
+# Last update: 12.06.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -158,54 +158,34 @@ def wizhd(parIn=None):
 def daddy(parIn=None):
     video_urls = []
     logging.warning('PAR: '+parIn)
-    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
-    if PY3:
-        page_data = page_data.decode('utf-8')
-    page_video = preg_match(page_data, r'iframe.+?src="([^"]+)')
-    if page_video == "":
-        page_video = preg_match(page_data, r"iframe.+?src='([^']+)")
-    if page_video.startswith("//"):
-        page_video = "https:"+page_video
-    logging.warning('page_video: '+page_video)
-    page_data2 = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','referer':parIn,'accept':'*/*'}).content
-    if PY3:
-        page_data2 = page_data2.decode('utf-8')
-    video_url = preg_match(page_data2, r'source\s*:\s*"([^"]+)')
+    video_url = GetLSProData(parIn)
     logging.warning('video_url '+video_url)
     video_urls.append((video_url, ""))
     return video_urls
+
+def GetLSProData(page_in):
+    import jsunpack
+    page_data = requests.get(page_in,headers={'user-agent':'iPad','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    
+    src = preg_match(page_data, '<iframe src="([^"]*)')
+    if src == "":
+        src = preg_match(page_data, "<iframe src='([^']*)")
+    src = 'http:' + src if src.startswith('//') else src
+    logging.warning('iframe_url '+src)
+    fu = requests.get(src, headers={'user-agent':'iPad','referer':page_in}).text
+    find = re.findall('eval\(function(.+?.+)', fu)[0]
+    unpack = jsunpack.unpack(find)
+    c = re.findall('var src="([^"]*)',unpack)[0]
+    return c + '|user-agent=ipad&referer=' + src
 
 def wigi(parIn=None):
     #Massimo della Pena, succhiami lo scroto
     wigiUrl = "https://wigilive.com/embed.php?id="+parIn
     video_urls = []
     logging.warning('PAR: '+parIn)
-    page_data = requests.get(wigiUrl,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
-    if PY3:
-        page_data = page_data.decode('utf-8')
-    #page_video = preg_match(page_data, r'iframe.+?src="([^"]+)')
-    page_video = preg_match(page_data, "<iframe src='(.*?)' width='100%'")
-    if page_video == "":
-        page_video = preg_match(page_data, r"iframe.+?src='([^']+)")
-    if page_video.startswith("//"):
-        page_video = "https:"+page_video
-    logging.warning('page_video: '+page_video)
-    if "buzztv" in page_video:
-        page_data2 = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','referer':parIn,'accept':'*/*'}).content
-        if PY3:
-            page_data2 = page_data2.decode('utf-8')
-        page_video2 = preg_match(page_data2, r'iframe.+?src="([^"]+)')
-        if page_video2 == "":
-            page_video2 = preg_match(page_data2, r"iframe.+?src='([^']+)")
-        if page_video2.startswith("//"):
-            page_video2 = "https:"+page_video2
-        logging.warning('page_video2: '+page_video2)
-        page_data3 = requests.get(page_video2,headers={'user-agent':'Mozilla/5.0','referer':page_video,'accept':'*/*'}).content
-    else:
-       page_data3 = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','referer':wigiUrl,'accept':'*/*'}).content 
-    if PY3:
-        page_data3 = page_data3.decode('utf-8')
-    video_url = preg_match(page_data3, r'source\s*:\s*"([^"]+)')
+    video_url = GetLSProData(wigiUrl)
     logging.warning('video_url '+video_url)
     video_urls.append((video_url, ""))
     return video_urls
