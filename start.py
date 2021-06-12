@@ -1,4 +1,4 @@
-versione='1.0.9'
+versione='1.0.10'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -431,7 +431,7 @@ def setPvr(urlM3u):
         return dialog.ok("Mandrakodi", "PVR configurato correttamente.")
     except Exception as err:
         errMsg="ERRORE: {0}".format(err)
-        raise ValueError(errMsg)
+        raise Exception(errMsg)
 
 def checkJsunpack():
     home = ''
@@ -721,10 +721,10 @@ def run():
             elif action == 'copyXml':
                 copyPlayerCoreFactory()
             else:
-                raise ValueError('Invalid paramstring: {0}!'.format(params))
+                raise Exception('Invalid paramstring: {0}!'.format(params))
     except Exception as err:
         errMsg="ERRORE: {0}".format(err)
-        raise ValueError(errMsg)
+        raise Exception(errMsg)
     
     if not viewmode==None:
         logga("setting view mode")
