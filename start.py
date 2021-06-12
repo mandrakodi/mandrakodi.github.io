@@ -1,4 +1,4 @@
-versione='1.0.8'
+versione='1.0.9'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -664,8 +664,17 @@ def run():
                 keyboard.doModal()
                 if not (keyboard.isConfirmed() == False):
                     userInput = keyboard.getText()
-                    strUrl = url + userInput.replace(" ", "+")
-                    getExternalJson(strUrl)
+                    if not (userInput == ''):
+                        strUrl = url + userInput.replace(" ", "+")
+                        getExternalJson(strUrl)
+                    else:
+                        logga("NO INPUT")
+                        mesNoInput='{"SetViewMode":"500","items":[{"title":"[COLOR red]NO INPUT[/COLOR]","link":"ignore","thumbnail":"https://e7.pngegg.com/pngimages/56/148/png-clipart-computer-icons-wrong-miscellaneous-blue-thumbnail.png","fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg","info":"NO INPUT"}]}'
+                        jsonToItems(mesNoInput)
+                else:
+                    logga("EXIT KEYBOARD")
+                    mesNoInput='{"SetViewMode":"500","items":[{"title":"[COLOR red]NO INPUT[/COLOR]","link":"ignore","thumbnail":"https://e7.pngegg.com/pngimages/56/148/png-clipart-computer-icons-wrong-miscellaneous-blue-thumbnail.png","fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg","info":"NO INPUT"}]}'
+                    jsonToItems(mesNoInput)
             elif action == 'apk':
                 apkN =  params['apk']
                 logga("RUN APK: "+apkN)
