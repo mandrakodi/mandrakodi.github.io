@@ -1,4 +1,4 @@
-versione='1.0.7'
+versione='1.0.8'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -591,6 +591,13 @@ def saveFile(fileName, text):
 	    return False
     return True
 
+def preg_match(data, patron, index=0):
+    try:
+        matches = re.findall(patron, data, flags=re.DOTALL)
+        return matches[index]
+    except:
+        return ""
+
 def m3u2json(src):
     import re
     m3uSource = makeRequest(src)
@@ -600,17 +607,22 @@ def m3u2json(src):
         if PY3:
             m3uSource = m3uSource.decode('utf-8')		
     
-    regex = r'#EXTINF:.*?tvg-logo=\"([^\"]+|)\".*?,(.*?)$\s(http.*?//.*?)$'
-		
+    #regex = r'#EXTINF:.*?tvg-logo=\"([^\"]+|)\".*?,(.*?)$\s(http.*?//.*?)$'
+    regex = r'#EXTINF:(.*?),(.*?)$\s(http.*?//.*?)$'	
     matches = re.compile(regex, re.MULTILINE).findall(m3uSource)
     strJson = '{"items":['
     numIt=0
     for match in matches:
         img = str(match[0]).strip()
+        regex2= r'.*?tvg-logo="(.*?)"'
+        urlImg=preg_match(img, regex2)
+        if (urlImg == ""):
+            img = "https://e7.pngegg.com/pngimages/349/361/png-clipart-silver-and-blue-tv-digital-art-television-channel-card-sharing-iptv-front-splash-background-cartoon-tv-television-blue-thumbnail.png"
+        else:
+            img = urlImg
+
         title = str(match[1]).strip()
         link = str(match[2]).strip()
-        if (img == ""):
-            img = "https://e7.pngegg.com/pngimages/349/361/png-clipart-silver-and-blue-tv-digital-art-television-channel-card-sharing-iptv-front-splash-background-cartoon-tv-television-blue-thumbnail.png"
 
         if (numIt > 0):
             strJson += ','
