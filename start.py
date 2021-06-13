@@ -1,8 +1,8 @@
-versione='1.0.11'
+versione='1.0.12'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 12.06.2021
+# Last update: 13.06.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -661,10 +661,6 @@ def run():
                 getExternalJson(url)
             elif action == 'getExtData2':
                 clipB=""
-                if (xbmc.getCondVisibility("system.platform.android")):
-                    from androidhelper import Android
-                    droid = Android()
-                    clipB = droid.getClipboard().result
                 keyboard = xbmc.Keyboard(clipB,'Insert string')
                 keyboard.doModal()
                 if not (keyboard.isConfirmed() == False):
