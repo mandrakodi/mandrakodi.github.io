@@ -1,4 +1,4 @@
-versione='1.0.12'
+versione='1.0.13'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
