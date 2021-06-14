@@ -18,12 +18,14 @@ import xbmcvfs
 
 # Get the plugin url in plugin:// notation.
 _url = sys.argv[0]
+
 # Get the plugin handle as an integer number.
 _handle = int(sys.argv[1])
 
 addon_id = 'plugin.video.mandrakodi19'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 debug = selfAddon.getSetting("debug")
+testoLog = "";
 
 viewmode=None
 
@@ -35,9 +37,12 @@ else:
     from urlparse import urlparse, parse_qsl
     from urllib import urlencode, quote
 
+
 def logga(mess):
+    global testoLog
     if debug == "on":
-        logging.warning('MANDRA_LOG: '+mess)
+        testoLog += mess+"\n";
+
 
 def makeRequest(url, hdr=None):
     logga('Try to open '+url)
@@ -49,6 +54,7 @@ def makeRequest(url, hdr=None):
 
     pwd = selfAddon.getSetting("password")
     version = selfAddon.getAddonInfo("version")
+
     if hdr is None:
         ua = "MandraKodi@@"+version+"@@"+pwd
         hdr = {"User-Agent" : ua}
@@ -60,7 +66,9 @@ def makeRequest(url, hdr=None):
     except:
         logga('Error to open url')
         pass
+
     return html
+
 
 def getSource():
     startUrl = "https://www.dropbox.com/s/igyq58cnpjq0fq4/disclaimer.json?dl=1"
@@ -75,13 +83,14 @@ def getSource():
         logga('Errore getSource')
         strSource = getTxtMessage("um.txt")
         pass
-    jsonToItems(strSource)
 
+    jsonToItems(strSource)
 
 
 def play_video(path):
     play_item = xbmcgui.ListItem(path=path)
     xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
+
 
 def getTxtMessage(vName):
     home = ''
@@ -95,9 +104,13 @@ def getTxtMessage(vName):
     resF.close()
     return file_content
 
+
+
 def getExternalJson(strPath):
     strSource = makeRequest(strPath)
     jsonToItems(strSource)
+
+
 
 def jsonToItems(strJson):
     global viewmode
@@ -111,7 +124,6 @@ def jsonToItems(strJson):
                 return jsonToItems(getTxtMessage(vS))
             return getExternalJson(vS)
     except:
-        logga('DISPLAY ADDON MESSAGE')
         pass
 
     try:
@@ -140,6 +152,7 @@ def jsonToItems(strJson):
         regExp = ""
         resolverPar = "no_par"
         link = ""
+
         extLink = False
         extLink2 = False
         is_folder = False
@@ -159,10 +172,10 @@ def jsonToItems(strJson):
 
         if is_enabled == False:
             continue
-        
+
         if 'title' in item:
             titolo = item["title"]
-        
+
         if 'thumbnail' in item:
             thumb = item["thumbnail"]
 
@@ -174,6 +187,7 @@ def jsonToItems(strJson):
 
         if 'genre' in item:
             genre = item["genre"]
+
 
         if 'link' in item:
             link = item["link"]
@@ -200,6 +214,7 @@ def jsonToItems(strJson):
                 arrT=link.split(":")
                 link=arrT[0]
                 resolverPar=arrT[1]
+
         if 'regexPage' in item:
             is_regex = True
             link = item["regexPage"]
@@ -242,8 +257,9 @@ def jsonToItems(strJson):
         list_item = xbmcgui.ListItem(label=titolo)
         list_item.setInfo('video', {'title': titolo,'genre': genre,'mediatype': 'video'})
         list_item.setArt({'thumb': thumb, 'icon': thumb, 'fanart': fanart})
-        
+
         url = ""
+
         if extLink == True:
             url = get_url(action='getExtData', url=link)
         elif extLink2 == True:
@@ -284,6 +300,7 @@ def jsonToItems(strJson):
                     url = get_url(action='plugin', url=link)
 
         xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
+
     xbmcplugin.endOfDirectory(_handle)
 
 def get_url(**kwargs):
@@ -445,12 +462,28 @@ def checkJsunpack():
         strSource = makeRequest(remoteResolverUrl)
         if strSource is None or strSource == "":
             logga('We failed to get source from '+remoteResolverUrl)
-            remote_vers = local_vers
         else:
             if PY3:
                 strSource = strSource.decode('utf-8')
             saveFile(resolver_file, strSource)
-            
+
+
+def checkPortalPy():
+    home = ''
+    if PY3:
+        home = xbmc.translatePath(selfAddon.getAddonInfo('path'))
+    else:
+        home = xbmc.translatePath(selfAddon.getAddonInfo('path').decode('utf-8'))
+    resolver_file = os.path.join(home, 'portal_api.py')
+    if os.path.exists(resolver_file)==False:
+        remoteResolverUrl = "https://mandrakodi.github.io/portal_api.py"
+        strSource = makeRequest(remoteResolverUrl)
+        if strSource is None or strSource == "":
+            logga('We failed to get source from '+remoteResolverUrl)
+        else:
+            if PY3:
+                strSource = strSource.decode('utf-8')
+            saveFile(resolver_file, strSource)
 
 def checkResolver():
     home = ''
@@ -642,21 +675,27 @@ def m3u2json(src):
     logga(strJson)
     jsonToItems(strJson)
 
+
+
 def run():
     try:
         if not sys.argv[2]:
             logga("=== ADDON START ===")
             checkResolver()
             checkJsunpack()
+            checkPortalPy()
+
             if (checkMsgOnLog()):
                 checkDns()
                 checkMandraScript()
+
             getSource()
         else:
             params = parameters_string_to_dict(sys.argv[2])
             action =  params['action']
             url =  params['url']
             logga("ACTION ==> "+action)
+
             if action == 'getExtData':
                 getExternalJson(url)
             elif action == 'getExtData2':
@@ -667,6 +706,7 @@ def run():
                     userInput = keyboard.getText()
                     if not (userInput == ''):
                         strUrl = url + userInput.replace(" ", "+")
+                        logga("GET JSON FROM: "+strUrl)
                         getExternalJson(strUrl)
                     else:
                         logga("NO INPUT")
@@ -726,9 +766,12 @@ def run():
     except Exception as err:
         errMsg="ERRORE: {0}".format(err)
         raise Exception(errMsg)
-    
+
     if not viewmode==None:
         logga("setting view mode")
         xbmc.executebuiltin("Container.SetViewMode("+viewmode+")")
         logga("setting view mode again")
         xbmc.executebuiltin("Container.SetViewMode("+viewmode+")")
+
+    if debug == "on":
+        logging.warning("MANDRA_LOG: \n"+testoLog)
