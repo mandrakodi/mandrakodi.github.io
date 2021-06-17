@@ -1,8 +1,8 @@
-versione='1.0.18'
+versione='1.0.19'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 14.06.2021
+# Last update: 17.06.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -227,7 +227,7 @@ def streamingcommunity(parIn=None):
         from time import time
         from base64 import b64encode as b64
         import hashlib
-        page_video = "https://streamingcommunity.one/client-address"
+        page_video = "https://streamingcommunity.tv/client-address"
         page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
         if PY3:
             page_data = page_data.decode('utf-8')
@@ -241,7 +241,7 @@ def streamingcommunity(parIn=None):
         return s
 
     token = calculateToken()
-    video_url = "https://streamingcommunity.one/videos/master/"+parIn+"/480p"+token
+    video_url = "https://streamingcommunity.tv/videos/master/"+parIn+"/480p"+token
     logga('video_community '+video_url)
     video_urls.append((video_url, ""))
     return video_urls
