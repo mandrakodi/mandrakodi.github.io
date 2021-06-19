@@ -1,8 +1,8 @@
-versione='1.0.13'
+versione='1.0.14'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 13.06.2021
+# Last update: 14.06.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -25,6 +25,7 @@ _handle = int(sys.argv[1])
 addon_id = 'plugin.video.mandrakodi19'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 debug = selfAddon.getSetting("debug")
+showAdult = selfAddon.getSetting("ShowAdult")
 testoLog = "";
 
 viewmode=None
@@ -173,6 +174,12 @@ def jsonToItems(strJson):
         if is_enabled == False:
             continue
 
+        if 'tipoLink' in item:
+            tipoLink = item["tipoLink"]
+            if tipoLink == "adult":
+                 if showAdult==False:
+                     continue
+        
         if 'title' in item:
             titolo = item["title"]
 
