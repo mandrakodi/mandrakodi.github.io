@@ -1,4 +1,4 @@
-versione='1.0.14'
+versione='1.0.15'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -177,7 +177,7 @@ def jsonToItems(strJson):
         if 'tipoLink' in item:
             tipoLink = item["tipoLink"]
             if tipoLink == "adult":
-                 if showAdult==False:
+                 if showAdult=="false":
                      continue
         
         if 'title' in item:
