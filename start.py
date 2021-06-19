@@ -1,8 +1,8 @@
-versione='1.0.15'
+versione='1.0.16'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 14.06.2021
+# Last update: 20.06.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -18,33 +18,27 @@ import xbmcvfs
 
 # Get the plugin url in plugin:// notation.
 _url = sys.argv[0]
-
 # Get the plugin handle as an integer number.
 _handle = int(sys.argv[1])
-
 addon_id = 'plugin.video.mandrakodi19'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 debug = selfAddon.getSetting("debug")
 showAdult = selfAddon.getSetting("ShowAdult")
 testoLog = "";
-
 viewmode=None
 
 PY3 = sys.version_info[0] == 3
-
 if PY3:
     from urllib.parse import urlencode, parse_qsl
 else:
     from urlparse import urlparse, parse_qsl
     from urllib import urlencode, quote
-
-
+	
 def logga(mess):
     global testoLog
     if debug == "on":
         testoLog += mess+"\n";
-
-
+		
 def makeRequest(url, hdr=None):
     logga('Try to open '+url)
     html = ""
@@ -52,10 +46,8 @@ def makeRequest(url, hdr=None):
 	    import urllib.request as myRequest
     else:
 	    import urllib2 as myRequest
-
     pwd = selfAddon.getSetting("password")
     version = selfAddon.getAddonInfo("version")
-
     if hdr is None:
         ua = "MandraKodi@@"+version+"@@"+pwd
         hdr = {"User-Agent" : ua}
@@ -67,9 +59,7 @@ def makeRequest(url, hdr=None):
     except:
         logga('Error to open url')
         pass
-
     return html
-
 
 def getSource():
     startUrl = "https://www.dropbox.com/s/igyq58cnpjq0fq4/disclaimer.json?dl=1"
@@ -84,14 +74,11 @@ def getSource():
         logga('Errore getSource')
         strSource = getTxtMessage("um.txt")
         pass
-
     jsonToItems(strSource)
-
 
 def play_video(path):
     play_item = xbmcgui.ListItem(path=path)
     xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
-
 
 def getTxtMessage(vName):
     home = ''
@@ -105,18 +92,15 @@ def getTxtMessage(vName):
     resF.close()
     return file_content
 
-
-
 def getExternalJson(strPath):
     strSource = makeRequest(strPath)
     jsonToItems(strSource)
-
-
-
+	
 def jsonToItems(strJson):
     global viewmode
     dataJson = json.loads(strJson)
     xbmcplugin.setContent(_handle, 'videos')
+    
     try:
         nvs = dataJson['name']
         if nvs == addon_id:
@@ -131,11 +115,10 @@ def jsonToItems(strJson):
         viewmode = dataJson['SetViewMode']
         skin_name = xbmc.getSkinDir()
         logga("setting view mode for "+skin_name+" on "+viewmode)
-        #xbmc.executebuiltin("Container.SetViewMode("+viewmode+")")
     except:
         logga('no view mode')
         pass
-
+    
     try:
         arrChan = dataJson['channels']
         logga("OK CHANNELS")
@@ -143,7 +126,7 @@ def jsonToItems(strJson):
     except:
         logga('no channels. GetItems')
         pass
-
+    
     for item in dataJson["items"]:
         titolo = "NO TIT"
         thumb = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
@@ -153,7 +136,8 @@ def jsonToItems(strJson):
         regExp = ""
         resolverPar = "no_par"
         link = ""
-
+        tipoLink = ""
+		
         extLink = False
         extLink2 = False
         is_folder = False
@@ -170,7 +154,6 @@ def jsonToItems(strJson):
 
         if 'enabled' in item:
             is_enabled = item["enabled"]
-
         if is_enabled == False:
             continue
 
@@ -182,33 +165,24 @@ def jsonToItems(strJson):
         
         if 'title' in item:
             titolo = item["title"]
-
         if 'thumbnail' in item:
             thumb = item["thumbnail"]
-
         if 'fanart' in item:
             fanart = item["fanart"]
-
         if 'info' in item:
             info = item["info"]
-
         if 'genre' in item:
             genre = item["genre"]
-
-
         if 'link' in item:
             link = item["link"]
-
         if 'externallink' in item:
             extLink = True
             is_folder = True
             link = item["externallink"]
-
         if 'externallink2' in item:
             extLink2 = True
             is_folder = True
             link = item["externallink2"]
-
         if 'myresolve' in item:
             is_myresolve = True
             is_folder = True
@@ -221,50 +195,41 @@ def jsonToItems(strJson):
                 arrT=link.split(":")
                 link=arrT[0]
                 resolverPar=arrT[1]
-
         if 'regexPage' in item:
             is_regex = True
             link = item["regexPage"]
             if 'regexExpres' in item:
                 regExp = item["regexExpres"]
-
         if 'chrome' in item:
             is_chrome = True
             is_folder = True
             link = item["chrome"]
-
         if 'yatse' in item:
             is_yatse = True
             is_folder = True
             link = item["yatse"]
-
         if 'm3u' in item:
             is_m3u = True
             is_folder = True
             link = item["m3u"]
-
         if 'magnet' in item:
             is_magnet = True
             link = item["magnet"]
-
         if 'pvr' in item:
             is_pvr = True
             link = item["pvr"]
-
         if 'log' in item:
             is_log = True
             is_folder = True
             link = "ignore"
-
         if 'copyXml' in item:
             is_copyXml = True
             is_folder = True
             link = "ignore"
 
         list_item = xbmcgui.ListItem(label=titolo)
-        list_item.setInfo('video', {'title': titolo,'genre': genre,'mediatype': 'video'})
+        list_item.setInfo('video', {'title': titolo,'genre': genre,'plot': info,'mediatype': 'video'})
         list_item.setArt({'thumb': thumb, 'icon': thumb, 'fanart': fanart})
-
         url = ""
 
         if extLink == True:
@@ -305,9 +270,7 @@ def jsonToItems(strJson):
                     url = get_url(action='play', url=link)
                 else:
                     url = get_url(action='plugin', url=link)
-
         xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
-
     xbmcplugin.endOfDirectory(_handle)
 
 def get_url(**kwargs):
@@ -338,19 +301,14 @@ def jsonToChannels(strJson):
         genre = "generic"
         info = ""
         link = ""
-
         if 'name' in channel:
             titolo = channel["name"]
-
         if 'thumbnail' in channel:
             thumb = channel["thumbnail"]
-
         if 'fanart' in channel:
             fanart = channel["fanart"]
-
         if 'info' in channel:
             info = channel["info"]
-
         list_item = xbmcgui.ListItem(label=titolo)
         list_item.setInfo('video', {'title': titolo,'genre': genre,'mediatype': 'video'})
         list_item.setArt({'thumb': thumb, 'icon': thumb, 'fanart': fanart})
@@ -369,7 +327,6 @@ def channelToItems(strChName, _handle):
             logga("FOUND CH: "+titolo)
             jsonToItems(json.dumps(channel))
 
-
 def simpleRegex(page, find):
     html = makeRequest(page)
     if PY3:
@@ -377,10 +334,11 @@ def simpleRegex(page, find):
     urlSteam = re.findall(find, html)[0]
     return urlSteam
 
-
 def callReolver(metodo, parametro):
     import myResolver
+
     retVal = myResolver.run(metodo, parametro)
+
     xbmcplugin.setContent(_handle, 'videos')
     thumb="https://cdn.pixabay.com/photo/2012/04/12/20/56/play-30619_640.png"
     fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
@@ -434,14 +392,11 @@ def setPvr(urlM3u):
             xbmc.executebuiltin('xbmc.StopPVRManager')
         else:
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "id":1, "method": "Addons.SetAddonEnabled", "params": { "addonid": "pvr.iptvsimple", "enabled": false }}')
-
         if pvrSimpleTv.getSetting('m3uPathType') != '1': 
             pvrSimpleTv.setSetting('m3uPathType', '1')
         pvrSimpleTv.setSetting('epgUrl','')
         pvrSimpleTv.setSetting('m3uUrl', urlM3u)
-
         xbmc.sleep(500)
-
         if PY3:
             xbmc.executebuiltin('xbmc.StartPVRManager')
         else:
@@ -473,7 +428,6 @@ def checkJsunpack():
             if PY3:
                 strSource = strSource.decode('utf-8')
             saveFile(resolver_file, strSource)
-
 
 def checkPortalPy():
     home = ''
@@ -542,7 +496,6 @@ def checkDns():
         okDns=True
     elif dns2 == "1.1.1.1" or dns2 == "8.8.4.4" or dns2 == "192.168.1.1" or dns2 == "192.168.1.254":
         okDns=True
-
     if okDns == False:
         dialog = xbmcgui.Dialog()
         mess = "Con i DNS attualmente impostati, "+dns1+" - "+dns2+",\npotresti avere problemi a recuperare i link da alcuni siti.\nSe puoi, utilizza quelli di CloudFlare [1.1.1.1 - 1.0.0.1]"
@@ -554,7 +507,6 @@ def checkMandraScript():
         dialog = xbmcgui.Dialog()
         mess = "Il plugin script.mandra.kodi non risulta installato.\nAlcune funzionalita' non saranno disponibili."
         return dialog.ok("Mandrakodi", mess)
-
 
 def checkMsgOnLog():
     LOGPATH = xbmc.translatePath('special://logpath')
@@ -573,25 +525,21 @@ def checkMsgOnLog():
             return True
 
 def uploadLog():
-    from xbmcaddon import Addon
     addon_log_uploader = None
     try:
-        addon_log_uploader = Addon('script.kodi.loguploader')
+        addon_log_uploader = xbmcaddon.Addon('script.kodi.loguploader')
     except:
         logga.info('loguploader seems to be not installed or disabled')
-
     if not addon_log_uploader:
         xbmc.executebuiltin('InstallAddon(script.kodi.loguploader)', wait=True)
         xbmc.executeJSONRPC('{"jsonrpc": "2.0", "id":1, "method": "Addons.SetAddonEnabled", "params": { "addonid": "script.kodi.loguploader", "enabled": true }}')
         try:
-            addon_log_uploader = Addon('script.kodi.loguploader')
+            addon_log_uploader = xbmcaddon.Addon('script.kodi.loguploader')
         except:
             logga.info('Logfile Uploader cannot be found')
-
     if not addon_log_uploader:
         logga('Cannot send log because Logfile Uploader cannot be found')
         return False
-
     xbmc.executebuiltin('RunScript(script.kodi.loguploader)')
     return True
 
@@ -660,10 +608,8 @@ def m3u2json(src):
             img = "https://e7.pngegg.com/pngimages/349/361/png-clipart-silver-and-blue-tv-digital-art-television-channel-card-sharing-iptv-front-splash-background-cartoon-tv-television-blue-thumbnail.png"
         else:
             img = urlImg
-
         title = str(match[1]).strip()
         link = str(match[2]).strip()
-
         if (numIt > 0):
             strJson += ','
         strJson += '{'
@@ -677,12 +623,9 @@ def m3u2json(src):
         strJson += '"info":"NO INFO"'
         strJson += '}'
         numIt += 1
-
     strJson += ']}'
     logga(strJson)
     jsonToItems(strJson)
-
-
 
 def run():
     try:
@@ -691,18 +634,15 @@ def run():
             checkResolver()
             checkJsunpack()
             checkPortalPy()
-
             if (checkMsgOnLog()):
                 checkDns()
                 checkMandraScript()
-
             getSource()
         else:
             params = parameters_string_to_dict(sys.argv[2])
             action =  params['action']
             url =  params['url']
             logga("ACTION ==> "+action)
-
             if action == 'getExtData':
                 getExternalJson(url)
             elif action == 'getExtData2':
@@ -773,12 +713,10 @@ def run():
     except Exception as err:
         errMsg="ERRORE: {0}".format(err)
         raise Exception(errMsg)
-
     if not viewmode==None:
         logga("setting view mode")
         xbmc.executebuiltin("Container.SetViewMode("+viewmode+")")
         logga("setting view mode again")
         xbmc.executebuiltin("Container.SetViewMode("+viewmode+")")
-
     if debug == "on":
         logging.warning("MANDRA_LOG: \n"+testoLog)
