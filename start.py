@@ -1,4 +1,4 @@
-versione='1.0.16'
+versione='1.0.17'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -66,12 +66,13 @@ def getSource():
     try:
         strSource = makeRequest(startUrl)
         if strSource is None or strSource == "":
-            logga('We failed to get source from '+startUrl)
+            logging.warning('MANDRA_LOG: NO DISCLAIMER')
             strSource = getTxtMessage("um.txt")
         else:
             logga('OK SOURCE ')
-    except:
-        logga('Errore getSource')
+    except Exception as err:
+        errMsg="ERRORE: {0}".format(err)
+        logging.warning("MANDRA_LOG: UNDER MAINTENANCE \n"+errMsg)
         strSource = getTxtMessage("um.txt")
         pass
     jsonToItems(strSource)
