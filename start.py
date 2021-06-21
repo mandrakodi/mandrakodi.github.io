@@ -1,4 +1,4 @@
-versione='1.0.18'
+versione='1.0.19'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -67,7 +67,7 @@ def getSource():
         strSource = makeRequest(startUrl)
         if strSource is None or strSource == "":
             logging.warning('MANDRA_LOG: NO DISCLAIMER')
-            strSource = getTxtMessage("um.txt")
+            strSource = underMaintMsg()
         else:
             logga('OK SOURCE ')
     except Exception as err:
