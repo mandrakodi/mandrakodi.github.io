@@ -1,8 +1,8 @@
-versione='1.0.17'
+versione='1.0.18'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 20.06.2021
+# Last update: 21.06.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -73,9 +73,21 @@ def getSource():
     except Exception as err:
         errMsg="ERRORE: {0}".format(err)
         logging.warning("MANDRA_LOG: UNDER MAINTENANCE \n"+errMsg)
-        strSource = getTxtMessage("um.txt")
+        strSource = underMaintMsg()
         pass
     jsonToItems(strSource)
+
+def underMaintMsg():
+    strToRet = '{"SetViewMode":"500","items":['
+    strToRet +='{"title":"[COLOR red]ADDON UNDER MAINTENANCE[/COLOR]",'
+    strToRet +='"link":"ignore","thumbnail":"https://images-na.ssl-images-amazon.com/images/I/41sxqlFU88L.jpg",'
+    strToRet +='"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg","info":"Addon Under Maintenance"},'
+    strToRet +='{"title":"[COLOR gold]SEND LOG[/COLOR]",'
+    strToRet +='"log":"ignore","thumbnail":"https://e7.pngegg.com/pngimages/584/374/png-clipart-green-computer-monitor-computer-monitor-accessory-screen-multimedia-11-computer-matrix-computer-computer-monitor-accessory-thumbnail.png",'
+    strToRet +='"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg","info":"Send Log"}'
+    strToRet +=']}'
+
+    return strToRet
 
 def play_video(path):
     play_item = xbmcgui.ListItem(path=path)
