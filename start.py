@@ -1,4 +1,4 @@
-versione='1.0.20'
+versione='1.0.21'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -53,7 +53,7 @@ def makeRequest(url, hdr=None):
         hdr = {"User-Agent" : ua}
     try:
         req = myRequest.Request(url, headers=hdr)
-        response = myRequest.urlopen(req, timeout=25)
+        response = myRequest.urlopen(req, timeout=45)
         html = response.read()
         response.close()
     except:
