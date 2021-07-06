@@ -1,8 +1,8 @@
-versione='1.0.19'
+versione='1.0.20'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 21.06.2021
+# Last update: 06.07.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -53,7 +53,7 @@ def makeRequest(url, hdr=None):
         hdr = {"User-Agent" : ua}
     try:
         req = myRequest.Request(url, headers=hdr)
-        response = myRequest.urlopen(req)
+        response = myRequest.urlopen(req, timeout=25)
         html = response.read()
         response.close()
     except:
