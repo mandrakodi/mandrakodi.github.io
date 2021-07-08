@@ -1,4 +1,4 @@
-versione='1.0.20'
+versione='1.0.21'
 
 # Module: myResolve
 
@@ -493,7 +493,7 @@ def streamingcommunity(parIn=None):
 
         import hashlib
 
-        page_video = "https://streamingcommunity.tv/client-address"
+        page_video = "https://streamingcommunity.work/client-address"
 
         page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
 
@@ -521,7 +521,7 @@ def streamingcommunity(parIn=None):
 
     token = calculateToken()
 
-    video_url = "https://streamingcommunity.tv/videos/master/"+parIn+"/480p"+token
+    video_url = "https://streamingcommunity.work/videos/master/"+parIn+"/480p"+token
 
     logga('video_community '+video_url)
 
