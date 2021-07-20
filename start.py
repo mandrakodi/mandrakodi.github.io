@@ -1,4 +1,4 @@
-versione='1.0.22'
+versione='1.0.23'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -722,7 +722,7 @@ def run():
             elif action == 'log':
                 uploadLog()
             elif action == 'copyXml':
-                copyPlayerCoreFactory()
+                copyPlayerCoreFactory(url)
             else:
                 raise Exception('Invalid paramstring: {0}!'.format(params))
     except Exception as err:
