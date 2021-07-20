@@ -9,28 +9,32 @@
 			<filename>com.mxtech.videoplayer.ad</filename>
 			<hidexbmc>false</hidexbmc>
 		</player>
-		<player name="Acestream" type="ExternalPlayer" audio="false" video="true">
+		<player name="AceStream" type="ExternalPlayer" audio="false" video="true">
 			<filename>org.acestream.media</filename>
-			<hidexbmc>true</hidexbmc>
-		</player>
-		<player name="SopCast" type="ExternalPlayer" audio="false" video="true">
-			<filename>com.devaward.soptohttp</filename>
 			<hidexbmc>false</hidexbmc>
 		</player>
-		<player name="WVC" type="ExternalPlayer" audio="false" video="true">
-			<filename>com.instantbits.cast.webvideo</filename>
-			<hidexbmc>false</hidexbmc>
-		</player>
-		<player name="WUFFY" type="ExternalPlayer" audio="false" video="true">
-			<filename>co.wuffy.player</filename>
-			<hidexbmc>false</hidexbmc>
-    	</player>
-		<player name="Chrome" type="ExternalPlayer" audio="false" video="true">
-			<filename>com.android.chrome</filename>
+		<player name="AceEngine" type="ExternalPlayer" audio="false" video="true">
+			<filename>org.acestream.core</filename>
 			<hidexbmc>false</hidexbmc>
 		</player>
 		<player name="Wiseplay" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.wiseplay</filename>
+			<hidexbmc>false</hidexbmc>
+		</player>
+		<player name="WuffyPlayer" type="ExternalPlayer" audio="false" video="true">
+			<filename>co.wuffy.player</filename>
+			<hidexbmc>false</hidexbmc>
+    	        </player>
+		<player name="SopCast" type="ExternalPlayer" audio="false" video="true">
+			<filename>com.devaward.soptohttp</filename>
+			<hidexbmc>false</hidexbmc>
+		</player>
+		<player name="WebVideoCaster" type="ExternalPlayer" audio="false" video="true">
+			<filename>com.instantbits.cast.webvideo</filename>
+			<hidexbmc>false</hidexbmc>
+		</player>
+		<player name="Chrome" type="ExternalPlayer" audio="false" video="true">
+			<filename>com.android.chrome</filename>
 			<hidexbmc>false</hidexbmc>
 		</player>
 	</players>
