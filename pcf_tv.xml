@@ -47,7 +47,7 @@
 	</players>
 	
 	<rules action="overwrite">
-		<rule name="acestream" filename="acestream://.*" player="AceStream" />
+		<rule name="acestream" filename="acestream://.*" player="AceStreamTV" />
 		<rule name="wise" filename=".*extPL=wise" player="Wiseplay" />
 		<rule name="other" video="true" player="videodefaultplayer" />
 	</rules>
