@@ -17,6 +17,14 @@
 			<filename>org.acestream.core</filename>
 			<hidexbmc>false</hidexbmc>
 		</player>
+		<player name="AceStreamTV" type="ExternalPlayer" audio="false" video="true">
+			<filename>org.acestream.media.atv</filename>
+			<hidexbmc>false</hidexbmc>
+		</player>
+		<player name="AceEngineTV" type="ExternalPlayer" audio="false" video="true">
+			<filename>org.acestream.core.atv</filename>
+			<hidexbmc>false</hidexbmc>
+		</player>
 		<player name="Wiseplay" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.wiseplay</filename>
 			<hidexbmc>false</hidexbmc>
