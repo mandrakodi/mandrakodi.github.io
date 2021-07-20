@@ -1,8 +1,8 @@
-versione='1.0.21'
+versione='1.0.22'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 06.07.2021
+# Last update: 20.07.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -238,7 +238,7 @@ def jsonToItems(strJson):
         if 'copyXml' in item:
             is_copyXml = True
             is_folder = True
-            link = "ignore"
+            link = item["copyXml"]
 
         list_item = xbmcgui.ListItem(label=titolo)
         list_item.setInfo('video', {'title': titolo,'genre': genre,'plot': info,'mediatype': 'video'})
@@ -556,12 +556,14 @@ def uploadLog():
     xbmc.executebuiltin('RunScript(script.kodi.loguploader)')
     return True
 
-def copyPlayerCoreFactory():
+def copyPlayerCoreFactory(parIn):
     XMLPATH = xbmc.translatePath('special://profile')
     xml_file = os.path.join(XMLPATH, 'playercorefactory.xml')
     dialog = xbmcgui.Dialog()
     if (xbmc.getCondVisibility("system.platform.android")):
         remoteXmlUrl = "https://mandrakodi.github.io/pcf.xml"
+        if parIn == "ACETV":
+            remoteXmlUrl = "https://mandrakodi.github.io/pcf_tv.xml"
         strSource = makeRequest(remoteXmlUrl)
         if strSource is None or strSource == "":
             mess = "Impossibile recuperare il file"
