@@ -62,7 +62,16 @@
          "externallink":"https://test34344.herokuapp.com/test36.php",
          "thumbnail":"https://icon-library.com/images/disclaimer-icon/disclaimer-icon-5.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"Disclaimer"
+         "info":"Disclaimer",
+         "enabled":0
+      },
+      {
+         "title":"[COLOR aqua]====== ENTRA IN MANDRAKODI ADDON ======[/COLOR]",
+         "externallink":"https://bkp34344.herokuapp.com/test36.php",
+         "thumbnail":"https://icon-library.com/images/disclaimer-icon/disclaimer-icon-5.jpg",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Disclaimer",
+         "enabled":1
       }
    ]
 }
