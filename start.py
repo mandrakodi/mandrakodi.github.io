@@ -1,8 +1,8 @@
-versione='1.0.23'
+versione='1.0.24'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 20.07.2021
+# Last update: 25.07.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -62,7 +62,7 @@ def makeRequest(url, hdr=None):
     return html
 
 def getSource():
-    startUrl = "https://www.dropbox.com/s/igyq58cnpjq0fq4/disclaimer.json?dl=1"
+    startUrl = "https://mandrakodi.github.io/data/disclaimer.json"
     try:
         strSource = makeRequest(startUrl)
         if strSource is None or strSource == "":
