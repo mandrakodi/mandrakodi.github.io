@@ -1,8 +1,8 @@
-versione='1.0.23'
+versione='1.0.24'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 28.07.2021
+# Last update: 29.07.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -204,6 +204,14 @@ def findM3u8(linkIframe, refPage):
         pass
 
     return vUrl
+
+def assia(parIn=None):
+    video_urls = []
+    logga('PAR: '+parIn)
+    video_url = findM3u8(parIn, 'http://assia1.tv/')
+    logga('video_url '+video_url)
+    video_urls.append((video_url, ""))
+    return video_urls
 
 def daddy(parIn=None):
     video_urls = []
@@ -423,6 +431,7 @@ def run (action, params=None):
         'strco': streamingcommunity,
         'dark': darkIptv,
         'mac': macLink,
+        'assia': assia,
         'rocktalk': rocktalk
     }
 
