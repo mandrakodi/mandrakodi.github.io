@@ -1,4 +1,4 @@
-versione='1.0.22'
+versione='1.0.23'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -423,7 +423,6 @@ def run (action, params=None):
         'strco': streamingcommunity,
         'dark': darkIptv,
         'mac': macLink,
-        'sky': sky,
         'rocktalk': rocktalk
     }
 
