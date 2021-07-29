@@ -1,4 +1,4 @@
-versione='1.0.24'
+versione='1.0.25'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -197,6 +197,8 @@ def findM3u8(linkIframe, refPage):
             page_data2 = page_data2.decode('utf-8')
 
         video_url = preg_match(page_data2, r'source:\s*"([^"]+)')
+        if video_url == "":
+            video_url = preg_match(page_data2, r"source:\s*'([^']+)")
         vUrl = video_url + '|User-Agent=iPad&Referer='+linkIframe
         logga('video_url '+vUrl)
 
