@@ -1,8 +1,8 @@
-versione='1.0.25'
+versione='1.0.26'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 29.07.2021
+# Last update: 03.08.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -250,8 +250,11 @@ def GetLSProData(page_in, refe=None):
     if src == "":
         src = preg_match(page_data, "<iframe src='([^']*)")
 
-    if src == "":
+    if src == "": 
         src = preg_match(page_data, '<iframe width="100%" height="100%" src="([^"]*)')
+
+    if src == "":
+        src = preg_match(page_data, "<iframe allow='encrypted-media' src='([^']*)")
 
     src = 'https:' + src if src.startswith('//') else src
     logga('iframe_url '+src)
