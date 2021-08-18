@@ -1,8 +1,8 @@
-versione='1.0.26'
+versione='1.0.27'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 03.08.2021
+# Last update: 18.08.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -264,8 +264,8 @@ def GetLSProData(page_in, refe=None):
     elif "embed" in src:
         logga('iframe_wigistream_ok ')
     else:
-        logga('RECALL FUNCTION ')
-        return GetLSProData(src, page_in)
+        logga('CALL findM3u8 FUNCTION ')
+        return findM3u8(src, page_in)
 
     fu = requests.get(src, headers={'user-agent':'iPad','referer':page_in}).text
     find = re.findall('eval\(function(.+?.+)', fu)[0]
