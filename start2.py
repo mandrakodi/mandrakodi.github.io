@@ -1,8 +1,8 @@
-versione='1.0.9'
+versione='1.0.10'
 # Module: default
 # Author: ElSupremo
 # Created on: 12.05.2021
-# Last update: 22.05.2021 02:30
+# Last update: 18.08.2021 16:46
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import hashlib
@@ -752,6 +752,7 @@ def msgBox(mess):
 def logga(mess):
     if debug == "on":
         logging.warning('MANDRA_LOG: '+mess)
+    logging.warning('MANDRALISTA_LOG: '+mess)
 
 def run():
     logga("PAR ==> "+sys.argv[2])
