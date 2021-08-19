@@ -1,8 +1,8 @@
-versione='1.0.11'
+versione='1.0.12'
 # Module: default
 # Author: ElSupremo
 # Created on: 12.05.2021
-# Last update: 19.08.2021 14:15
+# Last update: 19.08.2021 15:35
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import hashlib
@@ -742,7 +742,7 @@ def updateMandraLista():
             f = open(launcher_file, "w")
             f.write(strSource)
             f.close()
-            msgBox('LIST UPDATE. CLOSE AND REOPEN ADDON.')
+            msgBox("LIST UPDATE AT VERSION [COLOR lime]"+remote_vers+"[/COLOR].\nCLOSE AND REOPEN ADDON.")
     
         
 def msgBox(mess):
