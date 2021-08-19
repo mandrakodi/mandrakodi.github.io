@@ -1,8 +1,8 @@
-versione='1.0.10'
+versione='1.0.11'
 # Module: default
 # Author: ElSupremo
 # Created on: 12.05.2021
-# Last update: 18.08.2021 16:46
+# Last update: 19.08.2021 14:15
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import hashlib
@@ -342,7 +342,7 @@ def AddDir(name, url, mode, iconimage='', logos='', index=-1, move=0, uuid='0', 
         else:
             urlQuote = quote(url)
         items = [
-            (getLocaleString(30009), 'RunPlugin({0}?url={1}&mode=31&iconimage={2}&name={3}&uuid={4})'.format(sys.argv[0], urlQuote, iconimage, name, uuid))
+            (getLocaleString(30009), 'RunPlugin({0}?url={1}&mode=31&iconimage={2}&name={3}&uuid={4})'.format(sys.argv[0], urlQuote, iconimage, name, uuid).encode('utf-8'))
         ]
     
     elif mode == 32:
