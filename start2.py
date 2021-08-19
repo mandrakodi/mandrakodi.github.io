@@ -1,4 +1,4 @@
-versione='1.0.14'
+versione='1.0.15'
 # Module: default
 # Author: ElSupremo
 # Created on: 12.05.2021
@@ -383,7 +383,7 @@ def AddDir(name, url, mode, iconimage='', logos='', index=-1, move=0, uuid='0', 
         try:
             u = sys.argv[0]+"?"+urlencode(urlParams)
         except:
-            u = sys.argv[0]+"?"+urlencode(urlParams.encode('utf-8')) 
+            u = sys.argv[0]+"?"+urlencode(urlParams).encode('utf-8') 
     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=liz, isFolder=isFolder)
 
 
