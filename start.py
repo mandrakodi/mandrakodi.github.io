@@ -1,8 +1,8 @@
-versione='1.0.24'
+versione='1.0.25'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 25.07.2021
+# Last update: 21.08.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -188,6 +188,9 @@ def jsonToItems(strJson):
             genre = item["genre"]
         if 'link' in item:
             link = item["link"]
+            if 'youtube' in link:
+                is_yatse = True
+                is_folder = True
         if 'externallink' in item:
             extLink = True
             is_folder = True
