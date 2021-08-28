@@ -1,8 +1,8 @@
-versione='1.0.25'
+versione='1.0.26'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 21.08.2021
+# Last update: 281.08.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -129,6 +129,7 @@ def jsonToItems(strJson):
         skin_name = xbmc.getSkinDir()
         logga("setting view mode for "+skin_name+" on "+viewmode)
     except:
+        viewmode = "51"
         logga('no view mode')
         pass
     
@@ -645,6 +646,16 @@ def m3u2json(src):
     logga(strJson)
     jsonToItems(strJson)
 
+def decodeSkinViewMode (mySkin='', viewMode=''):
+    retMode=viewMode
+    if str(mySkin).endswith("confluence"):
+        logga ("SKIN CONFLUENCE")
+        retMode = viewMode
+    if str(mySkin).endswith("estuary"):
+        logga ("SKIN ESTUARY")
+        retMode = "55"
+    return retMode
+
 def run():
     try:
         if not sys.argv[2]:
@@ -733,8 +744,10 @@ def run():
         raise Exception(errMsg)
     if not viewmode==None:
         logga("setting view mode")
-        xbmc.executebuiltin("Container.SetViewMode("+viewmode+")")
-        logga("setting view mode again")
-        xbmc.executebuiltin("Container.SetViewMode("+viewmode+")")
+        kodiSkin=xbmc.getSkinDir()
+        kodiView=decodeSkinViewMode(kodiSkin, viewmode)
+        xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
+        logga("setting view mode again to "+kodiView)
+        xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
     if debug == "on":
         logging.warning("MANDRA_LOG: \n"+testoLog)
