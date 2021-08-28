@@ -1,8 +1,8 @@
-versione='1.0.26'
+versione='1.0.27'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 281.08.2021
+# Last update: 28.08.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -127,7 +127,7 @@ def jsonToItems(strJson):
     try:
         viewmode = dataJson['SetViewMode']
         skin_name = xbmc.getSkinDir()
-        logga("setting view mode for "+skin_name+" on "+viewmode)
+        logga("view mode for "+skin_name+" on "+viewmode)
     except:
         viewmode = "51"
         logga('no view mode')
@@ -743,7 +743,7 @@ def run():
         errMsg="ERRORE: {0}".format(err)
         raise Exception(errMsg)
     if not viewmode==None:
-        logga("setting view mode")
+        logga("setting viewmode")
         kodiSkin=xbmc.getSkinDir()
         kodiView=decodeSkinViewMode(kodiSkin, viewmode)
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
