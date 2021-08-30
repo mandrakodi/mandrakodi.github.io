@@ -63,7 +63,7 @@
          "thumbnail":"https://icon-library.com/images/disclaimer-icon/disclaimer-icon-5.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Disclaimer",
-         "enabled":1
+         "enabled":0
       },
       {
          "title":"[COLOR aqua]====== ENTRA IN MANDRAKODI ADDON ======[/COLOR]",
@@ -71,7 +71,7 @@
          "thumbnail":"https://icon-library.com/images/disclaimer-icon/disclaimer-icon-5.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Disclaimer",
-         "enabled":0
+         "enabled":1
       }
    ]
 }
