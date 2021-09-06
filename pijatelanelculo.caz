@@ -1,8 +1,8 @@
-versione='1.0.28'
+versione='1.0.29'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 21.08.2021
+# Last update: 06.09.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -429,12 +429,12 @@ def streamTape(parIn):
     page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.me/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
-    iframe_url = preg_match(page_data, r'<div id="videooolink" style="display:none;">(.*?)<\/div>')
+    iframe_url = preg_match(page_data, r'<div id="videoolink" style="display:none;">(.*?)<\/div>')
     logga('IFRAME: '+iframe_url)
     link1 = iframe_url.split('&token=')
     linkPre = link1[0];
     logga('LINK_PRE: '+linkPre)
-    info = preg_match(page_data, r"<script>document.getElementById\('videooolink'\)(.*?)<\/script>")
+    info = preg_match(page_data, r"<script>document.getElementById\('videoolink'\)(.*?)<\/script>")
     tkn = preg_match(info, r"&token=(.*?)'")
     info2 = "https:"+linkPre+"&token="+tkn
     logga('LINK_FINAL: '+info2)
