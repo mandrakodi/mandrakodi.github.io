@@ -1,8 +1,8 @@
-versione='1.0.27'
+versione='1.0.28'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 28.08.2021
+# Last update: 06.09.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -492,6 +492,7 @@ def checkResolver():
             f = open(resolver_file, "w")
             f.write(strSource)
             f.close()
+            msgBox("UPDATE RESOLVE TO VERSION "+remote_vers)
             logga('VERSION UPDATE')
 
 def checkDns():
@@ -655,6 +656,10 @@ def decodeSkinViewMode (mySkin='', viewMode=''):
         logga ("SKIN ESTUARY")
         retMode = "55"
     return retMode
+
+def msgBox(mess):
+    dialog = xbmcgui.Dialog()
+    dialog.ok("MandraKodi", mess)
 
 def run():
     try:
