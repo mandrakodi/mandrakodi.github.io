@@ -1,4 +1,4 @@
-versione='1.0.28'
+versione='1.0.29'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -477,7 +477,7 @@ def checkResolver():
         local_vers = re.findall("versione='(.*)'",resolver_content)[0]
         logga('local_vers '+local_vers)
         #ATTACCATE AR CAZZO!!!!
-        remoteResolverUrl = "https://mandrakodi.github.io/pijatelanelculo.caz"
+        remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/pijatelanelculo.caz"
         strSource = makeRequest(remoteResolverUrl)
         if strSource is None or strSource == "":
             logga('We failed to get source from '+remoteResolverUrl)
