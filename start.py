@@ -1,4 +1,4 @@
-versione='1.0.29'
+versione='1.0.30'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -654,7 +654,10 @@ def decodeSkinViewMode (mySkin='', viewMode=''):
         retMode = viewMode
     if str(mySkin).endswith("estuary"):
         logga ("SKIN ESTUARY")
-        retMode = "55"
+        if (retMode != "500"):
+            retMode = "55"
+        else:
+            retMode = "54"
     return retMode
 
 def msgBox(mess):
