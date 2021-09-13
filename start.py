@@ -1,4 +1,4 @@
-versione='1.0.30'
+versione='1.0.31'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -112,7 +112,7 @@ def getExternalJson(strPath):
 def jsonToItems(strJson):
     global viewmode
     dataJson = json.loads(strJson)
-    xbmcplugin.setContent(_handle, 'videos')
+    xbmcplugin.setContent(_handle, 'movies')
     
     try:
         nvs = dataJson['name']
@@ -243,10 +243,9 @@ def jsonToItems(strJson):
             is_copyXml = True
             is_folder = True
             link = item["copyXml"]
-
         list_item = xbmcgui.ListItem(label=titolo)
-        list_item.setInfo('video', {'title': titolo,'genre': genre,'plot': info,'mediatype': 'video'})
-        list_item.setArt({'thumb': thumb, 'icon': thumb, 'fanart': fanart})
+        list_item.setInfo('video', {'title': titolo,'genre': genre,'plot': info,'mediatype': 'movie','credits': 'ElSupremo'})
+        list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
         url = ""
 
         if extLink == True:
@@ -310,7 +309,7 @@ def jsonToChannels(strJson):
     channelsArray = json.loads(strJson)
     window = xbmcgui.Window(10000)
     window.setProperty("chList", strJson)
-    xbmcplugin.setContent(_handle, 'videos')
+    xbmcplugin.setContent(_handle, 'movies')
     for channel in channelsArray["channels"]:
         titolo = "NO TIT"
         thumb = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
@@ -327,8 +326,8 @@ def jsonToChannels(strJson):
         if 'info' in channel:
             info = channel["info"]
         list_item = xbmcgui.ListItem(label=titolo)
-        list_item.setInfo('video', {'title': titolo,'genre': genre,'mediatype': 'video'})
-        list_item.setArt({'thumb': thumb, 'icon': thumb, 'fanart': fanart})
+        list_item.setInfo('video', {'title': titolo,'genre': genre,'plot': info,'mediatype': 'movie','credits': 'ElSupremo'})
+        list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
         url = get_url(action='getChannel', url=titolo)
         xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
     xbmcplugin.endOfDirectory(_handle)
@@ -337,7 +336,7 @@ def channelToItems(strChName, _handle):
     window = xbmcgui.Window(10000)
     strJson = window.getProperty("chList")
     channelsArray = json.loads(strJson)
-    xbmcplugin.setContent(_handle, 'videos')
+    xbmcplugin.setContent(_handle, 'movies')
     for channel in channelsArray["channels"]:
         titolo = channel["name"]
         if titolo == strChName:
@@ -356,7 +355,7 @@ def callReolver(metodo, parametro):
 
     retVal = myResolver.run(metodo, parametro)
 
-    xbmcplugin.setContent(_handle, 'videos')
+    xbmcplugin.setContent(_handle, 'movies')
     thumb="https://cdn.pixabay.com/photo/2012/04/12/20/56/play-30619_640.png"
     fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
     if isinstance(retVal, list):
@@ -368,8 +367,8 @@ def callReolver(metodo, parametro):
             logga("Stream_Url ==> " + newLink)
             newTit="[COLOR lime]PLAY LINK "+str(numLink)+" ("+newLink[0:4]+")[/COLOR]"
             list_item = xbmcgui.ListItem(label=newTit)
-            list_item.setInfo('video', {'title': newTit,'genre': 'generic','mediatype': 'video'})
-            list_item.setArt({'thumb': thumb, 'icon': thumb, 'fanart': fanart})
+            list_item.setInfo('video', {'title': newTit,'mediatype': 'movie','credits': 'ElSupremo'})
+            list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
             list_item.setProperty('IsPlayable', 'true')
             url = get_url(action='play', url=newLink)
             xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
@@ -378,8 +377,8 @@ def callReolver(metodo, parametro):
         logga("StreamUrl ==> " + retVal)
         newTit="[COLOR lime]PLAY LINK ("+retVal[0:4]+")[/COLOR]"
         list_item = xbmcgui.ListItem(label=newTit)
-        list_item.setInfo('video', {'title': newTit,'genre': 'generic','mediatype': 'video'})
-        list_item.setArt({'thumb': thumb, 'icon': thumb, 'fanart': fanart})
+        list_item.setInfo('video', {'title': newTit,'genre': 'generic','mediatype': 'movie','credits': 'ElSupremo'})
+        list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
         list_item.setProperty('IsPlayable', 'true')
         url = get_url(action='play', url=retVal)
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
