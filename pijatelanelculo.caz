@@ -1,4 +1,4 @@
-versione='1.0.31'
+versione='1.0.32'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -257,6 +257,12 @@ def GetLSProData(page_in, refe=None):
         logga('iframe_wigistream_ok ')
     elif "embed" in src:
         logga('iframe_wigistream_ok ')
+    elif "buzztv" in src:
+        logga('BUZZTV ')
+        return GetLSProData(src)
+    elif "pepperlive" in src:
+        logga('PEPPER')
+        return GetLSProData(src)
     else:
         logga('CALL findM3u8 FUNCTION ')
         return findM3u8(src, page_in)
