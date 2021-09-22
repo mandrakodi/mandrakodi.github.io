@@ -74,6 +74,14 @@
          "info":"VIP"
       },
       {
+         "title":"[COLOR lime]LOTTO VIP[/COLOR]",
+         "externallink2":"http://test34344.herokuapp.com/test36.php?numTest=JOB666&num=",
+         "thumbnail":"https://e7.pngegg.com/pngimages/912/912/png-clipart-billiard-balls-bingo-lottery-lottery-machine-game-number-bingo-video-game-smiley-thumbnail.png",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "enabled":1,
+         "info":"LOTTO VIP"
+      },
+      {
          "title":"[COLOR yellow]X[/COLOR][COLOR lime]-[/COLOR][COLOR yellow]X[/COLOR][COLOR lime]-[/COLOR][COLOR yellow]X[/COLOR]",
          "externallink":"http://test34344.herokuapp.com/test35.php?numTest=169",
          "thumbnail":"https://e7.pngegg.com/pngimages/270/455/png-clipart-woman-wearing-white-strapless-dress-with-wings-illustration-woman-witch-woman-3d-computer-graphics-people-thumbnail.png",
@@ -95,7 +103,7 @@
          "thumbnail":"https://e7.pngegg.com/pngimages/202/364/png-clipart-screw-bolt-graphy-fastener-various-screw-mouth-photography-wood-thumbnail.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
-         "info":"Various"
+         "info":"PRIVATE"
       }
    ]
 }
