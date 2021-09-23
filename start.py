@@ -1,4 +1,4 @@
-versione='1.0.31'
+versione='1.0.32'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -90,7 +90,8 @@ def underMaintMsg():
     return strToRet
 
 def play_video(path):
-    play_item = xbmcgui.ListItem(path=path)
+    urlClean=path.replace(" ", "%20")
+    play_item = xbmcgui.ListItem(path=urlClean)
     xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
 
 def getTxtMessage(vName):
