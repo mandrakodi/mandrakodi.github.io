@@ -1,4 +1,4 @@
-versione='1.0.32'
+versione='1.0.33'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -748,8 +748,13 @@ def run():
             else:
                 raise Exception('Invalid paramstring: {0}!'.format(params))
     except Exception as err:
-        errMsg="ERRORE: {0}".format(err)
-        raise Exception(errMsg)
+        import traceback
+        errMsg="ERROR_MANDRAKODI: {0}".format(err)
+        par=re.split('%3f', sys.argv[2])
+        logging.warning(errMsg+"\nPAR_ERR --> "+par[-1])
+        traceback.print_exc()
+        raise err
+
     if not viewmode==None:
         logga("setting viewmode")
         kodiSkin=xbmc.getSkinDir()
