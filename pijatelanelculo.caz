@@ -1,4 +1,4 @@
-versione='1.0.34'
+versione='1.0.35'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -507,7 +507,6 @@ def dplay(parIn):
            'Referer': 'https://discoveryplus.it',
            'Cookie' : 'st=' + token}
     data = requests.get('https://disco-api.discoveryplus.it/playback/videoPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers=headers).content
-    logga('JSON_DPLAY: '+data)
     dataJ = json.loads(data)
     dataErr = "[COLOR lime]PLAY VIDEO[/COLOR]"
     try:
@@ -528,7 +527,6 @@ def dplayLive(parIn):
            'Referer': 'https://discoveryplus.it',
            'Cookie' : 'st=' + token}
     data = requests.get('https://disco-api.discoveryplus.it/playback/channelPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers=headers).content
-    logga('JSON_DPLAY: '+data)
     dataJ = json.loads(data)
     dataErr = "[COLOR lime]PLAY VIDEO[/COLOR]"
     try:
