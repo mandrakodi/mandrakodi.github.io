@@ -1,4 +1,4 @@
-versione='1.0.33'
+versione='1.0.34'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -509,12 +509,14 @@ def dplay(parIn):
     data = requests.get('https://disco-api.discoveryplus.it/playback/videoPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers=headers).content
     logga('JSON_DPLAY: '+data)
     dataJ = json.loads(data)
+    dataErr = "[COLOR lime]PLAY VIDEO[/COLOR]"
     try:
         link = dataJ["data"]["attributes"]["streaming"]["hls"]["url"]
     except:
+        dataErr = "[COLOR red]"+dataJ["errors"][0]["detail"]+"[/COLOR]"
         link = dataJ["errors"][0]["detail"]
     logga('LINK_DPLAY: '+link)
-    video_urls.append((link, "TEST"))
+    video_urls.append((link, dataErr))
     return video_urls
 
 def dplayLive(parIn):
@@ -528,12 +530,14 @@ def dplayLive(parIn):
     data = requests.get('https://disco-api.discoveryplus.it/playback/channelPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers=headers).content
     logga('JSON_DPLAY: '+data)
     dataJ = json.loads(data)
+    dataErr = "[COLOR lime]PLAY VIDEO[/COLOR]"
     try:
         link = dataJ["data"]["attributes"]["streaming"]["hls"]["url"]
     except:
+        dataErr = "[COLOR red]"+dataJ["errors"][0]["detail"]+"[/COLOR]"
         link = dataJ["errors"][0]["detail"]
     logga('LINK_DPLAY: '+link)
-    video_urls.append((link, ""))
+    video_urls.append((link, dataErr))
     return video_urls
 
 def run (action, params=None):
@@ -558,8 +562,4 @@ def run (action, params=None):
     if action in commands:
         return commands[action](params)
     else:
-        import traceback
-        errMsg="ERROR_MANDRAKODI: {0}".format(err)
-        logging.warning(errMsg)
-        traceback.print_exc()
         raise ValueError('Invalid command: {0}!'.action)
