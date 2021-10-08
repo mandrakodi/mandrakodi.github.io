@@ -371,7 +371,7 @@ def callReolver(metodo, parametro):
             logga("Stream_Tit ==> " + newP)
             newTit="[COLOR lime]PLAY LINK "+str(numLink)+" ("+newLink[0:4]+")[/COLOR]"
             if newP != "":
-                newTit="[COLOR lime]PLAY "+newP+"[/COLOR]"
+                newTit=newP
             list_item = xbmcgui.ListItem(label=newTit)
             list_item.setInfo('video', {'title': newTit,'mediatype': 'movie','credits': 'ElSupremo'})
             list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
