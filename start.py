@@ -1,4 +1,4 @@
-versione='1.0.33'
+versione='1.0.35'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -365,8 +365,13 @@ def callReolver(metodo, parametro):
         for linkTmp in retVal:
             newList=list(retVal[0])
             newLink=newList[0]
+            newP=newList[1]
+
             logga("Stream_Url ==> " + newLink)
+            logga("Stream_Tit ==> " + newP)
             newTit="[COLOR lime]PLAY LINK "+str(numLink)+" ("+newLink[0:4]+")[/COLOR]"
+            if newP != "":
+                newTit="[COLOR lime]PLAY "+newP+"[/COLOR]"
             list_item = xbmcgui.ListItem(label=newTit)
             list_item.setInfo('video', {'title': newTit,'mediatype': 'movie','credits': 'ElSupremo'})
             list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
