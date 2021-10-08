@@ -1,11 +1,11 @@
-versione='1.0.32'
+versione='1.0.33'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 07.09.2021
+# Last update: 08.10.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
-import re, requests, sys, logging
+import re, requests, sys, logging, os
 import xbmcplugin
 import xbmcgui
 import xbmcaddon
@@ -154,19 +154,26 @@ def decodeMyStream(data):
 
     return first_group.encode('ascii').decode('unicode-escape').encode('ascii').decode('unicode-escape')
 
-
-def wizhd(parIn=None):
-    video_urls = []
-    page_url = "http://wizhdsports.net/"+parIn
-    logga('CALL: '+page_url)
-    page_data = requests.get(page_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'http://wizhdsports.net/'}).content
+def wizhdFind(parIn):
+    logga('CALL: '+parIn)
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'http://wizhdsports.net/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
 
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
     logga('IFRAME: '+iframe_url)
 
-    vUrl = findM3u8(iframe_url, page_url)
+    vUrl = findM3u8(iframe_url, parIn)
+    return vUrl
+
+def wizhd(parIn=None):
+    video_urls = []
+    if parIn.startswith('http'):
+        page_url = parIn
+    else:
+        page_url = "http://wizhdsports.net/"+parIn
+    
+    vUrl = wizhdFind(page_url)
     video_urls.append((vUrl, ""))
     if "|" in vUrl:
         arrV = vUrl.split("|")
@@ -187,7 +194,8 @@ def findM3u8(linkIframe, refPage):
         video_url = preg_match(page_data2, r'source:\s*"([^"]+)')
         if video_url == "":
             video_url = preg_match(page_data2, r"source:\s*'([^']+)")
-        vUrl = video_url + '|User-Agent=iPad&Referer='+linkIframe
+        if video_url != "":
+            vUrl = video_url + '|User-Agent=iPad&Referer='+linkIframe
         logga('video_url '+vUrl)
 
     except:
@@ -195,31 +203,35 @@ def findM3u8(linkIframe, refPage):
 
     return vUrl
 
-def assia(parIn=None):
-    video_urls = []
-    logga('PAR: '+parIn)
+def assiaFind(parIn):
+    logga('ASSIA_PAR: '+parIn)
     video_url = findM3u8(parIn, 'http://assia1.tv/')
     logga('video_url '+video_url)
+    return video_url
+
+def assia(parIn=None):
+    video_urls = []
+    video_url = assiaFind(parIn)
     video_urls.append((video_url, ""))
     if "|" in video_url:
         arrV = video_url.split("|")
         video_urls.append((arrV[0], ""))		
     return video_urls
 
+def daddyFind(parIn):
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.me/'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
+    logga('IFRAME: '+iframe_url)
+    video_url = findM3u8(iframe_url, parIn)
+    return video_url
+
 def daddy(parIn=None):
     video_urls = []
     logga('PAR: '+parIn)
 
-    if (1==1):
-        page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.me/'}).content
-        if PY3:
-            page_data = page_data.decode('utf-8')
-        iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
-        logga('IFRAME: '+iframe_url)
-        video_url = findM3u8(iframe_url, parIn)
-    else:
-        video_url = GetLSProData(parIn)
-        logga('video_url '+video_url)
+    video_url = daddyFind(parIn)
 
     video_urls.append((video_url, ""))
     if "|" in video_url:
@@ -293,29 +305,76 @@ def wigi(parIn=None):
 def urlsolver(url):
     video_urls = []
 
-    try:
-        import resolveurl
-    except:
-        logga('NO RESOLVEURL')
-        import urlresolver as resolveurl
+    resolvedUrl=get_resolved(url)
+    logga('video_url '+resolvedUrl)
+    if (resolvedUrl != url):
+        video_urls.append((resolvedUrl, ""))
+        if "|" in resolvedUrl:
+            arrV = resolvedUrl.split("|")
+            video_urls.append((arrV[0], ""))		
 
-    if resolveurl.HostedMediaFile(url).valid_url():
-        resolved = resolveurl.resolve(url)
+        return video_urls
     else:
         dialog = xbmcgui.Dialog()
         mess = "Sorry, ResolveUrl does not support this domain."
         dialog.ok("Mandrakodi", mess)
+    return url
 
-        resolved = ""
+    
 
-    logga('video_url '+resolved)
+def get_resolved(url):
+    import xbmcvfs
+    try:
+        import resolveurl
+    except:
+        dialog = xbmcgui.Dialog()
+        mess = "Lo script 'script.module.resolveurl' non risulta installato."
+        dialog.ok("Mandrakodi", mess)
+        return url
 
-    video_urls.append((resolved, ""))
-    if "|" in video_url:
-        arrV = video_url.split("|")
-        video_urls.append((arrV[0], ""))		
+    logga("TRY TO RESOLVE: "+url)
+    xxx_plugins_path = 'special://home/addons/script.module.resolveurl.xxx/resources/plugins/'
+    if xbmcvfs.exists(xxx_plugins_path):
+        logging.warning("OK XXX RESOLVER ")
+        if sys.version_info[0] > 2:
+            xxxp = xbmcvfs.translatePath(xxx_plugins_path)
+        else:
+            import xbmc
+            xxxp = xbmc.translatePath(xxx_plugins_path)
+        resolveurl.add_plugin_dirs(xxxp)
+    try:
+        resolved = resolveurl.resolve(url)
+        if resolved:
+            return resolved
+        raise
+    except Exception as e:
+        logga("NO RESOLVER")		
 
-    return video_urls
+    resolved = daddyFind(url)
+    if resolved:
+        return resolved
+    else:
+        logga("NO RESOLVER DADDY")		
+
+    resolved = wizhdFind(url)
+    if resolved:
+        return resolved
+    else:
+        logga("NO RESOLVER WIZHD")		
+
+    resolved = assiaFind(url)
+    if resolved:
+        return resolved
+    else:
+        logga("NO RESOLVER ASSIA")		
+
+    resolved = GetLSProData(url)
+    if resolved:
+        return resolved
+    else:
+        logga("NO RESOLVER DATA")		
+
+    return url
 
 def streamingcommunity(parIn=None):
     video_urls = []
@@ -340,8 +399,6 @@ def streamingcommunity(parIn=None):
         s = '?token={}&expires={}'.format(b64(md5.digest()).decode().replace('=', '').replace('+', "-").replace('\\', "_"), t)
         return s
 
-
-
     token = calculateToken()
     video_url = "https://streamingcommunity.vip/videos/master/"+parIn+"/480p"+token
     logga('video_community '+video_url)
@@ -350,27 +407,15 @@ def streamingcommunity(parIn=None):
     return video_urls
 
 
-
 def darkIptv(parIn=None):
-
     video_urls = []
-
     video_url = "http://temporary.mine.nu:8000/movie/Direct2Movie/r3ow52c4P4/"+parIn
-
     if "." in parIn:
-
         video_url = "http://temporary.mine.nu:8000/movie/Direct2Movie/r3ow52c4P4/"+parIn
-
     else:
-
         video_url = "http://temporary.mine.nu:8000/Direct2Movie/r3ow52c4P4/"+parIn
-
     video_urls.append((video_url, ""))
-
     return video_urls
-
-
-
 
 
 def macLink(parIn=None):
@@ -453,6 +498,44 @@ def streamTape(parIn):
     video_urls.append((info2, ""))
     return video_urls
 
+def dplay(parIn):
+    import json
+    video_urls = []
+    token = requests.get('https://disco-api.discoveryplus.it/token?realm=dplayit').json()['data']['attributes']['token']
+    logga('TOKEN_DPLAY: '+token)
+    headers = {'User-Agent': 'Mozilla/50.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
+           'Referer': 'https://discoveryplus.it',
+           'Cookie' : 'st=' + token}
+    data = requests.get('https://disco-api.discoveryplus.it/playback/videoPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers=headers).content
+    logga('JSON_DPLAY: '+data)
+    dataJ = json.loads(data)
+    try:
+        link = dataJ["data"]["attributes"]["streaming"]["hls"]["url"]
+    except:
+        link = dataJ["errors"][0]["detail"]
+    logga('LINK_DPLAY: '+link)
+    video_urls.append((link, "TEST"))
+    return video_urls
+
+def dplayLive(parIn):
+    import json
+    video_urls = []
+    token = requests.get('https://disco-api.discoveryplus.it/token?realm=dplayit').json()['data']['attributes']['token']
+    logga('TOKEN_DPLAY: '+token)
+    headers = {'User-Agent': 'Mozilla/50.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
+           'Referer': 'https://discoveryplus.it',
+           'Cookie' : 'st=' + token}
+    data = requests.get('https://disco-api.discoveryplus.it/playback/channelPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers=headers).content
+    logga('JSON_DPLAY: '+data)
+    dataJ = json.loads(data)
+    try:
+        link = dataJ["data"]["attributes"]["streaming"]["hls"]["url"]
+    except:
+        link = dataJ["errors"][0]["detail"]
+    logga('LINK_DPLAY: '+link)
+    video_urls.append((link, ""))
+    return video_urls
+
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
@@ -464,6 +547,8 @@ def run (action, params=None):
         'risolvi': urlsolver,
         'strco': streamingcommunity,
         'dark': darkIptv,
+        'dplay': dplay,
+        'dplayLive': dplayLive,
         'mac': macLink,
         'assia': assia,
         'stape': streamTape,
@@ -473,4 +558,8 @@ def run (action, params=None):
     if action in commands:
         return commands[action](params)
     else:
+        import traceback
+        errMsg="ERROR_MANDRAKODI: {0}".format(err)
+        logging.warning(errMsg)
+        traceback.print_exc()
         raise ValueError('Invalid command: {0}!'.action)
