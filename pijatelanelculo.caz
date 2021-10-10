@@ -1,4 +1,4 @@
-versione='1.0.35'
+versione='1.0.36'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -377,32 +377,54 @@ def get_resolved(url):
     return url
 
 def streamingcommunity(parIn=None):
+    import json
     video_urls = []
+    
+    page_video = "https://streamingcommunity.video/watch/" + parIn
+    page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    patron=r'<video-player response="([^"]+)"'
+    dataJ = preg_match(page_data, patron).replace('&quot;','"').replace('\\','')
+    arrJ = json.loads(dataJ)
+    nm=arrJ["title"]["name"]
+    name = "[COLOR lime]"+nm.upper()+"[/COLOR]"
+    plot = arrJ["title"]["plot"]
+    url = "https://streamingcommunity.video/videos/master/" + str(arrJ["video_id"]) + "m3u8"
 
-    def calculateToken():
+    def calculateToken(ip_client):
         from time import time
         from base64 import b64encode as b64
         import hashlib
-
-        page_video = "https://streamingcommunity.vip/client-address"
-        page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
-
-        if PY3:
-            page_data = page_data.decode('utf-8')
-
-        logga('IP_community '+page_data)
         o = 48
         i = 'Yc8U6r8KjAKAepEA'
         t = int(time() + (3600 * o))
-        l = '{}{} {}'.format(t, page_data, i)
+        l = '{}{} {}'.format(t, ip_client, i)
         md5 = hashlib.md5(l.encode())
         s = '?token={}&expires={}'.format(b64(md5.digest()).decode().replace('=', '').replace('+', "-").replace('\\', "_"), t)
         return s
+    
+    page_video = "https://streamingcommunity.video/client-address"
+    page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    logga('IP_community '+page_data)
 
-    token = calculateToken()
-    video_url = "https://streamingcommunity.vip/videos/master/"+parIn+"/480p"+token
+    token = calculateToken(page_data)
+    #url = "https://streamingcommunity.video/videos/master/" + parIn + "m3u8"
+    code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
+    count = 0
+    while not code == 200:
+        token = calculateToken(page_data)
+        code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
+        count +=1
+        if count == 30:
+            break
+
+    
+    video_url = url + token
     logga('video_community '+video_url)
-    video_urls.append((video_url, ""))
+    video_urls.append((video_url, name, plot))
 
     return video_urls
 
