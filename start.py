@@ -1,8 +1,8 @@
-versione='1.0.35'
+versione='1.0.36'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 08.10.2021
+# Last update: 10.10.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -352,6 +352,7 @@ def simpleRegex(page, find):
     return urlSteam
 
 def callReolver(metodo, parametro):
+    global viewmode
     import myResolver
 
     retVal = myResolver.run(metodo, parametro)
@@ -366,6 +367,10 @@ def callReolver(metodo, parametro):
             newList=list(retVal[0])
             newLink=newList[0]
             newP=newList[1]
+            info=""
+            if len(newList)==3:
+                info=newList[2]
+                viewmode="503"
 
             logga("Stream_Url ==> " + newLink)
             logga("Stream_Tit ==> " + newP)
@@ -373,7 +378,7 @@ def callReolver(metodo, parametro):
             if newP != "":
                 newTit=newP
             list_item = xbmcgui.ListItem(label=newTit)
-            list_item.setInfo('video', {'title': newTit,'mediatype': 'movie','credits': 'ElSupremo'})
+            list_item.setInfo('video', {'title': newTit,'plot': info,'mediatype': 'movie','credits': 'ElSupremo'})
             list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
             list_item.setProperty('IsPlayable', 'true')
             url = get_url(action='play', url=newLink)
