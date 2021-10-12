@@ -1,4 +1,4 @@
-versione='1.0.36'
+versione='1.0.37'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -390,7 +390,12 @@ def streamingcommunity(parIn=None):
     nm=arrJ["title"]["name"]
     name = "[COLOR lime]"+nm.upper()+"[/COLOR]"
     plot = arrJ["title"]["plot"]
-    url = "https://streamingcommunity.video/videos/master/" + str(arrJ["video_id"]) + "m3u8"
+    idVideo = arrJ["video_id"]
+    url = "https://streamingcommunity.video/videos/master/" + str(idVideo) + "m3u8"
+    if "scws_id" in arrJ:
+        logga("SCWS: "+str(arrJ["scws_id"]))	
+        idVideo = arrJ["scws_id"]
+        url = "https://scws.xyz/master/" + str(idVideo)
 
     def calculateToken(ip_client):
         from time import time
@@ -402,23 +407,26 @@ def streamingcommunity(parIn=None):
         l = '{}{} {}'.format(t, ip_client, i)
         md5 = hashlib.md5(l.encode())
         s = '?token={}&expires={}'.format(b64(md5.digest()).decode().replace('=', '').replace('+', "-").replace('\\', "_"), t)
-        return s
+        return s + '&n=1'
     
-    page_video = "https://streamingcommunity.video/client-address"
+    page_video = "https://scws.xyz/videos/" + str(idVideo)
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     logga('IP_community '+page_data)
+    arrJ2 = json.loads(page_data)
+    localIp = arrJ2["client_ip"]
 
-    token = calculateToken(page_data)
+    token = calculateToken(localIp)
     #url = "https://streamingcommunity.video/videos/master/" + parIn + "m3u8"
     code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
     count = 0
     while not code == 200:
-        token = calculateToken(page_data)
+        token = calculateToken(localIp)
         code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
         count +=1
         if count == 30:
+            logga('END OF TRY. CODE: '+str(code))
             break
 
     
@@ -427,7 +435,6 @@ def streamingcommunity(parIn=None):
     video_urls.append((video_url, name, plot))
 
     return video_urls
-
 
 def darkIptv(parIn=None):
     video_urls = []
