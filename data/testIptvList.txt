@@ -1,3 +1,4 @@
 http://queen-tv.co/get.php?username=benzina&password=viaparmenide&type=m3u
 http://painel.tvdigitalsbl.net:80/get.php?username=vo&password=vo&type=m3u
-http://163.172.39.215:25461/get.php?username=line&password=C4@!a3a1@!w72A&type=m3u        
+http://queen-tv.co/get.php?username=Pinopino1&password=t8FWLk7Q7B&type=m3u
+http://163.172.39.215:25461/get.php?username=line&password=C4@!a3a1@!w72A&type=m3u
