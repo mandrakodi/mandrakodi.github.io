@@ -20,7 +20,7 @@ import xbmcvfs
 _url = sys.argv[0]
 # Get the plugin handle as an integer number.
 _handle = int(sys.argv[1])
-addon_id = 'plugin.video.mandrakodi19'
+addon_id = 'plugin.video.mandrakodi'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 debug = selfAddon.getSetting("debug")
 showAdult = selfAddon.getSetting("ShowAdult")
@@ -62,7 +62,8 @@ def makeRequest(url, hdr=None):
     return html
 
 def getSource():
-    startUrl = "https://mandrakodi.github.io/data/disclaimer.json"
+    #startUrl = "https://mandrakodi.github.io/data/disclaimer.json"
+    startUrl = "https://www.dropbox.com/s/igyq58cnpjq0fq4/disclaimer.json?dl=1"
     try:
         strSource = makeRequest(startUrl)
         if strSource is None or strSource == "":
@@ -165,6 +166,7 @@ def jsonToItems(strJson):
         is_pvr = False
         is_log = False
         is_copyXml = False
+        is_personal = False
         is_enabled = True
 
         if 'enabled' in item:
@@ -230,6 +232,10 @@ def jsonToItems(strJson):
             is_m3u = True
             is_folder = True
             link = item["m3u"]
+        if 'personal' in item:
+            is_personal = True
+            is_folder = True
+            link = item["personal"]
         if 'magnet' in item:
             is_magnet = True
             link = item["magnet"]
@@ -264,6 +270,8 @@ def jsonToItems(strJson):
             url = get_url(action='log', url=link)
         elif is_m3u == True:
             url = get_url(action='m3u', url=link)
+        elif is_personal == True:
+            url = get_url(action='personal', url=link)
         elif is_copyXml == True:
             url = get_url(action='copyXml', url=link)
         elif is_yatse == True:
@@ -628,47 +636,125 @@ def m3u2json(src):
     #regex = r'#EXTINF:.*?tvg-logo=\"([^\"]+|)\".*?,(.*?)$\s(http.*?//.*?)$'
     regex = r'#EXTINF:(.*?),(.*?)$\s(http.*?//.*?)$'	
     matches = re.compile(regex, re.MULTILINE).findall(m3uSource)
-    strJson = '{"items":['
+    
+    
     numIt=0
+    arrTmp = [""]
     for match in matches:
-        img = str(match[0]).strip()
-        regex2= r'.*?tvg-logo="(.*?)"'
-        urlImg=preg_match(img, regex2)
-        if (urlImg == ""):
-            img = "https://e7.pngegg.com/pngimages/349/361/png-clipart-silver-and-blue-tv-digital-art-television-channel-card-sharing-iptv-front-splash-background-cartoon-tv-television-blue-thumbnail.png"
-        else:
-            img = urlImg
         title = str(match[1]).strip()
         link = str(match[2]).strip()
-        if (numIt > 0):
-            strJson += ','
-        strJson += '{'
-        strJson += '"title":"'+title+'",'
-        strJson += '"thumbnail":"'+img+'",'
-        strJson += '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-        if link.endswith(".m3u"):
-            strJson += '"externallink":"'+link+'",'
+        img = ""
+        group = ""
+        infos = str(match[0]).strip()
+        regex2= r'.*?tvg-logo="(.*?)"'
+        urlImg=preg_match(infos, regex2)
+        if (urlImg == ""):
+            img = "https://www.dropbox.com/s/wd2d403175rbvs7/tv_ch.png?dl=1"
         else:
-            strJson += '"link":"'+link+'",'
-        strJson += '"info":"NO INFO"'
-        strJson += '}'
+            img = urlImg
+
+        regex3 = r'.*?group-title="(.*?)"'
+        group = preg_match(infos, regex3)
+        if (group == ""):
+            group = "VARIOUS"
+        row = group+"@@"+title+"@@"+link+"@@"+img
+        #logging.warning(row)
+        arrTmp.append(row)
         numIt += 1
-    strJson += ']}'
-    logga(strJson)
+    logga("FOUND "+str(numIt)+" ROWS")
+
+    arrTmp.sort()
+    strJson = '{"SetViewMode": "500","channels": ['
+    oldGroup = ""
+    numGoup = 0
+    numIt=0
+    numLoop=0
+    for rowTmp in arrTmp:
+        if (rowTmp != ""):
+            arrRow = rowTmp.split("@@")
+            group = arrRow[0]
+            if (oldGroup != group):
+                oldGroup = group
+                if (numGoup > 0):
+                    strJson += ']},'
+                strJson += '{'
+                strJson += '"name": "[COLOR lime]'+group+'[/COLOR]",'
+                strJson += '"thumbnail": "https://www.dropbox.com/s/3j4wf8b67xt8gry/fold_tube.png?dl=1",'
+                strJson += '"fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                strJson += '"info": "[COLOR lime]Category: '+group+'[/COLOR]",'
+                strJson += '"items":['
+                numGoup += 1
+                numIt=0
+            
+            if (numIt > 0):
+                strJson += ','
+            strJson += '{'
+            strJson += '"title":"'+arrRow[1]+'",'
+            strJson += '"thumbnail":"'+arrRow[3]+'",'
+            strJson += '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            link = arrRow[2]
+            if link.endswith(".m3u"):
+                strJson += '"m3u":"'+link+'",'
+            else:
+                strJson += '"link":"'+link+'",'
+            strJson += '"info":"NO INFO"'
+            strJson += '}'
+            numIt += 1
+
+    strJson += ']}]}'
+
+    logging.warning(strJson)
     jsonToItems(strJson)
+
 
 def decodeSkinViewMode (mySkin='', viewMode=''):
     retMode=viewMode
-    if str(mySkin).endswith("confluence"):
-        logga ("SKIN CONFLUENCE")
-        retMode = viewMode
-    if str(mySkin).endswith("estuary"):
-        logga ("SKIN ESTUARY")
-        if (retMode != "500"):
-            retMode = "55"
-        else:
-            retMode = "54"
+    if (retMode == "500"):
+        retMode = str(selfAddon.getSetting("SkinWall"))
+    if (retMode == "50"):
+        retMode = str(selfAddon.getSetting("SkinList1"))
+    if (retMode == "51"):
+        retMode = str(selfAddon.getSetting("SkinList2"))
+    if (retMode == "503"):
+        retMode = str(selfAddon.getSetting("SkinInfo1"))
+    if (retMode == "504"):
+        retMode = str(selfAddon.getSetting("SkinInfo2"))
+    logga ("SKIN: "+mySkin+" - VIEW: "+retMode)
+
     return retMode
+
+def personalList(listtType=''):
+    import json
+    baseScript = makeRequest("https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/enterScrip.txt")
+    if baseScript is None or baseScript == "":
+        logga('We failed to get source from serverSource')
+    else:
+        if PY3:
+            baseScript = baseScript.decode('utf-8')
+    baseScript = baseScript.replace("\r\n", "").replace("\n", "").replace("\r", "")          
+    urlToCall=""
+    fileName=""
+    if 	(listtType=="MAC"):
+        fileName = selfAddon.getSetting("macFile")
+    if 	(listtType=="IPTV"):
+        fileName = selfAddon.getSetting("iptvFile")
+    if 	(listtType=="M3U"):
+        fileName = selfAddon.getSetting("m3uFile")
+
+    if (fileName=="" or fileName=="blank"):
+        msgBox("E' necessario specificare un file nelle impostazioni")
+    else:
+        urlToCall=baseScript+"JOB810&type="+listtType+"&url="+fileName
+        if 	(listtType=="MAC"):
+            urlToCall=baseScript+"JOB811&url="+fileName
+        logga('URL TO CALL: '+urlToCall)
+        try:
+            return getExternalJson(urlToCall)
+        except Exception as err:
+            msgBox("Non e' stato possibile leggere i dati. Controllare se il file e' presente")
+
+    
+
 
 def msgBox(mess):
     dialog = xbmcgui.Dialog()
@@ -690,6 +776,7 @@ def run():
             action =  params['action']
             url =  params['url']
             logga("ACTION ==> "+action)
+            logga("URL ==> "+url)
             if action == 'getExtData':
                 getExternalJson(url)
             elif action == 'getExtData2':
@@ -699,8 +786,15 @@ def run():
                 if not (keyboard.isConfirmed() == False):
                     userInput = keyboard.getText()
                     if not (userInput == ''):
-                        strUrl = url + userInput.replace(" ", "+")
-                        logga("GET JSON FROM: "+strUrl)
+                        if PY3:
+                            import urllib.parse as myParse
+                        else:
+                            import urllib as myParse
+
+                        logging.warning("GET JSON FROM: "+userInput)
+                        #strUrl = url + userInput.replace(" ", "+")
+                        strUrl = url + myParse.quote(userInput)
+                        logging.warning("GET JSON FROM: "+strUrl)
                         getExternalJson(strUrl)
                     else:
                         logga("NO INPUT")
@@ -717,6 +811,9 @@ def run():
             elif action == 'getChannel':
                 logga("OPEN CHANNEL: "+url)
                 channelToItems(url, _handle)
+            elif action == 'personal':
+                logga("OPEN CHANNEL: "+url)
+                personalList(url)
             elif action == 'regex':
                 express =  params['exp']
                 logga("REGEX: "+url+" - "+express)
