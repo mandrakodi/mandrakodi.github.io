@@ -2,7 +2,7 @@ versione='1.0.37'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 08.10.2021
+# Last update: 10.10.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, os
@@ -10,7 +10,7 @@ import xbmcplugin
 import xbmcgui
 import xbmcaddon
 
-addon_id = 'plugin.video.mandrakodi19'
+addon_id = 'plugin.video.mandrakodi'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 debug = selfAddon.getSetting("debug")
 
@@ -380,7 +380,7 @@ def streamingcommunity(parIn=None):
     import json
     video_urls = []
     
-    page_video = "https://streamingcommunity.video/watch/" + parIn
+    page_video = "https://streamingcommunity.live/watch/" + parIn
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
@@ -391,7 +391,7 @@ def streamingcommunity(parIn=None):
     name = "[COLOR lime]"+nm.upper()+"[/COLOR]"
     plot = arrJ["title"]["plot"]
     idVideo = arrJ["video_id"]
-    url = "https://streamingcommunity.video/videos/master/" + str(idVideo) + "m3u8"
+    url = "https://streamingcommunity.live/videos/master/" + str(idVideo) + "m3u8"
     if "scws_id" in arrJ:
         logga("SCWS: "+str(arrJ["scws_id"]))	
         idVideo = arrJ["scws_id"]
@@ -435,6 +435,50 @@ def streamingcommunity(parIn=None):
     video_urls.append((video_url, name, plot))
 
     return video_urls
+
+def scws(parIn=None):
+    import json
+    video_urls = []
+    url = "https://scws.xyz/master/" + str(parIn)
+
+    def calculateToken(ip_client):
+        from time import time
+        from base64 import b64encode as b64
+        import hashlib
+        o = 48
+        i = 'Yc8U6r8KjAKAepEA'
+        t = int(time() + (3600 * o))
+        l = '{}{} {}'.format(t, ip_client, i)
+        md5 = hashlib.md5(l.encode())
+        s = '?token={}&expires={}'.format(b64(md5.digest()).decode().replace('=', '').replace('+', "-").replace('\\', "_"), t)
+        return s + '&n=1'
+    
+    page_video = "https://scws.xyz/videos/" + str(parIn)
+    page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    logga('IP_community '+page_data)
+    arrJ2 = json.loads(page_data)
+    localIp = arrJ2["client_ip"]
+
+    token = calculateToken(localIp)
+    code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
+    count = 0
+    while not code == 200:
+        token = calculateToken(localIp)
+        code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
+        count +=1
+        if count == 30:
+            logga('END OF TRY. CODE: '+str(code))
+            break
+
+    
+    video_url = url + token
+    logga('video_community '+video_url)
+    video_urls.append((video_url, "[COLOR lime]PLAY VIDEO[/COLOR]", "by @mandrakodi"))
+
+    return video_urls
+
 
 def darkIptv(parIn=None):
     video_urls = []
@@ -581,6 +625,7 @@ def run (action, params=None):
         'dplay': dplay,
         'dplayLive': dplayLive,
         'mac': macLink,
+        'scws': scws,
         'assia': assia,
         'stape': streamTape,
         'rocktalk': rocktalk
