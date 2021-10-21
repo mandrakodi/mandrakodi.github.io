@@ -1,8 +1,8 @@
-versione='1.0.36'
+versione='1.0.37'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 10.10.2021
+# Last update: 21.10.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -709,15 +709,15 @@ def m3u2json(src):
 
 def decodeSkinViewMode (mySkin='', viewMode=''):
     retMode=viewMode
-    if (retMode == "500"):
+    if (retMode == "500" or retMode == "Wall"):
         retMode = str(selfAddon.getSetting("SkinWall"))
-    if (retMode == "50"):
+    if (retMode == "50" or retMode == "List1"):
         retMode = str(selfAddon.getSetting("SkinList1"))
-    if (retMode == "51"):
+    if (retMode == "51" or retMode == "List2"):
         retMode = str(selfAddon.getSetting("SkinList2"))
-    if (retMode == "503"):
+    if (retMode == "503" or retMode == "Info1"):
         retMode = str(selfAddon.getSetting("SkinInfo1"))
-    if (retMode == "504"):
+    if (retMode == "504" or retMode == "Info2"):
         retMode = str(selfAddon.getSetting("SkinInfo2"))
     logga ("SKIN: "+mySkin+" - VIEW: "+retMode)
 
