@@ -1,4 +1,4 @@
-versione='1.0.39'
+versione='1.0.40'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -58,7 +58,7 @@ def makeRequest(url, hdr=None):
         html = response.read()
         response.close()
     except:
-        logga('Error to open url')
+        logging.warning('Error to open url: '+url)
         pass
     return html
 
@@ -110,7 +110,10 @@ def getTxtMessage(vName):
 
 def getExternalJson(strPath):
     strSource = makeRequest(strPath)
-    jsonToItems(strSource)
+    if (strSource == ""):
+        msgBox("MandraKodi", "External Json not found")
+    else:
+        jsonToItems(strSource)
 	
 def jsonToItems(strJson):
     global viewmode
