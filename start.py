@@ -1,4 +1,4 @@
-versione='1.0.38'
+versione='1.0.39'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -757,7 +757,35 @@ def personalList(listtType=''):
         except Exception as err:
             msgBox("Non e' stato possibile leggere i dati. Controllare se il file e' presente")
 
-    
+def checkSkin():
+    kodiSkin=xbmc.getSkinDir()
+    wall=selfAddon.getSetting("SkinWall")
+    if str(kodiSkin).endswith("estuary"):
+        logga ("SKIN ESTUARY")
+        if (wall!="55"):
+            dialog = xbmcgui.Dialog()
+            mess="Rilevata Skin Estuary. Vuoi impostare la visualizzazione per questa skin?"
+            resp= dialog.yesno("MandraKodi", mess)
+            if (resp):
+                selfAddon.setSetting("SkinWall", "55")    
+                selfAddon.setSetting("SkinList1", "55")    
+                selfAddon.setSetting("SkinList2", "55")    
+                selfAddon.setSetting("SkinInfo1", "55")    
+                selfAddon.setSetting("SkinInfo2", "55")
+                msgBox("Visualizzazione impostata")    
+    if str(kodiSkin).endswith("confluence"):
+        logga ("SKIN CONFLUENCE")
+        if (wall!="500"):
+            dialog = xbmcgui.Dialog()
+            mess="Rilevata Skin Confluence. Vuoi impostare la visualizzazione per questa skin?"
+            resp= dialog.yesno("MandraKodi", mess)
+            if (resp):
+                selfAddon.setSetting("SkinWall", "500")    
+                selfAddon.setSetting("SkinList1", "50")    
+                selfAddon.setSetting("SkinList2", "51")    
+                selfAddon.setSetting("SkinInfo1", "503")    
+                selfAddon.setSetting("SkinInfo2", "504")
+                msgBox("Visualizzazione impostata")    
 
 
 def msgBox(mess):
@@ -774,6 +802,7 @@ def run():
             if (checkMsgOnLog()):
                 checkDns()
                 checkMandraScript()
+                checkSkin()
             getSource()
         else:
             params = parameters_string_to_dict(sys.argv[2])
