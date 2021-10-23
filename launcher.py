@@ -1,4 +1,4 @@
-versione='1.0.40'
+versione='1.0.41'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -22,6 +22,7 @@ _url = sys.argv[0]
 _handle = int(sys.argv[1])
 addon_id = 'plugin.video.mandrakodi'
 selfAddon = xbmcaddon.Addon(id=addon_id)
+selfAddon.setSetting("debug", "on")
 debug = selfAddon.getSetting("debug")
 showAdult = selfAddon.getSetting("ShowAdult")
 testoLog = "";
@@ -111,13 +112,19 @@ def getTxtMessage(vName):
 def getExternalJson(strPath):
     strSource = makeRequest(strPath)
     if (strSource == ""):
-        msgBox("MandraKodi", "External Json not found")
+        msgBox("External Json not found")
+        logging.warning("NO JSON AT: "+strPath)
     else:
         jsonToItems(strSource)
 	
 def jsonToItems(strJson):
     global viewmode
-    dataJson = json.loads(strJson)
+    try:
+        dataJson = json.loads(strJson)
+    except Exception as err:
+        errMsg="NO JSON FOUND"
+        msgBox(errMsg)
+    
     xbmcplugin.setContent(_handle, 'movies')
     
     try:
@@ -147,160 +154,165 @@ def jsonToItems(strJson):
         logga('no channels. GetItems')
         pass
     
-    for item in dataJson["items"]:
-        titolo = "NO TIT"
-        thumb = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
-        fanart = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
-        genre = "generic"
-        info = ""
-        regExp = ""
-        resolverPar = "no_par"
-        link = ""
-        tipoLink = ""
-		
-        extLink = False
-        extLink2 = False
-        is_folder = False
-        is_magnet = False
-        is_myresolve = False
-        is_regex = False
-        is_m3u = False
-        is_chrome = False
-        is_yatse = False
-        is_pvr = False
-        is_log = False
-        is_copyXml = False
-        is_personal = False
-        is_enabled = True
+    try:
+        for item in dataJson["items"]:
+            titolo = "NO TIT"
+            thumb = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
+            fanart = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
+            genre = "generic"
+            info = ""
+            regExp = ""
+            resolverPar = "no_par"
+            link = ""
+            tipoLink = ""
+            
+            extLink = False
+            extLink2 = False
+            is_folder = False
+            is_magnet = False
+            is_myresolve = False
+            is_regex = False
+            is_m3u = False
+            is_chrome = False
+            is_yatse = False
+            is_pvr = False
+            is_log = False
+            is_copyXml = False
+            is_personal = False
+            is_enabled = True
 
-        if 'enabled' in item:
-            is_enabled = item["enabled"]
-        if is_enabled == False:
-            continue
+            if 'enabled' in item:
+                is_enabled = item["enabled"]
+            if is_enabled == False:
+                continue
 
-        if 'tipoLink' in item:
-            tipoLink = item["tipoLink"]
-            if tipoLink == "adult":
-                 if showAdult=="false":
-                     continue
-        
-        if 'title' in item:
-            titolo = item["title"]
-        if 'thumbnail' in item:
-            thumb = item["thumbnail"]
-        if 'fanart' in item:
-            fanart = item["fanart"]
-        if 'info' in item:
-            info = item["info"]
-        if 'genre' in item:
-            genre = item["genre"]
-        if 'link' in item:
-            link = item["link"]
-            if 'youtube' in link:
+            if 'tipoLink' in item:
+                tipoLink = item["tipoLink"]
+                if tipoLink == "adult":
+                    if showAdult=="false":
+                        continue
+            
+            if 'title' in item:
+                titolo = item["title"]
+            if 'thumbnail' in item:
+                thumb = item["thumbnail"]
+            if 'fanart' in item:
+                fanart = item["fanart"]
+            if 'info' in item:
+                info = item["info"]
+            if 'genre' in item:
+                genre = item["genre"]
+            if 'link' in item:
+                link = item["link"]
+                if 'youtube' in link:
+                    is_yatse = True
+                    is_folder = True
+            if 'externallink' in item:
+                extLink = True
+                is_folder = True
+                link = item["externallink"]
+            if 'externallink2' in item:
+                extLink2 = True
+                is_folder = True
+                link = item["externallink2"]
+            if 'myresolve' in item:
+                is_myresolve = True
+                is_folder = True
+                link = item["myresolve"]
+                if "@@" in link:
+                    arrT=link.split("@@")
+                    link=arrT[0]
+                    resolverPar=arrT[1]
+                elif ":" in link:
+                    arrT=link.split(":")
+                    link=arrT[0]
+                    resolverPar=arrT[1]
+            if 'regexPage' in item:
+                is_regex = True
+                link = item["regexPage"]
+                if 'regexExpres' in item:
+                    regExp = item["regexExpres"]
+            if 'chrome' in item:
+                is_chrome = True
+                is_folder = True
+                link = item["chrome"]
+            if 'yatse' in item:
                 is_yatse = True
                 is_folder = True
-        if 'externallink' in item:
-            extLink = True
-            is_folder = True
-            link = item["externallink"]
-        if 'externallink2' in item:
-            extLink2 = True
-            is_folder = True
-            link = item["externallink2"]
-        if 'myresolve' in item:
-            is_myresolve = True
-            is_folder = True
-            link = item["myresolve"]
-            if "@@" in link:
-                arrT=link.split("@@")
-                link=arrT[0]
-                resolverPar=arrT[1]
-            elif ":" in link:
-                arrT=link.split(":")
-                link=arrT[0]
-                resolverPar=arrT[1]
-        if 'regexPage' in item:
-            is_regex = True
-            link = item["regexPage"]
-            if 'regexExpres' in item:
-                regExp = item["regexExpres"]
-        if 'chrome' in item:
-            is_chrome = True
-            is_folder = True
-            link = item["chrome"]
-        if 'yatse' in item:
-            is_yatse = True
-            is_folder = True
-            link = item["yatse"]
-        if 'm3u' in item:
-            is_m3u = True
-            is_folder = True
-            link = item["m3u"]
-        if 'personal' in item:
-            is_personal = True
-            is_folder = True
-            link = item["personal"]
-        if 'magnet' in item:
-            is_magnet = True
-            link = item["magnet"]
-        if 'pvr' in item:
-            is_pvr = True
-            link = item["pvr"]
-        if 'log' in item:
-            is_log = True
-            is_folder = True
-            link = "ignore"
-        if 'copyXml' in item:
-            is_copyXml = True
-            is_folder = True
-            link = item["copyXml"]
-        list_item = xbmcgui.ListItem(label=titolo)
-        list_item.setInfo('video', {'title': titolo,'genre': genre,'plot': info,'mediatype': 'movie','credits': 'ElSupremo'})
-        list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
-        url = ""
-
-        if extLink == True:
-            url = get_url(action='getExtData', url=link)
-        elif extLink2 == True:
-            url = get_url(action='getExtData2', url=link)
-        elif is_regex == True:
-            list_item.setProperty('IsPlayable', 'true')
-            url = get_url(action='regex', url=link, exp=regExp)
-        elif is_myresolve == True:
-            url = get_url(action='myresolve', url=link, parIn=resolverPar)
-        elif is_pvr == True:
-            url = get_url(action='pvr', url=link)
-        elif is_log == True:
-            url = get_url(action='log', url=link)
-        elif is_m3u == True:
-            url = get_url(action='m3u', url=link)
-        elif is_personal == True:
-            url = get_url(action='personal', url=link)
-        elif is_copyXml == True:
-            url = get_url(action='copyXml', url=link)
-        elif is_yatse == True:
-            list_item.setProperty('IsPlayable', 'true')
-            url = get_urlYatse(action='share', type='unresolvedurl', data=link)
-        elif is_magnet == True:
-            list_item.setProperty('IsPlayable', 'true')
-            url = get_urlMagnet(uri=link)
-        elif is_chrome == True:
-            url = get_urlChrome(mode='showSite', stopPlayback='no', kiosk='no', url=link)
-        else:
-            if 'apk' in item:
-                logga('APK MODE')
-                list_item.setProperty('IsPlayable', 'true')
+                link = item["yatse"]
+            if 'm3u' in item:
+                is_m3u = True
                 is_folder = True
-                apkName=item["apk"]
-                url = get_url(action='apk', url=link, apk=apkName)
-            else:
+                link = item["m3u"]
+            if 'personal' in item:
+                is_personal = True
+                is_folder = True
+                link = item["personal"]
+            if 'magnet' in item:
+                is_magnet = True
+                link = item["magnet"]
+            if 'pvr' in item:
+                is_pvr = True
+                link = item["pvr"]
+            if 'log' in item:
+                is_log = True
+                is_folder = True
+                link = "ignore"
+            if 'copyXml' in item:
+                is_copyXml = True
+                is_folder = True
+                link = item["copyXml"]
+            list_item = xbmcgui.ListItem(label=titolo)
+            list_item.setInfo('video', {'title': titolo,'genre': genre,'plot': info,'mediatype': 'movie','credits': 'ElSupremo'})
+            list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
+            url = ""
+
+            if extLink == True:
+                url = get_url(action='getExtData', url=link)
+            elif extLink2 == True:
+                url = get_url(action='getExtData2', url=link)
+            elif is_regex == True:
                 list_item.setProperty('IsPlayable', 'true')
-                if not link.startswith("plugin://plugin"):
-                    url = get_url(action='play', url=link)
+                url = get_url(action='regex', url=link, exp=regExp)
+            elif is_myresolve == True:
+                url = get_url(action='myresolve', url=link, parIn=resolverPar)
+            elif is_pvr == True:
+                url = get_url(action='pvr', url=link)
+            elif is_log == True:
+                url = get_url(action='log', url=link)
+            elif is_m3u == True:
+                url = get_url(action='m3u', url=link)
+            elif is_personal == True:
+                url = get_url(action='personal', url=link)
+            elif is_copyXml == True:
+                url = get_url(action='copyXml', url=link)
+            elif is_yatse == True:
+                list_item.setProperty('IsPlayable', 'true')
+                url = get_urlYatse(action='share', type='unresolvedurl', data=link)
+            elif is_magnet == True:
+                list_item.setProperty('IsPlayable', 'true')
+                url = get_urlMagnet(uri=link)
+            elif is_chrome == True:
+                url = get_urlChrome(mode='showSite', stopPlayback='no', kiosk='no', url=link)
+            else:
+                if 'apk' in item:
+                    logga('APK MODE')
+                    list_item.setProperty('IsPlayable', 'true')
+                    is_folder = True
+                    apkName=item["apk"]
+                    url = get_url(action='apk', url=link, apk=apkName)
                 else:
-                    url = get_url(action='plugin', url=link)
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
-    xbmcplugin.endOfDirectory(_handle)
+                    list_item.setProperty('IsPlayable', 'true')
+                    if not link.startswith("plugin://plugin"):
+                        url = get_url(action='play', url=link)
+                    else:
+                        url = get_url(action='plugin', url=link)
+            xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
+        xbmcplugin.endOfDirectory(_handle)
+    except:
+        msgBox("Errore nella lettura del json")
+        logging.warning(strJson)
+
 
 def get_url(**kwargs):
     return '{0}?{1}'.format(_url, urlencode(kwargs))
