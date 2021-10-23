@@ -2,7 +2,7 @@ versione='1.0.38'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 10.10.2021
+# Last update: 23.10.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
