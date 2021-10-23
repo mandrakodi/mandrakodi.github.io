@@ -1,8 +1,8 @@
-versione='1.0.37'
+versione='1.0.38'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 21.10.2021
+# Last update: 10.10.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -25,7 +25,7 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 debug = selfAddon.getSetting("debug")
 showAdult = selfAddon.getSetting("ShowAdult")
 testoLog = "";
-viewmode=None
+viewmode="51"
 
 PY3 = sys.version_info[0] == 3
 if PY3:
@@ -37,6 +37,7 @@ else:
 def logga(mess):
     global testoLog
     if debug == "on":
+        logging.warning("MANDRA_LOG: \n"+mess)
         testoLog += mess+"\n";
 		
 def makeRequest(url, hdr=None):
@@ -353,10 +354,13 @@ def channelToItems(strChName, _handle):
             jsonToItems(json.dumps(channel))
 
 def simpleRegex(page, find):
-    html = makeRequest(page)
+    hdr = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"}
+    html = makeRequest(page, hdr)
     if PY3:
-        html = html.decode('utf-8')		
+        html = html.decode('utf-8')
+    logga("HTML:\n"+html)		
     urlSteam = re.findall(find, html)[0]
+    logga("urlSteam:\n"+urlSteam)	
     return urlSteam
 
 def callReolver(metodo, parametro):
@@ -510,7 +514,7 @@ def checkResolver():
             f = open(resolver_file, "w")
             f.write(strSource)
             f.close()
-            msgBox("UPDATE RESOLVE TO VERSION "+remote_vers)
+            msgBox("Codice Resolver aggiornato alla versione: "+remote_vers)
             logga('VERSION UPDATE')
 
 def checkDns():
@@ -719,7 +723,7 @@ def decodeSkinViewMode (mySkin='', viewMode=''):
         retMode = str(selfAddon.getSetting("SkinInfo1"))
     if (retMode == "504" or retMode == "Info2"):
         retMode = str(selfAddon.getSetting("SkinInfo2"))
-    logga ("SKIN: "+mySkin+" - VIEW: "+retMode)
+    logga ("SKIN: "+mySkin+" - VIEW: "+str(retMode))
 
     return retMode
 
