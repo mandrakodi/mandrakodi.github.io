@@ -1,8 +1,8 @@
-versione='1.0.37'
+versione='1.0.38'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 10.10.2021
+# Last update: 23.10.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -25,7 +25,7 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 debug = selfAddon.getSetting("debug")
 showAdult = selfAddon.getSetting("ShowAdult")
 testoLog = "";
-viewmode=51
+viewmode="51"
 
 PY3 = sys.version_info[0] == 3
 if PY3:
@@ -514,7 +514,7 @@ def checkResolver():
             f = open(resolver_file, "w")
             f.write(strSource)
             f.close()
-            msgBox("UPDATE RESOLVE TO VERSION "+remote_vers)
+            msgBox("Codice Resolver aggiornato alla versione: "+remote_vers)
             logga('VERSION UPDATE')
 
 def checkDns():
@@ -723,7 +723,7 @@ def decodeSkinViewMode (mySkin='', viewMode=''):
         retMode = str(selfAddon.getSetting("SkinInfo1"))
     if (retMode == "504" or retMode == "Info2"):
         retMode = str(selfAddon.getSetting("SkinInfo2"))
-    logga ("SKIN: "+mySkin+" - VIEW: "+retMode)
+    logga ("SKIN: "+mySkin+" - VIEW: "+str(retMode))
 
     return retMode
 
