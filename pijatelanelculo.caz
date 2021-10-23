@@ -1,8 +1,8 @@
-versione='1.0.37'
+versione='1.0.38'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 10.10.2021
+# Last update: 23.10.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, os
@@ -15,6 +15,10 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 debug = selfAddon.getSetting("debug")
 
 PY3 = sys.version_info[0] == 3
+if PY3:
+    import urllib.parse as myParse
+else:
+    import urllib as myParse
 
 def logga(mess):
     if debug == "on":
@@ -549,26 +553,31 @@ def preg_match_all(data, patron, index=0):
 
 def streamTape(parIn):
     video_urls = []
-    logga('PAR: '+parIn)
-    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.me/'}).content
+    ppIn = myParse.unquote(parIn)
+    logga('PAR_STAPE: '+ppIn)
+    page_data = requests.get(ppIn, headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.me/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     htmlCodice = preg_match(page_data, r'<\/video><script>(.*?)<\/body>')
     #iframe_url = preg_match(page_data, r'<div id="videoolink" style="display:none;">(.*?)<\/div>')
     iframe_url = preg_match(htmlCodice, r'style="display:none;">(.*?)<\/div>')
     logga('IFRAME: '+iframe_url)
-    link1 = iframe_url.split('&token=')
-    linkPre = link1[0];
-    logga('LINK_PRE: '+linkPre)
-    #info = preg_match(page_data, r"<script>document.getElementById\('videoolink'\)(.*?)<\/script>")
-    info1 = preg_match(page_data, r"<script>document.getElementById(.*?)<\/script>")
-    info = info1.split(';')[0]
-    tkn = preg_match(info, r"&token=(.*?)'")
-    #tkn = preg_match(htmlCodice, r"&token=(.*?)'\).substring")
-    linkSplit = linkPre.split("?")[1]
-    info2 = "https://streamta.pe/get_video?"+linkSplit+"&token="+tkn+"&stream=1"
-    logga('LINK_FINAL: '+info2)
-    video_urls.append((info2, ""))
+    if (iframe_url != ""):
+        link1 = iframe_url.split('&token=')
+        linkPre = link1[0];
+        logga('LINK_PRE: '+linkPre)
+        #info = preg_match(page_data, r"<script>document.getElementById\('videoolink'\)(.*?)<\/script>")
+        info1 = preg_match(page_data, r"<script>document.getElementById(.*?)<\/script>")
+        info = info1.split(';')[0]
+        tkn = preg_match(info, r"&token=(.*?)'")
+        #tkn = preg_match(htmlCodice, r"&token=(.*?)'\).substring")
+        linkSplit = linkPre.split("?")[1]
+        info2 = "https://streamta.pe/get_video?"+linkSplit+"&token="+tkn+"&stream=1"
+        logga('LINK_FINAL: '+info2)
+        video_urls.append((info2, ""))
+    else:
+        logga('NO IFRAME')
+        video_urls.append(("ignore", "[COLOR red]NO LINK FOUND[/COLOR]", ppIn))
     return video_urls
 
 def dplay(parIn):
