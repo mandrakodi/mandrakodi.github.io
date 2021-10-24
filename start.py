@@ -1,4 +1,4 @@
-versione='1.0.41'
+versione='1.0.42'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -563,6 +563,17 @@ def checkMandraScript():
         mess = "Il plugin script.mandra.kodi non risulta installato.\nAlcune funzionalita' non saranno disponibili."
         return dialog.ok("Mandrakodi", mess)
 
+def checkPluginInstalled(pluginId):
+    
+    have_mandra_plugin = '"enabled":true' in xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"Addons.GetAddonDetails","id":1,"params":{"addonid":"'+pluginId+'", "properties": ["enabled"]}}')
+    if have_mandra_plugin == False:
+        dialog = xbmcgui.Dialog()
+        mess = "Il plugin "+pluginId+" non risulta installato."
+        dialog.ok("Mandrakodi", mess)
+    logga("CHECK IF "+pluginId+" IS INSTALLED: "+have_mandra_plugin)
+    return have_mandra_plugin
+    
+
 def checkMsgOnLog():
     LOGPATH = xbmc.translatePath('special://logpath')
     log_file = os.path.join(LOGPATH, 'kodi.log')
@@ -829,7 +840,7 @@ def run():
                 getExternalJson(url)
             elif action == 'getExtData2':
                 clipB=""
-                keyboard = xbmc.Keyboard(clipB,'Insert string')
+                keyboard = xbmc.Keyboard(clipB,'Inserisci Valore')
                 keyboard.doModal()
                 if not (keyboard.isConfirmed() == False):
                     userInput = keyboard.getText()
@@ -885,11 +896,14 @@ def run():
                     pl=url3[0].replace("/", "")
                     par=url3[1]
                     logga("plug: "+pl+" --> "+par)
-                    xbmc.executebuiltin("RunPlugin("+url+")")
+                    if (checkPluginInstalled(pl)):
+                        xbmc.executebuiltin("RunPlugin("+url+")")
                 else:
                     pl=url3[0].replace("/", "")
                     logga("onlyplugin: "+pl)
-                    xbmc.executebuiltin('RunAddon("'+pl+'")')
+                    if (checkPluginInstalled(pl)):
+                        xbmc.executebuiltin('RunAddon("'+pl+'")')
+
             elif action == 'play':
                 play_video(url)
             elif action == 'm3u':
