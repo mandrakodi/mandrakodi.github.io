@@ -1,4 +1,4 @@
-versione='1.0.43'
+versione='1.0.44'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -112,7 +112,7 @@ def getTxtMessage(vName):
 def getExternalJson(strPath):
     strSource = makeRequest(strPath)
     if (strSource == ""):
-        msgBox("Spiacenti, la fonte non è raggiungibile")
+        msgBox("Spiacenti, la fonte non e' raggiungibile")
         logging.warning("NO JSON AT: "+strPath)
     else:
         jsonToItems(strSource)
