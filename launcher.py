@@ -1,8 +1,8 @@
-versione='1.0.42'
+versione='1.0.43'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 24.10.2021
+# Last update: 25.10.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -51,7 +51,7 @@ def makeRequest(url, hdr=None):
     pwd = selfAddon.getSetting("password")
     version = selfAddon.getAddonInfo("version")
     if hdr is None:
-        ua = "MandraKodi@@"+version+"@@"+pwd
+        ua = "MandraKodi2@@"+version+"@@"+pwd
         hdr = {"User-Agent" : ua}
     try:
         req = myRequest.Request(url, headers=hdr)
@@ -112,7 +112,7 @@ def getTxtMessage(vName):
 def getExternalJson(strPath):
     strSource = makeRequest(strPath)
     if (strSource == ""):
-        msgBox("External Json not found")
+        msgBox("Spiacenti, la fonte non è raggiungibile")
         logging.warning("NO JSON AT: "+strPath)
     else:
         jsonToItems(strSource)
@@ -122,7 +122,7 @@ def jsonToItems(strJson):
     try:
         dataJson = json.loads(strJson)
     except Exception as err:
-        errMsg="NO JSON FOUND"
+        errMsg="Errore: Nessuna risposta dal server (No Json)"
         msgBox(errMsg)
     
     xbmcplugin.setContent(_handle, 'movies')
@@ -513,8 +513,8 @@ def checkResolver():
         resF.close()
         local_vers = re.findall("versione='(.*)'",resolver_content)[0]
         logga('local_vers '+local_vers)
-        #ATTACCATE AR CAZZO!!!!
-        remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/pijatelanelculo.caz"
+        
+        remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/myResolver.py"
         strSource = makeRequest(remoteResolverUrl)
         if strSource is None or strSource == "":
             logga('We failed to get source from '+remoteResolverUrl)
