@@ -1,4 +1,4 @@
-versione='1.0.44'
+versione='1.0.45'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -113,6 +113,7 @@ def getExternalJson(strPath):
     strSource = makeRequest(strPath)
     if (strSource == ""):
         msgBox("Spiacenti, la fonte non e' raggiungibile")
+        remoteLog("NO_FONTE@@"+strPath)
         logging.warning("NO JSON AT: "+strPath)
     else:
         jsonToItems(strSource)
@@ -124,6 +125,7 @@ def jsonToItems(strJson):
     except Exception as err:
         errMsg="Errore: Nessuna risposta dal server (No Json)"
         msgBox(errMsg)
+        remoteLog("BAD_JSON")
     
     xbmcplugin.setContent(_handle, 'movies')
     
@@ -154,6 +156,7 @@ def jsonToItems(strJson):
         logga('no channels. GetItems')
         pass
     
+    link = ""
     try:
         for item in dataJson["items"]:
             titolo = "NO TIT"
@@ -163,7 +166,7 @@ def jsonToItems(strJson):
             info = ""
             regExp = ""
             resolverPar = "no_par"
-            link = ""
+            
             tipoLink = ""
             
             extLink = False
@@ -311,6 +314,7 @@ def jsonToItems(strJson):
         xbmcplugin.endOfDirectory(_handle)
     except:
         msgBox("Errore nella lettura del json")
+        remoteLog("NO_JSON_READ@@"+link)
         logging.warning(strJson)
 
 
@@ -782,6 +786,8 @@ def personalList(listtType=''):
             return getExternalJson(urlToCall)
         except Exception as err:
             msgBox("Non e' stato possibile leggere i dati. Controllare se il file e' presente")
+            remoteLog(personalList+"@@"+urlToCall)
+
 
 def checkSkin():
     kodiSkin=xbmc.getSkinDir()
@@ -818,7 +824,18 @@ def msgBox(mess):
     dialog = xbmcgui.Dialog()
     dialog.ok("MandraKodi", mess)
 
+def remoteLog(msgToLog):
+    baseLog = "http://test34344.herokuapp.com/filter.php?numTest=JOB999"
+    urlLog = baseLog + "&msgLog=" + msgToLog
+    strSource = makeRequest(urlLog)
+    if strSource is None or strSource == "":
+        logga('MANDRA_LOG: NO REMOTE LOG')
+    else:
+        logga('OK REMOTE LOG')
+
 def run():
+    action = "start"
+    url = "start"
     try:
         if not sys.argv[2]:
             logga("=== ADDON START ===")
@@ -918,9 +935,13 @@ def run():
                 raise Exception('Invalid paramstring: {0}!'.format(params))
     except Exception as err:
         import traceback
-        errMsg="ERROR_MANDRAKODI: {0}".format(err)
+        
+        errMsg="ERROR_MK2: {0}".format(err)
         par=re.split('%3f', sys.argv[2])
-        logging.warning(errMsg+"\nPAR_ERR --> "+par[-1])
+        parErr = par[-1]
+        logging.warning(errMsg+"\nPAR_ERR --> "+parErr)
+        errToLog = action + "@@" + url
+        remoteLog(errToLog)
         traceback.print_exc()
         raise err
 
