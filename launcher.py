@@ -1,4 +1,4 @@
-versione='1.0.46'
+versione='1.0.47'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -73,7 +73,7 @@ def getSource():
             strSource = underMaintMsg()
         else:
             logga('OK SOURCE ')
-            liveVersion = "Mandrakodi "+selfAddon.getAddonInfo("version")
+            liveVersion = "Mandrakodi "+str(selfAddon.getAddonInfo("version"))
             strSource=strSource.replace("Mandrakodi 2.0", liveVersion)
     except Exception as err:
         errMsg="ERRORE: {0}".format(err)
