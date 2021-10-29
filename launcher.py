@@ -1,8 +1,8 @@
-versione='1.0.45'
+versione='1.0.46'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 25.10.2021
+# Last update: 29.10.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -73,6 +73,8 @@ def getSource():
             strSource = underMaintMsg()
         else:
             logga('OK SOURCE ')
+            liveVersion = "Mandrakodi "+selfAddon.getAddonInfo("version")
+            strSource=strSource.replace("Mandrakodi 2.0", liveVersion)
     except Exception as err:
         errMsg="ERRORE: {0}".format(err)
         logging.warning("MANDRA_LOG: UNDER MAINTENANCE \n"+errMsg)
