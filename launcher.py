@@ -1,4 +1,4 @@
-versione='1.0.47'
+versione='1.0.48'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -56,7 +56,7 @@ def makeRequest(url, hdr=None):
     try:
         req = myRequest.Request(url, headers=hdr)
         response = myRequest.urlopen(req, timeout=45)
-        html = response.read()
+        html = response.read().decode('utf-8')
         response.close()
     except:
         logging.warning('Error to open url: '+url)
@@ -377,8 +377,8 @@ def channelToItems(strChName, _handle):
 def simpleRegex(page, find):
     hdr = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"}
     html = makeRequest(page, hdr)
-    if PY3:
-        html = html.decode('utf-8')
+    #if PY3:
+        #html = html.decode('utf-8')
     logga("HTML:\n"+html)		
     urlSteam = re.findall(find, html)[0]
     logga("urlSteam:\n"+urlSteam)	
@@ -485,8 +485,8 @@ def checkJsunpack():
         if strSource is None or strSource == "":
             logga('We failed to get source from '+remoteResolverUrl)
         else:
-            if PY3:
-                strSource = strSource.decode('utf-8')
+            #if PY3:
+                #strSource = strSource.decode('utf-8')
             saveFile(resolver_file, strSource)
 
 def checkPortalPy():
@@ -526,8 +526,8 @@ def checkResolver():
             logga('We failed to get source from '+remoteResolverUrl)
             remote_vers = local_vers
         else:
-            if PY3:
-                strSource = strSource.decode('utf-8')		
+            #if PY3:
+                #strSource = strSource.decode('utf-8')		
             remote_vers = re.findall("versione='(.*)'",strSource)[0]
         logga('remote_vers '+remote_vers)
         if local_vers != remote_vers:
@@ -628,8 +628,8 @@ def copyPlayerCoreFactory(parIn):
             mess = "Impossibile recuperare il file"
             logga('We failed to get source from '+remoteXmlUrl)
         else:
-            if PY3:
-                strSource = strSource.decode('utf-8')
+            #if PY3:
+                #strSource = strSource.decode('utf-8')
             try:
                 mess = "Si vuole sostituire il file playercorefactory.xml?"
                 risposta = dialog.yesno("Mandrakodi", mess, nolabel="Annulla", yeslabel="Procedi")
@@ -666,10 +666,9 @@ def m3u2json(src):
     if m3uSource is None or m3uSource == "":
         logga('We failed to get source from '+src)
     else:
-        if PY3:
-            m3uSource = m3uSource.decode('utf-8')		
-    
-    #regex = r'#EXTINF:.*?tvg-logo=\"([^\"]+|)\".*?,(.*?)$\s(http.*?//.*?)$'
+        #if PY3:
+            #m3uSource = m3uSource.decode('utf-8')		
+        logga('OK source')
     regex = r'#EXTINF:(.*?),(.*?)$\s(http.*?//.*?)$'	
     matches = re.compile(regex, re.MULTILINE).findall(m3uSource)
     
@@ -765,8 +764,9 @@ def personalList(listtType=''):
     if baseScript is None or baseScript == "":
         logga('We failed to get source from serverSource')
     else:
-        if PY3:
-            baseScript = baseScript.decode('utf-8')
+        #if PY3:
+            #baseScript = baseScript.decode('utf-8')
+        logga('OK get source from serverSource')
     baseScript = baseScript.replace("\r\n", "").replace("\n", "").replace("\r", "")          
     urlToCall=""
     fileName=""
