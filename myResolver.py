@@ -1,8 +1,8 @@
-versione='1.0.39'
+versione='1.0.40'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.10.2021
+# Last update: 31.10.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, os
@@ -249,6 +249,15 @@ def GetLSProData(page_in, refe=None):
     logga('page_in '+page_in)
     if refe != None:
         logga('REFER '+refe)
+    if "hdmario" in page_in:
+        logga('HDMARIO')
+        fu = requests.get(page_in, headers={'user-agent':'iPad','referer':page_in}).text
+        find = re.findall('eval\(function(.+?.+)', fu)[0]
+        unpack = jsunpack.unpack(find)
+        logga('UNPACK: '+unpack)
+        c = re.findall('var src="([^"]*)',unpack)[0]
+        logga('URL_MARIO '+c)
+        return c
 
     page_data = requests.get(page_in,headers={'user-agent':'iPad','accept':'*/*','referer':refe}).content
 
@@ -278,6 +287,9 @@ def GetLSProData(page_in, refe=None):
         return GetLSProData(src)
     elif "pepperlive" in src:
         logga('PEPPER')
+        return GetLSProData(src)
+    elif "hdmario" in src:
+        logga('HDMARIO')
         return GetLSProData(src)
     else:
         logga('CALL findM3u8 FUNCTION ')
@@ -328,33 +340,7 @@ def urlsolver(url):
 
 def get_resolved(url):
     import xbmcvfs
-    try:
-        import resolveurl
-    except:
-        dialog = xbmcgui.Dialog()
-        mess = "Lo script 'script.module.resolveurl' non risulta installato."
-        dialog.ok("Mandrakodi", mess)
-        return url
-
-    logga("TRY TO RESOLVE: "+url)
-    xxx_plugins_path = 'special://home/addons/script.module.resolveurl.xxx/resources/plugins/'
-    if xbmcvfs.exists(xxx_plugins_path):
-        logging.warning("OK XXX RESOLVER ")
-        if sys.version_info[0] > 2:
-            xxxp = xbmcvfs.translatePath(xxx_plugins_path)
-        else:
-            import xbmc
-            xxxp = xbmc.translatePath(xxx_plugins_path)
-        resolveurl.add_plugin_dirs(xxxp)
-    try:
-        resolved = resolveurl.resolve(url)
-        if resolved:
-            logga("OK RESOLVER: "+resolved)
-            return resolved
-        raise
-    except Exception as e:
-        logga("NO RESOLVER")		
-
+    
     resolved = daddyFind(url)
     if resolved:
         return resolved
@@ -379,6 +365,32 @@ def get_resolved(url):
     else:
         logga("NO RESOLVER DATA")		
 
+    try:
+        import resolveurl
+    except:
+        dialog = xbmcgui.Dialog()
+        mess = "Lo script 'script.module.resolveurl' non risulta installato."
+        dialog.ok("Mandrakodi", mess)
+        return url
+
+    logga("TRY TO RESOLVE: "+url)
+    xxx_plugins_path = 'special://home/addons/script.module.resolveurl.xxx/resources/plugins/'
+    if xbmcvfs.exists(xxx_plugins_path):
+        logging.warning("OK XXX RESOLVER ")
+        if sys.version_info[0] > 2:
+            xxxp = xbmcvfs.translatePath(xxx_plugins_path)
+        else:
+            import xbmc
+            xxxp = xbmc.translatePath(xxx_plugins_path)
+        resolveurl.add_plugin_dirs(xxxp)
+    try:
+        resolved = resolveurl.resolve(url)
+        if resolved:
+            logga("OK RESOLVER: "+resolved)
+            return resolved
+    except Exception as e:
+        logga("NO RESOLVER")		
+
     return url
 
 def streamingcommunity(parIn=None):
@@ -389,9 +401,16 @@ def streamingcommunity(parIn=None):
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
-    patron=r'<video-player response="([^"]+)"'
-    dataJ = preg_match(page_data, patron).replace('&quot;','"').replace('\\','')
-    arrJ = json.loads(dataJ)
+    patron=r'<video-player response="(.*?)"'
+    dataF = preg_match(page_data, patron)
+    #logga("DATA FROM STRCO: "+dataF)
+    dataJ = dataF.replace('&quot;','"')
+    try:
+        arrJ = json.loads(dataJ)
+    except Exception as e:
+        logga("NO JSON FROM STRCO: "+page_video)
+        raise ValueError('NO JSON FROM: '+page_video)
+
     nm=arrJ["title"]["name"]
     name = "[COLOR lime]"+nm.upper()+"[/COLOR]"
     plot = arrJ["title"]["plot"]
