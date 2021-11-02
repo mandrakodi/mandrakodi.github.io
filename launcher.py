@@ -1,8 +1,8 @@
-versione='1.0.48'
+versione='1.0.49'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 29.10.2021
+# Last update: 02.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -576,7 +576,7 @@ def checkPluginInstalled(pluginId):
         dialog = xbmcgui.Dialog()
         mess = "Il plugin "+pluginId+" non risulta installato."
         dialog.ok("Mandrakodi", mess)
-    logga("CHECK IF "+pluginId+" IS INSTALLED: "+have_mandra_plugin)
+    logga("CHECK IF "+pluginId+" IS INSTALLED: "+str(have_mandra_plugin))
     return have_mandra_plugin
     
 
@@ -738,7 +738,7 @@ def m3u2json(src):
 
     strJson += ']}]}'
 
-    logging.warning(strJson)
+    #logging.warning(strJson)
     jsonToItems(strJson)
 
 
@@ -902,9 +902,12 @@ def run():
                 logga("MyResolver: "+url+" - "+parIn)
                 callReolver(url, parIn)
             elif action == 'openSettings':
-                xbmcaddon.Addon().openSettings()
-                xbmcgui.Dialog().ok('[B][COLOR yellow]AVVISO[/COLOR][/B]','[COLOR lime]CHIUDI KODI E APRI DI NUOVO PER AGGIORNARE IMPOSTAZIONI[/COLOR]')
-                xbmc.executebuiltin("XBMC.Container.Refresh()")
+                try:
+                    xbmcaddon.Addon().openSettings()
+                    xbmcgui.Dialog().ok('[B][COLOR yellow]AVVISO[/COLOR][/B]','[COLOR lime]CHIUDI KODI E APRI DI NUOVO PER AGGIORNARE IMPOSTAZIONI[/COLOR]')
+                    xbmc.executebuiltin("XBMC.Container.Refresh()")
+                except:
+                    xbmc.executebuiltin('Addon.OpenSettings(plugin.video.mandrakodi)')
             elif action == 'plugin':
                 logga("CALL PLUGIN: "+url)
                 url2=url.replace("plugin://", "")
