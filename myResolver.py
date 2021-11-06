@@ -1,8 +1,8 @@
-versione='1.0.40'
+versione='1.0.41'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 31.10.2021
+# Last update: 06.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, os
@@ -396,8 +396,8 @@ def get_resolved(url):
 def streamingcommunity(parIn=None):
     import json
     video_urls = []
-    
-    page_video = "https://streamingcommunity.live/watch/" + parIn
+    url_sito = "https://streamingcommunity.live/"
+    page_video = url_sito + "watch/" + parIn
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
@@ -415,7 +415,7 @@ def streamingcommunity(parIn=None):
     name = "[COLOR lime]"+nm.upper()+"[/COLOR]"
     plot = arrJ["title"]["plot"]
     idVideo = arrJ["video_id"]
-    url = "https://streamingcommunity.live/videos/master/" + str(idVideo) + "m3u8"
+    url = url_sito + "videos/master/" + str(idVideo) + "m3u8"
     if "scws_id" in arrJ:
         logga("SCWS: "+str(arrJ["scws_id"]))	
         idVideo = arrJ["scws_id"]
@@ -442,7 +442,6 @@ def streamingcommunity(parIn=None):
     localIp = arrJ2["client_ip"]
 
     token = calculateToken(localIp)
-    #url = "https://streamingcommunity.video/videos/master/" + parIn + "m3u8"
     code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
     count = 0
     while not code == 200:
