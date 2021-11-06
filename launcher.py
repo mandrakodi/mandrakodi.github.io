@@ -1,8 +1,8 @@
-versione='1.0.49'
+versione='1.0.50'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 02.11.2021
+# Last update: 06.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -25,8 +25,11 @@ selfAddon = xbmcaddon.Addon(id=addon_id)
 selfAddon.setSetting("debug", "on")
 debug = selfAddon.getSetting("debug")
 showAdult = selfAddon.getSetting("ShowAdult")
+lastView = selfAddon.getSetting("urlAppo1")
+if (lastView=="Not in use"):
+    lastView="51"
 testoLog = "";
-viewmode="51"
+viewmode=lastView
 
 PY3 = sys.version_info[0] == 3
 if PY3:
@@ -155,7 +158,7 @@ def jsonToItems(strJson):
         logga("OK CHANNELS")
         return jsonToChannels(strJson)
     except:
-        logga('no channels. GetItems')
+        logga('NO CHANNELS. GetItems')
         pass
     
     link = ""
@@ -315,9 +318,11 @@ def jsonToItems(strJson):
             xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
         xbmcplugin.endOfDirectory(_handle)
     except:
+        import traceback
         msgBox("Errore nella lettura del json")
         remoteLog("NO_JSON_READ@@"+link)
-        logging.warning(strJson)
+        traceback.print_exc()
+        #logging.warning(strJson)
 
 
 def get_url(**kwargs):
@@ -337,31 +342,35 @@ def parameters_string_to_dict(parameters):
     return params
 
 def jsonToChannels(strJson):
-    channelsArray = json.loads(strJson)
-    window = xbmcgui.Window(10000)
-    window.setProperty("chList", strJson)
-    xbmcplugin.setContent(_handle, 'movies')
-    for channel in channelsArray["channels"]:
-        titolo = "NO TIT"
-        thumb = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
-        fanart = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
-        genre = "generic"
-        info = ""
-        link = ""
-        if 'name' in channel:
-            titolo = channel["name"]
-        if 'thumbnail' in channel:
-            thumb = channel["thumbnail"]
-        if 'fanart' in channel:
-            fanart = channel["fanart"]
-        if 'info' in channel:
-            info = channel["info"]
-        list_item = xbmcgui.ListItem(label=titolo)
-        list_item.setInfo('video', {'title': titolo,'genre': genre,'plot': info,'mediatype': 'movie','credits': 'ElSupremo'})
-        list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
-        url = get_url(action='getChannel', url=titolo)
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
-    xbmcplugin.endOfDirectory(_handle)
+    try:
+        channelsArray = json.loads(strJson)
+        window = xbmcgui.Window(10000)
+        window.setProperty("chList", strJson)
+        xbmcplugin.setContent(_handle, 'movies')
+        for channel in channelsArray["channels"]:
+            titolo = "NO TIT"
+            thumb = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
+            fanart = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
+            genre = "generic"
+            info = ""
+            if 'name' in channel:
+                titolo = channel["name"]
+            if 'thumbnail' in channel:
+                thumb = channel["thumbnail"]
+            if 'fanart' in channel:
+                fanart = channel["fanart"]
+            if 'info' in channel:
+                info = channel["info"]
+            list_item = xbmcgui.ListItem(label=titolo)
+            list_item.setInfo('video', {'title': titolo,'genre': genre,'plot': info,'mediatype': 'movie','credits': 'ElSupremo'})
+            list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
+            url = get_url(action='getChannel', url=titolo)
+            xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
+        xbmcplugin.endOfDirectory(_handle)
+    except:
+        import traceback
+        msgBox("Errore nella creazione delle gategorie")
+        traceback.print_exc()    
    
 def channelToItems(strChName, _handle):
     window = xbmcgui.Window(10000)
@@ -957,5 +966,7 @@ def run():
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
         logga("setting view mode again to "+kodiView)
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
+        selfAddon.setSetting("urlAppo1", kodiView)
+        logga("Last ViewMode Saved: "+kodiView)
     if debug == "on":
         logging.warning("MANDRA_LOG: \n"+testoLog)
