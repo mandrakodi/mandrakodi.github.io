@@ -1,4 +1,4 @@
-versione='1.0.41'
+versione='1.0.42'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -396,7 +396,7 @@ def get_resolved(url):
 def streamingcommunity(parIn=None):
     import json
     video_urls = []
-    url_sito = "https://streamingcommunity.live/"
+    url_sito = "https://streamingcommunity.space/"
     page_video = url_sito + "watch/" + parIn
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
