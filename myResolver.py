@@ -1,11 +1,11 @@
-versione='1.0.43'
+versione='1.0.44'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
 # Last update: 11.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
-import re, sys, logging, os
+import re, requests, sys, logging, os
 import xbmcplugin
 import xbmcgui
 import xbmcaddon
@@ -24,77 +24,24 @@ def logga(mess):
     if debug == "on":
         logging.warning("MANDRA_RESOLVE: "+mess);
 
-def makeRequest(url, hdr=None):
-    logga('Try to open '+url)
-    html = ""
-    if PY3:
-	    import urllib.request as myRequest
-    else:
-	    import urllib2 as myRequest
-    pwd = selfAddon.getSetting("password")
-    version = selfAddon.getAddonInfo("version")
-    if hdr is None:
-        ua = "MandraKodi2@@"+version+"@@"+pwd
-        hdr = {"User-Agent" : ua}
-    try:
-        req = myRequest.Request(url, headers=hdr)
-        response = myRequest.urlopen(req, timeout=45)
-        html = response.read().decode('utf-8')
-        response.close()
-    except:
-        import traceback
-        logging.warning('Error to open url: '+url)
-        traceback.print_exc()
-        pass
-    return html
-
-def getResponseCode(url, hdr=None):
-    logga('Try to open '+url)
-    html = 106
-    if PY3:
-	    import urllib.request as myRequest
-    else:
-	    import urllib2 as myRequest
-    pwd = selfAddon.getSetting("password")
-    version = selfAddon.getAddonInfo("version")
-    if hdr is None:
-        ua = "MandraKodi2@@"+version+"@@"+pwd
-        hdr = {"User-Agent" : ua}
-    try:
-        req = myRequest.Request(url, headers=hdr)
-        response = myRequest.urlopen(req, timeout=45)
-        contentPage = response.read()
-        html = response.getCode()
-        response.close()
-    except:
-        import traceback
-        logging.warning('Error to open url: '+url)
-        traceback.print_exc()
-        pass
-    return html
-
-
 def rsi(parIn=None):
     chName="rsilajuve"
     chRef="zzz.php"
     if parIn == "LA1":
         chName="RsiLa1Live"
         chRef="RsiLa1.php"
-    #source = requests.get('https://www.janjua.tv/hembedplayer/'+chName+'/3/800/456',headers={'user-agent':'Mozilla/5.0','referer':'https://easysite.one/z/Player/embed/Native/'+chRef,'accept':'*/*'}).content
-    source = makeRequest('https://www.janjua.tv/hembedplayer/'+chName+'/3/800/456',{'user-agent':'Mozilla/5.0','referer':'https://easysite.one/z/Player/embed/Native/'+chRef,'accept':'*/*'})
-    
+    source = requests.get('https://www.janjua.tv/hembedplayer/'+chName+'/3/800/456',headers={'user-agent':'Mozilla/5.0','referer':'https://easysite.one/z/Player/embed/Native/'+chRef,'accept':'*/*'}).content
+    if PY3:
+        source = source.decode('utf-8')
+
     tok,lhtml,ids = re.findall('enableVideo.[\'"]([^\'"]+)[\w\W]+?ajax..url.+?[\'"](.+?\?(\d+))',source)[0]
-    source2 = makeRequest(lhtml,{'user-agent':'Mozilla/5.0','referer':'https://www.janjua.tv/hembedplayer/'+chName+'/3/800/456','accept':'*/*'})
+    source2 = requests.get(lhtml,headers={'user-agent':'Mozilla/5.0','referer':'https://www.janjua.tv/hembedplayer/'+chName+'/3/800/456','accept':'*/*'}).content
+    if PY3:
+        source2 = source2.decode('utf-8')
     m3u8 = 'https://'+re.findall('=(.*)',source2)[0]+':8088/live/'+chName+'/playlist.m3u8?id=%s&pk=%s'%(ids,tok)
     return m3u8
 
 def rocktalk(parIn=None):
-    try:
-        import requests
-    except:
-        logga("NO REQUESTS MODULE")
-        links = []
-        return links
     from base64 import b64encode, b64decode
     from binascii import a2b_hex
     from Cryptodome.Cipher import PKCS1_v1_5 as Cipher_PKCS1_v1_5
@@ -156,8 +103,10 @@ def myStream(parIn=None):
     video_urls = []
     page_url = "https://embed.mystream.to/"+parIn
     logga('CALL: '+page_url)
-    page_data = makeRequest(page_url,{'user-agent':'Mozilla/5.0','accept':'*/*'})
-    
+    page_data = requests.get(page_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+
     page_decode = decodeMyStream(page_data)
     video_url = preg_match(page_decode, r"'src',\s*'([^']+)")
 
@@ -211,8 +160,10 @@ def decodeMyStream(data):
 
 def wizhdFind(parIn):
     logga('CALL: '+parIn)
-    page_data = makeRequest(parIn,{'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'http://wizhdsports.net/'})
-    
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'http://wizhdsports.net/'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
     logga('IFRAME: '+iframe_url)
 
@@ -239,8 +190,11 @@ def findM3u8(linkIframe, refPage):
     logga('URL: '+linkIframe)
     vUrl = ""
     try:
-        page_data2 = makeRequest(linkIframe,{'user-agent':'iPad','accept':'*/*','referer':refPage})
-        
+        page_data2 = requests.get(linkIframe,headers={'user-agent':'iPad','accept':'*/*','referer':refPage}).content
+
+        if PY3:
+            page_data2 = page_data2.decode('utf-8')
+
         video_url = preg_match(page_data2, r'source:\s*"([^"]+)')
         if video_url == "":
             video_url = preg_match(page_data2, r"source:\s*'([^']+)")
@@ -269,7 +223,9 @@ def assia(parIn=None):
     return video_urls
 
 def daddyFind(parIn):
-    page_data = makeRequest(parIn,{'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.me/'})
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.me/'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
     logga('IFRAME: '+iframe_url)
     video_url = findM3u8(iframe_url, parIn)
@@ -278,23 +234,13 @@ def daddyFind(parIn):
 def daddy(parIn=None):
     video_urls = []
     logga('PAR: '+parIn)
+
     video_url = daddyFind(parIn)
+
     video_urls.append((video_url, ""))
     if "|" in video_url:
         arrV = video_url.split("|")
         video_urls.append((arrV[0], ""))		
-    return video_urls
-
-def unpackSite(page_in):
-    import jsunpack
-    video_urls = []
-    fu = makeRequest(page_in, {'user-agent':'iPad','referer':page_in})
-    find = re.findall('eval\(function(.+?.+)', fu)[0]
-    unpack = jsunpack.unpack(find)
-    logging.warning('UNPACK: '+unpack)
-    c = re.findall('sources:\[\{file:"(.*?)"',unpack)[0]
-    logga('URL_UNPACK '+c)
-    video_urls.append((c, ""))
     return video_urls
 
 def GetLSProData(page_in, refe=None):
@@ -305,7 +251,7 @@ def GetLSProData(page_in, refe=None):
         logga('REFER '+refe)
     if "hdmario" in page_in:
         logga('HDMARIO')
-        fu = makeRequest(page_in, {'user-agent':'iPad','referer':page_in})
+        fu = requests.get(page_in, headers={'user-agent':'iPad','referer':page_in}).text
         find = re.findall('eval\(function(.+?.+)', fu)[0]
         unpack = jsunpack.unpack(find)
         logga('UNPACK: '+unpack)
@@ -313,7 +259,10 @@ def GetLSProData(page_in, refe=None):
         logga('URL_MARIO '+c)
         return c
 
-    page_data = makeRequest(page_in,{'user-agent':'iPad','accept':'*/*','referer':refe})
+    page_data = requests.get(page_in,headers={'user-agent':'iPad','accept':'*/*','referer':refe}).content
+
+    if PY3:
+        page_data = page_data.decode('utf-8')
 
     src = preg_match(page_data, '<iframe src="([^"]*)')
 
@@ -346,7 +295,7 @@ def GetLSProData(page_in, refe=None):
         logga('CALL findM3u8 FUNCTION ')
         return findM3u8(src, page_in)
 
-    fu = makeRequest(src, {'user-agent':'iPad','referer':page_in})
+    fu = requests.get(src, headers={'user-agent':'iPad','referer':page_in}).text
     find = re.findall('eval\(function(.+?.+)', fu)[0]
     unpack = jsunpack.unpack(find)
     c = re.findall('var src="([^"]*)',unpack)[0]
@@ -449,7 +398,9 @@ def streamingcommunity(parIn=None):
     video_urls = []
     url_sito = "https://streamingcommunity.space/"
     page_video = url_sito + "watch/" + parIn
-    page_data = makeRequest(page_video,{'user-agent':'Mozilla/5.0','accept':'*/*'})
+    page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
     patron=r'<video-player response="(.*?)"'
     dataF = preg_match(page_data, patron)
     #logga("DATA FROM STRCO: "+dataF)
@@ -483,17 +434,19 @@ def streamingcommunity(parIn=None):
         return s + '&n=1'
     
     page_video = "https://scws.xyz/videos/" + str(idVideo)
-    page_data = makeRequest(page_video,{'user-agent':'Mozilla/5.0','accept':'*/*'})
+    page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
     logga('IP_community '+page_data)
     arrJ2 = json.loads(page_data)
     localIp = arrJ2["client_ip"]
 
     token = calculateToken(localIp)
-    code = getResponseCode(url + token, {'user-agent':'Mozilla/5.0','accept':'*/*'})
+    code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
     count = 0
     while not code == 200:
         token = calculateToken(localIp)
-        code = getResponseCode(url + token, {'user-agent':'Mozilla/5.0','accept':'*/*'})
+        code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
         count +=1
         if count == 30:
             logga('END OF TRY. CODE: '+str(code))
@@ -524,17 +477,19 @@ def scws(parIn=None):
         return s + '&n=1'
     
     page_video = "https://scws.xyz/videos/" + str(parIn)
-    page_data = makeRequest(page_video,{'user-agent':'Mozilla/5.0','accept':'*/*'})
-    logga('IP_scws '+page_data)
+    page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    logga('IP_community '+page_data)
     arrJ2 = json.loads(page_data)
     localIp = arrJ2["client_ip"]
 
     token = calculateToken(localIp)
-    code = getResponseCode(url + token, {'user-agent':'Mozilla/5.0','accept':'*/*'})
+    code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
     count = 0
     while not code == 200:
         token = calculateToken(localIp)
-        code = getResponseCode(url + token, {'user-agent':'Mozilla/5.0','accept':'*/*'})
+        code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
         count +=1
         if count == 30:
             logga('END OF TRY. CODE: '+str(code))
@@ -619,7 +574,9 @@ def streamTape(parIn):
     video_urls = []
     ppIn = myParse.unquote(parIn)
     logga('PAR_STAPE: '+ppIn)
-    page_data = makeRequest(ppIn, {'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.me/'})
+    page_data = requests.get(ppIn, headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.me/'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
     htmlCodice = preg_match(page_data, r'<\/video><script>(.*?)<\/body>')
     #iframe_url = preg_match(page_data, r'<div id="videoolink" style="display:none;">(.*?)<\/div>')
     iframe_url = preg_match(htmlCodice, r'style="display:none;">(.*?)<\/div>')
@@ -645,12 +602,12 @@ def streamTape(parIn):
 def dplay(parIn):
     import json
     video_urls = []
-    token = makeRequest('https://disco-api.discoveryplus.it/token?realm=dplayit').json()['data']['attributes']['token']
+    token = requests.get('https://disco-api.discoveryplus.it/token?realm=dplayit').json()['data']['attributes']['token']
     logga('TOKEN_DPLAY: '+token)
     headers = {'User-Agent': 'Mozilla/50.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
            'Referer': 'https://discoveryplus.it',
            'Cookie' : 'st=' + token}
-    data = makeRequest('https://disco-api.discoveryplus.it/playback/videoPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers)
+    data = requests.get('https://disco-api.discoveryplus.it/playback/videoPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers=headers).content
     dataJ = json.loads(data)
     dataErr = "[COLOR lime]PLAY VIDEO[/COLOR]"
     try:
@@ -665,12 +622,12 @@ def dplay(parIn):
 def dplayLive(parIn):
     import json
     video_urls = []
-    token = makeRequest('https://disco-api.discoveryplus.it/token?realm=dplayit').json()['data']['attributes']['token']
+    token = requests.get('https://disco-api.discoveryplus.it/token?realm=dplayit').json()['data']['attributes']['token']
     logga('TOKEN_DPLAY: '+token)
     headers = {'User-Agent': 'Mozilla/50.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
            'Referer': 'https://discoveryplus.it',
            'Cookie' : 'st=' + token}
-    data = makeRequest('https://disco-api.discoveryplus.it/playback/channelPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers)
+    data = requests.get('https://disco-api.discoveryplus.it/playback/channelPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers=headers).content
     dataJ = json.loads(data)
     dataErr = "[COLOR lime]PLAY VIDEO[/COLOR]"
     try:
@@ -692,7 +649,6 @@ def run (action, params=None):
         'wigi': wigi,
         'risolvi': urlsolver,
         'strco': streamingcommunity,
-        'unpack': unpackSite,
         'dark': darkIptv,
         'dplay': dplay,
         'dplayLive': dplayLive,
