@@ -1,8 +1,8 @@
-versione='1.0.44'
+versione='1.0.45'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 11.11.2021
+# Last update: 16.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, os
@@ -322,17 +322,19 @@ def urlsolver(url):
     video_urls = []
 
     resolvedUrl=get_resolved(url)
-    logga('video_url '+resolvedUrl)
+    logga('video_resolved_url '+resolvedUrl)
     if (resolvedUrl != url):
-        video_urls.append((resolvedUrl, ""))
+        video_urls.append((resolvedUrl, "LINK 1"))
         if "|" in resolvedUrl:
             arrV = resolvedUrl.split("|")
-            video_urls.append((arrV[0], ""))		
+            linkClean=arrV[0]
+            logga('video_resolved_cleaned '+linkClean)
+            video_urls.append((linkClean, "LINK 2"))		
 
         return video_urls
     else:
         dialog = xbmcgui.Dialog()
-        mess = "Sorry, ResolveUrl does not support this domain."
+        mess = "Sorry, ResolveUrl does not support this domain"
         dialog.ok("Mandrakodi", mess)
     return url
 

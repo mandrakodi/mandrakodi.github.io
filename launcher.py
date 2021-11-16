@@ -1,8 +1,8 @@
-versione='1.0.50'
+versione='1.0.51'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 06.11.2021
+# Last update: 16.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -342,12 +342,17 @@ def parameters_string_to_dict(parameters):
     return params
 
 def jsonToChannels(strJson):
+    jobStep=1
+    jobCh=1
     try:
         channelsArray = json.loads(strJson)
+        jobStep += 1
         window = xbmcgui.Window(10000)
         window.setProperty("chList", strJson)
         xbmcplugin.setContent(_handle, 'movies')
         for channel in channelsArray["channels"]:
+            jobCh=1
+            jobStep += 1
             titolo = "NO TIT"
             thumb = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
             fanart = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
@@ -355,21 +360,31 @@ def jsonToChannels(strJson):
             info = ""
             if 'name' in channel:
                 titolo = channel["name"]
+                jobCh += 1
             if 'thumbnail' in channel:
                 thumb = channel["thumbnail"]
+                jobCh += 1
             if 'fanart' in channel:
                 fanart = channel["fanart"]
+                jobCh += 1
             if 'info' in channel:
                 info = channel["info"]
+                jobCh += 1
             list_item = xbmcgui.ListItem(label=titolo)
+            jobCh += 1
             list_item.setInfo('video', {'title': titolo,'genre': genre,'plot': info,'mediatype': 'movie','credits': 'ElSupremo'})
+            jobCh += 1
             list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
+            jobCh += 1
             url = get_url(action='getChannel', url=titolo)
+            jobCh += 1
             xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
+            jobCh += 1
         xbmcplugin.endOfDirectory(_handle)
-    except:
+    except Exception as err:
         import traceback
-        msgBox("Errore nella creazione delle gategorie")
+        logging.warning("ERR_TIT: "+titolo)
+        msgBox("Errore nella creazione delle gategorie: "+str(jobStep)+" - "+str(jobCh))
         traceback.print_exc()    
    
 def channelToItems(strChName, _handle):
@@ -406,7 +421,7 @@ def callReolver(metodo, parametro):
         numLink=1
         
         for linkTmp in retVal:
-            newList=list(retVal[0])
+            newList=list(linkTmp)
             newLink=newList[0]
             newP=newList[1]
             info=""
