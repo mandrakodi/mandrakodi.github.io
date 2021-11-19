@@ -1,8 +1,8 @@
-versione='1.0.51'
+versione='1.0.52'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 16.11.2021
+# Last update: 19.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -30,6 +30,7 @@ if (lastView=="Not in use"):
     lastView="51"
 testoLog = "";
 viewmode=lastView
+ua = ""
 
 PY3 = sys.version_info[0] == 3
 if PY3:
@@ -130,7 +131,8 @@ def jsonToItems(strJson):
     except Exception as err:
         errMsg="Errore: Nessuna risposta dal server (No Json)"
         msgBox(errMsg)
-        remoteLog("BAD_JSON")
+        remoteLog("BAD_JSON@@"+strJson)
+        return
     
     xbmcplugin.setContent(_handle, 'movies')
     
@@ -359,7 +361,7 @@ def jsonToChannels(strJson):
             genre = "generic"
             info = ""
             if 'name' in channel:
-                titolo = channel["name"]
+                titolo = channel["name"].encode('utf-8').strip()
                 jobCh += 1
             if 'thumbnail' in channel:
                 thumb = channel["thumbnail"]
@@ -368,7 +370,7 @@ def jsonToChannels(strJson):
                 fanart = channel["fanart"]
                 jobCh += 1
             if 'info' in channel:
-                info = channel["info"]
+                info = channel["info"].encode('utf-8').strip()
                 jobCh += 1
             list_item = xbmcgui.ListItem(label=titolo)
             jobCh += 1
@@ -700,11 +702,12 @@ def m3u2json(src):
     numIt=0
     arrTmp = [""]
     for match in matches:
-        title = str(match[1]).strip()
-        link = str(match[2]).strip()
+        title = match[1].encode('utf-8').strip()
+        #title = str(match[1]).strip()
+        link = match[2].encode('utf-8').strip()
         img = ""
         group = ""
-        infos = str(match[0]).strip()
+        infos = match[0].encode('utf-8').strip()
         regex2= r'.*?tvg-logo="(.*?)"'
         urlImg=preg_match(infos, regex2)
         if (urlImg == ""):
@@ -851,8 +854,12 @@ def msgBox(mess):
     dialog.ok("MandraKodi", mess)
 
 def remoteLog(msgToLog):
+    if PY3:
+        import urllib.parse as myParse
+    else:
+        import urllib as myParse
     baseLog = "http://test34344.herokuapp.com/filter.php?numTest=JOB999"
-    urlLog = baseLog + "&msgLog=" + msgToLog
+    urlLog = baseLog + "&msgLog=" + myParse.quote(ua+"@@"+msgToLog)
     strSource = makeRequest(urlLog)
     if strSource is None or strSource == "":
         logga('MANDRA_LOG: NO REMOTE LOG')
