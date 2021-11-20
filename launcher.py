@@ -1,8 +1,8 @@
-versione='1.0.52'
+versione='1.0.53'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 19.11.2021
+# Last update: 20.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -131,7 +131,7 @@ def jsonToItems(strJson):
     except Exception as err:
         errMsg="Errore: Nessuna risposta dal server (No Json)"
         msgBox(errMsg)
-        remoteLog("BAD_JSON@@"+strJson)
+        writeFileLog("BAD_JSON\n"+strJson, "w+")
         return
     
     xbmcplugin.setContent(_handle, 'movies')
@@ -164,8 +164,10 @@ def jsonToItems(strJson):
         pass
     
     link = ""
+    strLog=""
     try:
         for item in dataJson["items"]:
+            strLog=json.dumps(item)
             titolo = "NO TIT"
             thumb = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
             fanart = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
@@ -322,7 +324,8 @@ def jsonToItems(strJson):
     except:
         import traceback
         msgBox("Errore nella lettura del json")
-        remoteLog("NO_JSON_READ@@"+link)
+        remoteLog("NO_JSON_READ@@"+strLog)
+        writeFileLog("NO_JSON_READ\n"+strLog, "w+")
         traceback.print_exc()
         #logging.warning(strJson)
 
@@ -691,6 +694,8 @@ def m3u2json(src):
     m3uSource = makeRequest(src)
     if m3uSource is None or m3uSource == "":
         logga('We failed to get source from '+src)
+        msgBox("Errore download m3u")
+        return
     else:
         #if PY3:
             #m3uSource = m3uSource.decode('utf-8')		
@@ -701,72 +706,94 @@ def m3u2json(src):
     
     numIt=0
     arrTmp = [""]
-    for match in matches:
-        title = match[1].encode('utf-8').strip()
-        #title = str(match[1]).strip()
-        link = match[2].encode('utf-8').strip()
-        img = ""
-        group = ""
-        infos = match[0].encode('utf-8').strip()
-        regex2= r'.*?tvg-logo="(.*?)"'
-        urlImg=preg_match(infos, regex2)
-        if (urlImg == ""):
-            img = "https://www.dropbox.com/s/wd2d403175rbvs7/tv_ch.png?dl=1"
-        else:
-            img = urlImg
+    strLog="";
+    try:
+        for match in matches:
+            strLog=json.dumps(match)
+            tt = match[1]
+            title = str(tt).replace("'", " ").replace("\r", "").replace("\n", "")
+            #title = str(match[1]).strip()
+            link = match[2].replace("\r", "").replace("\n", "")
+            img = ""
+            group = ""
+            infos = match[0]
+            regex2= r'.*?tvg-logo="(.*?)"'
+            urlImg=preg_match(infos, regex2)
+            if (urlImg == ""):
+                img = "https://www.dropbox.com/s/wd2d403175rbvs7/tv_ch.png?dl=1"
+            else:
+                img = urlImg
 
-        regex3 = r'.*?group-title="(.*?)"'
-        group = preg_match(infos, regex3)
-        if (group == ""):
-            group = "VARIOUS"
-        row = group+"@@"+title+"@@"+link+"@@"+img
-        #logging.warning(row)
-        arrTmp.append(row)
-        numIt += 1
+            regex3 = r'.*?group-title="(.*?)"'
+            group = preg_match(infos, regex3)
+            if (group == ""):
+                group = "VARIOUS"
+            try:
+                row = group+"@@"+title+"@@"+link+"@@"+img
+            except:
+                row = str(group)+"@@"+str(title)+"@@"+str(link)+"@@"+str(img)
+                writeFileLog("\n"+row, "a+")
+            #logging.warning(row)
+            arrTmp.append(row)
+            numIt += 1
+    except:
+        import traceback
+        msgBox("Errore nella lettura del file m3u")
+        writeFileLog(str(numIt)+"\n"+strLog, "a+")
+        traceback.print_exc()
+        return 
     logga("FOUND "+str(numIt)+" ROWS")
 
     arrTmp.sort()
-    strJson = '{"SetViewMode": "500","channels": ['
-    oldGroup = ""
-    numGoup = 0
-    numIt=0
-    numLoop=0
-    for rowTmp in arrTmp:
-        if (rowTmp != ""):
-            arrRow = rowTmp.split("@@")
-            group = arrRow[0]
-            if (oldGroup != group):
-                oldGroup = group
-                if (numGoup > 0):
-                    strJson += ']},'
+    try:
+        strJson = '{"SetViewMode": "500","channels": ['
+        oldGroup = ""
+        numGoup = 0
+        numIt=0
+        numLoop=0
+        for rowTmp in arrTmp:
+            if (rowTmp != ""):
+                strLog=rowTmp
+                arrRow = rowTmp.split("@@")
+                group = arrRow[0]
+                if (oldGroup != group):
+                    oldGroup = group
+                    if (numGoup > 0):
+                        strJson += ']},'
+                    strJson += '{'
+                    strJson += '"name": "[COLOR lime]'+group+'[/COLOR]",'
+                    strJson += '"thumbnail": "https://www.dropbox.com/s/3j4wf8b67xt8gry/fold_tube.png?dl=1",'
+                    strJson += '"fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                    strJson += '"info": "[COLOR lime]Category: '+group+'[/COLOR]",'
+                    strJson += '"items":['
+                    numGoup += 1
+                    numIt=0
+                
+                if (numIt > 0):
+                    strJson += ','
                 strJson += '{'
-                strJson += '"name": "[COLOR lime]'+group+'[/COLOR]",'
-                strJson += '"thumbnail": "https://www.dropbox.com/s/3j4wf8b67xt8gry/fold_tube.png?dl=1",'
-                strJson += '"fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-                strJson += '"info": "[COLOR lime]Category: '+group+'[/COLOR]",'
-                strJson += '"items":['
-                numGoup += 1
-                numIt=0
-            
-            if (numIt > 0):
-                strJson += ','
-            strJson += '{'
-            strJson += '"title":"'+arrRow[1]+'",'
-            strJson += '"thumbnail":"'+arrRow[3]+'",'
-            strJson += '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-            link = arrRow[2]
-            if link.endswith(".m3u"):
-                strJson += '"m3u":"'+link+'",'
-            else:
-                strJson += '"link":"'+link+'",'
-            strJson += '"info":"NO INFO"'
-            strJson += '}'
-            numIt += 1
+                strJson += '"title":"'+arrRow[1]+'",'
+                strJson += '"thumbnail":"'+arrRow[3]+'",'
+                strJson += '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                link = arrRow[2]
+                if link.endswith(".m3u"):
+                    strJson += '"m3u":"'+link+'",'
+                else:
+                    strJson += '"link":"'+link+'",'
+                strJson += '"info":"NO INFO"'
+                strJson += '}'
+                numIt += 1
 
-    strJson += ']}]}'
+        strJson += ']}]}'
 
-    #logging.warning(strJson)
-    jsonToItems(strJson)
+        #logging.warning(strJson)
+        jsonToItems(strJson)
+    except:
+        import traceback
+        msgBox("Errore nella creazione del json")
+        writeFileLog(strLog, "w+")
+        traceback.print_exc()
+        return
 
 
 def decodeSkinViewMode (mySkin='', viewMode=''):
@@ -865,6 +892,18 @@ def remoteLog(msgToLog):
         logga('MANDRA_LOG: NO REMOTE LOG')
     else:
         logga('OK REMOTE LOG')
+
+def writeFileLog(strIn, modo):
+    home = ''
+    if PY3:
+        home = xbmc.translatePath(selfAddon.getAddonInfo('path'))
+    else:
+        home = xbmc.translatePath(selfAddon.getAddonInfo('path').decode('utf-8'))
+    log_file = os.path.join(home, 'mandrakodi2.log')
+    
+    f = open(log_file, modo, encoding="utf-8")
+    f.write(strIn)
+    f.close()
 
 def run():
     action = "start"
