@@ -1,4 +1,4 @@
-versione='1.0.54'
+versione='1.0.55'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -46,7 +46,7 @@ def logga(mess):
         testoLog += mess+"\n";
 		
 def makeRequest(url, hdr=None):
-    logga('Try to open '+url)
+    logga('TRY TO OPEN '+url)
     html = ""
     if PY3:
 	    import urllib.request as myRequest
@@ -62,6 +62,7 @@ def makeRequest(url, hdr=None):
         response = myRequest.urlopen(req, timeout=45)
         html = response.read().decode('utf-8')
         response.close()
+        logga('OK REQUEST FROM '+url)
     except:
         logging.warning('Error to open url: '+url)
         pass
@@ -127,6 +128,7 @@ def getExternalJson(strPath):
 def jsonToItems(strJson):
     global viewmode
     try:
+        logga('START jsonToItems')
         dataJson = json.loads(strJson)
     except Exception as err:
         errMsg="Errore: Nessuna risposta dal server (No Json)"
