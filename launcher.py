@@ -1,8 +1,8 @@
-versione='1.0.53'
+versione='1.0.54'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 20.11.2021
+# Last update: 24.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -711,7 +711,7 @@ def m3u2json(src):
         for match in matches:
             strLog=json.dumps(match)
             tt = match[1]
-            title = str(tt).replace("'", " ").replace("\r", "").replace("\n", "")
+            title = tt.encode('utf-8', 'ignore').decode('utf-8').replace("'", " ").replace("\r", "").replace("\n", "")
             #title = str(match[1]).strip()
             link = match[2].replace("\r", "").replace("\n", "")
             img = ""
@@ -731,7 +731,7 @@ def m3u2json(src):
             try:
                 row = group+"@@"+title+"@@"+link+"@@"+img
             except:
-                row = str(group)+"@@"+str(title)+"@@"+str(link)+"@@"+str(img)
+                row = group.encode('utf-8', 'ignore').decode('utf-8')+"@@"+title+"@@"+link+"@@"+img
                 writeFileLog("\n"+row, "a+")
             #logging.warning(row)
             arrTmp.append(row)
@@ -786,7 +786,7 @@ def m3u2json(src):
 
         strJson += ']}]}'
 
-        #logging.warning(strJson)
+        logging.warning("END M3U2JSON. CALL jsonToItems")
         jsonToItems(strJson)
     except:
         import traceback
@@ -897,13 +897,16 @@ def writeFileLog(strIn, modo):
     home = ''
     if PY3:
         home = xbmc.translatePath(selfAddon.getAddonInfo('path'))
+        log_file = os.path.join(home, 'mandrakodi2.log')
+        f = open(log_file, modo, encoding="utf-8")
+        f.write(strIn)
+        f.close()
     else:
         home = xbmc.translatePath(selfAddon.getAddonInfo('path').decode('utf-8'))
-    log_file = os.path.join(home, 'mandrakodi2.log')
-    
-    f = open(log_file, modo, encoding="utf-8")
-    f.write(strIn)
-    f.close()
+        log_file = os.path.join(home, 'mandrakodi2.log')
+        f = open(log_file, modo)
+        f.write(strIn)
+        f.close()
 
 def run():
     action = "start"
