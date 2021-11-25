@@ -1,8 +1,8 @@
-versione='1.0.55'
+versione='1.0.56'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 24.11.2021
+# Last update: 25.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -21,11 +21,11 @@ _url = sys.argv[0]
 # Get the plugin handle as an integer number.
 _handle = int(sys.argv[1])
 addon_id = 'plugin.video.mandrakodi'
-selfAddon = xbmcaddon.Addon(id=addon_id)
-selfAddon.setSetting("debug", "on")
-debug = selfAddon.getSetting("debug")
-showAdult = selfAddon.getSetting("ShowAdult")
-lastView = selfAddon.getSetting("urlAppo1")
+#selfAddon = xbmcaddon.Addon(id=addon_id)
+xbmcaddon.Addon(id=addon_id).setSetting("debug", "on")
+debug = xbmcaddon.Addon(id=addon_id).getSetting("debug")
+showAdult = xbmcaddon.Addon(id=addon_id).getSetting("ShowAdult")
+lastView = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo1")
 if (lastView=="Not in use"):
     lastView="51"
 testoLog = "";
@@ -52,8 +52,8 @@ def makeRequest(url, hdr=None):
 	    import urllib.request as myRequest
     else:
 	    import urllib2 as myRequest
-    pwd = selfAddon.getSetting("password")
-    version = selfAddon.getAddonInfo("version")
+    pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
+    version = xbmcaddon.Addon(id=addon_id).getAddonInfo("version")
     if hdr is None:
         ua = "MandraKodi2@@"+version+"@@"+pwd
         hdr = {"User-Agent" : ua}
@@ -78,7 +78,7 @@ def getSource():
             strSource = underMaintMsg()
         else:
             logga('OK SOURCE ')
-            liveVersion = "Mandrakodi "+str(selfAddon.getAddonInfo("version"))
+            liveVersion = "Mandrakodi "+str(xbmcaddon.Addon(id=addon_id).getAddonInfo("version"))
             strSource=strSource.replace("Mandrakodi 2.0", liveVersion)
     except Exception as err:
         errMsg="ERRORE: {0}".format(err)
@@ -107,9 +107,9 @@ def play_video(path):
 def getTxtMessage(vName):
     home = ''
     if PY3:
-        home = xbmc.translatePath(selfAddon.getAddonInfo('path'))
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
     else:
-        home = xbmc.translatePath(selfAddon.getAddonInfo('path').decode('utf-8'))
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     fPath = os.path.join(home, vName)
     resF = open(fPath)
     file_content = resF.read()
@@ -503,12 +503,32 @@ def setPvr(urlM3u):
         errMsg="ERRORE: {0}".format(err)
         raise Exception(errMsg)
 
+def reloadDefault():
+    home = ''
+    if PY3:
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
+    else:
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
+    defualt_file = os.path.join(home, 'default.py')
+    timeUnix=os.path.getmtime(defualt_file)
+    logga('TIME FILE '+str(timeUnix))
+    if (timeUnix < 1637834000):
+        remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/default.py"
+        strSource = makeRequest(remoteResolverUrl)
+        if strSource is None or strSource == "":
+            logga('We failed to get source from '+remoteResolverUrl)
+        else:
+            f = open(defualt_file, "w")
+            f.write(strSource.encode('utf-8'))
+            f.close()
+            logga("DEFAULT.PY UPDATE")
+
 def checkJsunpack():
     home = ''
     if PY3:
-        home = xbmc.translatePath(selfAddon.getAddonInfo('path'))
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
     else:
-        home = xbmc.translatePath(selfAddon.getAddonInfo('path').decode('utf-8'))
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     resolver_file = os.path.join(home, 'jsunpack.py')
     if os.path.exists(resolver_file)==False:
         remoteResolverUrl = "https://mandrakodi.github.io/jsunpack.py"
@@ -523,9 +543,9 @@ def checkJsunpack():
 def checkPortalPy():
     home = ''
     if PY3:
-        home = xbmc.translatePath(selfAddon.getAddonInfo('path'))
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
     else:
-        home = xbmc.translatePath(selfAddon.getAddonInfo('path').decode('utf-8'))
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     resolver_file = os.path.join(home, 'portal_api.py')
     if os.path.exists(resolver_file)==False:
         remoteResolverUrl = "https://mandrakodi.github.io/portal_api.py"
@@ -540,9 +560,9 @@ def checkPortalPy():
 def checkResolver():
     home = ''
     if PY3:
-        home = xbmc.translatePath(selfAddon.getAddonInfo('path'))
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
     else:
-        home = xbmc.translatePath(selfAddon.getAddonInfo('path').decode('utf-8'))
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     resolver_file = os.path.join(home, 'myResolver.py')
     if os.path.exists(resolver_file)==True:
         resF = open(resolver_file)
@@ -676,13 +696,16 @@ def copyPlayerCoreFactory(parIn):
     dialog.ok("Mandrakodi", mess)
 
 def saveFile(fileName, text):
+    res=True
     try:
 	    f = xbmcvfs.File(fileName, 'w')
 	    f.write(text)
 	    f.close()
     except:
-	    return False
-    return True
+        import traceback
+        traceback.print_exc()
+        return False
+    return res
 
 def preg_match(data, patron, index=0):
     try:
@@ -801,15 +824,15 @@ def m3u2json(src):
 def decodeSkinViewMode (mySkin='', viewMode=''):
     retMode=viewMode
     if (retMode == "500" or retMode == "Wall"):
-        retMode = str(selfAddon.getSetting("SkinWall"))
+        retMode = str(xbmcaddon.Addon(id=addon_id).getSetting("SkinWall"))
     if (retMode == "50" or retMode == "List1"):
-        retMode = str(selfAddon.getSetting("SkinList1"))
+        retMode = str(xbmcaddon.Addon(id=addon_id).getSetting("SkinList1"))
     if (retMode == "51" or retMode == "List2"):
-        retMode = str(selfAddon.getSetting("SkinList2"))
+        retMode = str(xbmcaddon.Addon(id=addon_id).getSetting("SkinList2"))
     if (retMode == "503" or retMode == "Info1"):
-        retMode = str(selfAddon.getSetting("SkinInfo1"))
+        retMode = str(xbmcaddon.Addon(id=addon_id).getSetting("SkinInfo1"))
     if (retMode == "504" or retMode == "Info2"):
-        retMode = str(selfAddon.getSetting("SkinInfo2"))
+        retMode = str(xbmcaddon.Addon(id=addon_id).getSetting("SkinInfo2"))
     logga ("SKIN: "+mySkin+" - VIEW: "+str(retMode))
 
     return retMode
@@ -827,11 +850,11 @@ def personalList(listtType=''):
     urlToCall=""
     fileName=""
     if 	(listtType=="MAC"):
-        fileName = selfAddon.getSetting("macFile")
+        fileName = xbmcaddon.Addon(id=addon_id).getSetting("macFile")
     if 	(listtType=="IPTV"):
-        fileName = selfAddon.getSetting("iptvFile")
+        fileName = xbmcaddon.Addon(id=addon_id).getSetting("iptvFile")
     if 	(listtType=="M3U"):
-        fileName = selfAddon.getSetting("m3uFile")
+        fileName = xbmcaddon.Addon(id=addon_id).getSetting("m3uFile")
 
     if (fileName=="" or fileName=="blank"):
         msgBox("E' necessario specificare un file nelle impostazioni")
@@ -849,7 +872,7 @@ def personalList(listtType=''):
 
 def checkSkin():
     kodiSkin=xbmc.getSkinDir()
-    wall=selfAddon.getSetting("SkinWall")
+    wall=xbmcaddon.Addon(id=addon_id).getSetting("SkinWall")
     if str(kodiSkin).endswith("estuary"):
         logga ("SKIN ESTUARY")
         if (wall!="55"):
@@ -857,11 +880,11 @@ def checkSkin():
             mess="Rilevata Skin Estuary. Vuoi impostare la visualizzazione per questa skin?"
             resp= dialog.yesno("MandraKodi", mess)
             if (resp):
-                selfAddon.setSetting("SkinWall", "55")    
-                selfAddon.setSetting("SkinList1", "55")    
-                selfAddon.setSetting("SkinList2", "55")    
-                selfAddon.setSetting("SkinInfo1", "55")    
-                selfAddon.setSetting("SkinInfo2", "55")
+                xbmcaddon.Addon(id=addon_id).setSetting("SkinWall", "55")    
+                xbmcaddon.Addon(id=addon_id).setSetting("SkinList1", "55")    
+                xbmcaddon.Addon(id=addon_id).setSetting("SkinList2", "55")    
+                xbmcaddon.Addon(id=addon_id).setSetting("SkinInfo1", "55")    
+                xbmcaddon.Addon(id=addon_id).setSetting("SkinInfo2", "55")
                 msgBox("Visualizzazione impostata")    
     if str(kodiSkin).endswith("confluence"):
         logga ("SKIN CONFLUENCE")
@@ -870,11 +893,11 @@ def checkSkin():
             mess="Rilevata Skin Confluence. Vuoi impostare la visualizzazione per questa skin?"
             resp= dialog.yesno("MandraKodi", mess)
             if (resp):
-                selfAddon.setSetting("SkinWall", "500")    
-                selfAddon.setSetting("SkinList1", "50")    
-                selfAddon.setSetting("SkinList2", "51")    
-                selfAddon.setSetting("SkinInfo1", "503")    
-                selfAddon.setSetting("SkinInfo2", "504")
+                xbmcaddon.Addon(id=addon_id).setSetting("SkinWall", "500")    
+                xbmcaddon.Addon(id=addon_id).setSetting("SkinList1", "50")    
+                xbmcaddon.Addon(id=addon_id).setSetting("SkinList2", "51")    
+                xbmcaddon.Addon(id=addon_id).setSetting("SkinInfo1", "503")    
+                xbmcaddon.Addon(id=addon_id).setSetting("SkinInfo2", "504")
                 msgBox("Visualizzazione impostata")    
 
 
@@ -898,13 +921,13 @@ def remoteLog(msgToLog):
 def writeFileLog(strIn, modo):
     home = ''
     if PY3:
-        home = xbmc.translatePath(selfAddon.getAddonInfo('path'))
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
         log_file = os.path.join(home, 'mandrakodi2.log')
         f = open(log_file, modo, encoding="utf-8")
         f.write(strIn)
         f.close()
     else:
-        home = xbmc.translatePath(selfAddon.getAddonInfo('path').decode('utf-8'))
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
         log_file = os.path.join(home, 'mandrakodi2.log')
         f = open(log_file, modo)
         f.write(strIn)
@@ -919,6 +942,7 @@ def run():
             checkResolver()
             checkJsunpack()
             checkPortalPy()
+            reloadDefault()
             if (checkMsgOnLog()):
                 checkDns()
                 checkMandraScript()
@@ -1032,7 +1056,7 @@ def run():
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
         logga("setting view mode again to "+kodiView)
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
-        selfAddon.setSetting("urlAppo1", kodiView)
+        xbmcaddon.Addon(id=addon_id).setSetting("urlAppo1", kodiView)
         logga("Last ViewMode Saved: "+kodiView)
     if debug == "on":
         logging.warning("MANDRA_LOG: \n"+testoLog)
