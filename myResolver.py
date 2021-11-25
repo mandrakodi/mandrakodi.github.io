@@ -1,8 +1,8 @@
-versione='1.0.46'
+versione='1.0.47'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 19.11.2021
+# Last update: 25.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, os
@@ -11,8 +11,8 @@ import xbmcgui
 import xbmcaddon
 
 addon_id = 'plugin.video.mandrakodi'
-selfAddon = xbmcaddon.Addon(id=addon_id)
-debug = selfAddon.getSetting("debug")
+#selfAddon = xbmcaddon.Addon(id=addon_id)
+debug = xbmcaddon.Addon(id=addon_id).getSetting("debug")
 
 PY3 = sys.version_info[0] == 3
 if PY3:
@@ -199,7 +199,7 @@ def findM3u8(linkIframe, refPage):
         if video_url == "":
             video_url = preg_match(page_data2, r"source:\s*'([^']+)")
         if video_url != "":
-            vUrl = video_url + '|User-Agent=iPad&Referer='+linkIframe
+            vUrl = video_url + '|Referer='+linkIframe
         logga('video_url '+vUrl)
 
     except:
@@ -299,7 +299,7 @@ def GetLSProData(page_in, refe=None):
     find = re.findall('eval\(function(.+?.+)', fu)[0]
     unpack = jsunpack.unpack(find)
     c = re.findall('var src="([^"]*)',unpack)[0]
-    return c + '|user-agent=ipad&referer=' + src
+    return c + '|referer=' + src
 
 def wigi(parIn=None):
 
@@ -337,8 +337,6 @@ def urlsolver(url):
         mess = "Sorry, ResolveUrl does not support this domain"
         dialog.ok("Mandrakodi", mess)
     return url
-
-    
 
 def get_resolved(url):
     import xbmcvfs
