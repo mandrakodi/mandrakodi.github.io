@@ -1,4 +1,4 @@
-versione='1.0.56'
+versione='1.0.57'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -942,7 +942,7 @@ def run():
             checkResolver()
             checkJsunpack()
             checkPortalPy()
-            reloadDefault()
+            #reloadDefault()
             if (checkMsgOnLog()):
                 checkDns()
                 checkMandraScript()
