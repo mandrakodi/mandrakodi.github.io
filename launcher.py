@@ -1,8 +1,8 @@
-versione='1.0.58'
+versione='1.0.59'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 28.11.2021
+# Last update: 29.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -660,6 +660,7 @@ def uploadLog():
         addon_log_uploader = xbmcaddon.Addon('script.kodi.loguploader')
     except:
         logga.info('loguploader seems to be not installed or disabled')
+        
     if not addon_log_uploader:
         xbmc.executebuiltin('InstallAddon(script.kodi.loguploader)', wait=True)
         xbmc.executeJSONRPC('{"jsonrpc": "2.0", "id":1, "method": "Addons.SetAddonEnabled", "params": { "addonid": "script.kodi.loguploader", "enabled": true }}')
@@ -669,6 +670,7 @@ def uploadLog():
             logga.info('Logfile Uploader cannot be found')
     if not addon_log_uploader:
         logga('Cannot send log because Logfile Uploader cannot be found')
+        msgBox("Il plugin Kodi File Uploader non risulta installato.\nLo trovi nella repo di Kodi sotto Addon-Programmi.")
         return False
     xbmc.executebuiltin('RunScript(script.kodi.loguploader)')
     return True
