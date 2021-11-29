@@ -1,8 +1,8 @@
-versione='1.0.57'
+versione='1.0.58'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 25.11.2021
+# Last update: 28.11.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -192,6 +192,7 @@ def jsonToItems(strJson):
             is_pvr = False
             is_log = False
             is_copyXml = False
+            is_delSet = False
             is_personal = False
             is_enabled = True
 
@@ -276,6 +277,10 @@ def jsonToItems(strJson):
                 is_copyXml = True
                 is_folder = True
                 link = item["copyXml"]
+            if 'delSet' in item:
+                is_delSet = True
+                is_folder = True
+                link = item["delSet"]
             list_item = xbmcgui.ListItem(label=titolo)
             list_item.setInfo('video', {'title': titolo,'genre': genre,'plot': info,'mediatype': 'movie','credits': 'ElSupremo'})
             list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
@@ -300,6 +305,8 @@ def jsonToItems(strJson):
                 url = get_url(action='personal', url=link)
             elif is_copyXml == True:
                 url = get_url(action='copyXml', url=link)
+            elif is_delSet == True:
+                url = get_url(action='delSet', url=link)
             elif is_yatse == True:
                 list_item.setProperty('IsPlayable', 'true')
                 url = get_urlYatse(action='share', type='unresolvedurl', data=link)
@@ -933,6 +940,19 @@ def writeFileLog(strIn, modo):
         f.write(strIn)
         f.close()
 
+def deleteSettings(parIn):
+    XMLPATH = xbmc.translatePath('special://profile')
+    xml_file = os.path.join(XMLPATH, 'addon_data/plugin.video.mandrakodi/settings.xml')
+    if os.path.exists(xml_file):
+        dialog = xbmcgui.Dialog()
+        mess="Vuoi davvero resettare il file settings.xml?"
+        resp= dialog.yesno("MandraKodi", mess)
+        if (resp):
+            os.remove(xml_file)
+            msgBox("File settings resettato.\nChiudi l'addon e metti i parametri nelle impostazioni.")
+    else:
+        msgBox("File settings non presente")
+
 def run():
     action = "start"
     url = "start"
@@ -1035,6 +1055,8 @@ def run():
                 uploadLog()
             elif action == 'copyXml':
                 copyPlayerCoreFactory(url)
+            elif action == 'delSet':
+                deleteSettings(url)
             else:
                 raise Exception('Invalid paramstring: {0}!'.format(params))
     except Exception as err:
