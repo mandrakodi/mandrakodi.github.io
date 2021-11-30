@@ -1,4 +1,4 @@
-versione='1.0.59'
+versione='1.0.60'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -13,6 +13,8 @@ import os
 import xbmcplugin
 import xbmcaddon
 import json
+import string
+import random
 import re
 import xbmcvfs
 
@@ -53,9 +55,14 @@ def makeRequest(url, hdr=None):
     else:
 	    import urllib2 as myRequest
     pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
+    deviceId = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo2")
+    if (deviceId == "Not in use"):
+        #generate id
+        deviceId = id_generator()
+        xbmcaddon.Addon(id=addon_id).setSetting("urlAppo2", deviceId)
     version = xbmcaddon.Addon(id=addon_id).getAddonInfo("version")
     if hdr is None:
-        ua = "MandraKodi2@@"+version+"@@"+pwd
+        ua = "MandraKodi2@@"+version+"@@"+pwd+"@@"+deviceId
         hdr = {"User-Agent" : ua}
     try:
         req = myRequest.Request(url, headers=hdr)
@@ -98,6 +105,9 @@ def underMaintMsg():
     strToRet +=']}'
 
     return strToRet
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 def play_video(path):
     urlClean=path.replace(" ", "%20")
@@ -670,7 +680,7 @@ def uploadLog():
             logga.info('Logfile Uploader cannot be found')
     if not addon_log_uploader:
         logga('Cannot send log because Logfile Uploader cannot be found')
-        msgBox("Il plugin Kodi File Uploader non risulta installato.\nLo trovi nella repo di Kodi sotto Addon-Programmi.")
+        msgBox("Il plugin Kodi File Uploader non risulta installato. Lo trovi nella repo di Kodi sotto Addon-Programmi.")
         return False
     xbmc.executebuiltin('RunScript(script.kodi.loguploader)')
     return True
