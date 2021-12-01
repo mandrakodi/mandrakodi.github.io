@@ -1,8 +1,8 @@
-versione='1.0.60'
+versione='1.0.61'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 29.11.2021
+# Last update: 01.12.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -383,7 +383,10 @@ def jsonToChannels(strJson):
             genre = "generic"
             info = ""
             if 'name' in channel:
-                titolo = channel["name"].encode('utf-8').strip()
+                try:
+                    titolo = channel["name"].encode('ascii', 'ignore')
+                except:
+                    titolo = "NO_TIT"
                 jobCh += 1
             if 'thumbnail' in channel:
                 thumb = channel["thumbnail"]
@@ -408,6 +411,7 @@ def jsonToChannels(strJson):
     except Exception as err:
         import traceback
         logging.warning("ERR_TIT: "+titolo)
+        
         msgBox("Errore nella creazione delle gategorie: "+str(jobStep)+" - "+str(jobCh))
         traceback.print_exc()    
    
@@ -610,20 +614,22 @@ def checkDns():
     ip = xbmc.getIPAddress()
     dns1 = xbmc.getInfoLabel('Network.DNS1Address')
     dns2 = xbmc.getInfoLabel('Network.DNS2Address')
+    gate = xbmc.getInfoLabel('Network.GatewayAddress')
     logging.warning("MANDRA_DNS")
     logga("############ START NETWORK INFO ############")
     logga("## IP: %s" %  (ip))
+    logga("## GATE: %s" %  (gate))
     logga("## DNS1: %s" %  (dns1))
     logga("## DNS2: %s" %  (dns2))
     logga("############# END NETWORK INFO #############")
     okDns=False
-    if dns1 == "1.1.1.1" or dns1 == "8.8.8.8" or dns1 == "192.168.0.1" or dns1 == "127.0.0.1":
+    if dns1 == "1.1.1.1" or dns1 == "8.8.8.8" or dns1 == gate:
         okDns=True
-    elif dns1 == "1.0.0.1" or dns1 == "8.8.4.4" or dns1 == "192.168.1.1" or dns1 == "192.168.1.254":
+    elif dns1 == "1.0.0.1" or dns1 == "8.8.4.4" or dns1 == gate:
         okDns=True
-    elif dns2 == "1.1.1.1" or dns2 == "8.8.8.8" or dns2 == "192.168.0.1" or dns2 == "127.0.0.1":
+    elif dns2 == "1.1.1.1" or dns2 == "8.8.8.8" or dns2 == gate:
         okDns=True
-    elif dns2 == "1.1.1.1" or dns2 == "8.8.4.4" or dns2 == "192.168.1.1" or dns2 == "192.168.1.254":
+    elif dns2 == "1.1.1.1" or dns2 == "8.8.4.4" or dns2 == gate:
         okDns=True
     if okDns == False:
         dialog = xbmcgui.Dialog()
