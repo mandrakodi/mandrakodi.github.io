@@ -1,4 +1,4 @@
-versione='1.0.61'
+versione='1.0.62'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -76,8 +76,8 @@ def makeRequest(url, hdr=None):
     return html
 
 def getSource():
-    #startUrl = "https://mandrakodi.github.io/data/disclaimer.json"
-    startUrl = "https://www.dropbox.com/s/igyq58cnpjq0fq4/disclaimer.json?dl=1"
+    startUrl = "https://mandrakodi.github.io/data/disclaimer.json"
+    #startUrl = "https://www.dropbox.com/s/igyq58cnpjq0fq4/disclaimer.json?dl=1"
     try:
         strSource = makeRequest(startUrl)
         if strSource is None or strSource == "":
