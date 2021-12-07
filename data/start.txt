@@ -1,109 +1,67 @@
 {
-   "SetViewMode":"500",
-   "items":[
-      {
-         "title":"[COLOR lime]SPORT[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/test36.php?numTest=10",
-         "thumbnail":"https://e7.pngegg.com/pngimages/964/480/png-clipart-assorted-sports-players-2018-fifa-world-cup-sports-association-sports-league-american-football-sports-personal-sport-team-thumbnail.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"Sport",
-         "enabled":1
-      },
+    "SetViewMode":"500",
+    "items":[
        {
-         "title":"[COLOR lime]CINETECA[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/test36.php?numTest=81A",
-         "thumbnail":"https://e7.pngegg.com/pngimages/39/640/png-clipart-film-cinema-illustration-popcorn-and-film-food-baking-thumbnail.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"Cinema",
-         "enabled":1
-      },
-      {
-         "title":"[COLOR lime]IPTV[\/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/test36.php?numTest=56",
-         "thumbnail":"https://e7.pngegg.com/pngimages/498/724/png-clipart-m3u-iptv-television-channel-ip-tv-television-logo-thumbnail.png",
-         "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
-         "enabled":1,
-         "info":"IPTV"
-      },
-      {
-         "title":"[COLOR lime]KIDS TOON[\/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/test36.php?numTest=140",
-         "thumbnail":"https://e7.pngegg.com/pngimages/62/220/png-clipart-two-loony-tunes-characters-wile-e-coyote-and-the-road-runner-looney-tunes-cartoon-runner-miscellaneous-fauna-thumbnail.png",
-         "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
-         "enabled":1,
-         "info":"TOONS COMPILATION"
-      },
-      {
-         "title":"[COLOR lime]WEB TV[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/test36.php?numTest=60",
-         "thumbnail":"https://e7.pngegg.com/pngimages/706/661/png-clipart-television-show-video-book-actor-tv-old-television-retro-thumbnail.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
-         "info":"Streaming from the Web"
-      },
-      {
-         "title":"[COLOR lime]RADIO[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/radio.php",
-         "thumbnail":"https://e7.pngegg.com/pngimages/500/412/png-clipart-orange-and-black-radio-internet-radio-fm-broadcasting-music-radio-station-radio-television-electronics-thumbnail.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
-         "info":"Radio on the Web"
-      },
-      {
-         "title":"[COLOR lime]ENGLISH CORNER[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/test36.php?numTest=50",
-         "thumbnail":"https://e7.pngegg.com/pngimages/1024/187/png-clipart-london-illustration-big-ben-cartoon-illustration-london-watercolor-watercolor-painting-comics-thumbnail.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":0,
-         "info":"TEST"
-      },
-      {
-         "title":"[COLOR lime]WORLD WEBCAM[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/test36.php?numTest=45",
-         "thumbnail":"https://e7.pngegg.com/pngimages/653/1023/png-clipart-webcam-world-amazon-com-android-webcam-computer-network-electronics-thumbnail.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
-         "info":"TEST"
-      },
-      {
-         "title":"[COLOR gold]VIP AREA[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/test35.php?numTest=2",
-         "thumbnail":"https://e7.pngegg.com/pngimages/90/276/png-clipart-recliner-chair-couch-furniture-cinema-vip-party-angle-recruiter-thumbnail.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
-         "info":"VIP"
-      },
-      {
-         "title":"[COLOR lime]LOTTO VIP[/COLOR]",
-         "externallink2":"http://test34344.herokuapp.com/test36.php?numTest=JOB666&num=",
-         "thumbnail":"https://e7.pngegg.com/pngimages/912/912/png-clipart-billiard-balls-bingo-lottery-lottery-machine-game-number-bingo-video-game-smiley-thumbnail.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
-         "info":"LOTTO VIP"
-      },
-      {
-         "title":"[COLOR yellow]X[/COLOR][COLOR lime]-[/COLOR][COLOR yellow]X[/COLOR][COLOR lime]-[/COLOR][COLOR yellow]X[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/test35.php?numTest=169",
-         "thumbnail":"https://e7.pngegg.com/pngimages/270/455/png-clipart-woman-wearing-white-strapless-dress-with-wings-illustration-woman-witch-woman-3d-computer-graphics-people-thumbnail.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
-         "tipoLink":"adult",
-         "info":"XXX"
-      },
-      {
-         "title":"[COLOR orange]HELP ME![/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/test36.php?numTest=151",
-         "thumbnail":"https://e7.pngegg.com/pngimages/43/258/png-clipart-customer-service-help-desk-call-centre-technical-support-business-telephone-call-service-thumbnail.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"HELP"
-      },
-      {
-         "title":"[COLOR red]FACTORY (Private)[/COLOR]",
-         "externallink2":"http://test34344.herokuapp.com/test.php?pwd=",
-         "thumbnail":"https://e7.pngegg.com/pngimages/202/364/png-clipart-screw-bolt-graphy-fastener-various-screw-mouth-photography-wood-thumbnail.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
-         "info":"PRIVATE"
-      }
-   ]
-}
+          "title":"[COLOR lime]SPORT[/COLOR]",
+          "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB100",
+          "thumbnail":"https://www.dropbox.com/s/jq9sep5v6ld56l4/sport.jpg?dl=1",
+          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+          "info":"Sport",
+          "enabled":1
+       },
+        {
+          "title":"[COLOR lime]LIVE[/COLOR]",
+          "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB200",
+          "thumbnail":"https://www.dropbox.com/s/v0x17dv1cgcyuhh/tv.jpg?dl=1",
+          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+          "info":"Live TV",
+          "enabled":1
+       },
+       {
+          "title":"[COLOR lime]ON DEMAND[\/COLOR]",
+          "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB300",
+          "thumbnail":"https://www.dropbox.com/s/12cl7r8zlj3mtcj/ondemand.jpg?dl=1",
+          "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
+          "enabled":1,
+          "info":"TV on demand"
+       },
+       {
+          "title":"[COLOR lime]RADIO[/COLOR]",
+          "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB400",
+          "thumbnail":"https://www.dropbox.com/s/gxpfyfkt9wq998b/radio.jpg?dl=1",
+          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+          "enabled":1,
+          "info":"Radio on the Web"
+       },
+       {
+          "title":"[COLOR gold]VIP AREA[/COLOR]",
+          "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB500",
+          "thumbnail":"https://www.dropbox.com/s/07shum6ob1n8cdy/vip.jpg?dl=1",
+          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+          "enabled":1,
+          "info":"Area VIP"
+       },
+       {
+          "title":"[COLOR lime]HELP ME![/COLOR]",
+          "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB700",
+          "thumbnail":"https://www.dropbox.com/s/j5dqf52zevfz4h4/help.jpg?dl=1",
+          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+          "info":"Help & Tools"
+       },
+       {
+          "title":"[COLOR lime]POWER ON[/COLOR]",
+          "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB800",
+          "thumbnail":"https://www.dropbox.com/s/db8rbb7b6xcy88f/power.png?dl=1",
+          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+          "info":"Help & Tools"
+       },
+       {
+          "title":"[COLOR red]FACTORY (Private)[/COLOR]",
+          "externallink2":"http://test34344.herokuapp.com/test.php?pwd=",
+          "thumbnail":"https://e7.pngegg.com/pngimages/202/364/png-clipart-screw-bolt-graphy-fastener-various-screw-mouth-photography-wood-thumbnail.png",
+          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+          "enabled":0,
+          "info":"PRIVATE"
+       }
+    ]
+ }
