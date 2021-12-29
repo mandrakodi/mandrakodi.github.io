@@ -1,4 +1,4 @@
-versione='1.0.48'
+versione='1.0.49'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -469,6 +469,14 @@ def streamingcommunity(parIn=None):
 def scws(parIn=None):
     import json
     video_urls = []
+    refe="https://streamingcommunity.fun/watch/"
+    if "___" in parIn:
+        arrPar=parIn.split("___")
+        parIn=arrPar[0]
+        refe="https://streamingcommunity.fun/watch/"+arrPar[1]
+
+    headSC={'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36','Referer':refe,'Origin':'https://streamingcommunity.fun/'}
+    
     url = "https://scws.xyz/master/" + str(parIn)
 
     def calculateToken(ip_client):
@@ -481,10 +489,10 @@ def scws(parIn=None):
         l = '{}{} {}'.format(t, ip_client, i)
         md5 = hashlib.md5(l.encode())
         s = '?token={}&expires={}'.format(b64(md5.digest()).decode().replace('=', '').replace('+', "-").replace('\\', "_"), t)
-        return s + '&n=1'
+        return s + '&type=video&rendition=480p.m3u8'
     
     page_video = "https://scws.xyz/videos/" + str(parIn)
-    page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    page_data = requests.get(page_video,headers=headSC).content
     if PY3:
         page_data = page_data.decode('utf-8')
     logga('IP_community '+page_data)
@@ -492,6 +500,7 @@ def scws(parIn=None):
     localIp = arrJ2["client_ip"]
 
     token = calculateToken(localIp)
+    """
     code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
     count = 0
     while not code == 200:
@@ -501,11 +510,17 @@ def scws(parIn=None):
         if count == 30:
             logga('END OF TRY. CODE: '+str(code))
             break
-
+    """
     
     video_url = url + token
     logga('video_community '+video_url)
     video_urls.append((video_url, "[COLOR lime]PLAY VIDEO[/COLOR]", "by @mandrakodi"))
+
+    video_url = url + token +"|Referer="+refe
+    logga('video_community '+video_url)
+    video_urls.append((video_url, "[COLOR yellow]PLAY VIDEO (REFE)[/COLOR]", "by @mandrakodi"))
+    video_urls.append((refe, "[COLOR aqua]PLAY VIDEO (WISE)[/COLOR]", "by @mandrakodi"))
+    
 
     return video_urls
 
