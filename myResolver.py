@@ -1,12 +1,11 @@
-versione='1.0.47'
+versione='1.0.48'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 25.11.2021
+# Last update: 29.12.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
-import re, requests, sys, logging, os
-import xbmcplugin
+import re, requests, sys, logging
 import xbmcgui
 import xbmcaddon
 
@@ -187,7 +186,7 @@ def wizhd(parIn=None):
     
 
 def findM3u8(linkIframe, refPage):
-    logga('URL: '+linkIframe)
+    logging.warning('URL: '+linkIframe)
     vUrl = ""
     try:
         page_data2 = requests.get(linkIframe,headers={'user-agent':'iPad','accept':'*/*','referer':refPage}).content
@@ -223,24 +222,32 @@ def assia(parIn=None):
     return video_urls
 
 def daddyFind(parIn):
-    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.me/'}).content
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.click/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
     logga('IFRAME: '+iframe_url)
+    
     video_url = findM3u8(iframe_url, parIn)
     return video_url
 
 def daddy(parIn=None):
     video_urls = []
     logga('PAR: '+parIn)
+    #video_url = daddyFind(parIn)
 
-    video_url = daddyFind(parIn)
+    arrTmp = parIn.split("stream-")
+    arrTmp2 = arrTmp[1].split(".")
+    video_url = "https://cdn.videocdn.click/cdn/premium"+arrTmp2[0]+"/video.m3u8?vcdn|Referer=https://widevine.licenses4.me/"
 
-    video_urls.append((video_url, ""))
+    
+
+    video_urls.append((video_url, "[COLOR lime]PLAY STREAM "+arrTmp2[0]+"[/COLOR]"))
+    """
     if "|" in video_url:
         arrV = video_url.split("|")
         video_urls.append((arrV[0], ""))		
+    """
     return video_urls
 
 def GetLSProData(page_in, refe=None):
@@ -396,7 +403,7 @@ def get_resolved(url):
 def streamingcommunity(parIn=None):
     import json
     video_urls = []
-    url_sito = "https://streamingcommunity.art/"
+    url_sito = "https://streamingcommunity.fun/"
     page_video = url_sito + "watch/" + parIn
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
