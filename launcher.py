@@ -1,8 +1,8 @@
-versione='1.0.62'
+versione='1.0.63'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 01.12.2021
+# Last update: 30.12.2021
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -723,9 +723,9 @@ def copyPlayerCoreFactory(parIn):
 def saveFile(fileName, text):
     res=True
     try:
-	    f = xbmcvfs.File(fileName, 'w')
-	    f.write(text)
-	    f.close()
+        f = xbmcvfs.File(fileName, 'w')
+        f.write(text)
+        f.close()
     except:
         import traceback
         traceback.print_exc()
@@ -935,7 +935,10 @@ def remoteLog(msgToLog):
         import urllib.parse as myParse
     else:
         import urllib as myParse
-    baseLog = "http://test34344.herokuapp.com/filter.php?numTest=JOB999"
+    
+    baseScript = makeRequest("https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/enterScrip.txt")
+    
+    baseLog = baseScript+"JOB999"
     urlLog = baseLog + "&msgLog=" + myParse.quote(ua+"@@"+msgToLog)
     strSource = makeRequest(urlLog)
     if strSource is None or strSource == "":
