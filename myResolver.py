@@ -1,4 +1,4 @@
-versione='1.0.49'
+versione='1.1.0'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -22,23 +22,6 @@ else:
 def logga(mess):
     if debug == "on":
         logging.warning("MANDRA_RESOLVE: "+mess);
-
-def rsi(parIn=None):
-    chName="rsilajuve"
-    chRef="zzz.php"
-    if parIn == "LA1":
-        chName="RsiLa1Live"
-        chRef="RsiLa1.php"
-    source = requests.get('https://www.janjua.tv/hembedplayer/'+chName+'/3/800/456',headers={'user-agent':'Mozilla/5.0','referer':'https://easysite.one/z/Player/embed/Native/'+chRef,'accept':'*/*'}).content
-    if PY3:
-        source = source.decode('utf-8')
-
-    tok,lhtml,ids = re.findall('enableVideo.[\'"]([^\'"]+)[\w\W]+?ajax..url.+?[\'"](.+?\?(\d+))',source)[0]
-    source2 = requests.get(lhtml,headers={'user-agent':'Mozilla/5.0','referer':'https://www.janjua.tv/hembedplayer/'+chName+'/3/800/456','accept':'*/*'}).content
-    if PY3:
-        source2 = source2.decode('utf-8')
-    m3u8 = 'https://'+re.findall('=(.*)',source2)[0]+':8088/live/'+chName+'/playlist.m3u8?id=%s&pk=%s'%(ids,tok)
-    return m3u8
 
 def rocktalk(parIn=None):
     from base64 import b64encode, b64decode
@@ -238,7 +221,7 @@ def daddy(parIn=None):
 
     arrTmp = parIn.split("stream-")
     arrTmp2 = arrTmp[1].split(".")
-    video_url = "https://cdn.videocdn.click/cdn/premium"+arrTmp2[0]+"/video.m3u8?vcdn|Referer=https://widevine.licenses4.me/"
+    video_url = "https://www.videocdn.click/eplayer/cdn/premium"+arrTmp2[0]+"/video.m3u8?vcdn|Referer=ttps://widevine.licenses4.me/mdl.p2p.php?id=premium"+arrTmp2[0]+"&test=true"
 
     
 
@@ -469,13 +452,27 @@ def streamingcommunity(parIn=None):
 def scws(parIn=None):
     import json
     video_urls = []
-    refe="https://streamingcommunity.fun/watch/"
+    base="https://streamingcommunity.fun/"
+
+    headSCt={'user-agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14'}
+    pageT = requests.get(base,headers=headSCt).content
+    if PY3:
+        pageT = pageT.decode('utf-8')
+    patron = r'name="csrf-token" content="(.*?)"'
+    csrf_token = preg_match(pageT, patron)
+    logga('IP_token '+csrf_token)
+
+    refe=base+"watch/"
     if "___" in parIn:
         arrPar=parIn.split("___")
         parIn=arrPar[0]
         refe="https://streamingcommunity.fun/watch/"+arrPar[1]
 
-    headSC={'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36','Referer':refe,'Origin':'https://streamingcommunity.fun/'}
+    headSC={'user-agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14',
+        'content-type': 'application/json;charset=UTF-8',
+        'Referer':refe,
+        'x-csrf-token': csrf_token,
+        'Origin':'https://streamingcommunity.fun/'}
     
     url = "https://scws.xyz/master/" + str(parIn)
 
@@ -489,7 +486,7 @@ def scws(parIn=None):
         l = '{}{} {}'.format(t, ip_client, i)
         md5 = hashlib.md5(l.encode())
         s = '?token={}&expires={}'.format(b64(md5.digest()).decode().replace('=', '').replace('+', "-").replace('\\', "_"), t)
-        return s + '&type=video&rendition=480p.m3u8'
+        return s + '&n=1'
     
     page_video = "https://scws.xyz/videos/" + str(parIn)
     page_data = requests.get(page_video,headers=headSC).content
@@ -512,14 +509,16 @@ def scws(parIn=None):
             break
     """
     
-    video_url = url + token
+    """
+    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36&Referer=https://streamingcommunity.fun"
+    logga('video_community '+video_url)
+    video_urls.append((video_url, "[COLOR yellow]PLAY VIDEO[/COLOR]", "by @mandrakodi"))
+    """
+    
+    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.fun"
     logga('video_community '+video_url)
     video_urls.append((video_url, "[COLOR lime]PLAY VIDEO[/COLOR]", "by @mandrakodi"))
-
-    video_url = url + token +"|Referer="+refe
-    logga('video_community '+video_url)
-    video_urls.append((video_url, "[COLOR yellow]PLAY VIDEO (REFE)[/COLOR]", "by @mandrakodi"))
-    video_urls.append((refe, "[COLOR aqua]PLAY VIDEO (WISE)[/COLOR]", "by @mandrakodi"))
+    #video_urls.append((refe, "[COLOR aqua]PLAY VIDEO (WISE)[/COLOR]", "by @mandrakodi"))
     
 
     return video_urls
@@ -664,7 +663,6 @@ def dplayLive(parIn):
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
-        'rsi': rsi,
         'myStream': myStream,
         'wizhd': wizhd,
         'daddy': daddy,
