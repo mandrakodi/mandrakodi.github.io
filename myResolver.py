@@ -1,8 +1,8 @@
-versione='1.1.0'
+versione='1.1.1'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 02.01.2022
+# Last update: 04.01.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -181,7 +181,7 @@ def findM3u8(linkIframe, refPage):
         if video_url == "":
             video_url = preg_match(page_data2, r"source:\s*'([^']+)")
         if video_url != "":
-            vUrl = video_url + '|Referer='+linkIframe
+            vUrl = video_url + '|User-Agent=Mozilla/5.0&Referer='+linkIframe
         logga('video_url '+vUrl)
 
     except:
@@ -205,27 +205,40 @@ def assia(parIn=None):
     return video_urls
 
 def daddyFind(parIn):
+    video_url = ""
     page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.click/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
-    logga('IFRAME: '+iframe_url)
-    
-    video_url = findM3u8(iframe_url, parIn)
+    logga('IFRAME DADDY: '+iframe_url)
+    if "http" in iframe_url:
+        page_data2 = requests.get(iframe_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':parIn}).content
+        if PY3:
+            page_data2 = page_data2.decode('utf-8')
+        
+        iframe_url2 = preg_match(page_data2, r'iframe\s*src="([^"]+)')
+        logga('IFRAME DADDY2: '+iframe_url2)
+        if "http" in iframe_url2:
+            page_data3 = requests.get(iframe_url2,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://widevine.licenses4.me/'}).content
+            if PY3:
+                page_data3 = page_data3.decode('utf-8')
+            
+            video_url = preg_match(page_data3, "Clappr.Player[\w\W]*?.source:'(.*?)'")
+
     return video_url
 
 def daddy(parIn=None):
     video_urls = []
     logga('PAR: '+parIn)
-    #video_url = daddyFind(parIn)
-
+    video_url = daddyFind(parIn)
+    logga('URL DADDY: '+video_url)
     arrTmp = parIn.split("stream-")
     arrTmp2 = arrTmp[1].split(".")
-    video_url = "https://www.videocdn.click/eplayer/cdn/premium"+arrTmp2[0]+"/video.m3u8?vcdn|Referer=ttps://widevine.licenses4.me/mdl.p2p.php?id=premium"+arrTmp2[0]+"&test=true"
+    final_url = video_url+"|User-Agent=Mozilla/5.0&Referer=https://widevine.licenses4.me/"
 
     
 
-    video_urls.append((video_url, "[COLOR lime]PLAY STREAM "+arrTmp2[0]+"[/COLOR]"))
+    video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+arrTmp2[0]+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
     """
     if "|" in video_url:
         arrV = video_url.split("|")
