@@ -1,8 +1,8 @@
-versione='1.0.63'
+versione='1.1.0'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 30.12.2021
+# Last update: 04.01.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -453,10 +453,13 @@ def callReolver(metodo, parametro):
             newLink=newList[0]
             newP=newList[1]
             info=""
-            if len(newList)==3:
+            if len(newList)>2:
                 info=newList[2]
                 viewmode="503"
 
+            if len(newList)>3:
+                thumb=newList[3]
+            
             logga("Stream_Url ==> " + newLink)
             logga("Stream_Tit ==> " + newP)
             newTit="[COLOR lime]PLAY LINK "+str(numLink)+" ("+newLink[0:4]+")[/COLOR]"
