@@ -1,8 +1,8 @@
-versione='1.1.0'
+versione='1.1.1'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 04.01.2022
+# Last update: 05.01.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -51,12 +51,12 @@ def makeRequest(url, hdr=None):
     logga('TRY TO OPEN '+url)
     html = ""
     if PY3:
-	    import urllib.request as myRequest
+        import urllib.request as myRequest
     else:
-	    import urllib2 as myRequest
+        import urllib2 as myRequest
     pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
     deviceId = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo2")
-    if (deviceId == "Not in use"):
+    if (deviceId == "Not in use" or deviceId == "" or len(deviceId) != 6):
         #generate id
         deviceId = id_generator()
         xbmcaddon.Addon(id=addon_id).setSetting("urlAppo2", deviceId)
@@ -76,7 +76,7 @@ def makeRequest(url, hdr=None):
     return html
 
 def getSource():
-    startUrl = "https://mandrakodi.github.io/data/disclaimer.json"
+    startUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/disclaimer.json"
     #startUrl = "https://www.dropbox.com/s/igyq58cnpjq0fq4/disclaimer.json?dl=1"
     try:
         strSource = makeRequest(startUrl)
