@@ -1,8 +1,8 @@
-versione='1.1.1'
+versione='1.1.2'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 04.01.2022
+# Last update: 06.01.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -309,7 +309,8 @@ def wigi(parIn=None):
     if parIn.startswith('http'):
         wigiUrl = parIn
     else:
-        wigiUrl = "https://starlive.xyz/embed.php?id="+parIn
+        #wigiUrl = "https://starlive.xyz/embed.php?id="+parIn
+        wigiUrl = "https://starlive.xyz/"+parIn
 
     video_urls = []
     logga('PAR: '+parIn)
