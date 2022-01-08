@@ -1,8 +1,8 @@
-versione='1.1.1'
+versione='1.1.2'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 05.01.2022
+# Last update: 08.01.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -904,16 +904,11 @@ def checkSkin():
     if str(kodiSkin).endswith("estuary"):
         logga ("SKIN ESTUARY")
         if (wall!="55"):
-            dialog = xbmcgui.Dialog()
-            mess="Rilevata Skin Estuary. Vuoi impostare la visualizzazione per questa skin?"
-            resp= dialog.yesno("MandraKodi", mess)
-            if (resp):
-                xbmcaddon.Addon(id=addon_id).setSetting("SkinWall", "55")    
-                xbmcaddon.Addon(id=addon_id).setSetting("SkinList1", "55")    
-                xbmcaddon.Addon(id=addon_id).setSetting("SkinList2", "55")    
-                xbmcaddon.Addon(id=addon_id).setSetting("SkinInfo1", "55")    
-                xbmcaddon.Addon(id=addon_id).setSetting("SkinInfo2", "55")
-                msgBox("Visualizzazione impostata")    
+            xbmcaddon.Addon(id=addon_id).setSetting("SkinWall", "55")    
+            xbmcaddon.Addon(id=addon_id).setSetting("SkinList1", "55")    
+            xbmcaddon.Addon(id=addon_id).setSetting("SkinList2", "55")    
+            xbmcaddon.Addon(id=addon_id).setSetting("SkinInfo1", "55")    
+            xbmcaddon.Addon(id=addon_id).setSetting("SkinInfo2", "55")    
     if str(kodiSkin).endswith("confluence"):
         logga ("SKIN CONFLUENCE")
         if (wall!="500"):
