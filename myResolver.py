@@ -1,8 +1,8 @@
-versione='1.1.2'
+versione='1.1.3'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 06.01.2022
+# Last update: 09.01.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -442,8 +442,13 @@ def streamingcommunity(parIn=None):
     if PY3:
         page_data = page_data.decode('utf-8')
     logga('IP_community '+page_data)
-    arrJ2 = json.loads(page_data)
-    localIp = arrJ2["client_ip"]
+    try:
+        arrJ2 = json.loads(page_data)
+        localIp = arrJ2["client_ip"]
+    except:
+        logga("NO LOCAL IP")
+        localIp = "31.191.12.52"
+        pass
 
     token = calculateToken(localIp)
     code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
@@ -452,7 +457,7 @@ def streamingcommunity(parIn=None):
         token = calculateToken(localIp)
         code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
         count +=1
-        if count == 30:
+        if count == 3:
             logga('END OF TRY. CODE: '+str(code))
             break
 
@@ -503,12 +508,16 @@ def scws(parIn=None):
         return s + '&n=1'
     
     page_video = "https://scws.xyz/videos/" + str(parIn)
-    page_data = requests.get(page_video,headers=headSC).content
+    #page_data = requests.get(page_video,headers=headSC).content
+    page_data = requests.get("http://test34344.herokuapp.com/getMyIp.php", headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     logga('IP_community '+page_data)
-    arrJ2 = json.loads(page_data)
-    localIp = arrJ2["client_ip"]
+    try:
+        arrJ2 = json.loads(page_data)
+        localIp = arrJ2["client_ip"]
+    except:
+        logga("NO LOCAL IP")
 
     token = calculateToken(localIp)
     """
