@@ -1,4 +1,4 @@
-versione='1.1.3'
+versione='1.1.4'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -1073,6 +1073,13 @@ def run():
                         xbmc.executebuiltin('RunAddon("'+pl+'")')
 
             elif action == 'play':
+                if url.startswith("acestream"):
+                    dialog = xbmcgui.Dialog()
+                    mess="Vuoi usare l'engine per il link ace?"
+                    resp= dialog.yesno("MandraKodi", mess)
+                    if (resp):
+                        uArr = url.split("/")
+                        url="http://127.0.0.1:6878/ace/manifest.m3u8?id="+uArr[-1]
                 play_video(url)
             elif action == 'm3u':
                 m3u2json(url)
