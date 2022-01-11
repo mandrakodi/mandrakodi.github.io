@@ -1,8 +1,8 @@
-versione='1.1.2'
+versione='1.1.3'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 08.01.2022
+# Last update: 11.01.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -217,6 +217,10 @@ def jsonToItems(strJson):
                     if showAdult=="false":
                         continue
             
+                if tipoLink == "android":
+                    if (xbmc.getCondVisibility("system.platform.android") == False):
+                        continue
+            
             if 'title' in item:
                 titolo = item["title"]
             if 'thumbnail' in item:
@@ -232,6 +236,10 @@ def jsonToItems(strJson):
                 if 'youtube' in link:
                     is_yatse = True
                     is_folder = True
+            if 'acelocal' in item:
+                link = "http://127.0.0.1:6878/ace/getstream?id="+item["acelocal"]
+            if 'acehls' in item:
+                link = "http://127.0.0.1:6878/ace/manifest.m3u8?id="+item["acehls"]
             if 'externallink' in item:
                 extLink = True
                 is_folder = True
