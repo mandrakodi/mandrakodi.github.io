@@ -37,8 +37,8 @@
          "info":"Disclaimer"
       },
       {
-         "title":"[COLOR lime]puoi contattare [B]@ElSupremo[/B] per sapere come fare.[/COLOR]",
-         "link":"ignoreme",
+         "title":"[COLOR lime]puoi contattarmi cliccando [COLOR yellow][B]QUI[/B][/COLOR] per sapere come fare.[/COLOR]",
+         "externallink":"https://test34344.herokuapp.com/filter.php?numTest=JOB950",
          "thumbnail":"https://i.postimg.cc/CM7p0MJG/index.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Disclaimer"
@@ -56,22 +56,6 @@
          "thumbnail":"https://i.postimg.cc/CM7p0MJG/index.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Disclaimer"
-      },
-      {
-         "title":"[COLOR orange]====== ENTRA IN MANDRAKODI ADDON ======[/COLOR]",
-         "externallink":"https://test34344.herokuapp.com/filter.php",
-         "thumbnail":"https://i.postimg.cc/CM7p0MJG/index.jpg",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"Disclaimer",
-	        "enabled":0
-      },
-      {
-         "title":"[COLOR blue]====== ENTRA IN MANDRAKODI ADDON ======[/COLOR]",
-         "externallink":"https://bkp34344.herokuapp.com/filter.php",
-         "thumbnail":"https://i.postimg.cc/CM7p0MJG/index.jpg",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"Disclaimer",
-	       "enabled":1
       }
    ]
 }
