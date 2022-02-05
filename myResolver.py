@@ -1,8 +1,8 @@
-versione='1.1.3'
+versione='1.1.4'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 09.01.2022
+# Last update: 05.02.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -63,11 +63,18 @@ def rocktalk(parIn=None):
         data={"payload": tkn2, "channel_id": ch_id, "username": "603803577"},
         timeout=15)
 
+    logga('JSON TVTAP: '+str(r2.json()))
+
     from pyDes import des, PAD_PKCS5
     key = b"98221122"
 
     links = []
+    linksTmp = []
     jch = r2.json()["msg"]["channel"][0]
+    chName=jch["channel_name"]
+    chCountry=jch["country"]
+    chImg="https://rocktalk.net/tv/"+jch["img"]
+    chTit="[COLOR lime]"+chName+"[/COLOR] [COLOR aqua]("+chCountry+")[/COLOR]"
 
     for stream in jch.keys():
         if "stream" in stream or "chrome_cast" in stream:
@@ -75,8 +82,9 @@ def rocktalk(parIn=None):
             link = d.decrypt(b64decode(jch[stream]), padmode=PAD_PKCS5)
             if link:
                 link = link.decode("utf-8")
-                if not link == "dummytext" and link not in links:
-                    links.append((link, ""))
+                if not link == "dummytext" and link not in linksTmp:
+                    links.append((link, chTit, stream, chImg))
+                    linksTmp.append(link)
 
     return links
 
@@ -234,7 +242,7 @@ def daddy(parIn=None):
     logga('URL DADDY: '+video_url)
     arrTmp = parIn.split("stream-")
     arrTmp2 = arrTmp[1].split(".")
-    final_url = video_url+"|User-Agent=Mozilla/5.0&Referer=https://widevine.licenses4.me/"
+    final_url = video_url+"|Referer=https://widevine.licenses4.me/mdl.p2p.php?id=premium36&test=true"
 
     
 
@@ -287,6 +295,9 @@ def GetLSProData(page_in, refe=None):
         logga('iframe_wigistream_ok ')
     elif "buzztv" in src:
         logga('BUZZTV ')
+        return GetLSProData(src)
+    elif "cloudstream" in src:
+        logga('CLOUDSTREAM')
         return GetLSProData(src)
     elif "pepperlive" in src:
         logga('PEPPER')
@@ -400,7 +411,7 @@ def get_resolved(url):
 def streamingcommunity(parIn=None):
     import json
     video_urls = []
-    url_sito = "https://streamingcommunity.fun/"
+    url_sito = "https://streamingcommunity.host/"
     page_video = url_sito + "watch/" + parIn
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
@@ -471,7 +482,7 @@ def streamingcommunity(parIn=None):
 def scws(parIn=None):
     import json
     video_urls = []
-    base="https://streamingcommunity.fun/"
+    base="https://streamingcommunity.host/"
 
     headSCt={'user-agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14'}
     pageT = requests.get(base,headers=headSCt).content
@@ -482,16 +493,22 @@ def scws(parIn=None):
     logga('IP_token '+csrf_token)
 
     refe=base+"watch/"
+    titFilm="PLAY VIDEO"
     if "___" in parIn:
         arrPar=parIn.split("___")
         parIn=arrPar[0]
-        refe="https://streamingcommunity.fun/watch/"+arrPar[1]
+        refe="https://streamingcommunity.host/watch/"+arrPar[1]
+    try:
+        titFilm=arrPar[2]
+    except:
+        logga("NO TIT VIDEO")
+        titFilm="PLAY VIDEO"
 
     headSC={'user-agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14',
         'content-type': 'application/json;charset=UTF-8',
         'Referer':refe,
         'x-csrf-token': csrf_token,
-        'Origin':'https://streamingcommunity.fun/'}
+        'Origin':'https://streamingcommunity.host/'}
     
     url = "https://scws.xyz/master/" + str(parIn)
 
@@ -533,14 +550,14 @@ def scws(parIn=None):
     """
     
     """
-    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36&Referer=https://streamingcommunity.fun"
+    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36&Referer=https://streamingcommunity.host"
     logga('video_community '+video_url)
     video_urls.append((video_url, "[COLOR yellow]PLAY VIDEO[/COLOR]", "by @mandrakodi"))
     """
     
-    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.fun"
+    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.host"
     logga('video_community '+video_url)
-    video_urls.append((video_url, "[COLOR lime]PLAY VIDEO[/COLOR]", "by @mandrakodi"))
+    video_urls.append((video_url, "[COLOR lime]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR]", "by @mandrakodi"))
     #video_urls.append((refe, "[COLOR aqua]PLAY VIDEO (WISE)[/COLOR]", "by @mandrakodi"))
     
 
