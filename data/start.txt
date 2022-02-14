@@ -2,7 +2,7 @@
    "SetViewMode":"500",
    "items":[
       {
-         "title":"[COLOR DeepSkyBlue][B]ELSUPREMO SAYS...[/B][/COLOR]",
+         "title":"[COLOR deepskyblue][B]ELSUPREMO SAYS...[/B][/COLOR]",
          "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB949",
          "thumbnail":"https://www.dropbox.com/s/q34810lzta6tz46/avatar.png?dl=1",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
