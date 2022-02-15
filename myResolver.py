@@ -1,13 +1,15 @@
-versione='1.1.4'
+versione='1.1.5'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 05.02.2022
+# Last update: 15.02.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
 import xbmcgui
+import xbmc
 import xbmcaddon
+import os
 
 addon_id = 'plugin.video.mandrakodi'
 #selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -230,8 +232,10 @@ def daddyFind(parIn):
             page_data3 = requests.get(iframe_url2,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://widevine.licenses4.me/'}).content
             if PY3:
                 page_data3 = page_data3.decode('utf-8')
-            
+            writeFileLog("DADDY_PAGE\n"+page_data3, "w+")
             video_url = preg_match(page_data3, "Clappr.Player[\w\W]*?.source:'(.*?)'")
+            vt = video_url.split("?auth")
+            video_url = vt[0]
 
     return video_url
 
@@ -242,11 +246,13 @@ def daddy(parIn=None):
     logga('URL DADDY: '+video_url)
     arrTmp = parIn.split("stream-")
     arrTmp2 = arrTmp[1].split(".")
-    final_url = video_url+"|Referer=https://widevine.licenses4.me/mdl.p2p.php?id=premium36&test=true"
+    final_url = video_url+"|Referer=https://widevine.licenses4.me/"
+    final_url2 = video_url+"|Referer=https://widevine.licenses4.me/ Origin=https://widevine.licenses4.me/"
 
     
 
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+arrTmp2[0]+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
+    #video_urls.append((final_url2, "[COLOR yellow]PLAY STREAM "+arrTmp2[0]+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
     """
     if "|" in video_url:
         arrV = video_url.split("|")
@@ -699,6 +705,21 @@ def dplayLive(parIn):
     logga('LINK_DPLAY: '+link)
     video_urls.append((link, dataErr))
     return video_urls
+
+def writeFileLog(strIn, modo):
+    home = ''
+    if PY3:
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
+        log_file = os.path.join(home, 'mandrakodi2.log')
+        f = open(log_file, modo, encoding="utf-8")
+        f.write(strIn)
+        f.close()
+    else:
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
+        log_file = os.path.join(home, 'mandrakodi2.log')
+        f = open(log_file, modo)
+        f.write(strIn)
+        f.close()
 
 def run (action, params=None):
     logga('Run version '+versione)
