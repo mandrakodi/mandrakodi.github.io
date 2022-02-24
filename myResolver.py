@@ -1,8 +1,8 @@
-versione='1.1.5'
+versione='1.1.6'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 15.02.2022
+# Last update: 24.02.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -417,7 +417,7 @@ def get_resolved(url):
 def streamingcommunity(parIn=None):
     import json
     video_urls = []
-    url_sito = "https://streamingcommunity.host/"
+    url_sito = "https://streamingcommunity.site/"
     page_video = url_sito + "watch/" + parIn
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
@@ -488,7 +488,7 @@ def streamingcommunity(parIn=None):
 def scws(parIn=None):
     import json
     video_urls = []
-    base="https://streamingcommunity.host/"
+    base="https://streamingcommunity.site/"
 
     headSCt={'user-agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14'}
     pageT = requests.get(base,headers=headSCt).content
@@ -503,7 +503,7 @@ def scws(parIn=None):
     if "___" in parIn:
         arrPar=parIn.split("___")
         parIn=arrPar[0]
-        refe="https://streamingcommunity.host/watch/"+arrPar[1]
+        refe="https://streamingcommunity.site/watch/"+arrPar[1]
     try:
         titFilm=arrPar[2]
     except:
@@ -514,7 +514,7 @@ def scws(parIn=None):
         'content-type': 'application/json;charset=UTF-8',
         'Referer':refe,
         'x-csrf-token': csrf_token,
-        'Origin':'https://streamingcommunity.host/'}
+        'Origin':'https://streamingcommunity.site/'}
     
     url = "https://scws.xyz/master/" + str(parIn)
 
@@ -556,12 +556,12 @@ def scws(parIn=None):
     """
     
     """
-    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36&Referer=https://streamingcommunity.host"
+    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36&Referer=https://streamingcommunity.site"
     logga('video_community '+video_url)
     video_urls.append((video_url, "[COLOR yellow]PLAY VIDEO[/COLOR]", "by @mandrakodi"))
     """
     
-    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.host"
+    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.site"
     logga('video_community '+video_url)
     video_urls.append((video_url, "[COLOR lime]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR]", "by @mandrakodi"))
     #video_urls.append((refe, "[COLOR aqua]PLAY VIDEO (WISE)[/COLOR]", "by @mandrakodi"))
