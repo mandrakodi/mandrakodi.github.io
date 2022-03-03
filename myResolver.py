@@ -1,8 +1,8 @@
-versione='1.1.6'
+versione='1.1.7'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 24.02.2022
+# Last update: 03.03.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -10,6 +10,8 @@ import xbmcgui
 import xbmc
 import xbmcaddon
 import os
+import string
+import random
 
 addon_id = 'plugin.video.mandrakodi'
 #selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -531,7 +533,7 @@ def scws(parIn=None):
         return s + '&n=1'
     
     page_video = "https://scws.xyz/videos/" + str(parIn)
-    #page_data = requests.get(page_video,headers=headSC).content
+   
     page_data = requests.get("http://test34344.herokuapp.com/getMyIp.php", headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
@@ -543,29 +545,13 @@ def scws(parIn=None):
         logga("NO LOCAL IP")
 
     token = calculateToken(localIp)
-    """
-    code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
-    count = 0
-    while not code == 200:
-        token = calculateToken(localIp)
-        code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
-        count +=1
-        if count == 30:
-            logga('END OF TRY. CODE: '+str(code))
-            break
-    """
     
-    """
-    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36&Referer=https://streamingcommunity.site"
-    logga('video_community '+video_url)
-    video_urls.append((video_url, "[COLOR yellow]PLAY VIDEO[/COLOR]", "by @mandrakodi"))
-    """
     
     video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.site"
     logga('video_community '+video_url)
     video_urls.append((video_url, "[COLOR lime]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR]", "by @mandrakodi"))
-    #video_urls.append((refe, "[COLOR aqua]PLAY VIDEO (WISE)[/COLOR]", "by @mandrakodi"))
     
+    remoteLog(titFilm)
 
     return video_urls
 
@@ -720,6 +706,54 @@ def writeFileLog(strIn, modo):
         f = open(log_file, modo)
         f.write(strIn)
         f.close()
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+def makeRequest(url, hdr=None):
+    logga('TRY TO OPEN '+url)
+    html = ""
+    if PY3:
+        import urllib.request as myRequest
+    else:
+        import urllib2 as myRequest
+    pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
+    deviceId = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo2")
+    if (deviceId == "Not in use" or deviceId == "" or len(deviceId) != 6):
+        #generate id
+        deviceId = id_generator()
+        xbmcaddon.Addon(id=addon_id).setSetting("urlAppo2", deviceId)
+    version = xbmcaddon.Addon(id=addon_id).getAddonInfo("version")
+    if hdr is None:
+        ua = "MandraKodi2@@"+version+"@@"+pwd+"@@"+deviceId
+        hdr = {"User-Agent" : ua}
+    try:
+        req = myRequest.Request(url, headers=hdr)
+        response = myRequest.urlopen(req, timeout=45)
+        html = response.read().decode('utf-8')
+        response.close()
+        logga('OK REQUEST FROM '+url+": "+html)
+    except:
+        logging.warning('Error to open url: '+url)
+        pass
+    return html
+
+
+def remoteLog(msgToLog):
+    if PY3:
+        import urllib.parse as myParse
+    else:
+        import urllib as myParse
+    
+    baseScript = makeRequest("https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/enterScrip.txt")
+    
+    baseLog = "http://bkp34344.herokuapp.com/filter.php?numTest=JOB998"
+    urlLog = baseLog + "&msgLog=" + myParse.quote(msgToLog)
+    strSource = makeRequest(urlLog)
+    if strSource is None or strSource == "":
+        logga('MANDRA_LOG: NO REMOTE LOG')
+    else:
+        logga('OK REMOTE LOG')
 
 def run (action, params=None):
     logga('Run version '+versione)
