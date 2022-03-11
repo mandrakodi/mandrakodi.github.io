@@ -1,8 +1,8 @@
-versione='1.1.7'
+versione='1.1.8'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 03.03.2022
+# Last update: 11.03.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -419,7 +419,7 @@ def get_resolved(url):
 def streamingcommunity(parIn=None):
     import json
     video_urls = []
-    url_sito = "https://streamingcommunity.site/"
+    url_sito = "https://streamingcommunity.bond/"
     page_video = url_sito + "watch/" + parIn
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
@@ -490,7 +490,7 @@ def streamingcommunity(parIn=None):
 def scws(parIn=None):
     import json
     video_urls = []
-    base="https://streamingcommunity.site/"
+    base="https://streamingcommunity.bond/"
 
     headSCt={'user-agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14'}
     pageT = requests.get(base,headers=headSCt).content
@@ -505,7 +505,7 @@ def scws(parIn=None):
     if "___" in parIn:
         arrPar=parIn.split("___")
         parIn=arrPar[0]
-        refe="https://streamingcommunity.site/watch/"+arrPar[1]
+        refe="https://streamingcommunity.bond/watch/"+arrPar[1]
     try:
         titFilm=arrPar[2]
     except:
@@ -516,7 +516,7 @@ def scws(parIn=None):
         'content-type': 'application/json;charset=UTF-8',
         'Referer':refe,
         'x-csrf-token': csrf_token,
-        'Origin':'https://streamingcommunity.site/'}
+        'Origin':'https://streamingcommunity.bond/'}
     
     url = "https://scws.xyz/master/" + str(parIn)
 
@@ -547,7 +547,7 @@ def scws(parIn=None):
     token = calculateToken(localIp)
     
     
-    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.site"
+    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.bond"
     logga('video_community '+video_url)
     video_urls.append((video_url, "[COLOR lime]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR]", "by @mandrakodi"))
     
