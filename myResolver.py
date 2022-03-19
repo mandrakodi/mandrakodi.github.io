@@ -1,8 +1,8 @@
-versione='1.1.8'
+versione='1.1.9'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 11.03.2022
+# Last update: 19.03.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -487,6 +487,38 @@ def streamingcommunity(parIn=None):
 
     return video_urls
 
+def play(scws_id):
+    from time import time
+    from base64 import b64encode
+    from hashlib import md5
+
+    
+    # Calculate Token
+    client_ip = httptools.downloadpage('https://api.ipify.org/').data
+    expires = int(time() + 172800)
+    token = b64encode(md5('{}{} Yc8U6r8KjAKAepEA'.format(expires, client_ip).encode('utf-8')).digest()).decode('utf-8').replace('=', '').replace('+', '-').replace('/', '_')
+
+    url = 'https://scws.xyz/master/{}?token={}&expires={}&n=1'.format(scws_id, token, expires)
+    subs = []
+    urls = []
+
+    info = support.match(url, patron=r'LANGUAGE="([^"]+)",\s*URI="([^"]+)|RESOLUTION=\d+x(\d+).*?(http[^"\s]+)').matches
+    if info:
+        for lang, sub, res, url in info:
+            if sub:
+                if lang == 'auto': lang = 'ita-forced'
+                s = config.get_temp_file(lang +'.srt')
+                subs.append(s)
+                filetools.write(s, support.vttToSrt(httptools.downloadpage(support.match(sub, patron=r'(http[^\s\n]+)').match).data))
+            elif url:
+                urls.append(['hls [{}]'.format(res), url])
+
+        return [item.clone(title = channeltools.get_channel_parameters(item.channel)['title'], server='directo', video_urls=urls, subtitle=subs, manifest='hls')]
+    else:
+        return [item.clone(title = channeltools.get_channel_parameters(item.channel)['title'], server='directo', url=url, manifest='hls')]
+
+
+
 def scws(parIn=None):
     import json
     video_urls = []
@@ -524,12 +556,19 @@ def scws(parIn=None):
         from time import time
         from base64 import b64encode as b64
         import hashlib
-        o = 48
-        i = 'Yc8U6r8KjAKAepEA'
-        t = int(time() + (3600 * o))
-        l = '{}{} {}'.format(t, ip_client, i)
-        md5 = hashlib.md5(l.encode())
-        s = '?token={}&expires={}'.format(b64(md5.digest()).decode().replace('=', '').replace('+', "-").replace('\\', "_"), t)
+
+        expires = int(time() + 172800)
+        token = b64(hashlib.md5('{}{} Yc8U6r8KjAKAepEA'.format(expires, ip_client).encode('utf-8')).digest()).decode('utf-8').replace('=', '').replace('+', '-').replace('/', '_')
+
+        s = '?token={}&expires={}&n=1'.format(token, expires)
+
+        #o = 48
+        #i = 'Yc8U6r8KjAKAepEA'
+        #t = int(time() + (3600 * o))
+        #l = '{}{} {}'.format(t, ip_client, i)
+        #md5 = hashlib.md5(l.encode())
+        #s = '?token={}&expires={}'.format(b64(md5.digest()).decode().replace('=', '').replace('+', "-").replace('\\', "_"), t)
+        
         return s + '&n=1'
     
     page_video = "https://scws.xyz/videos/" + str(parIn)
@@ -546,14 +585,39 @@ def scws(parIn=None):
 
     token = calculateToken(localIp)
     
+    url2 = url + token
+    pageT = requests.get(url2,headers=headSCt).content
+    if PY3:
+        pageT = pageT.decode('utf-8')
+    logga("MANIFEST: "+pageT)
     
-    video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.bond"
-    logga('video_community '+video_url)
-    video_urls.append((video_url, "[COLOR lime]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR]", "by @mandrakodi"))
+    patron=r'.*?(http[^"\s]+)'
+    info = preg_match(pageT, patron, -1)
+
+    if info:
+        logga ("OK INFO")
+        girancora=True
+        ind=0
+        while girancora:
+            url3=info[ind]
+            if "type=video" in url3:
+                girancora=False
+            else:
+               ind += 1
+             
+        logga('video_community '+url3)
+        video_urls.append((url3, "[COLOR gold]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR] ", "by @mandrakodi"))
+    else:
+        video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.bond"
+        logga('video_community '+video_url)
+        video_urls.append((video_url, "[COLOR lime]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR]", "by @mandrakodi"))
     
     remoteLog(titFilm)
 
     return video_urls
+
+
+
 
 
 def darkIptv(parIn=None):
@@ -599,6 +663,9 @@ def macLink(parIn=None):
 def preg_match(data, patron, index=0):
     try:
         matches = re.findall(patron, data, flags=re.DOTALL)
+        if index == -1:
+            return matches
+
         return matches[index]
     except:
         return ""
