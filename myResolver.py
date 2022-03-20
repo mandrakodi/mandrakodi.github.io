@@ -1,4 +1,4 @@
-versione='1.1.10'
+versione='1.1.11'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -587,8 +587,7 @@ def scws(parIn=None):
     
     url2 = url + token
     pageT = requests.get(url2,headers=headSCt).content
-    if PY3:
-        #pageT = pageT.decode('utf-8')
+
     logga("MANIFEST: "+pageT)
     
     patron=r'.*?(http[^"\s]+)'
