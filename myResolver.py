@@ -587,7 +587,8 @@ def scws(parIn=None):
     
     url2 = url + token
     pageT = requests.get(url2,headers=headSCt).content
-
+    if PY3:
+        pageT = pageT.decode('utf-8')
     logga("MANIFEST: "+pageT)
     
     patron=r'.*?(http[^"\s]+)'
