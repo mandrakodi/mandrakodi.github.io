@@ -1,4 +1,4 @@
-versione='1.1.11'
+versione='1.1.12'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -419,7 +419,7 @@ def get_resolved(url):
 def streamingcommunity(parIn=None):
     import json
     video_urls = []
-    url_sito = "https://streamingcommunity.bond/"
+    url_sito = "https://streamingcommunity.fun/"
     page_video = url_sito + "watch/" + parIn
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
@@ -487,42 +487,11 @@ def streamingcommunity(parIn=None):
 
     return video_urls
 
-def play(scws_id):
-    from time import time
-    from base64 import b64encode
-    from hashlib import md5
-
-    
-    # Calculate Token
-    client_ip = httptools.downloadpage('https://api.ipify.org/').data
-    expires = int(time() + 172800)
-    token = b64encode(md5('{}{} Yc8U6r8KjAKAepEA'.format(expires, client_ip).encode('utf-8')).digest()).decode('utf-8').replace('=', '').replace('+', '-').replace('/', '_')
-
-    url = 'https://scws.xyz/master/{}?token={}&expires={}&n=1'.format(scws_id, token, expires)
-    subs = []
-    urls = []
-
-    info = support.match(url, patron=r'LANGUAGE="([^"]+)",\s*URI="([^"]+)|RESOLUTION=\d+x(\d+).*?(http[^"\s]+)').matches
-    if info:
-        for lang, sub, res, url in info:
-            if sub:
-                if lang == 'auto': lang = 'ita-forced'
-                s = config.get_temp_file(lang +'.srt')
-                subs.append(s)
-                filetools.write(s, support.vttToSrt(httptools.downloadpage(support.match(sub, patron=r'(http[^\s\n]+)').match).data))
-            elif url:
-                urls.append(['hls [{}]'.format(res), url])
-
-        return [item.clone(title = channeltools.get_channel_parameters(item.channel)['title'], server='directo', video_urls=urls, subtitle=subs, manifest='hls')]
-    else:
-        return [item.clone(title = channeltools.get_channel_parameters(item.channel)['title'], server='directo', url=url, manifest='hls')]
-
-
 
 def scws(parIn=None):
     import json
     video_urls = []
-    base="https://streamingcommunity.bond/"
+    base="https://streamingcommunity.fun/"
 
     headSCt={'user-agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14'}
     pageT = requests.get(base,headers=headSCt).content
@@ -537,7 +506,7 @@ def scws(parIn=None):
     if "___" in parIn:
         arrPar=parIn.split("___")
         parIn=arrPar[0]
-        refe="https://streamingcommunity.bond/watch/"+arrPar[1]
+        refe="https://streamingcommunity.fun/watch/"+arrPar[1]
     try:
         titFilm=arrPar[2]
     except:
@@ -548,7 +517,7 @@ def scws(parIn=None):
         'content-type': 'application/json;charset=UTF-8',
         'Referer':refe,
         'x-csrf-token': csrf_token,
-        'Origin':'https://streamingcommunity.bond/'}
+        'Origin':'https://streamingcommunity.fun/'}
     
     url = "https://scws.xyz/master/" + str(parIn)
 
@@ -608,7 +577,7 @@ def scws(parIn=None):
         logga('video_community '+url3)
         video_urls.append((url3, "[COLOR gold]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR] ", "by @mandrakodi"))
     else:
-        video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.bond"
+        video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.fun"
         logga('video_community '+video_url)
         video_urls.append((video_url, "[COLOR lime]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR]", "by @mandrakodi"))
     
