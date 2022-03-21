@@ -1,8 +1,8 @@
-versione='1.1.12'
+versione='1.1.13'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 19.03.2022
+# Last update: 21.03.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -567,15 +567,16 @@ def scws(parIn=None):
         logga ("OK INFO")
         girancora=True
         ind=0
-        while girancora:
+        cnt = len(info)
+        while ind < cnt:
             url3=info[ind]
+            logga('video_community '+url3)
             if "type=video" in url3:
-                girancora=False
-            else:
-               ind += 1
-             
-        logga('video_community '+url3)
-        video_urls.append((url3, "[COLOR gold]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR] ", "by @mandrakodi"))
+                patron=r'rendition=(.*?)p'
+                res = preg_match(url3, patron)
+
+                video_urls.append((url3, "[COLOR gold]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR] [COLOR blue]("+res+"p)[/COLOR]", "by @mandrakodi"))
+            ind += 1
     else:
         video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.fun"
         logga('video_community '+video_url)
