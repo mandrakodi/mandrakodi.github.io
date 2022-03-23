@@ -57,19 +57,11 @@
          "info":"Help & Tools"
       },
       {
-         "title":"[COLOR lime]POWER ON[/COLOR]",
+         "title":"[COLOR lime]POWER UP[/COLOR]",
          "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB800",
          "thumbnail":"https://www.dropbox.com/s/db8rbb7b6xcy88f/power.png?dl=1",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Help & Tools"
-      },
-      {
-         "title":"[COLOR red]FACTORY (Private)[/COLOR]",
-         "externallink2":"http://test34344.herokuapp.com/test.php?pwd=",
-         "thumbnail":"https://e7.pngegg.com/pngimages/202/364/png-clipart-screw-bolt-graphy-fastener-various-screw-mouth-photography-wood-thumbnail.png",
-         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":0,
-         "info":"PRIVATE"
       }
    ]
 }
