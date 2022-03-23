@@ -1,5 +1,5 @@
-http://srv.webnet.icu:8080/
-00:1A:79:47:9D:53
+http://srv.webnet.icu:8080/__TEST INFO SERVER
+00:1A:79:47:9D:53 TEST INFO LISTA
 00:1A:79:63:9C:A9
 00:1A:79:41:CF:1F
 00:1A:79:42:2D:E8
