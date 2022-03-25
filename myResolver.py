@@ -1,8 +1,8 @@
-versione='1.1.13'
+versione='1.1.14'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 21.03.2022
+# Last update: 25.03.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -419,7 +419,7 @@ def get_resolved(url):
 def streamingcommunity(parIn=None):
     import json
     video_urls = []
-    url_sito = "https://streamingcommunity.fun/"
+    url_sito = "https://streamingcommunity.icu/"
     page_video = url_sito + "watch/" + parIn
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
@@ -491,7 +491,7 @@ def streamingcommunity(parIn=None):
 def scws(parIn=None):
     import json
     video_urls = []
-    base="https://streamingcommunity.fun/"
+    base="https://streamingcommunity.icu/"
 
     headSCt={'user-agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14'}
     pageT = requests.get(base,headers=headSCt).content
@@ -506,7 +506,7 @@ def scws(parIn=None):
     if "___" in parIn:
         arrPar=parIn.split("___")
         parIn=arrPar[0]
-        refe="https://streamingcommunity.fun/watch/"+arrPar[1]
+        refe="https://streamingcommunity.icu/watch/"+arrPar[1]
     try:
         titFilm=arrPar[2]
     except:
@@ -517,7 +517,7 @@ def scws(parIn=None):
         'content-type': 'application/json;charset=UTF-8',
         'Referer':refe,
         'x-csrf-token': csrf_token,
-        'Origin':'https://streamingcommunity.fun/'}
+        'Origin':'https://streamingcommunity.icu/'}
     
     url = "https://scws.xyz/master/" + str(parIn)
 
@@ -578,7 +578,7 @@ def scws(parIn=None):
                 video_urls.append((url3, "[COLOR gold]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR] [COLOR blue]("+res+"p)[/COLOR]", "by @mandrakodi"))
             ind += 1
     else:
-        video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.fun"
+        video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.icu"
         logga('video_community '+video_url)
         video_urls.append((video_url, "[COLOR lime]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR]", "by @mandrakodi"))
     
