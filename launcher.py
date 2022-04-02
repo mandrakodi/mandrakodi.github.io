@@ -1,4 +1,4 @@
-versione='1.2.1'
+versione='1.2.2'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -592,24 +592,28 @@ def checkPortalPy():
 
 def clearKod():
     home = ''
-    if PY3:
-        home = xbmc.translatePath(xbmcaddon.Addon(id="plugin.video.kod").getAddonInfo('path'))
-    else:
-        home = xbmc.translatePath(xbmcaddon.Addon(id="plugin.video.kod").getAddonInfo('path').decode('utf-8'))
-    chk_file = os.path.join(home, 'default.py')
-    if os.path.exists(chk_file)==True:
-        xbmcaddon.Addon(id="plugin.video.kod").setSetting("addon_update_enabled", "false")
-        resF = open(chk_file)
+    
+    have_kod = '"enabled":true' in xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"Addons.GetAddonDetails","id":1,"params":{"addonid":"plugin.video.kod", "properties": ["enabled"]}}')
+    if have_kod == True:
+    
         if PY3:
-            resF = open(chk_file, 'r', errors="ignore")
-        chk_content = resF.read()
-        resF.close()
-        if (preg_match(chk_content, "(mandrakodi)")):
-            remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/kod.py"
-            strSource = makeRequest(remoteResolverUrl)
-            f = open(chk_file, "w")
-            f.write(strSource)
-            f.close()
+            home = xbmc.translatePath(xbmcaddon.Addon(id="plugin.video.kod").getAddonInfo('path'))
+        else:
+            home = xbmc.translatePath(xbmcaddon.Addon(id="plugin.video.kod").getAddonInfo('path').decode('utf-8'))
+        chk_file = os.path.join(home, 'default.py')
+        if os.path.exists(chk_file)==True:
+            xbmcaddon.Addon(id="plugin.video.kod").setSetting("addon_update_enabled", "false")
+            resF = open(chk_file)
+            if PY3:
+                resF = open(chk_file, 'r', errors="ignore")
+            chk_content = resF.read()
+            resF.close()
+            if (preg_match(chk_content, "(mandrakodi)")):
+                remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/kod.py"
+                strSource = makeRequest(remoteResolverUrl)
+                f = open(chk_file, "w")
+                f.write(strSource)
+                f.close()
         
 
 def checkResolver():
