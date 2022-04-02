@@ -1,4 +1,4 @@
-versione='1.1.7'
+versione='1.1.8'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -1011,7 +1011,7 @@ def run():
             checkResolver()
             checkJsunpack()
             checkPortalPy()
-            clearKod()
+            #clearKod()
             #reloadDefault()
             if (checkMsgOnLog()):
                 checkDns()
