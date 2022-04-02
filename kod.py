@@ -25,7 +25,7 @@ sys.path.insert(0, librerias)
 
 if 'elsupremo' in xbmc.getInfoLabel('Container.FolderPath'):
     from platformcode.platformtools import dialog_ok
-    dialog_ok('Kodi on Demand', 'Non è consentito sfruttare KoD da add-on esterni')
+    dialog_ok('Kodi on Demand', 'Non consentito sfruttare KoD da add-on esterni')
     exit()
 
 from platformcode import launcher
