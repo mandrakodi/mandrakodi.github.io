@@ -1,8 +1,8 @@
-versione='1.1.9'
+versione='1.2.0'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 01.04.2022
+# Last update: 02.04.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -18,13 +18,14 @@ import random
 import re
 import xbmcvfs
 
-# Get the plugin url in plugin:// notation.
+# Get the plugin url in plugin:// notation. 
 _url = sys.argv[0]
 # Get the plugin handle as an integer number.
 _handle = int(sys.argv[1])
 addon_id = 'plugin.video.mandrakodi'
 #selfAddon = xbmcaddon.Addon(id=addon_id)
 xbmcaddon.Addon(id=addon_id).setSetting("debug", "on")
+
 debug = xbmcaddon.Addon(id=addon_id).getSetting("debug")
 showAdult = xbmcaddon.Addon(id=addon_id).getSetting("ShowAdult")
 lastView = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo1")
@@ -597,6 +598,7 @@ def clearKod():
         home = xbmc.translatePath(xbmcaddon.Addon(id="plugin.video.kod").getAddonInfo('path').decode('utf-8'))
     chk_file = os.path.join(home, 'default.py')
     if os.path.exists(chk_file)==True:
+        xbmcaddon.Addon(id="plugin.video.kod").setSetting("addon_update_enabled", "false")
         resF = open(chk_file)
         if PY3:
             resF = open(chk_file, 'r', errors="ignore")
