@@ -1,8 +1,8 @@
-versione='1.1.4'
+versione='1.1.5'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 11.01.2022
+# Last update: 01.04.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -589,6 +589,24 @@ def checkPortalPy():
                 strSource = strSource.decode('utf-8')
             saveFile(resolver_file, strSource)
 
+def clearKod():
+    home = ''
+    if PY3:
+        home = xbmc.translatePath(xbmcaddon.Addon(id="plugin.video.kod").getAddonInfo('path'))
+    else:
+        home = xbmc.translatePath(xbmcaddon.Addon(id="plugin.video.kod").getAddonInfo('path').decode('utf-8'))
+    chk_file = os.path.join(home, 'default.py')
+    if os.path.exists(chk_file)==True:
+        resF = open(chk_file)
+        chk_content = resF.read()
+        resF.close()
+        if (preg_match(chk_content, "(mandrakodi)")):
+            x = chk_content.replace("mandrakodi", "elsupremo")
+            f = open(chk_file, "w")
+            f.write(x)
+            f.close()
+            
+
 def checkResolver():
     home = ''
     if PY3:
@@ -769,6 +787,7 @@ def m3u2json(src):
     arrTmp = [""]
     strLog="";
     try:
+        okGroup=False
         for match in matches:
             strLog=json.dumps(match)
             tt = match[1]
@@ -784,13 +803,14 @@ def m3u2json(src):
                 img = "https://www.dropbox.com/s/wd2d403175rbvs7/tv_ch.png?dl=1"
             else:
                 img = urlImg
-
+           
             regex3 = r'.*?group-title="(.*?)"'
             group = preg_match(infos, regex3)
             if (group == ""):
                 group = "VARIOUS"
             try:
                 row = group+"@@"+title+"@@"+link+"@@"+img
+                okGroup=True
             except:
                 row = group.encode('utf-8', 'ignore').decode('utf-8')+"@@"+title+"@@"+link+"@@"+img
                 writeFileLog("\n"+row, "a+")
@@ -805,7 +825,9 @@ def m3u2json(src):
         return 
     logga("FOUND "+str(numIt)+" ROWS")
 
-    arrTmp.sort()
+    if (okGroup):
+        arrTmp.sort()
+        
     try:
         strJson = '{"SetViewMode": "500","channels": ['
         oldGroup = ""
@@ -989,7 +1011,8 @@ def run():
             checkResolver()
             checkJsunpack()
             checkPortalPy()
-            #reloadDefault()
+            clearKod()
+            reloadDefault()
             if (checkMsgOnLog()):
                 checkDns()
                 checkMandraScript()
