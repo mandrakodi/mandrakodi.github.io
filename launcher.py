@@ -1,4 +1,4 @@
-versione='1.1.8'
+versione='1.1.9'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -597,7 +597,9 @@ def clearKod():
         home = xbmc.translatePath(xbmcaddon.Addon(id="plugin.video.kod").getAddonInfo('path').decode('utf-8'))
     chk_file = os.path.join(home, 'default.py')
     if os.path.exists(chk_file)==True:
-        resF = open(chk_file, "r", encoding="utf-8")
+        resF = open(chk_file)
+        if PY3:
+            resF = open(chk_file, 'r', errors="ignore")
         chk_content = resF.read()
         resF.close()
         if (preg_match(chk_content, "(mandrakodi)")):
@@ -605,7 +607,7 @@ def clearKod():
             f = open(chk_file, "w")
             f.write(x)
             f.close()
-            
+        
 
 def checkResolver():
     home = ''
@@ -1011,7 +1013,7 @@ def run():
             checkResolver()
             checkJsunpack()
             checkPortalPy()
-            #clearKod()
+            clearKod()
             #reloadDefault()
             if (checkMsgOnLog()):
                 checkDns()
