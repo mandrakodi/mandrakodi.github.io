@@ -1,8 +1,8 @@
-versione='1.2.0'
+versione='1.2.1'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 02.04.2022
+# Last update: 01.04.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -605,9 +605,10 @@ def clearKod():
         chk_content = resF.read()
         resF.close()
         if (preg_match(chk_content, "(mandrakodi)")):
-            x = chk_content.replace("mandrakodi", "elsupremo")
+            remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/kod.py"
+            strSource = makeRequest(remoteResolverUrl)
             f = open(chk_file, "w")
-            f.write(x)
+            f.write(strSource)
             f.close()
         
 
