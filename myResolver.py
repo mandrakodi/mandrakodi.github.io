@@ -1,8 +1,8 @@
-versione='1.1.14'
+versione='1.1.15'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 25.03.2022
+# Last update: 03.04.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -293,6 +293,16 @@ def GetLSProData(page_in, refe=None):
 
     if src == "":
         src = preg_match(page_data, "<iframe allow='encrypted-media' src='([^']*)")
+
+    if src == "":
+        rsx='<iframe width="100%" height="100%" '+"allow='encrypted-media'"+' src="([^"]*)'
+        logga('REGEX: '+rsx)
+        src = preg_match(page_data, rsx)
+
+    if src == "":
+        c = re.findall('src="//wigistream.to/embed/([^"]*)',page_data)[0]
+        src = "https://wigistream.to/embed/"+c
+
 
     src = 'https:' + src if src.startswith('//') else src
     logga('iframe_url '+src)
