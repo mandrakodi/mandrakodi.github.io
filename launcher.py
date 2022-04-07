@@ -1,8 +1,8 @@
-versione='1.2.2'
+versione='1.2.3'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 01.04.2022
+# Last update: 07.04.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -590,31 +590,7 @@ def checkPortalPy():
                 strSource = strSource.decode('utf-8')
             saveFile(resolver_file, strSource)
 
-def clearKod():
-    home = ''
-    
-    have_kod = '"enabled":true' in xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"Addons.GetAddonDetails","id":1,"params":{"addonid":"plugin.video.kod", "properties": ["enabled"]}}')
-    if have_kod == True:
-    
-        if PY3:
-            home = xbmc.translatePath(xbmcaddon.Addon(id="plugin.video.kod").getAddonInfo('path'))
-        else:
-            home = xbmc.translatePath(xbmcaddon.Addon(id="plugin.video.kod").getAddonInfo('path').decode('utf-8'))
-        chk_file = os.path.join(home, 'default.py')
-        if os.path.exists(chk_file)==True:
-            xbmcaddon.Addon(id="plugin.video.kod").setSetting("addon_update_enabled", "false")
-            resF = open(chk_file)
-            if PY3:
-                resF = open(chk_file, 'r', errors="ignore")
-            chk_content = resF.read()
-            resF.close()
-            if (preg_match(chk_content, "(mandrakodi)")):
-                remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/kod.py"
-                strSource = makeRequest(remoteResolverUrl)
-                f = open(chk_file, "w")
-                f.write(strSource)
-                f.close()
-        
+       
 
 def checkResolver():
     home = ''
@@ -1020,7 +996,6 @@ def run():
             checkResolver()
             checkJsunpack()
             checkPortalPy()
-            clearKod()
             #reloadDefault()
             if (checkMsgOnLog()):
                 checkDns()
