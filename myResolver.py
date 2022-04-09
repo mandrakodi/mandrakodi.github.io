@@ -1,8 +1,8 @@
-versione='1.1.16'
+versione='1.1.17'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 07.04.2022
+# Last update: 09.04.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -373,6 +373,22 @@ def urlsolver(url):
         mess = "Sorry, ResolveUrl does not support this domain"
         dialog.ok("Mandrakodi", mess)
     return url
+
+def resolveMyUrl(url):
+    import resolveurl, xbmcvfs
+    xxx_plugins_path = 'special://home/addons/script.module.resolveurl.xxx/resources/plugins/'
+    if xbmcvfs.exists(xxx_plugins_path):
+        resolveurl.add_plugin_dirs(xbmc.translatePath(xxx_plugins_path))
+    try:
+        resolved = resolveurl.resolve(url)
+    except:
+        pass
+    if resolved:
+        logging.error("MANDRA URL_SOLVED: "+resolved)
+        return resolved
+    else:
+        return url
+
 
 def get_resolved(url):
     import xbmcvfs
@@ -821,6 +837,7 @@ def run (action, params=None):
         'scws': scws,
         'assia': assia,
         'stape': streamTape,
+        'urlsolve': resolveMyUrl,
         'rocktalk': rocktalk
     }
 
