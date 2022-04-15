@@ -1,8 +1,8 @@
-versione='1.1.17'
+versione='1.1.18'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 09.04.2022
+# Last update: 15.04.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging
@@ -218,7 +218,7 @@ def assia(parIn=None):
 
 def daddyFind(parIn):
     video_url = ""
-    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.click/'}).content
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.eu/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
@@ -693,7 +693,7 @@ def streamTape(parIn):
     video_urls = []
     ppIn = myParse.unquote(parIn)
     logga('PAR_STAPE: '+ppIn)
-    page_data = requests.get(ppIn, headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.me/'}).content
+    page_data = requests.get(ppIn, headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.eu/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     htmlCodice = preg_match(page_data, r'<\/video><script>(.*?)<\/body>')
