@@ -1,8 +1,8 @@
-versione='1.2.3'
+versione='1.2.4'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 07.04.2022
+# Last update: 24.04.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -1082,11 +1082,16 @@ def run():
             elif action == 'play':
                 if url.startswith("acestream"):
                     dialog = xbmcgui.Dialog()
-                    mess="Vuoi usare l'engine per il link ace?"
-                    resp= dialog.yesno("MandraKodi", mess)
-                    if (resp):
+                    options = ["ENGINE", "DIRETTO", "HORUS"]
+                    resp = dialog.select("Seleziona meodo di riproduzione", options)
+                    #mess="Vuoi usare l'engine per il link ace?"
+                    #resp= dialog.yesno("MandraKodi", mess)
+                    if (resp==0):
                         uArr = url.split("/")
                         url="http://127.0.0.1:6878/ace/manifest.m3u8?id="+uArr[-1]
+                    elif (resp==2):
+                        uArr = url.split("/")
+                        url="plugin://script.module.horus?action=play&title=by%20MandraKodi&id="+uArr[-1]
                 play_video(url)
             elif action == 'm3u':
                 m3u2json(url)
