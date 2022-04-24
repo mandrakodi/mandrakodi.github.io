@@ -1092,6 +1092,8 @@ def run():
                     elif (resp==2):
                         uArr = url.split("/")
                         url="plugin://script.module.horus?action=play&title=by%20MandraKodi&id="+uArr[-1]
+                    elif (resp==-1):
+                        url=""
                 play_video(url)
             elif action == 'm3u':
                 m3u2json(url)
