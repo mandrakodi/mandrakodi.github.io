@@ -1,11 +1,11 @@
-versione='1.1.18'
+versione='1.1.19'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 15.04.2022
+# Last update: 27.05.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
-import re, requests, sys, logging
+import re, requests, sys, logging, uuid
 import xbmcgui
 import xbmc
 import xbmcaddon
@@ -379,6 +379,7 @@ def resolveMyUrl(url):
     xxx_plugins_path = 'special://home/addons/script.module.resolveurl.xxx/resources/plugins/'
     if xbmcvfs.exists(xxx_plugins_path):
         resolveurl.add_plugin_dirs(xbmc.translatePath(xxx_plugins_path))
+    resolved = ""
     try:
         resolved = resolveurl.resolve(url)
     except:
@@ -448,7 +449,7 @@ def get_resolved(url):
 def streamingcommunity(parIn=None):
     import json
     video_urls = []
-    url_sito = "https://streamingcommunity.icu/"
+    url_sito = "https://streamingcommunity.cc/"
     page_video = url_sito + "watch/" + parIn
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
@@ -520,7 +521,7 @@ def streamingcommunity(parIn=None):
 def scws(parIn=None):
     import json
     video_urls = []
-    base="https://streamingcommunity.icu/"
+    base="https://streamingcommunity.monster/"
 
     headSCt={'user-agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14'}
     pageT = requests.get(base,headers=headSCt).content
@@ -535,7 +536,7 @@ def scws(parIn=None):
     if "___" in parIn:
         arrPar=parIn.split("___")
         parIn=arrPar[0]
-        refe="https://streamingcommunity.icu/watch/"+arrPar[1]
+        refe=base+"watch/"+arrPar[1]
     try:
         titFilm=arrPar[2]
     except:
@@ -546,7 +547,7 @@ def scws(parIn=None):
         'content-type': 'application/json;charset=UTF-8',
         'Referer':refe,
         'x-csrf-token': csrf_token,
-        'Origin':'https://streamingcommunity.icu/'}
+        'Origin':base}
     
     url = "https://scws.xyz/master/" + str(parIn)
 
@@ -607,7 +608,7 @@ def scws(parIn=None):
                 video_urls.append((url3, "[COLOR gold]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR] [COLOR blue]("+res+"p)[/COLOR]", "by @mandrakodi"))
             ind += 1
     else:
-        video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer=https://streamingcommunity.icu"
+        video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer="+base
         logga('video_community '+video_url)
         video_urls.append((video_url, "[COLOR lime]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR]", "by @mandrakodi"))
     
@@ -719,14 +720,33 @@ def streamTape(parIn):
     return video_urls
 
 def dplay(parIn):
-    import json
+    import json, functools
+
     video_urls = []
-    token = requests.get('https://disco-api.discoveryplus.it/token?realm=dplayit').json()['data']['attributes']['token']
+    session = requests.Session()
+    session.request = functools.partial(session.request, timeout=30)
+    deviceId = uuid.uuid4().hex
+    domain = 'https://' + requests.get("https://prod-realmservice.mercury.dnitv.com/realm-config/www.discoveryplus.com%2Fit%2Fepg").json()["domain"]
+    apiUrl = domain + "/token?deviceId="+deviceId+"&realm=dplay&shortlived=true"
+    logga('APIURL_DPLAY: '+apiUrl)
+    token = session.get(apiUrl).json()['data']['attributes']['token']
     logga('TOKEN_DPLAY: '+token)
-    headers = {'User-Agent': 'Mozilla/50.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
-           'Referer': 'https://discoveryplus.it',
-           'Cookie' : 'st=' + token}
-    data = requests.get('https://disco-api.discoveryplus.it/playback/videoPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers=headers).content
+    myHeaders = {'User-Agent': 'Mozilla/50.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
+            'Referer': 'https://discoveryplus.it',
+            'Origin': 'https://discoveryplus.it',
+            'Cookie' : 'st=' + token,
+            'content-type': 'application/json',
+            'x-disco-params': 'realm=dplay,siteLookupKey=dplus_it'}
+    session.headers = myHeaders
+
+    apiUrl2 = domain + "/playback/v3/videoPlaybackInfo/"
+    post = {'videoId': parIn, 'deviceInfo': {'adBlocker': False,'drmSupported': True}}
+    data2 = session.post(apiUrl2, json=post).content
+    data3 = json.loads(data2)
+    logga('POST_DPLAY: '+str(data2))
+
+    data = requests.get('https://eu1-prod-direct.discoveryplus.com/playback/videoPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers=myHeaders).content
+    logga('RESP_DPLAY: '+str(data))
     dataJ = json.loads(data)
     dataErr = "[COLOR lime]PLAY VIDEO[/COLOR]"
     try:
@@ -810,8 +830,6 @@ def remoteLog(msgToLog):
         import urllib.parse as myParse
     else:
         import urllib as myParse
-    
-    baseScript = makeRequest("https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/enterScrip.txt")
     
     baseLog = "http://bkp34344.herokuapp.com/filter.php?numTest=JOB998"
     urlLog = baseLog + "&msgLog=" + myParse.quote(msgToLog)
