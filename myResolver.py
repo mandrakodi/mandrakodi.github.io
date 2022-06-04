@@ -1,8 +1,8 @@
-versione='1.1.19'
+versione='1.1.20'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 27.05.2022
+# Last update: 04.06.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -441,8 +441,12 @@ def get_resolved(url):
         if resolved:
             logga("OK RESOLVER: "+resolved)
             return resolved
-    except Exception as e:
-        logga("NO RESOLVER")		
+    except Exception as err:
+        import traceback
+        
+        errMsg="ERROR_RESOLVER: {0}".format(err)
+        logga(errMsg)
+        traceback.print_exc()
 
     return url
 
