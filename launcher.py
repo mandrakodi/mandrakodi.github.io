@@ -1,8 +1,8 @@
-versione='1.2.6'
+versione='1.2.7'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 06.06.2022
+# Last update: 05.06.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -111,12 +111,9 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 def play_video(path):
-    try:
-        urlClean=path.replace(" ", "%20")
-        play_item = xbmcgui.ListItem(path=urlClean)
-        xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
-    except Exception:
-        msgBox("Spiacenti, il canale non può essere riprodotto.")
+    urlClean=path.replace(" ", "%20")
+    play_item = xbmcgui.ListItem(path=urlClean)
+    xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
 
 def getTxtMessage(vName):
     home = ''
@@ -356,7 +353,7 @@ def jsonToItems(strJson):
         import traceback
         msgBox("Errore nella lettura del json")
         remoteLog("NO_JSON_READ@@"+strLog)
-        writeFileLog("NO_JSON_READ\n"+strLog+"\n"+strJson, "w+")
+        writeFileLog("NO_JSON_READ\n"+strLog, "w+")
         traceback.print_exc()
         #logging.warning(strJson)
 
@@ -756,11 +753,6 @@ def preg_match(data, patron, index=0):
     except:
         return ""
 
-def m3u2json_new(src):
-    newSrc="http://bkp34344.herokuapp.com/filter.php?numTest=JOB777&url="+src
-    m3uSource = makeRequest(newSrc)
-    jsonToItems(m3uSource)
-
 def m3u2json(src):
     import re
     m3uSource = makeRequest(src)
@@ -801,19 +793,15 @@ def m3u2json(src):
             group = preg_match(infos, regex3)
             if (group == ""):
                 group = "VARIOUS"
-            else:
-                okGroup=True
-            
             try:
                 row = group+"@@"+title+"@@"+link+"@@"+img
+                okGroup=True
             except:
                 row = group.encode('utf-8', 'ignore').decode('utf-8')+"@@"+title+"@@"+link+"@@"+img
                 writeFileLog("\n"+row, "a+")
             #logging.warning(row)
             arrTmp.append(row)
             numIt += 1
-            if numIt>3000:
-                break
     except:
         import traceback
         msgBox("Errore nella lettura del file m3u")
@@ -898,8 +886,10 @@ def personalList(listtType=''):
     if baseScript is None or baseScript == "":
         logga('We failed to get source from serverSource')
     else:
+        #if PY3:
+            #baseScript = baseScript.decode('utf-8')
         logga('OK get source from serverSource')
-    baseScript = baseScript.replace("\r\n", "").replace("\n", "").replace("\r", "")
+    baseScript = baseScript.replace("\r\n", "").replace("\n", "").replace("\r", "")          
     urlToCall=""
     fileName=""
     if 	(listtType=="MAC"):
@@ -960,7 +950,7 @@ def remoteLog(msgToLog):
         import urllib as myParse
     
     baseScript = makeRequest("https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/enterScrip.txt")
-    baseScript = baseScript.replace("\r\n", "").replace("\n", "").replace("\r", "")
+    
     baseLog = baseScript+"JOB999"
     urlLog = baseLog + "&msgLog=" + myParse.quote(ua+"@@"+msgToLog)
     strSource = makeRequest(urlLog)
@@ -1098,8 +1088,7 @@ def run():
                     #resp= dialog.yesno("MandraKodi", mess)
                     if (resp==0):
                         uArr = url.split("/")
-                        #url="http://127.0.0.1:6878/ace/manifest.m3u8?id="+uArr[-1]
-                        url="http://127.0.0.1:6878/ace/getstream?id="+uArr[-1]
+                        url="http://127.0.0.1:6878/ace/manifest.m3u8?id="+uArr[-1]
                     elif (resp==2):
                         uArr = url.split("/")
                         url="plugin://script.module.horus?action=play&title=by%20MandraKodi&id="+uArr[-1]
@@ -1135,6 +1124,7 @@ def run():
         kodiSkin=xbmc.getSkinDir()
         kodiView=decodeSkinViewMode(kodiSkin, viewmode)
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
+        logga("setting view mode again to "+kodiView)
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
         xbmcaddon.Addon(id=addon_id).setSetting("urlAppo1", kodiView)
         logga("Last ViewMode Saved: "+kodiView)
