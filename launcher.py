@@ -1,4 +1,4 @@
-versione='1.2.7'
+versione='1.2.8'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -1088,7 +1088,7 @@ def run():
                     #resp= dialog.yesno("MandraKodi", mess)
                     if (resp==0):
                         uArr = url.split("/")
-                        url="http://127.0.0.1:6878/ace/manifest.m3u8?id="+uArr[-1]
+                        url="http://127.0.0.1:6878/ace/getstream?id="+uArr[-1]
                     elif (resp==2):
                         uArr = url.split("/")
                         url="plugin://script.module.horus?action=play&title=by%20MandraKodi&id="+uArr[-1]
