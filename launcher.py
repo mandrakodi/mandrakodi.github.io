@@ -1135,7 +1135,6 @@ def run():
         kodiSkin=xbmc.getSkinDir()
         kodiView=decodeSkinViewMode(kodiSkin, viewmode)
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
-        logga("setting view mode again to "+kodiView)
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
         xbmcaddon.Addon(id=addon_id).setSetting("urlAppo1", kodiView)
         logga("Last ViewMode Saved: "+kodiView)
