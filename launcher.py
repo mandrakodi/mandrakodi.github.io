@@ -1,8 +1,8 @@
-versione='1.2.8'
+versione='1.2.9'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 05.06.2022
+# Last update: 08.06.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -774,6 +774,8 @@ def m3u2json(src):
     try:
         okGroup=False
         for match in matches:
+            if numIt>2999:
+                break
             strLog=json.dumps(match)
             tt = match[1]
             title = tt.encode('utf-8', 'ignore').decode('utf-8').replace("'", " ").replace("\r", "").replace("\n", "")
