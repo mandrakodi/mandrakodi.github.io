@@ -32,13 +32,17 @@
 			<filename>co.wuffy.player</filename>
 			<hidexbmc>false</hidexbmc>
 		</player>
-		<player name="SopCast" type="ExternalPlayer" audio="false" video="true">
-			<filename>com.devaward.soptohttp</filename>
+		<player name="Downloader" type="ExternalPlayer" audio="false" video="true">
+			<filename>downloader.vitmate.downloaderapp</filename>
 			<hidexbmc>false</hidexbmc>
 		</player>
 		<player name="WebVideoCaster" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.instantbits.cast.webvideo</filename>
 			<hidexbmc>false</hidexbmc>
+		</player>
+		<player name="FFMPEG" type="ExternalPlayer" audio="false" video="true">
+			<filename>com.silentlexx.ffmpeggui</filename>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="Chrome" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.android.chrome</filename>
