@@ -1,8 +1,8 @@
-versione='1.1.21'
+versione='1.1.22'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 04.06.2022
+# Last update: 28.07.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -248,6 +248,9 @@ def daddy(parIn=None):
     logga('URL DADDY: '+video_url)
     arrTmp = parIn.split("stream-")
     arrTmp2 = arrTmp[1].split(".")
+    vId = arrTmp2[0]
+    if video_url == "":
+        video_url = "https://srv.vhls.ru.com/cdn/premium"+vId+"/tracks-v1a1/mono.m3u8"
     final_url = video_url+"|Referer=https://widevine.licenses4.me/"
     final_url2 = video_url+"|Referer=https://widevine.licenses4.me/ Origin=https://widevine.licenses4.me/"
 
