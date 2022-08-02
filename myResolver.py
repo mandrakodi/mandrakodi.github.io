@@ -1,8 +1,8 @@
-versione='1.1.22'
+versione='1.1.23'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 28.07.2022
+# Last update: 02.08.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -351,7 +351,11 @@ def wigi(parIn=None):
     logga('PAR: '+parIn)
     video_url = GetLSProData(wigiUrl)
     logga('video_url '+video_url)
-    video_urls.append((video_url, ""))
+    msg = ""
+    if video_url = "":
+        video_url = parIn
+        msg = "NO LINK FOUND"
+    video_urls.append((video_url, msg))
     if "|" in video_url:
         arrV = video_url.split("|")
         video_urls.append((arrV[0], ""))		
