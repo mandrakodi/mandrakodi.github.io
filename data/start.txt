@@ -3,7 +3,7 @@
    "items":[
       {
          "title":"[COLOR deepskyblue][B]ELSUPREMO SAYS...[/B][/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB949",
+         "externallink":"http://bkp34344.herokuapp.com/filter.php?numTest=JOB949",
          "thumbnail":"https://www.dropbox.com/s/q34810lzta6tz46/avatar.png?dl=1",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Message from ElSupremo",
@@ -11,7 +11,7 @@
       },
       {
          "title":"[COLOR lime]SPORT[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB100",
+         "externallink":"http://bkp34344.herokuapp.com/filter.php?numTest=JOB100",
          "thumbnail":"https://www.dropbox.com/s/jq9sep5v6ld56l4/sport.jpg?dl=1",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Sport",
@@ -19,7 +19,7 @@
       },
       {
          "title":"[COLOR lime]LIVE[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB200",
+         "externallink":"http://bkp34344.herokuapp.com/filter.php?numTest=JOB200",
          "thumbnail":"https://www.dropbox.com/s/v0x17dv1cgcyuhh/tv.jpg?dl=1",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Live TV",
@@ -27,7 +27,7 @@
       },
       {
          "title":"[COLOR lime]ON DEMAND[\/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB300",
+         "externallink":"http://bkp34344.herokuapp.com/filter.php?numTest=JOB300",
          "thumbnail":"https://www.dropbox.com/s/12cl7r8zlj3mtcj/ondemand.jpg?dl=1",
          "fanart":"https:\/\/www.stadiotardini.it\/wp-content\/uploads\/2016\/12\/mandrakata.jpg",
          "enabled":1,
@@ -35,7 +35,7 @@
       },
       {
          "title":"[COLOR lime]RADIO[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB400",
+         "externallink":"http://bkp34344.herokuapp.com/filter.php?numTest=JOB400",
          "thumbnail":"https://www.dropbox.com/s/gxpfyfkt9wq998b/radio.jpg?dl=1",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
@@ -43,7 +43,7 @@
       },
       {
          "title":"[COLOR gold]VIP AREA[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB500",
+         "externallink":"http://bkp34344.herokuapp.com/filter.php?numTest=JOB500",
          "thumbnail":"https://www.dropbox.com/s/07shum6ob1n8cdy/vip.jpg?dl=1",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "enabled":1,
@@ -51,14 +51,14 @@
       },
       {
          "title":"[COLOR lime]HELP ME![/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB700",
+         "externallink":"http://bkp34344.herokuapp.com/filter.php?numTest=JOB700",
          "thumbnail":"https://www.dropbox.com/s/j5dqf52zevfz4h4/help.jpg?dl=1",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Help & Tools"
       },
       {
          "title":"[COLOR lime]POWER UP[/COLOR]",
-         "externallink":"http://test34344.herokuapp.com/filter.php?numTest=JOB800",
+         "externallink":"http://bkp34344.herokuapp.com/filter.php?numTest=JOB800",
          "thumbnail":"https://www.dropbox.com/s/db8rbb7b6xcy88f/power.png?dl=1",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Help & Tools"
