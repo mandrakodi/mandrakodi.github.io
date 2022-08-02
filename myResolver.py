@@ -1,4 +1,4 @@
-versione='1.1.23'
+versione='1.1.24'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -352,13 +352,13 @@ def wigi(parIn=None):
     video_url = GetLSProData(wigiUrl)
     logga('video_url '+video_url)
     msg = ""
-    if video_url = "":
+    if video_url == '':
         video_url = parIn
         msg = "NO LINK FOUND"
     video_urls.append((video_url, msg))
     if "|" in video_url:
         arrV = video_url.split("|")
-        video_urls.append((arrV[0], ""))		
+        video_urls.append((arrV[0], "LINK NO PAR"))		
     return video_urls
 
 def urlsolver(url):
