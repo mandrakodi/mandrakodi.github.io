@@ -1,0 +1,40 @@
+{
+	"SetViewMode":"51",
+	"items":[
+      {
+         "title":"[COLOR blue]= = = = [/COLOR][COLOR yellow]MandraKodi Addon (vers. numVersLive)[/COLOR][COLOR blue] = = = =[/COLOR]",
+         "link":"ignoreme",
+         "thumbnail":"https://icon-library.com/images/disclaimer-icon/disclaimer-icon-5.jpg",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Disclaimer"
+      },
+      {
+         "title":"[COLOR lime]Nelle impostazioni risulta ancora la [B]password[/B] di default (livePwd).[/COLOR]",
+         "delSet":"ignoreme",
+         "thumbnail":"https://icon-library.com/images/disclaimer-icon/disclaimer-icon-5.jpg",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Disclaimer"
+      },
+      {
+         "title":"[COLOR lime]Ritorna sul [B]Bot Telegram[/B] e visualizza l'elenco dei pulsanti.[/COLOR]",
+         "link":"ignoreme",
+         "thumbnail":"https://icon-library.com/images/disclaimer-icon/disclaimer-icon-5.jpg",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Disclaimer"
+      },
+      {
+         "title":"[COLOR lime]Usa il pulsante per avere la tua [B]password[/B].[/COLOR]",
+         "link":"ignoreme",
+         "thumbnail":"https://icon-library.com/images/disclaimer-icon/disclaimer-icon-5.jpg",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Disclaimer"
+      },
+      {
+         "title":"[COLOR lime]Una volta ottenuta, chiudi l'addon e inseriscila nelle [B]impostazioni[/B][/COLOR]",
+         "link":"ignoreme",
+         "thumbnail":"https://icon-library.com/images/disclaimer-icon/disclaimer-icon-5.jpg",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Disclaimer"
+      }
+   ]
+}
