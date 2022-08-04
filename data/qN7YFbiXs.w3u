@@ -1,0 +1,15 @@
+{
+"name": "ElSupremo-Sport",
+"author": "Last Update: Every 8 Hours",
+"image": "https://i.postimg.cc/CM7p0MJG/index.jpg",
+"info": "Eventi Sportivi by ElSupremo",
+"url": "https://w3ubin.com/qN7YFbiXs.w3u",
+"groups": [
+{
+"name": "WISE SPORT",
+"image": "https://i.imgur.com/YAaMwxN.png",
+"url": "http://bkp34344.herokuapp.com/testWise.php",
+"userAgent":"ElSupremoWise"
+}
+]
+}
