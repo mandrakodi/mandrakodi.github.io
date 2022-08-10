@@ -1,8 +1,8 @@
-versione='1.1.24'
+versione='1.1.25'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 02.08.2022
+# Last update: 10.08.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -251,13 +251,13 @@ def daddy(parIn=None):
     vId = arrTmp2[0]
     if video_url == "":
         video_url = "https://srv.vhls.ru.com/cdn/premium"+vId+"/tracks-v1a1/mono.m3u8"
-    final_url = video_url+"|Referer=https://widevine.licenses4.me/"
-    final_url2 = video_url+"|Referer=https://widevine.licenses4.me/ Origin=https://widevine.licenses4.me/"
+    final_url = video_url+"|Referer=https://widevine.licenses4.me/&User-Agent=Mozilla%2F5.0+%28Linux%3B+Android+6.0%3B+Nexus+5+Build%2FMRA58N%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F104.0.0.0+Mobile+Safari%2F537.36"
+    final_url2 = "https://best2.globalweb.ru.com/cdn/premium"+vId+"/mono.m3u8|Referer=https://widevine.licenses4.me/&User-Agent=Mozilla%2F5.0+%28Linux%3B+Android+6.0%3B+Nexus+5+Build%2FMRA58N%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F104.0.0.0+Mobile+Safari%2F537.36"
 
     
 
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+arrTmp2[0]+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
-    #video_urls.append((final_url2, "[COLOR yellow]PLAY STREAM "+arrTmp2[0]+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
+    video_urls.append((final_url2, "[COLOR yellow]PLAY STREAM "+arrTmp2[0]+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
     """
     if "|" in video_url:
         arrV = video_url.split("|")
