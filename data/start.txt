@@ -7,7 +7,7 @@
          "thumbnail":"https://www.dropbox.com/s/q34810lzta6tz46/avatar.png?dl=1",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Message from ElSupremo",
-         "enabled":0
+         "enabled":1
       },
       {
          "title":"[COLOR lime]SPORT[/COLOR]",
