@@ -1,4 +1,4 @@
-versione='1.2.11'
+versione='1.2.12'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -493,7 +493,7 @@ def callReolver(metodo, parametro):
         url = get_url(action='play', url=retVal)
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     
-    if metodo != "mac":
+    if metodo != "mac" and metodo != "scws":
         newTit="[COLOR gold]OPEN WEB LINK (WISE)[/COLOR]"
         list_item = xbmcgui.ListItem(label=newTit)
         list_item.setInfo('video', {'title': newTit,'genre': 'generic','mediatype': 'movie','credits': 'ElSupremo'})
@@ -505,7 +505,7 @@ def callReolver(metodo, parametro):
         else:
             newUrl2 += "?extPL=wise"
         url = get_url(action='play', url=newUrl2)
-    xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
 
     xbmcplugin.endOfDirectory(_handle)
 
