@@ -1,8 +1,8 @@
-versione='1.2.10'
+versione='1.2.11'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 04.09.2022
+# Last update: 05.09.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -456,7 +456,7 @@ def callReolver(metodo, parametro):
     fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
     if isinstance(retVal, list):
         numLink=1
-        
+        oldLink="";
         for linkTmp in retVal:
             newList=list(linkTmp)
             newLink=newList[0]
@@ -479,8 +479,10 @@ def callReolver(metodo, parametro):
             list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
             list_item.setProperty('IsPlayable', 'true')
             url = get_url(action='play', url=newLink)
-            xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
-            numLink += 1
+            if oldLink!=newLink:
+                oldLink=newLink
+                xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+                numLink += 1
     else:
         logga("StreamUrl ==> " + retVal)
         newTit="[COLOR lime]PLAY LINK ("+retVal[0:4]+")[/COLOR]"
@@ -491,17 +493,18 @@ def callReolver(metodo, parametro):
         url = get_url(action='play', url=retVal)
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     
-    newTit="[COLOR gold]OPEN WEB LINK (WISE)[/COLOR]"
-    list_item = xbmcgui.ListItem(label=newTit)
-    list_item.setInfo('video', {'title': newTit,'genre': 'generic','mediatype': 'movie','credits': 'ElSupremo'})
-    list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
-    list_item.setProperty('IsPlayable', 'true')
-    newUrl2=parametro
-    if "?" in parametro:
-        newUrl2 += "&extPL=wise"
-    else:
-        newUrl2 += "?extPL=wise"
-    url = get_url(action='play', url=newUrl2)
+    if metodo != "mac":
+        newTit="[COLOR gold]OPEN WEB LINK (WISE)[/COLOR]"
+        list_item = xbmcgui.ListItem(label=newTit)
+        list_item.setInfo('video', {'title': newTit,'genre': 'generic','mediatype': 'movie','credits': 'ElSupremo'})
+        list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
+        list_item.setProperty('IsPlayable', 'true')
+        newUrl2=parametro
+        if "?" in parametro:
+            newUrl2 += "&extPL=wise"
+        else:
+            newUrl2 += "?extPL=wise"
+        url = get_url(action='play', url=newUrl2)
     xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
 
     xbmcplugin.endOfDirectory(_handle)
