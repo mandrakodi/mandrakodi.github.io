@@ -1,8 +1,8 @@
-versione='1.2.4'
+versione='1.2.12'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 24.04.2022
+# Last update: 05.09.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -456,7 +456,7 @@ def callReolver(metodo, parametro):
     fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
     if isinstance(retVal, list):
         numLink=1
-        
+        oldLink="";
         for linkTmp in retVal:
             newList=list(linkTmp)
             newLink=newList[0]
@@ -479,8 +479,10 @@ def callReolver(metodo, parametro):
             list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
             list_item.setProperty('IsPlayable', 'true')
             url = get_url(action='play', url=newLink)
-            xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
-            numLink += 1
+            if oldLink!=newLink:
+                oldLink=newLink
+                xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+                numLink += 1
     else:
         logga("StreamUrl ==> " + retVal)
         newTit="[COLOR lime]PLAY LINK ("+retVal[0:4]+")[/COLOR]"
@@ -490,6 +492,21 @@ def callReolver(metodo, parametro):
         list_item.setProperty('IsPlayable', 'true')
         url = get_url(action='play', url=retVal)
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+    
+    if metodo != "mac" and metodo != "scws":
+        newTit="[COLOR gold]OPEN WEB LINK (WISE)[/COLOR]"
+        list_item = xbmcgui.ListItem(label=newTit)
+        list_item.setInfo('video', {'title': newTit,'genre': 'generic','mediatype': 'movie','credits': 'ElSupremo'})
+        list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
+        list_item.setProperty('IsPlayable', 'true')
+        newUrl2=parametro
+        if "?" in parametro:
+            newUrl2 += "&extPL=wise"
+        else:
+            newUrl2 += "?extPL=wise"
+        url = get_url(action='play', url=newUrl2)
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+
     xbmcplugin.endOfDirectory(_handle)
 
 def runApk(apkName, apkPar):
@@ -774,6 +791,8 @@ def m3u2json(src):
     try:
         okGroup=False
         for match in matches:
+            if numIt>2999:
+                break
             strLog=json.dumps(match)
             tt = match[1]
             title = tt.encode('utf-8', 'ignore').decode('utf-8').replace("'", " ").replace("\r", "").replace("\n", "")
@@ -1088,7 +1107,7 @@ def run():
                     #resp= dialog.yesno("MandraKodi", mess)
                     if (resp==0):
                         uArr = url.split("/")
-                        url="http://127.0.0.1:6878/ace/manifest.m3u8?id="+uArr[-1]
+                        url="http://127.0.0.1:6878/ace/getstream?id="+uArr[-1]
                     elif (resp==2):
                         uArr = url.split("/")
                         url="plugin://script.module.horus?action=play&title=by%20MandraKodi&id="+uArr[-1]
