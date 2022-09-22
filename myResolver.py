@@ -1,8 +1,8 @@
-versione='1.1.25'
+versione='1.1.26'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 10.08.2022
+# Last update: 22.09.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -159,7 +159,7 @@ def wizhdFind(parIn):
         page_data = page_data.decode('utf-8')
 
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
-    logga('IFRAME: '+iframe_url)
+    logga('IFRAME WIZ: '+iframe_url)
 
     vUrl = findM3u8(iframe_url, parIn)
     return vUrl
@@ -193,7 +193,7 @@ def findM3u8(linkIframe, refPage):
         if video_url == "":
             video_url = preg_match(page_data2, r"source:\s*'([^']+)")
         if video_url != "":
-            vUrl = video_url + '|User-Agent=Mozilla/5.0&Referer='+linkIframe
+            vUrl = video_url + '|User-Agent=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F74.0.3729.169+Safari%2F537.36&Referer='+linkIframe
         logga('video_url '+vUrl)
 
     except:
@@ -250,9 +250,10 @@ def daddy(parIn=None):
     arrTmp2 = arrTmp[1].split(".")
     vId = arrTmp2[0]
     if video_url == "":
-        video_url = "https://srv.vhls.ru.com/cdn/premium"+vId+"/tracks-v1a1/mono.m3u8"
+        video_url = "https://zcri.vhls.ru.com/lb/premium"+vId+"/tracks-v1a1/mono.m3u8"
     final_url = video_url+"|Referer=https://widevine.licenses4.me/&User-Agent=Mozilla%2F5.0+%28Linux%3B+Android+6.0%3B+Nexus+5+Build%2FMRA58N%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F104.0.0.0+Mobile+Safari%2F537.36"
-    final_url2 = "https://best2.globalweb.ru.com/cdn/premium"+vId+"/mono.m3u8|Referer=https://widevine.licenses4.me/&User-Agent=Mozilla%2F5.0+%28Linux%3B+Android+6.0%3B+Nexus+5+Build%2FMRA58N%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F104.0.0.0+Mobile+Safari%2F537.36"
+    final_url2 = video_url+"|Referer="+parIn
+    final_url3 = "https://best2.globalweb.ru.com/cdn/premium"+vId+"/mono.m3u8|Referer=https://widevine.licenses4.me/&User-Agent=Mozilla%2F5.0+%28Linux%3B+Android+6.0%3B+Nexus+5+Build%2FMRA58N%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F104.0.0.0+Mobile+Safari%2F537.36"
 
     
 
@@ -320,6 +321,9 @@ def GetLSProData(page_in, refe=None):
     elif "buzztv" in src:
         logga('BUZZTV ')
         return GetLSProData(src)
+    elif "starlive.stream" in src:
+        logga('starlive.stream ')
+        return GetLSProData(src, page_in)
     elif "cloudstream" in src:
         logga('CLOUDSTREAM')
         return GetLSProData(src)
@@ -460,7 +464,7 @@ def get_resolved(url):
 def streamingcommunity(parIn=None):
     import json
     video_urls = []
-    url_sito = "https://streamingcommunity.cc/"
+    url_sito = "https://streamingcommunity.tech/"
     page_video = url_sito + "watch/" + parIn
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
@@ -532,7 +536,7 @@ def streamingcommunity(parIn=None):
 def scws(parIn=None):
     import json
     video_urls = []
-    base="https://streamingcommunity.press/"
+    base="https://streamingcommunity.tech/"
 
     headSCt={'user-agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14'}
     pageT = requests.get(base,headers=headSCt).content
@@ -658,7 +662,7 @@ def macLink(parIn=None):
     cmdCh="ffmpeg http://localhost/ch/"+idCh+"_"
     logga("PORTAL CMD: "+cmdCh)
     link = portal.get_link(cmdCh)
-    logga(link)
+    logga("PORTAL LINK: "+link)
 
     try:
         link = link.split(" ")[1]
@@ -666,7 +670,7 @@ def macLink(parIn=None):
         pass
 
     video_urls = []
-    video_urls.append((link, ""))
+    video_urls.append((link, "[COLOR gold]PLAY CH "+idCh+"[/COLOR]"))
     return video_urls
 
 
