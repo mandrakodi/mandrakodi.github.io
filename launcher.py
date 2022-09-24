@@ -1,8 +1,8 @@
-versione='1.2.12'
+versione='1.2.13'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 05.09.2022
+# Last update: 24.09.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -968,9 +968,8 @@ def remoteLog(msgToLog):
     else:
         import urllib as myParse
     
-    baseScript = makeRequest("https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/enterScrip.txt")
     
-    baseLog = baseScript+"JOB999"
+    baseLog = "http://bkp34344.herokuapp.com/filter.php?numTest=JOB999"
     urlLog = baseLog + "&msgLog=" + myParse.quote(ua+"@@"+msgToLog)
     strSource = makeRequest(urlLog)
     if strSource is None or strSource == "":
