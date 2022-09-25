@@ -1,8 +1,8 @@
-versione='1.2.13'
+versione='1.2.14'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 24.09.2022
+# Last update: 25.09.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -596,15 +596,29 @@ def checkPortalPy():
         home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
     else:
         home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
+    
     resolver_file = os.path.join(home, 'portal_api.py')
+    remoteResolverUrl = "https://mandrakodi.github.io/portal_api.py"
+    strSource = makeRequest(remoteResolverUrl)
+    if strSource is None or strSource == "":
+        logga('We failed to get source from '+remoteResolverUrl)
+    
     if os.path.exists(resolver_file)==False:
-        remoteResolverUrl = "https://mandrakodi.github.io/portal_api.py"
-        strSource = makeRequest(remoteResolverUrl)
-        if strSource is None or strSource == "":
-            logga('We failed to get source from '+remoteResolverUrl)
-        else:
-            if PY3:
-                strSource = strSource.decode('utf-8')
+        logga("UPDATE PORTAL_API")
+        saveFile(resolver_file, strSource)
+    else:
+        resF = open(resolver_file)
+        resolver_content = resF.read()
+        resF.close()
+        try:
+            local_vers = re.findall("versione='(.*)'",resolver_content)[0]
+            logga('local_vers '+local_vers)
+            remote_vers = re.findall("versione='(.*)'",strSource)[0]
+            if local_vers != remote_vers:
+                logga("UPDATE PORTAL_API")
+                saveFile(resolver_file, strSource)
+        except Exception as err:
+            logga("NO VERSION - UPDATE PORTAL_API")
             saveFile(resolver_file, strSource)
 
        
