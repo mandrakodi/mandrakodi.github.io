@@ -1,8 +1,8 @@
-versione='1.1.26'
+versione='1.1.27'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 22.09.2022
+# Last update: 25.09.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -487,7 +487,7 @@ def streamingcommunity(parIn=None):
     if "scws_id" in arrJ:
         logga("SCWS: "+str(arrJ["scws_id"]))	
         idVideo = arrJ["scws_id"]
-        url = "https://scws.xyz/master/" + str(idVideo)
+        url = "https://scws.work/master/" + str(idVideo)
 
     def calculateToken(ip_client):
         from time import time
@@ -501,7 +501,7 @@ def streamingcommunity(parIn=None):
         s = '?token={}&expires={}'.format(b64(md5.digest()).decode().replace('=', '').replace('+', "-").replace('\\', "_"), t)
         return s + '&n=1'
     
-    page_video = "https://scws.xyz/videos/" + str(idVideo)
+    page_video = "https://scws.work/videos/" + str(idVideo)
     page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
@@ -530,7 +530,6 @@ def streamingcommunity(parIn=None):
     logga('video_community '+video_url)
     video_urls.append((video_url, name, plot))
 
-    return video_urls
 
 
 def scws(parIn=None):
@@ -564,7 +563,7 @@ def scws(parIn=None):
         'x-csrf-token': csrf_token,
         'Origin':base}
     
-    url = "https://scws.xyz/master/" + str(parIn)
+    url = "https://scws.work/master/" + str(parIn)
 
     def calculateToken(ip_client):
         from time import time
@@ -585,7 +584,7 @@ def scws(parIn=None):
         
         return s + '&n=1'
     
-    page_video = "https://scws.xyz/videos/" + str(parIn)
+    page_video = "https://scws.work/videos/" + str(parIn)
    
     page_data = requests.get("http://test34344.herokuapp.com/getMyIp.php", headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
@@ -600,6 +599,8 @@ def scws(parIn=None):
     token = calculateToken(localIp)
     
     url2 = url + token
+    logga('URL_community '+url2)
+
     pageT = requests.get(url2,headers=headSCt).content
     if PY3:
         pageT = pageT.decode('utf-8')
