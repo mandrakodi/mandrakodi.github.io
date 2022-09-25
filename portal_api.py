@@ -1,9 +1,15 @@
+from datetime import datetime
+
 import requests
 import math
+import re
 
 try:
     from urllib.parse import quote as quoter
     from urllib.parse import unquote as unquoter
+    from urllib.parse import urlparse
+    from urllib.parse import parse_qs
+
 except ImportError:
     from urllib import quote as quoter
     from urllib import unquote as unquoter
@@ -18,7 +24,7 @@ class PortalApi:
 
         self.url = url
         self.mac = mac
-        self.api_url = self.url + "portal.php?"
+        self.api_url = self.url + "/portal.php?"
         self.__dict__.update(**kwargs)
         self.token = ""
         self.request_headers = None
@@ -55,6 +61,21 @@ class PortalApi:
 
     def get_profile(self):
         # self.request_headers['Authorization'] = 'Bearer ' + self.token
+        dt = datetime.now()
+        timestamp = datetime.timestamp(dt)
+        p = 'type=stb&action=get_profile&hd=1&ver=ImageDescription: 0.2.18-r23-254; ImageDate: Wed Oct 31 15:22:54 ' \
+            'EEST 2018; PORTAL version: 5.5.0; API Version: JS API version: 343; STB API version: 146; Player Engine ' \
+            'version: 0x58c&num_banks=2&sn=17F88C9910EF5&client_type=STB&image_version=218&video_out=hdmi&device_id' \
+            '=F48C7788EF17D24F661C5A1782DF0D2237D545BE12A5A4B4325D89A52A7DF186&device_id2' \
+            '=F48C7788EF17D24F661C5A1782DF0D2237D545BE12A5A4B4325D89A52A7DF186&signature' \
+            '=845519FCE3386C1847AD3469AAD6D2773080C6F94CB59CD0A9E82605FAEDE02F&auth_second_step=1&hw_version=2.6-IB' \
+            '-00&not_valid_token=0&metrics={"mac":"' + \
+            self.mac + '","sn":"17F88C9910EF5","type":"STB",' \
+                       '"model":"MAG254",' \
+                       '"uid":"F48C7788EF17D24F661C5A1782DF0D2237D545BE12A5A4B4325D89A52A7DF186",' \
+                       '"random":""}&hw_version_2=aff4d6ab1ab4e0660f09f89809c6e9782fa43263&timestamp=' \
+            + str(timestamp) + '&api_signature=262 '
+        self.do_request(p)
         res = self.do_request("type=stb&action=get_profile")
         # print(res)
         return res
@@ -62,7 +83,7 @@ class PortalApi:
     def get_categories(self, ltype="live"):
         self.get_token()
         url = "type=itv&action=get_genres" if ltype == "live" else "type=vod&action=get_categories"
-        res = self.do_request(url)
+        res = self.do_request(url, True)
         # print(res)
         if res:
             ret = []
@@ -84,7 +105,7 @@ class PortalApi:
 
     def get_genres(self):
         self.get_token()
-        res = self.do_request("type=itv&action=get_genres")
+        res = self.do_request("type=itv&action=get_genres", True)
         # print(res)
 
         ret = {}
@@ -138,7 +159,7 @@ class PortalApi:
         ret = []
 
         while True:
-            res = self.do_request(url + "&p=" + str(page))
+            res = self.do_request(url + "&p=" + str(page), True)
             # print(res)
             if res and "data" in res:
 
@@ -167,27 +188,55 @@ class PortalApi:
     def get_link(self, cmd, ltype="itv"):
         self.get_token()
 
-        "type=itv&action=create_link&cmd=ffmpeg%20http://localhost/ch/1823_&series=&forced_storage=0&disable_ad=0&download=0&force_ch_link_check=0&JsHttpRequest=1-xml"
-
         url = "type=" + ltype + "&action=create_link&cmd=" + cmd
-        url += "&forced_storage=undefined&disable_ad=0&download=0"
-        
-        res = self.do_request(url)
-        link = res["cmd"]
+        url += "&series=0&forced_storage=false&disable_ad=false&download=false&force_ch_link_check=false"
+
+        res = self.do_request(url, True)
+        if res:
+            if res["id"].isdigit():
+                link = res["cmd"]
+            else:
+                try:
+                    strm_id = re.compile(r".*?/([\d]+(?:\.ts|$))").findall(res["id"])[0]
+                    base = re.compile(r"(http.*?://.*?:[\d]+(?:/live/|/).*?/.*?/).*?(\?.*?)$").findall(res["cmd"])[0]
+                    link = base[0] + strm_id + base[1]
+
+                except Exception as e:
+                    link = cmd
+        else:
+            link = cmd
+
         try:
             link = link.split(" ")[1]
         except:
             pass
 
+        # link = re.sub(r"(http.*?//.*?:[\d]+)", self.url, link, 0, re.MULTILINE)
+
         return link
 
-    def do_request(self, url):
+    def do_request(self, url, is_get=False):
         self.set_headers()
-        url = self.api_url + url + "&JsHttpRequest=1-xml"
-        res = requests.get(url, headers=self.request_headers, timeout=1)
+        request_url = self.api_url + url + "&JsHttpRequest=1-xml"
 
-        # print(res.text)
+        parsed_url = urlparse(request_url)
+        payload = parse_qs(parsed_url.query)
+        print(payload)
+        try:
+            if is_get:
+                res = requests.get(self.api_url, headers=self.request_headers, params=payload, timeout=1)
+            else:
+                res = requests.post(self.api_url, headers=self.request_headers, data=payload, timeout=1)
+            print(res.text)
+
+            if res.status_code > 399:
+                return None
+        except Exception as e:
+            print(e)
+            return None
+
         jres = res.json()
+
         if "js" in jres:
             return jres["js"]
         else:
