@@ -1,3 +1,4 @@
+versione='1.1.0'
 from datetime import datetime
 
 import requests
