@@ -1,8 +1,8 @@
-versione='1.1.27'
+versione='1.1.28'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 25.09.2022
+# Last update: 06.10.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -218,7 +218,7 @@ def assia(parIn=None):
 
 def daddyFind(parIn):
     video_url = ""
-    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.eu/'}).content
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://livetvon.click/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
@@ -230,6 +230,14 @@ def daddyFind(parIn):
         
         iframe_url2 = preg_match(page_data2, r'iframe\s*src="([^"]+)')
         logga('IFRAME DADDY2: '+iframe_url2)
+        if iframe_url2=="":
+            video_url = preg_match(page_data2.replace('//source:','//source_no:'), "source:'(.*?)'")
+            logga('VIDEO DADDY2: '+video_url)
+            page_m3u8 = requests.get(video_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':parIn}).content
+            if PY3:
+                page_m3u8 = page_m3u8.decode('utf-8')
+            logga('M3U8 DADDY2: '+page_m3u8)
+
         if "http" in iframe_url2:
             page_data3 = requests.get(iframe_url2,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://widevine.licenses4.me/'}).content
             if PY3:
@@ -249,11 +257,15 @@ def daddy(parIn=None):
     arrTmp = parIn.split("stream-")
     arrTmp2 = arrTmp[1].split(".")
     vId = arrTmp2[0]
+    newUrlHost="https://webudi.vhls.ru.com/lb/premium37/index.m3u8"
+    rl = "https://webudi.vhls.ru.com/lb/premium"+vId+"/tracks-v1a1/mono.m3u8"
     if video_url == "":
-        video_url = "https://zcri.vhls.ru.com/lb/premium"+vId+"/tracks-v1a1/mono.m3u8"
-    final_url = video_url+"|Referer=https://widevine.licenses4.me/&User-Agent=Mozilla%2F5.0+%28Linux%3B+Android+6.0%3B+Nexus+5+Build%2FMRA58N%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F104.0.0.0+Mobile+Safari%2F537.36"
-    final_url2 = video_url+"|Referer="+parIn
-    final_url3 = "https://best2.globalweb.ru.com/cdn/premium"+vId+"/mono.m3u8|Referer=https://widevine.licenses4.me/&User-Agent=Mozilla%2F5.0+%28Linux%3B+Android+6.0%3B+Nexus+5+Build%2FMRA58N%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F104.0.0.0+Mobile+Safari%2F537.36"
+        video_url = "https://webudi.vhls.ru.com/lb/premium"+vId+"/index.m3u8"
+    
+    fin_url = video_url.replace("index.m3u8", "tracks-v1a1/mono.m3u8")
+    final_url = fin_url + "|Referer=https://widevine.licenses4.me/&User-Agent=Mozilla%2F5.0+%28Linux%3B+Android+6.0%3B+Nexus+5+Build%2FMRA58N%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F104.0.0.0+Mobile+Safari%2F537.36"
+    final_url2 = video_url.replace("index.m3u8", "tracks-v1a1/mono.m3u8")+"|Referer=https://streamservicehd.click/premiumtv/livetvon.php?id="+vId+"&User-Agent=Mozilla%2F5.0+%28Linux%3B+Android+6.0%3B+Nexus+5+Build%2FMRA58N%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F104.0.0.0+Mobile+Safari%2F537.36"
+    
 
     
 
@@ -530,14 +542,13 @@ def streamingcommunity(parIn=None):
     logga('video_community '+video_url)
     video_urls.append((video_url, name, plot))
 
-
-
 def scws(parIn=None):
     import json
     video_urls = []
-    base="https://streamingcommunity.tech/"
 
-    headSCt={'user-agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14'}
+    base="https://streamingcommunity.golf/"
+
+    headSCt={'user-agent':'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.210.0 Safari/532.0'}
     pageT = requests.get(base,headers=headSCt).content
     if PY3:
         pageT = pageT.decode('utf-8')
@@ -557,7 +568,7 @@ def scws(parIn=None):
         logga("NO TIT VIDEO")
         titFilm="PLAY VIDEO"
 
-    headSC={'user-agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14',
+    headSC={'user-agent':'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.210.0 Safari/532.0',
         'content-type': 'application/json;charset=UTF-8',
         'Referer':refe,
         'x-csrf-token': csrf_token,
@@ -571,21 +582,13 @@ def scws(parIn=None):
         import hashlib
 
         expires = int(time() + 172800)
-        token = b64(hashlib.md5('{}{} Yc8U6r8KjAKAepEA'.format(expires, ip_client).encode('utf-8')).digest()).decode('utf-8').replace('=', '').replace('+', '-').replace('/', '_')
+        token = b64(hashlib.md5('{}{} Yc8U6r8KjAKAepEA'.format(expires, localIp).encode('utf-8')).digest()).decode('utf-8').replace('=', '').replace('+', '-').replace('/', '_')
 
         s = '?token={}&expires={}&n=1'.format(token, expires)
 
-        #o = 48
-        #i = 'Yc8U6r8KjAKAepEA'
-        #t = int(time() + (3600 * o))
-        #l = '{}{} {}'.format(t, ip_client, i)
-        #md5 = hashlib.md5(l.encode())
-        #s = '?token={}&expires={}'.format(b64(md5.digest()).decode().replace('=', '').replace('+', "-").replace('\\', "_"), t)
-        
-        return s + '&n=1'
+        return s
     
-    page_video = "https://scws.work/videos/" + str(parIn)
-   
+    
     page_data = requests.get("http://test34344.herokuapp.com/getMyIp.php", headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
@@ -620,11 +623,11 @@ def scws(parIn=None):
             if "type=video" in url3:
                 patron=r'rendition=(.*?)p'
                 res = preg_match(url3, patron)
-
-                video_urls.append((url3, "[COLOR gold]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR] [COLOR blue]("+res+"p)[/COLOR]", "by @mandrakodi"))
+                url4 = url3 + "|User-Agent=Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.210.0 Safari/532.0&Referer="+base
+                video_urls.append((url4, "[COLOR gold]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR] [COLOR blue]("+res+"p)[/COLOR]", "by @mandrakodi"))
             ind += 1
     else:
-        video_url = url + token + "|User-Agent=Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14&Referer="+base
+        video_url = url + token + "|User-Agent=Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.210.0 Safari/532.0&Referer="+base
         logga('video_community '+video_url)
         video_urls.append((video_url, "[COLOR lime]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR]", "by @mandrakodi"))
     
@@ -737,7 +740,7 @@ def streamTape(parIn):
 
 def dplay(parIn):
     import json, functools
-
+    parIn=25081
     video_urls = []
     session = requests.Session()
     session.request = functools.partial(session.request, timeout=30)
@@ -755,8 +758,12 @@ def dplay(parIn):
             'x-disco-params': 'realm=dplay,siteLookupKey=dplus_it'}
     session.headers = myHeaders
 
-    apiUrl2 = domain + "/playback/v3/videoPlaybackInfo/"
-    post = {'videoId': parIn, 'deviceInfo': {'adBlocker': False,'drmSupported': True}}
+
+
+
+    content="video"
+    apiUrl2 = domain + "/playback/v3/"+content+"PlaybackInfo/"
+    post = {content+'Id': parIn, 'deviceInfo': {'adBlocker': False,'drmSupported': True}}
     data2 = session.post(apiUrl2, json=post).content
     data3 = json.loads(data2)
     logga('POST_DPLAY: '+str(data2))
@@ -764,9 +771,17 @@ def dplay(parIn):
     data = requests.get('https://eu1-prod-direct.discoveryplus.com/playback/videoPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers=myHeaders).content
     logga('RESP_DPLAY: '+str(data))
     dataJ = json.loads(data)
+    dataJ2=dataJ.get('data',{}).get('attributes',{})
     dataErr = "[COLOR lime]PLAY VIDEO[/COLOR]"
     try:
-        link = dataJ["data"]["attributes"]["streaming"]["hls"]["url"]
+        if dataJ2.get('protection', {}).get('drmEnabled',False):
+            link = dataJ2['streaming']['dash']['url']
+            #item.drm = 'com.widevine.alpha'
+            #item.license ="{}|PreAuthorization={}|R{{SSM}}|".format(data['protection']['schemes']['widevine']['licenseUrl'], data['protection']['drmToken'])
+        else:
+            link = dataJ2['streaming'][0]['url']
+            #item.manifest = 'hls'
+        #link = dataJ["data"]["attributes"]["streaming"]["hls"]["url"]
     except:
         dataErr = "[COLOR red]"+dataJ["errors"][0]["detail"]+"[/COLOR]"
         link = dataJ["errors"][0]["detail"]
