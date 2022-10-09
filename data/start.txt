@@ -46,7 +46,7 @@
          "externallink":"http://bkp34344.herokuapp.com/filter.php?numTest=JOB500",
          "thumbnail":"https://www.dropbox.com/s/07shum6ob1n8cdy/vip.jpg?dl=1",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "enabled":1,
+         "enabled":0,
          "info":"Area VIP"
       },
       {
