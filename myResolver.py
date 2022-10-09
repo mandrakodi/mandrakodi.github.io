@@ -1,4 +1,4 @@
-versione='1.1.29'
+versione='1.1.30'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -328,6 +328,8 @@ def GetLSProData(page_in, refe=None):
 
     if "wigistream" in src:
         logga('iframe_wigistream_ok ')
+    elif "embed" in src and "curvaweb" in page_in:
+        logga('iframe_curvaweb_ok ')
     elif "buzztv" in src:
         logga('BUZZTV ')
         return GetLSProData(src)
