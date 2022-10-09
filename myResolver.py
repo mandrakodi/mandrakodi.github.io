@@ -1,8 +1,8 @@
-versione='1.1.28'
+versione='1.1.29'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 06.10.2022
+# Last update: 09.10.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -223,7 +223,7 @@ def daddyFind(parIn):
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
     logga('IFRAME DADDY: '+iframe_url)
-    if "http" in iframe_url:
+    if iframe_url.startswith("http"):
         page_data2 = requests.get(iframe_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':parIn}).content
         if PY3:
             page_data2 = page_data2.decode('utf-8')
@@ -328,8 +328,6 @@ def GetLSProData(page_in, refe=None):
 
     if "wigistream" in src:
         logga('iframe_wigistream_ok ')
-    elif "embed" in src:
-        logga('iframe_wigistream_ok ')
     elif "buzztv" in src:
         logga('BUZZTV ')
         return GetLSProData(src)
@@ -391,14 +389,19 @@ def urlsolver(url):
             video_urls.append((linkClean, "LINK 2"))		
 
         return video_urls
-    else:
-        dialog = xbmcgui.Dialog()
-        mess = "Sorry, ResolveUrl does not support this domain"
-        dialog.ok("Mandrakodi", mess)
+    
     return url
 
 def resolveMyUrl(url):
-    import resolveurl, xbmcvfs
+    import xbmcvfs
+    try:
+        import resolveurl
+    except:
+        dialog = xbmcgui.Dialog()
+        mess = "Lo script 'script.module.resolveurl' non risulta installato."
+        dialog.ok("Mandrakodi", mess)
+        return url
+
     xxx_plugins_path = 'special://home/addons/script.module.resolveurl.xxx/resources/plugins/'
     if xbmcvfs.exists(xxx_plugins_path):
         resolveurl.add_plugin_dirs(xbmc.translatePath(xxx_plugins_path))
@@ -411,136 +414,38 @@ def resolveMyUrl(url):
         logging.error("MANDRA URL_SOLVED: "+resolved)
         return resolved
     else:
-        return url
+        dialog = xbmcgui.Dialog()
+        mess = "Spiacenti, ResolveUrl non ha trovato il link."
+        dialog.ok("Mandrakodi", mess)
+    return url
 
 
 def get_resolved(url):
-    import xbmcvfs
-    
     resolved = daddyFind(url)
-    if resolved:
+    if resolved != "" and resolved != url:
         return resolved
     else:
         logga("NO RESOLVER DADDY")		
 
     resolved = wizhdFind(url)
-    if resolved:
+    if resolved != "" and resolved != url:
         return resolved
     else:
         logga("NO RESOLVER WIZHD")		
 
     resolved = assiaFind(url)
-    if resolved:
+    if resolved != "" and resolved != url:
         return resolved
     else:
         logga("NO RESOLVER ASSIA")		
 
     resolved = GetLSProData(url)
-    if resolved:
+    if resolved != "" and resolved != url:
         return resolved
     else:
         logga("NO RESOLVER DATA")		
 
-    try:
-        import resolveurl
-    except:
-        dialog = xbmcgui.Dialog()
-        mess = "Lo script 'script.module.resolveurl' non risulta installato."
-        dialog.ok("Mandrakodi", mess)
-        return url
-
-    logga("TRY TO RESOLVE: "+url)
-    xxx_plugins_path = 'special://home/addons/script.module.resolveurl.xxx/resources/plugins/'
-    if xbmcvfs.exists(xxx_plugins_path):
-        logging.warning("OK XXX RESOLVER ")
-        if sys.version_info[0] > 2:
-            xxxp = xbmcvfs.translatePath(xxx_plugins_path)
-        else:
-            import xbmc
-            xxxp = xbmc.translatePath(xxx_plugins_path)
-        resolveurl.add_plugin_dirs(xxxp)
-    try:
-        resolved = resolveurl.resolve(url)
-        if resolved:
-            logga("OK RESOLVER: "+resolved)
-            return resolved
-    except Exception as err:
-        import traceback
-        
-        errMsg="ERROR_RESOLVER: {0}".format(err)
-        logga(errMsg)
-        traceback.print_exc()
-
-    return url
-
-def streamingcommunity(parIn=None):
-    import json
-    video_urls = []
-    url_sito = "https://streamingcommunity.tech/"
-    page_video = url_sito + "watch/" + parIn
-    page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
-    if PY3:
-        page_data = page_data.decode('utf-8')
-    patron=r'<video-player response="(.*?)"'
-    dataF = preg_match(page_data, patron)
-    #logga("DATA FROM STRCO: "+dataF)
-    dataJ = dataF.replace('&quot;','"')
-    try:
-        arrJ = json.loads(dataJ)
-    except Exception as e:
-        logga("NO JSON FROM STRCO: "+page_video)
-        raise ValueError('NO JSON FROM: '+page_video)
-
-    nm=arrJ["title"]["name"]
-    name = "[COLOR lime]"+nm.upper()+"[/COLOR]"
-    plot = arrJ["title"]["plot"]
-    idVideo = arrJ["video_id"]
-    url = url_sito + "videos/master/" + str(idVideo) + "m3u8"
-    if "scws_id" in arrJ:
-        logga("SCWS: "+str(arrJ["scws_id"]))	
-        idVideo = arrJ["scws_id"]
-        url = "https://scws.work/master/" + str(idVideo)
-
-    def calculateToken(ip_client):
-        from time import time
-        from base64 import b64encode as b64
-        import hashlib
-        o = 48
-        i = 'Yc8U6r8KjAKAepEA'
-        t = int(time() + (3600 * o))
-        l = '{}{} {}'.format(t, ip_client, i)
-        md5 = hashlib.md5(l.encode())
-        s = '?token={}&expires={}'.format(b64(md5.digest()).decode().replace('=', '').replace('+', "-").replace('\\', "_"), t)
-        return s + '&n=1'
-    
-    page_video = "https://scws.work/videos/" + str(idVideo)
-    page_data = requests.get(page_video,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
-    if PY3:
-        page_data = page_data.decode('utf-8')
-    logga('IP_community '+page_data)
-    try:
-        arrJ2 = json.loads(page_data)
-        localIp = arrJ2["client_ip"]
-    except:
-        logga("NO LOCAL IP")
-        localIp = "31.191.12.52"
-        pass
-
-    token = calculateToken(localIp)
-    code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
-    count = 0
-    while not code == 200:
-        token = calculateToken(localIp)
-        code = requests.get(url + token, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).status_code
-        count +=1
-        if count == 3:
-            logga('END OF TRY. CODE: '+str(code))
-            break
-
-    
-    video_url = url + token
-    logga('video_community '+video_url)
-    video_urls.append((video_url, name, plot))
+    return resolveMyUrl(url)
 
 def scws(parIn=None):
     import json
@@ -637,17 +542,6 @@ def scws(parIn=None):
 
 
 
-
-
-def darkIptv(parIn=None):
-    video_urls = []
-    video_url = "http://temporary.mine.nu:8000/movie/Direct2Movie/r3ow52c4P4/"+parIn
-    if "." in parIn:
-        video_url = "http://temporary.mine.nu:8000/movie/Direct2Movie/r3ow52c4P4/"+parIn
-    else:
-        video_url = "http://temporary.mine.nu:8000/Direct2Movie/r3ow52c4P4/"+parIn
-    video_urls.append((video_url, ""))
-    return video_urls
 
 
 def macLink(parIn=None):
@@ -878,8 +772,6 @@ def run (action, params=None):
         'daddy': daddy,
         'wigi': wigi,
         'risolvi': urlsolver,
-        'strco': streamingcommunity,
-        'dark': darkIptv,
         'dplay': dplay,
         'dplayLive': dplayLive,
         'mac': macLink,
