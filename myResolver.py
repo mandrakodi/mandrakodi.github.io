@@ -1,8 +1,8 @@
-versione='1.1.31'
+versione='1.1.32'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 09.10.2022
+# Last update: 11.10.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -233,10 +233,11 @@ def daddyFind(parIn):
         if iframe_url2=="":
             video_url = preg_match(page_data2.replace('//source:','//source_no:'), "source:'(.*?)'")
             logga('VIDEO DADDY2: '+video_url)
-            page_m3u8 = requests.get(video_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':parIn}).content
-            if PY3:
-                page_m3u8 = page_m3u8.decode('utf-8')
-            logga('M3U8 DADDY2: '+page_m3u8)
+            if video_url != "":
+                page_m3u8 = requests.get(video_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':parIn}).content
+                if PY3:
+                    page_m3u8 = page_m3u8.decode('utf-8')
+                logga('M3U8 DADDY2: '+page_m3u8)
 
         if "http" in iframe_url2:
             page_data3 = requests.get(iframe_url2,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://widevine.licenses4.me/'}).content
@@ -276,6 +277,14 @@ def daddy(parIn=None):
         arrV = video_url.split("|")
         video_urls.append((arrV[0], ""))		
     """
+    return video_urls
+
+def proData(parIn=None):
+    video_urls = []
+    logga('PAR: '+parIn)
+    video_url = GetLSProData(parIn)
+    logga('URL PRODATA: '+video_url)
+    video_urls.append((video_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi"))
     return video_urls
 
 def GetLSProData(page_in, refe=None):
@@ -328,7 +337,7 @@ def GetLSProData(page_in, refe=None):
 
     if "wigistream" in src:
         logga('iframe_wigistream_ok ')
-    elif "embed" in src and ("curvaweb" in page_in or "elixx" in page_in):
+    elif "embed" in src and ("curvaweb" in page_in or "elixx" in page_in or "sportsonline" in page_in or "buzztv" in page_in):
         logga('iframe_embed for '+page_in)
     elif "buzztv" in src:
         logga('BUZZTV ')
@@ -773,6 +782,7 @@ def run (action, params=None):
         'wizhd': wizhd,
         'daddy': daddy,
         'wigi': wigi,
+        'proData': proData,
         'risolvi': urlsolver,
         'dplay': dplay,
         'dplayLive': dplayLive,
