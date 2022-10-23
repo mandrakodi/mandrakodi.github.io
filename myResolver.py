@@ -1,8 +1,8 @@
-versione='1.1.33'
+versione='1.1.34'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 21.10.2022
+# Last update: 23.10.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -348,9 +348,9 @@ def GetLSProData(page_in, refe=None):
     elif "cloudstream" in src:
         logga('CLOUDSTREAM')
         return GetLSProData(src)
-    elif "pepperlive" in src:
-        logga('PEPPER')
-        return GetLSProData(src)
+    elif "pepperlive" in src or "projectlive" in src:
+        logga('PEPPER/PROJECT')
+        return GetLSProData(src.replace('projectlive', 'pepperlive'))
     elif "hdmario" in src:
         logga('HDMARIO')
         return GetLSProData(src)
