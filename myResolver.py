@@ -1,8 +1,8 @@
-versione='1.1.34'
+versione='1.1.35'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.10.2022
+# Last update: 28.10.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -259,19 +259,19 @@ def daddy(parIn=None):
     arrTmp2 = arrTmp[1].split(".")
     vId = arrTmp2[0]
     newUrlHost="https://webudi.vhls.ru.com/lb/premium37/index.m3u8"
-    rl = "https://webudi.vhls.ru.com/lb/premium"+vId+"/tracks-v1a1/mono.m3u8"
+    rl = "https://webudi.openhd.lol/ddy1/premium"+vId+"/tracks-v1a1/mono.m3u8"
     if video_url == "":
         video_url = "https://webudi.vhls.ru.com/lb/premium"+vId+"/index.m3u8"
     
-    fin_url = video_url.replace("index.m3u8", "tracks-v1a1/mono.m3u8")
-    final_url = fin_url + "|Referer=https://widevine.licenses4.me/&User-Agent=Mozilla%2F5.0+%28Linux%3B+Android+6.0%3B+Nexus+5+Build%2FMRA58N%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F104.0.0.0+Mobile+Safari%2F537.36"
-    final_url2 = video_url.replace("index.m3u8", "tracks-v1a1/mono.m3u8")+"|Referer=https://streamservicehd.click/premiumtv/livetvon.php?id="+vId+"&User-Agent=Mozilla%2F5.0+%28Linux%3B+Android+6.0%3B+Nexus+5+Build%2FMRA58N%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F104.0.0.0+Mobile+Safari%2F537.36"
+    final_url = video_url + "|connection=keepalive&Referer=https://streamservicehd.click/premiumtv/livetvon.php?id="+vId+"&User-Agent=Lavf%2F56.25.101"
+    final_url3 = video_url + "|Referer=https://streamservicehd.click/&User-Agent=ipad&connection=keepalive"
+    final_url2 = video_url.replace("index.m3u8", "tracks-v1a1/mono.m3u8")+"|connection=keepalive&Referer=https://streamservicehd.click/premiumtv/livetvon.php?id="+vId+"&User-Agent=Lavf%2F56.25.101"
     
 
     
 
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+arrTmp2[0]+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
-    video_urls.append((final_url2, "[COLOR yellow]PLAY STREAM "+arrTmp2[0]+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
+    
     """
     if "|" in video_url:
         arrV = video_url.split("|")
