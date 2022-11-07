@@ -1,8 +1,8 @@
-versione='1.2.14'
+versione='1.2.15'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 25.09.2022
+# Last update: 07.11.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -1025,14 +1025,13 @@ def run():
     try:
         if not sys.argv[2]:
             logga("=== ADDON START ===")
-            checkResolver()
-            checkJsunpack()
-            checkPortalPy()
-            #reloadDefault()
             if (checkMsgOnLog()):
+                checkResolver()
+                checkJsunpack()
+                checkPortalPy()
                 checkDns()
                 checkMandraScript()
-                checkSkin()
+            checkSkin()
             getSource()
         else:
             params = parameters_string_to_dict(sys.argv[2])
