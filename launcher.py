@@ -1,4 +1,4 @@
-versione='1.2.15'
+versione='1.2.16'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -70,7 +70,10 @@ def makeRequest(url, hdr=None):
         response = myRequest.urlopen(req, timeout=45)
         html = response.read().decode('utf-8')
         response.close()
-        logga('OK REQUEST FROM '+url)
+        retff="NOCODE"
+        if html != "":
+            retff=html[0:15]
+        logga('OK REQUEST FROM '+url+' resp: '+retff)
     except:
         logging.warning('Error to open url: '+url)
         pass
@@ -107,6 +110,18 @@ def underMaintMsg():
 
     return strToRet
 
+def connProblemMsg():
+    strToRet = '{"SetViewMode":"500","items":['
+    strToRet +='{"title":"[COLOR red]CONNECION PROBLEM[CR]TRY LATER.[/COLOR]",'
+    strToRet +='"link":"ignore","thumbnail":"https://images-na.ssl-images-amazon.com/images/I/41sxqlFU88L.jpg",'
+    strToRet +='"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg","info":"Addon Under Maintenance"},'
+    strToRet +='{"title":"[COLOR gold]SEND LOG[/COLOR]",'
+    strToRet +='"log":"ignore","thumbnail":"https://e7.pngegg.com/pngimages/584/374/png-clipart-green-computer-monitor-computer-monitor-accessory-screen-multimedia-11-computer-matrix-computer-computer-monitor-accessory-thumbnail.png",'
+    strToRet +='"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg","info":"Send Log"}'
+    strToRet +=']}'
+
+    return strToRet
+
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
@@ -133,8 +148,9 @@ def getExternalJson(strPath):
         msgBox("Spiacenti, la fonte non e' raggiungibile")
         remoteLog("NO_FONTE@@"+strPath)
         logging.warning("NO JSON AT: "+strPath)
-    else:
-        jsonToItems(strSource)
+        strSource = connProblemMsg()
+    
+    jsonToItems(strSource)
 	
 def jsonToItems(strJson):
     global viewmode
@@ -983,7 +999,7 @@ def remoteLog(msgToLog):
         import urllib as myParse
     
     
-    baseLog = "http://bkp34344.herokuapp.com/filter.php?numTest=JOB999"
+    baseLog = "https://bkp34344.herokuapp.com/filter.php?numTest=JOB999"
     urlLog = baseLog + "&msgLog=" + myParse.quote(ua+"@@"+msgToLog)
     strSource = makeRequest(urlLog)
     if strSource is None or strSource == "":
