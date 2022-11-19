@@ -1,8 +1,8 @@
-versione='1.1.35'
+versione='1.1.36'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 28.10.2022
+# Last update: 19.11.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -775,6 +775,25 @@ def remoteLog(msgToLog):
     else:
         logga('OK REMOTE LOG')
 
+def vudeo(parIn):
+    page_in="https://vudeo.io/"+parIn+".html"
+    page_data = requests.get(page_in,headers={'user-agent':'iPad','accept':'*/*','referer':page_in}).content
+
+    if PY3:
+        page_data = page_data.decode('utf-8')
+
+    src = preg_match(page_data, 'sources: \["(.*?)"\]')
+    tit = preg_match(page_data, '<title>(.*?)<\/title>')
+    img = preg_match(page_data, 'poster: "(.*?)"')
+
+    video_urls = []
+    video_urls.append((src+"|referer="+page_in, "[COLOR lime]PLAY VIDEO[/COLOR]", tit.replace("Watch", ""), img))
+    return video_urls
+
+
+
+
+
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
@@ -789,6 +808,7 @@ def run (action, params=None):
         'mac': macLink,
         'scws': scws,
         'assia': assia,
+        'vudeo': vudeo,
         'stape': streamTape,
         'urlsolve': resolveMyUrl,
         'rocktalk': rocktalk
