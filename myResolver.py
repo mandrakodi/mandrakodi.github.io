@@ -1,8 +1,8 @@
-versione='1.1.36'
+versione='1.1.37'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 19.11.2022
+# Last update: 22.11.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -462,9 +462,9 @@ def scws(parIn=None):
     import json
     video_urls = []
 
-    base="https://streamingcommunity.golf/"
+    base="https://streamingcommunity.cheap/"
 
-    headSCt={'user-agent':'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.210.0 Safari/532.0'}
+    headSCt={'user-agent':'Mozilla/5.0 (X11; U; Linux i686; es-AR; rv:1.9.0.9) Gecko/2009042113 Ubuntu/9.04 (jaunty) Firefox/3.0.9'}
     pageT = requests.get(base,headers=headSCt).content
     if PY3:
         pageT = pageT.decode('utf-8')
@@ -484,11 +484,6 @@ def scws(parIn=None):
         logga("NO TIT VIDEO")
         titFilm="PLAY VIDEO"
 
-    headSC={'user-agent':'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.210.0 Safari/532.0',
-        'content-type': 'application/json;charset=UTF-8',
-        'Referer':refe,
-        'x-csrf-token': csrf_token,
-        'Origin':base}
     
     url = "https://scws.work/master/" + str(parIn)
 
@@ -525,8 +520,10 @@ def scws(parIn=None):
         pageT = pageT.decode('utf-8')
     logga("MANIFEST: "+pageT)
     
-    patron=r'.*?(http[^"\s]+)'
-    info = preg_match(pageT, patron, -1)
+    info = ""
+    if pageT[0:5] != "<!DOC":
+        patron=r'.*?(http[^"\s]+)'
+        info = preg_match(pageT, patron, -1)
 
     if info:
         logga ("OK INFO")
@@ -539,11 +536,11 @@ def scws(parIn=None):
             if "type=video" in url3:
                 patron=r'rendition=(.*?)p'
                 res = preg_match(url3, patron)
-                url4 = url3 + "|User-Agent=Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.210.0 Safari/532.0&Referer="+base
+                url4 = url3 + "|User-Agent=Mozilla/5.0 (X11; U; Linux i686; es-AR; rv:1.9.0.9) Gecko/2009042113 Ubuntu/9.04 (jaunty) Firefox/3.0.9&Referer="+base
                 video_urls.append((url4, "[COLOR gold]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR] [COLOR blue]("+res+"p)[/COLOR]", "by @mandrakodi"))
             ind += 1
     else:
-        video_url = url + token + "|User-Agent=Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.210.0 Safari/532.0&Referer="+base
+        video_url = url + token + "|User-Agent=Mozilla/5.0 (X11; U; Linux i686; es-AR; rv:1.9.0.9) Gecko/2009042113 Ubuntu/9.04 (jaunty) Firefox/3.0.9&Referer="+base
         logga('video_community '+video_url)
         video_urls.append((video_url, "[COLOR lime]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR]", "by @mandrakodi"))
     
