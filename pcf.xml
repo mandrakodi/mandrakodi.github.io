@@ -48,6 +48,10 @@
 			<filename>com.android.chrome</filename>
 			<hidexbmc>false</hidexbmc>
 		</player>
+		<player name="SilkBrowser" type="ExternalPlayer" audio="false" video="true">
+			<filename>com.amazon.cloud9</filename>
+			<hidexbmc>false</hidexbmc>
+		</player>
 	</players>
 	
 	<rules action="overwrite">
