@@ -1,8 +1,8 @@
-versione='1.2.16'
+versione='1.2.17'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 07.11.2022
+# Last update: 24.11.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -1062,7 +1062,7 @@ def run():
                 keyboard = xbmc.Keyboard(clipB,'Inserisci Valore')
                 keyboard.doModal()
                 if not (keyboard.isConfirmed() == False):
-                    userInput = keyboard.getText()
+                    userInput = keyboard.getText().replace(" ", "+")
                     if not (userInput == ''):
                         if PY3:
                             import urllib.parse as myParse
