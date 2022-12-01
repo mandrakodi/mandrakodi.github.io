@@ -1,8 +1,8 @@
-versione='1.1.38'
+versione='1.1.39'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 22.11.2022
+# Last update: 01.12.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -786,6 +786,22 @@ def vudeo(parIn):
 
     video_urls = []
     video_urls.append((src+"|referer="+page_in, "[COLOR lime]PLAY VIDEO[/COLOR]", tit.replace("Watch", ""), img))
+    return video_urls
+
+def voe(parIn):
+    logga('VOE PAGE: '+parIn)
+    page_data = requests.get(parIn,headers={'user-agent':'iPad','accept':'*/*','referer':parIn}).content
+
+    if PY3:
+        page_data = page_data.decode('utf-8')
+
+    tit = preg_match(page_data, '<h1 class="mt-1">(.*?)<span')
+    src = preg_match(page_data, "'hls': '(.*?)'")
+    src1 = preg_match(page_data, "'mp4': '(.*?)'")
+
+    video_urls = []
+    video_urls.append((src+"|referer="+parIn, "[COLOR lime]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
+    video_urls.append((src1+"|referer="+parIn, "[COLOR gold]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
     return video_urls
 
 def getRandomUA():
@@ -2629,6 +2645,7 @@ def run (action, params=None):
         'scws': scws,
         'assia': assia,
         'vudeo': vudeo,
+        'voe': voe,
         'stape': streamTape,
         'urlsolve': resolveMyUrl,
         'rocktalk': rocktalk
