@@ -52,6 +52,10 @@
 			<filename>com.amazon.cloud9</filename>
 			<hidexbmc>false</hidexbmc>
 		</player>
+		<player name="Firefox TV" type="ExternalPlayer" audio="false" video="true">
+			<filename>org.mozilla.tv.firefox</filename>
+			<hidexbmc>false</hidexbmc>
+		</player>
 	</players>
 	
 	<rules action="overwrite">
