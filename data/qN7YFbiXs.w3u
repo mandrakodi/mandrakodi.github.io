@@ -8,7 +8,7 @@
 {
 "name": "WISE SPORT",
 "image": "https://i.imgur.com/YAaMwxN.png",
-"url": "http://bkp34344.herokuapp.com/testWise.php",
+"url": "http://test34344.herokuapp.com/wise/testWise.php?numList=99",
 "userAgent":"ElSupremoWise"
 }
 ]
