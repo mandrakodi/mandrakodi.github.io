@@ -1,8 +1,8 @@
-versione='1.1.39'
+versione='1.1.40'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 01.12.2022
+# Last update: 10.12.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -710,6 +710,42 @@ def dplayLive(parIn):
         link = dataJ["errors"][0]["detail"]
     logga('LINK_DPLAY: '+link)
     video_urls.append((link, dataErr))
+    return video_urls
+
+def taxi(parIn):
+    import re
+    video_urls = []
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+    url="https://eurostreaming.taxi/stream/"+parIn+".html"
+    s = requests.Session()
+    r = s.get(url, headers=headers) 
+
+    express2 = r'<a href=\"#\" allowfullscreen data-link=\"(.*?)\" id=\".*?data-num=\"(.*?)\" data-title=\"Episodio \d+\">\d+</a>'
+
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+
+    s = requests.Session()
+    r = s.get(url, headers=headers)
+    logga("FIND HOSTS")
+    ret = re.compile(express2, re.MULTILINE | re.DOTALL).findall(r.text)
+    jsonText='{"SetViewMode":"503","items":['
+    numIt=0
+    for (link, ep) in ret:
+        logga('LINK-TAXI: '+link+" "+ep)
+        if (numIt > 0):
+            jsonText = jsonText + ','    
+        jsonText = jsonText + '{"title":"'+ep+'","myresolve":"urlsolve@@'+link+'",'
+        jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"}'
+        numIt=numIt+1
+
+    jsonText = jsonText + "]}"
+    logga('JSON-TAXI: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
 def writeFileLog(strIn, modo):
@@ -2646,6 +2682,7 @@ def run (action, params=None):
         'assia': assia,
         'vudeo': vudeo,
         'voe': voe,
+        'taxi': taxi,
         'stape': streamTape,
         'urlsolve': resolveMyUrl,
         'rocktalk': rocktalk
