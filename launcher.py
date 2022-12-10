@@ -1,4 +1,4 @@
-versione='1.2.17'
+versione='1.2.18'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -485,6 +485,11 @@ def callReolver(metodo, parametro):
             if len(newList)>3:
                 thumb=newList[3]
             
+            if len(newList)>4:
+                tipo=newList[4]
+                if tipo == "json":
+                    return jsonToItems(newLink)
+                    
             logga("Stream_Url ==> " + newLink)
             logga("Stream_Tit ==> " + newP)
             newTit="[COLOR lime]PLAY LINK "+str(numLink)+" ("+newLink[0:4]+")[/COLOR]"
