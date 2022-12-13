@@ -1,8 +1,8 @@
-versione='1.1.40'
+versione='1.1.41'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 10.12.2022
+# Last update: 13.12.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -279,6 +279,7 @@ def daddy(parIn=None):
     """
     return video_urls
 
+
 def proData(parIn=None):
     video_urls = []
     logga('PAR: '+parIn)
@@ -335,16 +336,17 @@ def GetLSProData(page_in, refe=None):
     src = 'https:' + src if src.startswith('//') else src
     logga('iframe_url '+src)
 
-    if "wigistream" in src:
-        logga('iframe_wigistream_ok ')
-    elif "embed" in src and ("curvaweb" in page_in or "elixx" in page_in or "sportsonline" in page_in or "pepperlive" in page_in or "buzztv" in page_in):
+    if "starlive.xyz" in src:
+        logga('starlive.xyz ')
+        return wigi(src.replace("starlive.xyz", "curvaweb.com"))
+    elif "embed" in src and ("curvaweb" in page_in or "elixx" in page_in or "sportsembed" in page_in or "pepperlive" in page_in or "l1l1.to" in page_in):
         logga('iframe_embed for '+page_in)
     elif "buzztv" in src:
         logga('BUZZTV ')
         return GetLSProData(src)
-    elif "starlive.stream" in src:
-        logga('starlive.stream ')
-        return GetLSProData(src, page_in)
+    elif "starlive.xyz" in src:
+        logga('starlive.xyz ')
+        return GetLSProData(src.replace("starlive.xyz", "curvaweb"), page_in)
     elif "cloudstream" in src:
         logga('CLOUDSTREAM')
         return GetLSProData(src)
@@ -390,16 +392,22 @@ def urlsolver(url):
     video_urls = []
 
     resolvedUrl=get_resolved(url)
-    logga('video_resolved_url '+resolvedUrl)
-    if (resolvedUrl != url):
-        video_urls.append((resolvedUrl, "LINK 1"))
-        if "|" in resolvedUrl:
-            arrV = resolvedUrl.split("|")
-            linkClean=arrV[0]
-            logga('video_resolved_cleaned '+linkClean)
-            video_urls.append((linkClean, "LINK 2"))		
+    if isinstance(resolvedUrl, list):
+        for linkTmp in resolvedUrl:
+            logga('video_tmp_url '+''.join(linkTmp))
+            video_urls.append((''.join(linkTmp), "[COLOR gold]PLAY STREAM[/COLOR]"))
+            return video_urls
+    else:
+        logga('video_resolved_url '+resolvedUrl)
+        if (resolvedUrl != url):
+            video_urls.append((resolvedUrl, "LINK 1"))
+            if "|" in resolvedUrl:
+                arrV = resolvedUrl.split("|")
+                linkClean=arrV[0]
+                logga('video_resolved_cleaned '+linkClean)
+                video_urls.append((linkClean, "LINK 2"))		
 
-        return video_urls
+            return video_urls
     
     return url
 
@@ -2664,6 +2672,7 @@ def getRandomUA():
         "Opera/9.99 (Windows NT 5.1; U; pl) Presto/9.9.9"
     ]
     return random.choice(userAgentArray)    
+
 
 
 def run (action, params=None):
