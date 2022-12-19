@@ -1,8 +1,8 @@
-versione='1.2.18'
+versione='1.2.19'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 10.12.2022
+# Last update: 18.12.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -489,7 +489,7 @@ def callReolver(metodo, parametro):
                 tipo=newList[4]
                 if tipo == "json":
                     return jsonToItems(newLink)
-                    
+
             logga("Stream_Url ==> " + newLink)
             logga("Stream_Tit ==> " + newP)
             newTit="[COLOR lime]PLAY LINK "+str(numLink)+" ("+newLink[0:4]+")[/COLOR]"
@@ -826,7 +826,7 @@ def m3u2json(src):
     try:
         okGroup=False
         for match in matches:
-            if numIt>2999:
+            if numIt>24999:
                 break
             strLog=json.dumps(match)
             tt = match[1]
