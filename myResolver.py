@@ -1,8 +1,8 @@
-versione='1.1.42'
+versione='1.1.43'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 18.12.2022
+# Last update: 23.12.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -742,11 +742,12 @@ def taxi(parIn):
     express1 = r'<title>(.*?)</title>'
     ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)[0]
 
-    express2 = r'<a href=\"#\" allowfullscreen data-link=\"(.*?)\" id=\".*?data-num=\"(.*?)\" data-title=\"Episodio \d+\">\d+</a>'
+    #express2 = r'<a href=\"#\" allowfullscreen data-link=\"(.*?)\" id=\".*?data-num=\"(.*?)\" data-title=\"Episodio \d+\">\d+</a>'
+    express2 = r'<a href="#" allowfullscreen data-link="(.*?)" id="(.*?)" data-num="(.*?)" data-title="(.*?)">\d+</a>'
     ret = re.compile(express2, re.MULTILINE | re.DOTALL).findall(r.text)
     jsonText='{"SetViewMode":"503","items":['
     numIt=0
-    for (link, ep) in ret:
+    for (link, id, ep, tito) in ret:
         logga('LINK-TAXI: '+link+" "+ep)
         if (numIt > 0):
             jsonText = jsonText + ','    
