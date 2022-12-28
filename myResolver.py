@@ -1,8 +1,8 @@
-versione='1.1.43'
+versione='1.1.44'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.12.2022
+# Last update: 28.12.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -12,6 +12,7 @@ import xbmcaddon
 import os
 import string
 import random
+
 
 addon_id = 'plugin.video.mandrakodi'
 #selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -558,7 +559,20 @@ def scws(parIn=None):
     return video_urls
 
 
-
+def pulive(parIn=None):
+    url = "https://pulivetv82.com/player.html?id="+parIn
+    page_data = requests.get(url, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    patron=r'window.config=(.*?)<\/script>'
+    txt = preg_match(page_data, patron)
+    x = txt.split("match:")
+    rr=x[1]
+    patron=r'source:"(.*?)"'
+    txt2 = preg_match(rr, patron)
+    video_urls = []
+    video_urls.append((txt2+"|verifypeer=false", "[COLOR lime]PLAY STREAM[/COLOR]", "by @mandrakodi"))
+    return video_urls
 
 
 def macLink(parIn=None):
@@ -836,6 +850,7 @@ def vudeo(parIn):
 
     video_urls = []
     video_urls.append((src+"|referer="+page_in, "[COLOR lime]PLAY VIDEO[/COLOR]", tit.replace("Watch", ""), img))
+    video_urls.append((src+"|referer="+page_in+"&verifypeer=false", "[COLOR orange]PLAY VIDEO[/COLOR]", tit.replace("Watch", ""), img))
     return video_urls
 
 def voe(parIn):
@@ -2696,6 +2711,7 @@ def run (action, params=None):
         'scws': scws,
         'assia': assia,
         'vudeo': vudeo,
+        'pulive': pulive,
         'voe': voe,
         'taxi': taxi,
         'stape': streamTape,
