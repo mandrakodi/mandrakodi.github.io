@@ -1,8 +1,8 @@
-versione='1.1.44'
+versione='1.1.45'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 28.12.2022
+# Last update: 29.12.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -295,13 +295,13 @@ def GetLSProData(page_in, refe=None):
     logga('page_in '+page_in)
     if refe != None:
         logga('REFER '+refe)
-    if "hdmario" in page_in:
-        logga('HDMARIO')
+    if "maxstream" in page_in:
+        logga('MAX STREAM')
         fu = requests.get(page_in, headers={'user-agent':'iPad','referer':page_in}).text
         find = re.findall('eval\(function(.+?.+)', fu)[0]
         unpack = jsunpack.unpack(find)
         logga('UNPACK: '+unpack)
-        c = re.findall('var src="([^"]*)',unpack)[0]
+        c = re.findall('src:"([^"]*)',unpack)[0]
         logga('URL_MARIO '+c)
         return c
 
