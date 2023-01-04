@@ -26,7 +26,7 @@ else:
 
 def logga(mess):
     if debug == "on":
-        logging.warning("MANDRA_RESOLVE: "+mess);
+        logging.warning("MANDRA_RESOLVE: "+mess)
 
 def rocktalk(parIn=None):
     from base64 import b64encode, b64decode
@@ -182,7 +182,7 @@ def wizhd(parIn=None):
     
 
 def findM3u8(linkIframe, refPage):
-    logging.warning('URL: '+linkIframe)
+    #logging.warning('URL: '+linkIframe)
     vUrl = ""
     try:
         page_data2 = requests.get(linkIframe,headers={'user-agent':'iPad','accept':'*/*','referer':refPage}).content
@@ -424,14 +424,14 @@ def resolveMyUrl(url):
 
     xxx_plugins_path = 'special://home/addons/script.module.resolveurl.xxx/resources/plugins/'
     if xbmcvfs.exists(xxx_plugins_path):
-        resolveurl.add_plugin_dirs(xbmc.translatePath(xxx_plugins_path))
+        resolveurl.add_plugin_dirs(xbmcvfs.translatePath(xxx_plugins_path))
     resolved = ""
     try:
         resolved = resolveurl.resolve(url)
     except:
         pass
     if resolved:
-        logging.error("MANDRA URL_SOLVED: "+resolved)
+        #logging.error("MANDRA URL_SOLVED: "+resolved)
         return resolved
     else:
         dialog = xbmcgui.Dialog()
@@ -779,7 +779,7 @@ def taxi(parIn):
 def writeFileLog(strIn, modo):
     home = ''
     if PY3:
-        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
+        home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
         log_file = os.path.join(home, 'mandrakodi2.log')
         f = open(log_file, modo, encoding="utf-8")
         f.write(strIn)
