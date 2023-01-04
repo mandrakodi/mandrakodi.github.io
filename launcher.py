@@ -6,10 +6,10 @@ versione='1.2.19'
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
+import os
 import logging
 import xbmcgui
 import xbmc
-import os
 import xbmcplugin
 import xbmcaddon
 import json
@@ -133,7 +133,7 @@ def play_video(path):
 def getTxtMessage(vName):
     home = ''
     if PY3:
-        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
+        home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
     else:
         home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     fPath = os.path.join(home, vName)
@@ -536,7 +536,7 @@ def runApk(apkName, apkPar):
 def getPvr():
     myPvr = None
         
-    if not os.path.exists(xbmc.translatePath('special://home/addons/pvr.iptvsimple')) and not os.path.exists(xbmc.translatePath('special://xbmcbinaddons/pvr.iptvsimple')):
+    if not os.path.exists(xbmcvfs.translatePath('special://home/addons/pvr.iptvsimple')) and not os.path.exists(xbmcvfs.translatePath('special://xbmcbinaddons/pvr.iptvsimple')):
         xbmc.executebuiltin('InstallAddon(pvr.iptvsimple)', wait=True)
     
     pvr_enabled = '"enabled":true' in xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"Addons.GetAddonDetails","id":1,"params":{"addonid":"pvr.iptvsimple", "properties": ["enabled"]}}')
@@ -577,7 +577,7 @@ def setPvr(urlM3u):
 def reloadDefault():
     home = ''
     if PY3:
-        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
+        home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
     else:
         home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     defualt_file = os.path.join(home, 'default.py')
@@ -588,6 +588,7 @@ def reloadDefault():
         strSource = makeRequest(remoteResolverUrl)
         if strSource is None or strSource == "":
             logga('We failed to get source from '+remoteResolverUrl)
+            
         else:
             f = open(defualt_file, "w")
             f.write(strSource.encode('utf-8'))
@@ -597,7 +598,7 @@ def reloadDefault():
 def checkJsunpack():
     home = ''
     if PY3:
-        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
+        home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
     else:
         home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     resolver_file = os.path.join(home, 'jsunpack.py')
@@ -606,6 +607,7 @@ def checkJsunpack():
         strSource = makeRequest(remoteResolverUrl)
         if strSource is None or strSource == "":
             logga('We failed to get source from '+remoteResolverUrl)
+            
         else:
             #if PY3:
                 #strSource = strSource.decode('utf-8')
@@ -614,7 +616,7 @@ def checkJsunpack():
 def checkPortalPy():
     home = ''
     if PY3:
-        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
+        home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
     else:
         home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     
@@ -623,6 +625,7 @@ def checkPortalPy():
     strSource = makeRequest(remoteResolverUrl)
     if strSource is None or strSource == "":
         logga('We failed to get source from '+remoteResolverUrl)
+        
     
     if os.path.exists(resolver_file)==False:
         logga("UPDATE PORTAL_API")
@@ -647,7 +650,7 @@ def checkPortalPy():
 def checkResolver():
     home = ''
     if PY3:
-        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
+        home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
     else:
         home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     resolver_file = os.path.join(home, 'myResolver.py')
@@ -676,8 +679,12 @@ def checkResolver():
             msgBox("Codice Resolver aggiornato alla versione: "+remote_vers)
             logga('VERSION UPDATE')
 
+def getIPAddress():
+    import socket
+    return socket.gethostbyname(socket.gethostname())
+
 def checkDns():
-    ip = xbmc.getIPAddress()
+    ip = getIPAddress()
     dns1 = xbmc.getInfoLabel('Network.DNS1Address')
     dns2 = xbmc.getInfoLabel('Network.DNS2Address')
     gate = xbmc.getInfoLabel('Network.GatewayAddress')
@@ -721,7 +728,7 @@ def checkPluginInstalled(pluginId):
     
 
 def checkMsgOnLog():
-    LOGPATH = xbmc.translatePath('special://logpath')
+    LOGPATH = xbmcvfs.translatePath('special://logpath')
     log_file = os.path.join(LOGPATH, 'kodi.log')
     if os.path.exists(log_file)==True:
         try:
@@ -743,6 +750,7 @@ def uploadLog():
     except:
         logga.info('loguploader seems to be not installed or disabled')
         
+        
     if not addon_log_uploader:
         xbmc.executebuiltin('InstallAddon(script.kodi.loguploader)', wait=True)
         xbmc.executeJSONRPC('{"jsonrpc": "2.0", "id":1, "method": "Addons.SetAddonEnabled", "params": { "addonid": "script.kodi.loguploader", "enabled": true }}')
@@ -750,6 +758,7 @@ def uploadLog():
             addon_log_uploader = xbmcaddon.Addon('script.kodi.loguploader')
         except:
             logga.info('Logfile Uploader cannot be found')
+            
     if not addon_log_uploader:
         logga('Cannot send log because Logfile Uploader cannot be found')
         msgBox("Il plugin Kodi File Uploader non risulta installato. Lo trovi nella repo di Kodi sotto Addon-Programmi.")
@@ -758,7 +767,7 @@ def uploadLog():
     return True
 
 def copyPlayerCoreFactory(parIn):
-    XMLPATH = xbmc.translatePath('special://profile')
+    XMLPATH = xbmcvfs.translatePath('special://profile')
     xml_file = os.path.join(XMLPATH, 'playercorefactory.xml')
     dialog = xbmcgui.Dialog()
     if (xbmc.getCondVisibility("system.platform.android")):
@@ -816,6 +825,7 @@ def m3u2json(src):
         #if PY3:
             #m3uSource = m3uSource.decode('utf-8')		
         logga('OK source')
+        
     regex = r'#EXTINF:(.*?),(.*?)$\s(http.*?//.*?)$'	
     matches = re.compile(regex, re.MULTILINE).findall(m3uSource)
     
@@ -939,10 +949,12 @@ def personalList(listtType=''):
     baseScript = makeRequest("https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/enterScrip.txt")
     if baseScript is None or baseScript == "":
         logga('We failed to get source from serverSource')
+        
     else:
         #if PY3:
             #baseScript = baseScript.decode('utf-8')
         logga('OK get source from serverSource')
+        
     baseScript = baseScript.replace("\r\n", "").replace("\n", "").replace("\r", "")          
     urlToCall=""
     fileName=""
@@ -1009,13 +1021,15 @@ def remoteLog(msgToLog):
     strSource = makeRequest(urlLog)
     if strSource is None or strSource == "":
         logga('MANDRA_LOG: NO REMOTE LOG')
+        
     else:
         logga('OK REMOTE LOG')
+        
 
 def writeFileLog(strIn, modo):
     home = ''
     if PY3:
-        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
+        home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
         log_file = os.path.join(home, 'mandrakodi2.log')
         f = open(log_file, modo, encoding="utf-8")
         f.write(strIn)
@@ -1028,7 +1042,7 @@ def writeFileLog(strIn, modo):
         f.close()
 
 def deleteSettings(parIn):
-    XMLPATH = xbmc.translatePath('special://profile')
+    XMLPATH = xbmcvfs.translatePath('special://profile')
     xml_file = os.path.join(XMLPATH, 'addon_data/plugin.video.mandrakodi/settings.xml')
     if os.path.exists(xml_file):
         dialog = xbmcgui.Dialog()
@@ -1051,7 +1065,7 @@ def run():
                 checkJsunpack()
                 checkPortalPy()
                 checkDns()
-                checkMandraScript()
+                #checkMandraScript()
             checkSkin()
             getSource()
         else:
@@ -1182,3 +1196,4 @@ def run():
         logga("Last ViewMode Saved: "+kodiView)
     if debug == "on":
         logging.warning("MANDRA_LOG: \n"+testoLog)
+        
