@@ -1,8 +1,8 @@
-versione='1.1.45'
+versione='1.1.46'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 29.12.2022
+# Last update: 08.01.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -21,6 +21,7 @@ debug = xbmcaddon.Addon(id=addon_id).getSetting("debug")
 PY3 = sys.version_info[0] == 3
 if PY3:
     import urllib.parse as myParse
+    import xbmcvfs
 else:
     import urllib as myParse
 
@@ -413,7 +414,6 @@ def urlsolver(url):
     return url
 
 def resolveMyUrl(url):
-    import xbmcvfs
     try:
         import resolveurl
     except:
