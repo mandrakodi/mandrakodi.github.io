@@ -1,8 +1,8 @@
-versione='1.2.19'
+versione='1.2.20'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 18.12.2022
+# Last update: 08.01.2022
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -728,7 +728,12 @@ def checkPluginInstalled(pluginId):
     
 
 def checkMsgOnLog():
-    LOGPATH = xbmcvfs.translatePath('special://logpath')
+    LOGPATH = ''
+    if PY3:
+        LOGPATH = xbmcvfs.translatePath('special://logpath')
+    else:
+        LOGPATH = xbmc.translatePath('special://logpath')
+    
     log_file = os.path.join(LOGPATH, 'kodi.log')
     if os.path.exists(log_file)==True:
         try:
@@ -767,7 +772,12 @@ def uploadLog():
     return True
 
 def copyPlayerCoreFactory(parIn):
-    XMLPATH = xbmcvfs.translatePath('special://profile')
+    XMLPATH = ''
+    if PY3:
+        XMLPATH = xbmcvfs.translatePath('special://profile')
+    else:
+        XMLPATH = xbmc.translatePath('special://profile')
+    
     xml_file = os.path.join(XMLPATH, 'playercorefactory.xml')
     dialog = xbmcgui.Dialog()
     if (xbmc.getCondVisibility("system.platform.android")):
@@ -1042,7 +1052,12 @@ def writeFileLog(strIn, modo):
         f.close()
 
 def deleteSettings(parIn):
-    XMLPATH = xbmcvfs.translatePath('special://profile')
+    XMLPATH = ''
+    if PY3:
+        XMLPATH = xbmcvfs.translatePath('special://profile')
+    else:
+        XMLPATH = xbmc.translatePath('special://profile')
+    
     xml_file = os.path.join(XMLPATH, 'addon_data/plugin.video.mandrakodi/settings.xml')
     if os.path.exists(xml_file):
         dialog = xbmcgui.Dialog()
