@@ -1,8 +1,8 @@
-versione='1.2.20'
+versione='1.2.21'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 08.01.2022
+# Last update: 08.01.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -681,13 +681,23 @@ def checkResolver():
 
 def getIPAddress():
     import socket
-    return socket.gethostbyname(socket.gethostname())
+    try:
+        return socket.gethostbyname(socket.gethostname())
+    except:
+        return "0.0.0.0"
 
 def checkDns():
     ip = getIPAddress()
-    dns1 = xbmc.getInfoLabel('Network.DNS1Address')
-    dns2 = xbmc.getInfoLabel('Network.DNS2Address')
-    gate = xbmc.getInfoLabel('Network.GatewayAddress')
+    dns1 = "0.0.0.0"
+    dns2 = "0.0.0.0"
+    gate = "0.0.0.0"
+    try:
+        dns1 = xbmc.getInfoLabel('Network.DNS1Address')
+        dns2 = xbmc.getInfoLabel('Network.DNS2Address')
+        gate = xbmc.getInfoLabel('Network.GatewayAddress')
+    except:
+        pass
+    
     logging.warning("MANDRA_DNS")
     logga("############ START NETWORK INFO ############")
     logga("## IP: %s" %  (ip))
