@@ -1,8 +1,8 @@
-versione='1.1.46'
+versione='1.1.47'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 08.01.2023
+# Last update: 15.01.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -306,7 +306,20 @@ def GetLSProData(page_in, refe=None):
         logga('URL_MARIO '+c)
         return c
 
-    page_data = requests.get(page_in,headers={'user-agent':'iPad','accept':'*/*','referer':refe}).content
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+    s = requests.Session()
+    r = s.get(page_in, headers=headers) 
+
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+
+    s = requests.Session()
+    page_data = s.get(page_in, headers=headers).content
+
+    #page_data = requests.get(page_in,headers={'user-agent':'iPad','accept':'*/*','referer':refe}).content
 
     if PY3:
         page_data = page_data.decode('utf-8')
@@ -363,10 +376,13 @@ def GetLSProData(page_in, refe=None):
         return findM3u8(src, page_in)
 
     fu = requests.get(src, headers={'user-agent':'iPad','referer':page_in}).text
-    find = re.findall('eval\(function(.+?.+)', fu)[0]
-    unpack = jsunpack.unpack(find)
-    c = re.findall('var src="([^"]*)',unpack)[0]
-    return c + '|referer=' + src
+    try:
+        find = re.findall('eval\(function(.+?.+)', fu)[0]
+        unpack = jsunpack.unpack(find)
+        c = re.findall('var src="([^"]*)',unpack)[0]
+        return c + '|referer=' + src
+    except:
+        return page_in
 
 def wigi(parIn=None):
 
@@ -377,11 +393,11 @@ def wigi(parIn=None):
         wigiUrl = "https://starlive.xyz/"+parIn
 
     video_urls = []
-    logga('PAR: '+parIn)
+    logga('PAR_WIGI: '+parIn)
     video_url = GetLSProData(wigiUrl)
     logga('video_url '+video_url)
     msg = ""
-    if video_url == '':
+    if video_url == '' or video_url == wigiUrl:
         video_url = parIn
         msg = "NO LINK FOUND"
     video_urls.append((video_url, msg))
