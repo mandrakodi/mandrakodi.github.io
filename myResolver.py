@@ -1,8 +1,8 @@
-versione='1.1.47'
+versione='1.1.48'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 15.01.2023
+# Last update: 16.01.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -353,8 +353,8 @@ def GetLSProData(page_in, refe=None):
 
     if "starlive.xyz" in src:
         logga('starlive.xyz ')
-        return wigi(src.replace("starlive.xyz", "curvaweb.com"))
-    elif "embed" in src and ("curvaweb" in page_in or "elixx" in page_in or "sportsembed" in page_in or "pepperlive" in page_in or "l1l1.to" in page_in):
+        return wigi(src)
+    elif "embed" in src and ("starlive" in page_in or "elixx" in page_in or "sportsembed" in page_in or "pepperlive" in page_in or "l1l1.to" in page_in):
         logga('iframe_embed for '+page_in)
     elif "buzztv" in src:
         logga('BUZZTV ')
