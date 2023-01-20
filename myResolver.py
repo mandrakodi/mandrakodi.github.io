@@ -1,8 +1,8 @@
-versione='1.1.48'
+versione='1.1.49'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 16.01.2023
+# Last update: 20.01.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -483,11 +483,39 @@ def get_resolved(url):
 
     return resolveMyUrl(url)
 
+def scommunity(parIn=None):
+    import time, json
+    base="https://streamingcommunity.online/watch/"
+    
+    randomUA=getRandomUA()
+
+    headSCt={'user-agent':randomUA}
+    urlComm = base + parIn
+    logga("urlComm => "+urlComm)
+    s = requests.Session()
+    r = s.get(urlComm, headers=headSCt) 
+
+    time.sleep(2.5)
+
+    s = requests.Session()
+    page_data = s.get(urlComm, headers=headSCt).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    patron = r'<video-player response="(.*?)">'
+    jsonVideo = preg_match(page_data, patron)
+    dataJson=jsonVideo.replace('&quot;', '"')
+    arrJ = json.loads(dataJson)
+    tit = (arrJ["title"]["name"]).replace("&#039;", "'").replace("&amp;", "&")
+    scws_id = +arrJ["scws_id"]
+    logga("scws_id => "+str(scws_id))
+    return scws(str(scws_id))
+
+
 def scws(parIn=None):
     import json
     video_urls = []
 
-    base="https://streamingcommunity.cheap/"
+    base="https://streamingcommunity.online/"
     randomUA=getRandomUA()
 
     headSCt={'user-agent':randomUA}
@@ -2730,6 +2758,7 @@ def run (action, params=None):
         'pulive': pulive,
         'voe': voe,
         'taxi': taxi,
+        'scom': scommunity,
         'stape': streamTape,
         'urlsolve': resolveMyUrl,
         'rocktalk': rocktalk
