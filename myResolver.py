@@ -1,8 +1,8 @@
-versione='1.1.49'
+versione='1.1.50'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 20.01.2023
+# Last update: 23.01.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -361,7 +361,7 @@ def GetLSProData(page_in, refe=None):
         return GetLSProData(src)
     elif "starlive.xyz" in src:
         logga('starlive.xyz ')
-        return GetLSProData(src.replace("starlive.xyz", "curvaweb"), page_in)
+        return GetLSProData(page_in)
     elif "cloudstream" in src:
         logga('CLOUDSTREAM')
         return GetLSProData(src)
