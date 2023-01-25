@@ -1,4 +1,4 @@
-versione='1.1.51'
+versione='1.1.52'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -357,11 +357,11 @@ def GetLSProData(page_in, refe=None):
         fu = requests.get(pageNew, headers={'user-agent':'iPad','referer':page_in}).text
         find = re.findall("source: '(.*?)'", fu)[0]
         return find+"|referer=https://nopay.info"+src
-    elif "embed" in src and ("starlive" in page_in or "elixx" in page_in or "sportsembed" in page_in or "pepperlive" in page_in or "l1l1.to" in page_in):
-        logga('iframe_embed for '+page_in)
     elif "buzztv" in src:
         logga('BUZZTV ')
         return GetLSProData(src)
+    elif "embed" in src and ("starlive" in page_in or "elixx" in page_in or "sportsembed" in page_in or "pepperlive" in page_in or "l1l1.to" in page_in or "buzztv" in page_in):
+        logga('iframe_embed for '+page_in)
     elif "starlive.xyz" in src:
         logga('starlive.xyz ')
         return GetLSProData(page_in)
