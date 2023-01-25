@@ -1,8 +1,8 @@
-versione='1.1.50'
+versione='1.1.51'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.01.2023
+# Last update: 25.01.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -351,9 +351,12 @@ def GetLSProData(page_in, refe=None):
     src = 'https:' + src if src.startswith('//') else src
     logga('iframe_url '+src)
 
-    if "starlive.xyz" in src:
+    if "nopay.info" in page_in and src.startswith('/ch/'):
         logga('starlive.xyz ')
-        return wigi(src)
+        pageNew="https://nopay.info"+src
+        fu = requests.get(pageNew, headers={'user-agent':'iPad','referer':page_in}).text
+        find = re.findall("source: '(.*?)'", fu)[0]
+        return find+"|referer=https://nopay.info"+src
     elif "embed" in src and ("starlive" in page_in or "elixx" in page_in or "sportsembed" in page_in or "pepperlive" in page_in or "l1l1.to" in page_in):
         logga('iframe_embed for '+page_in)
     elif "buzztv" in src:
