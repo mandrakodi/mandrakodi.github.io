@@ -1,4 +1,4 @@
-versione='1.1.54'
+versione='1.1.55'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -407,6 +407,7 @@ def wigi(parIn=None):
     if "|" in video_url:
         arrV = video_url.split("|")
         video_urls.append((arrV[0]+"|connection=keepalive&User-Agent=Lavf%2F56.25.101", "[COLOR orange]LINK 2[/COLOR]"))		
+        video_urls.append((video_url, msg))		
     return video_urls
 
 def urlsolver(url):
