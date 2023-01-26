@@ -1,4 +1,4 @@
-versione='1.1.55'
+versione='1.1.56'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -195,7 +195,7 @@ def findM3u8(linkIframe, refPage):
         if video_url == "":
             video_url = preg_match(page_data2, r"source:\s*'([^']+)")
         if video_url != "":
-            vUrl = video_url + '|User-Agent=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F74.0.3729.169+Safari%2F537.36&Referer='+linkIframe
+            vUrl = video_url + '|User-Agent=Lavf%2F56.25.101&Referer='+linkIframe
         logga('video_url '+vUrl)
 
     except:
@@ -406,8 +406,7 @@ def wigi(parIn=None):
     video_urls.append((video_url, msg))
     if "|" in video_url:
         arrV = video_url.split("|")
-        video_urls.append((arrV[0]+"|connection=keepalive&User-Agent=Lavf%2F56.25.101", "[COLOR orange]LINK 2[/COLOR]"))		
-        video_urls.append((video_url, msg))		
+        video_urls.append((arrV[0], "[COLOR orange]LINK 2[/COLOR]"))		
     return video_urls
 
 def urlsolver(url):
