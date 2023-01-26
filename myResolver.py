@@ -1,4 +1,4 @@
-versione='1.1.52'
+versione='1.1.53'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -399,7 +399,7 @@ def wigi(parIn=None):
     logga('PAR_WIGI: '+parIn)
     video_url = GetLSProData(wigiUrl)
     logga('video_url '+video_url)
-    msg = ""
+    msg = "PLAY"
     if video_url == '' or video_url == wigiUrl:
         video_url = parIn
         msg = "NO LINK FOUND"
