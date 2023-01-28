@@ -26,6 +26,7 @@
 		</player>
 		<player name="Wiseplay" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.wiseplay</filename>
+			<args> "{0}"</args>
 			<hidexbmc>false</hidexbmc>
 		</player>
 		<player name="WuffyPlayer" type="ExternalPlayer" audio="false" video="true">
@@ -58,6 +59,7 @@
 		</player>
 		<player name="MagnetTorrentPlayer" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.iiplayer.sunplayer</filename>
+			<args> "{0}"</args>
 			<hidexbmc>false</hidexbmc>
 		</player>
 	</players>
