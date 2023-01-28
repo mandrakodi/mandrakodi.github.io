@@ -56,14 +56,14 @@
 			<filename>com.amazon.cloud9</filename>
 			<hidexbmc>false</hidexbmc>
 		</player>
-		<player name="Amnis" type="ExternalPlayer" audio="false" video="true">
-			<filename>com.amnis</filename>
+		<player name="MagnetTorrentPlayer" type="ExternalPlayer" audio="false" video="true">
+			<filename>com.iiplayer.sunplayer</filename>
 			<hidexbmc>false</hidexbmc>
 		</player>
 	</players>
 	
 	<rules action="overwrite">
-		<rule name="magnet" filename="magnet.*" player="Amnis" />
+		<rule name="magnet" filename="magnet.*" player="MagnetTorrentPlayer" />
 		<rule name="acestream" filename="acestream://.*" player="AceStream" />
 		<rule name="torrent" filename=".*torrent" player="AceStream" />
 		<rule name="wise" filename=".*extPL=wise" player="Wiseplay" />
