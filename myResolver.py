@@ -1,8 +1,8 @@
-versione='1.1.57'
+versione='1.1.58'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 26.01.2023
+# Last update: 28.01.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -290,8 +290,19 @@ def proData(parIn=None):
     video_urls.append((video_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi"))
     return video_urls
 
+
+def decodeProtected(linkIn):
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+    s = requests.Session()
+    page=s.get(linkIn, allow_redirects=False,timeout=20)
+    redir=page.headers["Location"]
+    logga("TROVATO: "+redir+" FROM "+page.url)
+    return redir
+
 def GetLSProData(page_in, refe=None):
-    import jsunpack
+    import jsunpack, time
 
     logga('page_in '+page_in)
     if refe != None:
@@ -315,7 +326,7 @@ def GetLSProData(page_in, refe=None):
     headers = {
         'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
     }
-
+    time.sleep(2)
     s = requests.Session()
     page_data = s.get(page_in, headers=headers).content
 
@@ -364,7 +375,11 @@ def GetLSProData(page_in, refe=None):
         logga('iframe_embed for '+page_in)
     elif "starlive.xyz" in src:
         logga('starlive.xyz ')
-        return GetLSProData(page_in)
+        return GetLSProData(src)
+    elif "protectlink.stream" in src:
+        logga('protectlink.stream')
+        newSrc=decodeProtected(src)
+        return resolveMyUrl(newSrc)
     elif "cloudstream" in src:
         logga('CLOUDSTREAM')
         return GetLSProData(src)
@@ -399,14 +414,11 @@ def wigi(parIn=None):
     logga('PAR_WIGI: '+parIn)
     video_url = GetLSProData(wigiUrl)
     logga('video_url '+video_url)
-    msg = "[COLOR lime]PLAY[/COLOR]"
+    msg = "[COLOR lime]PLAY STREAM[/COLOR]"
     if video_url == '' or video_url == wigiUrl:
         video_url = parIn
         msg = "NO LINK FOUND"
-    video_urls.append((video_url, msg))
-    if "|" in video_url:
-        arrV = video_url.split("|")
-        video_urls.append((arrV[0], "[COLOR orange]LINK 2[/COLOR]"))		
+    video_urls.append((video_url+"&connection=keepalive", msg))
     return video_urls
 
 def urlsolver(url):
