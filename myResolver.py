@@ -212,7 +212,7 @@ def findM3u8(linkIframe, refPage):
             video_url = preg_match(page_data2, express1)
         if video_url != "":
             vUrl = video_url + '|User-Agent=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F74.0.3729.169+Safari%2F537.36&Referer='+linkIframe
-        logga('video_url '+vUrl+"\n"+page_data2)
+        logga('video_url '+vUrl)
 
     except:
         pass
