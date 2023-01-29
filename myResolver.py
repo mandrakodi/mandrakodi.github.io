@@ -1,8 +1,8 @@
-versione='1.1.58'
+versione='1.1.59'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 28.01.2023
+# Last update: 29.01.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -183,20 +183,36 @@ def wizhd(parIn=None):
     
 
 def findM3u8(linkIframe, refPage):
-    #logging.warning('URL: '+linkIframe)
+    import time
     vUrl = ""
     try:
-        page_data2 = requests.get(linkIframe,headers={'user-agent':'iPad','accept':'*/*','referer':refPage}).content
+        headers = {
+            'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+        }
+        s = requests.Session()
+        r = s.get(linkIframe, headers=headers) 
+
+        headers = {
+            'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+        }
+        time.sleep(2)
+        s = requests.Session()
+        page_data2 = s.get(linkIframe,headers=headers).content
 
         if PY3:
             page_data2 = page_data2.decode('utf-8')
 
+        
+        
         video_url = preg_match(page_data2, r'source:\s*"([^"]+)')
         if video_url == "":
             video_url = preg_match(page_data2, r"source:\s*'([^']+)")
+        if video_url == "":
+            express1 = r'file:"(.*?)"'
+            video_url = preg_match(page_data2, express1)
         if video_url != "":
             vUrl = video_url + '|User-Agent=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F74.0.3729.169+Safari%2F537.36&Referer='+linkIframe
-        logga('video_url '+vUrl)
+        logga('video_url '+vUrl+"\n"+page_data2)
 
     except:
         pass
@@ -316,6 +332,10 @@ def GetLSProData(page_in, refe=None):
         c = re.findall('src:"([^"]*)',unpack)[0]
         logga('URL_MARIO '+c)
         return c
+
+    if "streamhide.to" in page_in:
+        logga('URL_STREAMHIDE ')
+        return findM3u8(page_in, page_in)
 
     headers = {
         'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
