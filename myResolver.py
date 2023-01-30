@@ -1,8 +1,8 @@
-versione='1.1.59'
+versione='1.1.60'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 29.01.2023
+# Last update: 30.01.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -25,9 +25,162 @@ if PY3:
 else:
     import urllib as myParse
 
+
+#=================================================
+# TOOLS VARI
+#=================================================
+
 def logga(mess):
     if debug == "on":
         logging.warning("MANDRA_RESOLVE: "+mess)
+
+def downloadHttpPage(urlIn, **opt):
+    import time
+    toRet=""
+    try:
+        headers = {
+            'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+        }
+        s = requests.Session()
+        if opt.get('header', None) is not None:
+            headers = opt['header']
+        
+        if opt.get('post', None) is not None:
+            postData=opt['post']
+            toRet = s.post(urlIn, data=postData, allow_redirects=True, headers=headers, timeout=15).content
+        else:    
+            r = s.get(urlIn, headers=headers) 
+
+            time.sleep(2)
+            s = requests.Session()
+            toRet = s.get(urlIn, headers=headers).content
+
+        if PY3:
+            toRet = toRet.decode('utf-8')
+    except:
+        pass
+
+    return toRet
+
+
+def find_single_match(data, patron, index=0):
+    try:
+        if index == 0:
+            matches = re.search(patron, data, flags=re.DOTALL)
+            if matches:
+                if len(matches.groups()) == 1:
+                    return matches.group(1)
+                elif len(matches.groups()) > 1:
+                    return matches.groups()
+                else:
+                    return matches.group()
+            else:
+                return ""
+        else:
+            matches = re.findall(patron, data, flags=re.DOTALL)
+            return matches[index]
+    except:
+        return ""
+
+def find_multiple_matches(text, pattern):
+    return re.findall(pattern, text, re.DOTALL)
+
+def get_domain_from_url(url):
+    if PY3:
+       import urllib.parse as urlparse                             # It is very slow in PY2. In PY3 it is native
+    else:
+       import urlparse                                             # We use the native of PY2 which is faster
+
+    parsed_url = urlparse.urlparse(url)
+    try:
+        filename = parsed_url.netloc
+    except:
+        # If it fails it is because the implementation of parsed_url does not recognize the attributes as "path"
+        if len(parsed_url) >= 4:
+            filename = parsed_url[1]
+        else:
+            filename = ""
+
+    return filename
+
+def girc(page_data, url, co, size='invisible'):
+    """
+    Code adapted from https://github.com/vb6rocod/utils/
+    Copyright (C) 2019 vb6rocod
+    and https://github.com/addon-lab/addon-lab_resolver_Project
+    Copyright (C) 2021 ADDON-LAB, KAR10S
+    """
+    import re, random, string
+    
+    hdrs = {'Referer': url}
+    rurl = 'https://www.google.com/recaptcha/api.js'
+    aurl = 'https://www.google.com/recaptcha/api2'
+    key = re.search(r"""(?:src="{0}\?.*?render|data-sitekey)=['"]?([^"']+)""".format(rurl), page_data)
+    if key:
+        key = key.group(1)
+        # rurl = '{0}?render={1}'.format(rurl, key)
+        page_data1 = downloadHttpPage(rurl, headers=hdrs)
+        v = re.findall('releases/([^/]+)', page_data1)[0]
+        rdata = {'ar': 1,
+                 'k': key,
+                 'co': co,
+                 'hl': 'it',
+                 'v': v,
+                 'size': size,
+                 'sa': 'submit',
+                 'cb': ''.join([random.choice(string.ascii_lowercase + string.digits) for i in range(12)])}
+        page_data2 = downloadHttpPage('{0}/anchor?{1}'.format(aurl, myParse.urlencode(rdata)), headers=hdrs)
+        rtoken = re.search('recaptcha-token.+?="([^"]+)', page_data2)
+        if rtoken:
+            rtoken = rtoken.group(1)
+        else:
+            return ''
+        pdata = {'v': v,
+                 'reason': 'q',
+                 'k': key,
+                 'c': rtoken,
+                 'sa': '',
+                 'co': co}
+        hdrs.update({'Referer': aurl})
+        page_data3 = downloadHttpPage('{0}/reload?k={1}'.format(aurl, key), post=pdata, headers=hdrs)
+        gtoken = re.search('rresp","([^"]+)', page_data3)
+        if gtoken:
+            return gtoken.group(1)
+
+    return ''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def rocktalk(parIn=None):
     from base64 import b64encode, b64decode
@@ -93,6 +246,60 @@ def rocktalk(parIn=None):
                     linksTmp.append(link)
 
     return links
+
+def streamsb(page_url):
+    import base64
+    video_urls = []
+    logga ("PAGE_SB: "+page_url)
+    data = downloadHttpPage(page_url)
+    
+    title="VIDEO"
+    try:
+        title=find_single_match(data, r'<h1 class="(.*?)">(.*?)<\/h1>')[1].replace("Download ", "")
+    except:
+        pass
+
+    dl_url = 'https://{}/dl?op=download_orig&id={}&mode={}&hash={}'
+    
+    host = get_domain_from_url(page_url)
+    logga ("HOST_SB: "+host)
+    
+    #sources = find_multiple_matches(data, r'download_video([^"]+)[^\d]+(\d+)p')
+    sources = find_multiple_matches(data, r"download_video\('(.*?)','(.*?)','(.*?)'\)")
+    
+    if sources:
+        logga ("OK_SOURCE_SB: "+sources[0][0]+" - "+sources[0][1]+" - "+sources[0][2]) 
+        code = sources[0][0]
+        mode = "n"
+        hash = sources[0][2]
+        newUrl=dl_url.format(host, code, mode, hash)
+        logga ("NEW_URL_SB: "+newUrl)
+        data = downloadHttpPage(newUrl)
+        
+        captcha = girc(data, 'https://{0}/'.format(host), base64.b64encode('https://{0}:443'.format(host).encode('utf-8')).decode('utf-8').replace('=', ''))
+        if captcha:
+            logga ("CAPTCHA_SB: "+captcha)
+            hash = find_single_match(data, r'"hash" value="([^"]+)')
+            logga ("HASH_CAPTCHA_SB: "+hash)
+            newUrl2 = dl_url.format(host, code, mode, hash)
+            data = downloadHttpPage(newUrl2, post='op=download_orig&id='+code+'&mode='+mode+'&hash='+hash+'&g-recaptcha-response='+captcha, timeout=10, header={'Referer':newUrl})
+            media_url = find_single_match(data, r'<a href="http(.*?)" class="(.*?)">')
+            if media_url:
+                vUrl="http"+str(media_url[0])
+                video_urls.append([vUrl+"|Referer="+page_url, "[COLOR lime]PLAY "+title+"[/COLOR]"])
+            else:
+                logga ("NO_MEDIA_URL:") 
+        else:
+            logga ("NO_CAPTCHA_SB\n"+data)
+            media_url = find_single_match(data, r'<a href="http(.*?)" class="(.*?)">')
+            if media_url:
+                vUrl="http"+str(media_url[0])
+                video_urls.append([vUrl+"|Referer="+page_url, "[COLOR gold]PLAY "+title+"[/COLOR]"])
+    else:
+       video_urls.append(["", "[COLOR red]NO LINK FOUND[/COLOR]"])
+       logga ("NO_SOURCE_SB: \n") 
+    return video_urls
+
 
 
 def myStream(parIn=None):
@@ -181,6 +388,8 @@ def wizhd(parIn=None):
 
     return video_urls
     
+
+
 
 def findM3u8(linkIframe, refPage):
     import time
@@ -2796,7 +3005,8 @@ def run (action, params=None):
         'scom': scommunity,
         'stape': streamTape,
         'urlsolve': resolveMyUrl,
-        'rocktalk': rocktalk
+        'rocktalk': rocktalk,
+        'stsb' : streamsb
     }
 
     if action in commands:
