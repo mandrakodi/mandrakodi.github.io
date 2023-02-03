@@ -1,8 +1,8 @@
-versione='1.1.60'
+versione='1.1.61'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 30.01.2023
+# Last update: 03.02.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -45,16 +45,22 @@ def downloadHttpPage(urlIn, **opt):
         if opt.get('header', None) is not None:
             headers = opt['header']
         
+        if opt.get('headers', None) is not None:
+            headers = opt['headers']
+        
         if opt.get('post', None) is not None:
             postData=opt['post']
             toRet = s.post(urlIn, data=postData, allow_redirects=True, headers=headers, timeout=15).content
         else:    
-            r = s.get(urlIn, headers=headers) 
-
-            time.sleep(2)
-            s = requests.Session()
-            toRet = s.get(urlIn, headers=headers).content
-
+            logga("START")
+            toRet = s.get(urlIn, headers=headers, timeout=45) 
+            if opt.get('sleep', None) is not None:
+                logga("SLEEP")
+                time.sleep(opt['post'])
+                logga("RE-START")
+                s = requests.Session()
+                toRet = s.get(urlIn, headers=headers, timeout=45).content
+            logga("END")
         if PY3:
             toRet = toRet.decode('utf-8')
     except:
@@ -148,33 +154,6 @@ def girc(page_data, url, co, size='invisible'):
             return gtoken.group(1)
 
     return ''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -526,20 +505,46 @@ def decodeProtected(linkIn):
     logga("TROVATO: "+redir+" FROM "+page.url)
     return redir
 
+def checkUnpacked(page_in):
+    import jsunpack
+    toRet=""
+    fu = downloadHttpPage(page_in, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':page_in})
+    if fu != "":
+        find = ""
+        try:
+            find = re.findall('eval\(function(.+?.+)', fu)[0]
+            unpack = jsunpack.unpack(find)
+            logga('UNPACK: '+unpack)
+            try:
+                toRet = re.findall('src:"([^"]*)',unpack)[0]
+            except:
+                try:
+                    toRet = re.findall('file:"([^"]*)',unpack)[0]
+                except:
+                    pass
+            logga('URL_UNPACK '+toRet)
+        except:
+            pass
+    else:
+        logga('LA PAGINA '+page_in+' NON RISPONDE')
+        toRet="NO_PAGE"
+    return toRet
+
 def GetLSProData(page_in, refe=None):
     import jsunpack, time
 
     logga('page_in '+page_in)
     if refe != None:
         logga('REFER '+refe)
-    if "maxstream" in page_in:
-        logga('MAX STREAM')
-        fu = requests.get(page_in, headers={'user-agent':'iPad','referer':page_in}).text
-        find = re.findall('eval\(function(.+?.+)', fu)[0]
-        unpack = jsunpack.unpack(find)
-        logga('UNPACK: '+unpack)
-        c = re.findall('src:"([^"]*)',unpack)[0]
-        logga('URL_MARIO '+c)
+    
+    c = checkUnpacked(page_in)
+    if c == "NO_PAGE":
+        dialog = xbmcgui.Dialog()
+        mess = 'La pagina '+page_in+' non risponde'
+        dialog.ok("Mandrakodi", mess)
+        return ""
+    if c != "":
+        logga('UNPACKED')
         return c
 
     if "streamhide.to" in page_in:
@@ -759,7 +764,7 @@ def scws(parIn=None):
     import json
     video_urls = []
 
-    base="https://streamingcommunity.online/"
+    base="https://streamingcommunity.cafe/"
     randomUA=getRandomUA()
 
     headSCt={'user-agent':randomUA}
@@ -1053,7 +1058,7 @@ def taxi(parIn):
         logga('LINK-TAXI: '+link+" "+ep)
         if (numIt > 0):
             jsonText = jsonText + ','    
-        jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"urlsolve@@'+link+'",'
+        jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"proData@@'+link+'",'
         jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"'+ret1.replace("streaming SERIE TV - euroStreaming", "")+'"}'
