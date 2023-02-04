@@ -1,8 +1,8 @@
-versione='1.1.61'
+versione='1.1.62'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 03.02.2023
+# Last update: 04.02.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -464,25 +464,16 @@ def daddy(parIn=None):
     arrTmp = parIn.split("stream-")
     arrTmp2 = arrTmp[1].split(".")
     vId = arrTmp2[0]
-    newUrlHost="https://webudi.vhls.ru.com/lb/premium37/index.m3u8"
-    rl = "https://webudi.openhd.lol/ddy1/premium"+vId+"/tracks-v1a1/mono.m3u8"
     if video_url == "":
         video_url = "https://webudi.vhls.ru.com/lb/premium"+vId+"/index.m3u8"
     
-    final_url = video_url + "|connection=keepalive&Referer=https://streamservicehd.click/premiumtv/livetvon.php?id="+vId+"&User-Agent=Lavf%2F56.25.101"
-    final_url3 = video_url + "|Referer=https://streamservicehd.click/&User-Agent=ipad&connection=keepalive"
-    final_url2 = video_url.replace("index.m3u8", "tracks-v1a1/mono.m3u8")+"|connection=keepalive&Referer=https://streamservicehd.click/premiumtv/livetvon.php?id="+vId+"&User-Agent=Lavf%2F56.25.101"
-    
 
+    randomUa=getRandomUA()
+    final_url = video_url + "|connection=keepalive&Referer=https://streamservicehd.click/premiumtv/livetvon.php?id="+vId+"&User-Agent="+randomUa
     
 
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+arrTmp2[0]+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
     
-    """
-    if "|" in video_url:
-        arrV = video_url.split("|")
-        video_urls.append((arrV[0], ""))		
-    """
     return video_urls
 
 
@@ -605,7 +596,7 @@ def GetLSProData(page_in, refe=None):
     elif "buzztv" in src:
         logga('BUZZTV ')
         return GetLSProData(src)
-    elif "embed" in src and ("starlive" in page_in or "elixx" in page_in or "sportsembed" in page_in or "pepperlive" in page_in or "l1l1.to" in page_in or "buzztv" in page_in):
+    elif "embed" in src and ("starlive" in page_in or "elixx" in page_in or "sportsonline" in page_in or "pepperlive" in page_in or "l1l1.to" in page_in or "buzztv" in page_in):
         logga('iframe_embed for '+page_in)
     elif "starlive.xyz" in src:
         logga('starlive.xyz ')
