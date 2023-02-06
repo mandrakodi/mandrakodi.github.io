@@ -1,8 +1,8 @@
-versione='1.1.62'
+versione='1.1.63'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 04.02.2023
+# Last update: 06.02.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -65,8 +65,8 @@ def downloadHttpPage(urlIn, **opt):
             toRet = toRet.decode('utf-8')
     except:
         pass
-
-    return toRet
+    logga("PAGE:\n"+toRet.text)
+    return toRet.text
 
 
 def find_single_match(data, patron, index=0):
@@ -480,6 +480,9 @@ def daddy(parIn=None):
 def proData(parIn=None):
     video_urls = []
     logga('PAR: '+parIn)
+    if "supervideo.tv" in parIn:
+        logga('CALL SUPERVIDEO')
+        return supervideo(parIn)
     video_url = GetLSProData(parIn)
     logga('URL PRODATA: '+video_url)
     video_urls.append((video_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi"))
@@ -608,6 +611,9 @@ def GetLSProData(page_in, refe=None):
     elif "cloudstream" in src:
         logga('CLOUDSTREAM')
         return GetLSProData(src)
+    elif "supervideo.tv" in src:
+        logga('SUPERVIDEO')
+        return supervideo(src)
     elif "pepperlive" in src or "projectlive" in src:
         logga('PEPPER/PROJECT')
         return GetLSProData(src.replace('projectlive', 'pepperlive'))
@@ -1152,6 +1158,46 @@ def voe(parIn):
     video_urls.append((src+"|referer="+parIn, "[COLOR lime]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
     video_urls.append((src1+"|referer="+parIn, "[COLOR gold]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
     return video_urls
+
+def supervideo(page_url):
+    import jsunpack, ast
+    logga("url=" + page_url)
+    video_urls = []
+    # data = httptools.downloadpage(page_url).data
+    data  = downloadHttpPage(page_url, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':page_url})
+    
+
+    code_data = find_single_match(data, "<script type='text/javascript'>(eval.*)")
+    if code_data:
+        code = jsunpack.unpack(code_data)
+
+        # corrections
+        if 'file' in code and not '"file"'in code: code = code.replace('file','"file"')
+        if 'label' in code and not '"label"'in code: code = code.replace('label','"label"')
+
+        match = find_single_match(code, r'sources:(\[[^]]+\])')
+        lSrc = ast.literal_eval(match)
+
+        # lQuality = ['360p', '720p', '1080p', '4k'][:len(lSrc)-1]
+        # lQuality.reverse()
+
+        for source in lSrc:
+            quality = source['label'] if 'label' in source else 'auto'
+            tit = source['file'].split('.')[-1] 
+            src =  source['file']
+            video_urls.append((src+"|referer="+page_url, "[COLOR lime]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
+            
+
+    else:
+        matches = find_multiple_matches(data, r'src:\s*"([^"]+)",\s*type:\s*"[^"]+"(?:\s*, res:\s(\d+))?')
+        for url, quality in matches:
+            if url.split('.')[-1] != 'm3u8':
+                video_urls.append([url, url.split('.')[-1] + ' [' + quality + '] [SuperVideo]'])
+            else:
+                video_urls.append([url, url.split('.')[-1]])
+
+    return video_urls
+
 
 def getRandomUA():
     import random
@@ -2997,6 +3043,7 @@ def run (action, params=None):
         'vudeo': vudeo,
         'pulive': pulive,
         'voe': voe,
+        'supVid': supervideo,
         'taxi': taxi,
         'scom': scommunity,
         'stape': streamTape,
