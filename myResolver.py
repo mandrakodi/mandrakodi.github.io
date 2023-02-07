@@ -1,4 +1,4 @@
-versione='1.1.64'
+versione='1.1.65'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -67,11 +67,10 @@ def downloadHttpPage(urlIn, **opt):
             logga("END")
         if PY3:
             toRet = toRet.decode('utf-8')
-        toRet=toRet.text
     except:
         pass
-    logga("PAGE:\n"+toRet)
-    return toRet
+    logga("PAGE:\n"+toRet.text)
+    return toRet.text
 
 
 def find_single_match(data, patron, index=0):
