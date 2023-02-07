@@ -1,22 +1,26 @@
-versione='1.1.63'
+versione='1.1.64'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 06.02.2023
+# Last update: 07.02.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
-import xbmcgui
-import xbmc
-import xbmcaddon
 import os
 import string
 import random
+
+import xbmcgui
+import xbmc
+import xbmcaddon
+import xbmcplugin
 
 
 addon_id = 'plugin.video.mandrakodi'
 #selfAddon = xbmcaddon.Addon(id=addon_id)
 debug = xbmcaddon.Addon(id=addon_id).getSetting("debug")
+
+addon_handle = int(sys.argv[1])
 
 PY3 = sys.version_info[0] == 3
 if PY3:
@@ -56,17 +60,18 @@ def downloadHttpPage(urlIn, **opt):
             toRet = s.get(urlIn, headers=headers, timeout=45) 
             if opt.get('sleep', None) is not None:
                 logga("SLEEP")
-                time.sleep(opt['post'])
+                time.sleep(opt['sleep'])
                 logga("RE-START")
                 s = requests.Session()
                 toRet = s.get(urlIn, headers=headers, timeout=45).content
             logga("END")
         if PY3:
             toRet = toRet.decode('utf-8')
+        toRet=toRet.text
     except:
         pass
-    logga("PAGE:\n"+toRet.text)
-    return toRet.text
+    logga("PAGE:\n"+toRet)
+    return toRet
 
 
 def find_single_match(data, patron, index=0):
@@ -476,7 +481,55 @@ def daddy(parIn=None):
     
     return video_urls
 
+def PlayStream(link):
+    baseurl='https://daddylivehd.sx/'
+    UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0'
+    logga("TRY TO GET STREAM FROM "+link)
+    url=link
+    
+    hea={
+        'Referer':baseurl+'/',
+        'user-agent':UA,
+    }
+    
+    resp=requests.post(url, headers=hea).text
+    url_1=re.compile('iframe src="(.*)" width').findall(resp)[0]
+    logga("URL IFRAME "+url_1)
+    hea={
+        'Referer':url,
+        'user-agent':UA,
+    }
+    
+    resp=requests.post(url_1, headers=hea).text
+    stream=re.compile('source:\'(.*)\'').findall(resp)[-1]
+    hdr='Referer='+myParse.quote(str(url_1))+'&User-Agent='+UA
+    logga("URL STREAM "+stream+"|"+hdr)
 
+    
+    
+    play_item = xbmcgui.ListItem(path=stream+'|'+hdr )
+    
+    import inputstreamhelper
+    PROTOCOL = 'hls'
+    is_helper = inputstreamhelper.Helper(PROTOCOL)
+    if is_helper.check_inputstream():
+        logga("OK INPUTSTREAM")
+        play_item = xbmcgui.ListItem(path=stream)
+        
+        play_item.setMimeType('application/x-mpegurl')
+        play_item.setContentLookup(False)
+        if sys.version_info >= (3,0,0):
+            play_item.setProperty('inputstream', is_helper.inputstream_addon)
+        else:
+            play_item.setProperty('inputstreamaddon', is_helper.inputstream_addon)
+        play_item.setProperty('inputstream.adaptive.stream_headers', hdr)        
+        play_item.setProperty("IsPlayable", "true")
+        play_item.setProperty('inputstream.adaptive.manifest_type', PROTOCOL)
+    
+        #xbmcplugin.setResolvedUrl(addon_handle, True, listitem=play_item)
+    return play_item
+    
+   
 def proData(parIn=None):
     video_urls = []
     logga('PAR: '+parIn)
@@ -634,7 +687,7 @@ def GetLSProData(page_in, refe=None):
         return page_in
 
 def wigi(parIn=None):
-
+    import base64
     if parIn.startswith('http'):
         wigiUrl = parIn
     else:
