@@ -1,8 +1,8 @@
-versione='1.2.21'
+versione='1.2.22'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 08.01.2023
+# Last update: 07.02.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -464,56 +464,70 @@ def simpleRegex(page, find):
 def callReolver(metodo, parametro):
     global viewmode
     import myResolver
-
-    retVal = myResolver.run(metodo, parametro)
-
-    xbmcplugin.setContent(_handle, 'movies')
     thumb="https://cdn.pixabay.com/photo/2012/04/12/20/56/play-30619_640.png"
     fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
-    if isinstance(retVal, list):
-        numLink=1
-        oldLink="";
-        for linkTmp in retVal:
-            newList=list(linkTmp)
-            newLink=newList[0]
-            newP=newList[1]
-            info=""
-            if len(newList)>2:
-                info=newList[2]
-                viewmode="503"
+        
+    logga("METODO_RESOLVE: "+metodo+" - PAR: "+parametro)	
+    if metodo=="daddy" and "daddylivehd.sx" in parametro:
+        fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        img="https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png"
+        newTit="[COLOR lime]PLAY STREAM DADDY[/COLOR]"
+    
+        list_item = myResolver.PlayStream(parametro)
+        list_item.setLabel(newTit)
+        list_item.setLabel2(newTit)
+        list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url=list_item.getPath()
+        xbmcplugin.setContent(_handle, 'videos')
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+    else:
+        retVal = myResolver.run(metodo, parametro)
 
-            if len(newList)>3:
-                thumb=newList[3]
-            
-            if len(newList)>4:
-                tipo=newList[4]
-                if tipo == "json":
-                    return jsonToItems(newLink)
+        xbmcplugin.setContent(_handle, 'movies')
+        if isinstance(retVal, list):
+            numLink=1
+            oldLink="";
+            for linkTmp in retVal:
+                newList=list(linkTmp)
+                newLink=newList[0]
+                newP=newList[1]
+                info=""
+                if len(newList)>2:
+                    info=newList[2]
+                    viewmode="503"
 
-            logga("Stream_Url ==> " + newLink)
-            logga("Stream_Tit ==> " + newP)
-            newTit="[COLOR lime]PLAY LINK "+str(numLink)+" ("+newLink[0:4]+")[/COLOR]"
-            if newP != "":
-                newTit=newP
+                if len(newList)>3:
+                    thumb=newList[3]
+                
+                if len(newList)>4:
+                    tipo=newList[4]
+                    if tipo == "json":
+                        return jsonToItems(newLink)
+
+                logga("Stream_Url ==> " + newLink)
+                logga("Stream_Tit ==> " + newP)
+                newTit="[COLOR lime]PLAY LINK "+str(numLink)+" ("+newLink[0:4]+")[/COLOR]"
+                if newP != "":
+                    newTit=newP
+                list_item = xbmcgui.ListItem(label=newTit)
+                list_item.setInfo('video', {'title': newTit,'plot': info,'mediatype': 'movie','credits': 'ElSupremo'})
+                list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
+                list_item.setProperty('IsPlayable', 'true')
+                url = get_url(action='play', url=newLink)
+                if oldLink!=newLink:
+                    oldLink=newLink
+                    xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+                    numLink += 1
+        else:
+            logga("StreamUrl ==> " + retVal)
+            newTit="[COLOR lime]PLAY LINK ("+retVal[0:4]+")[/COLOR]"
             list_item = xbmcgui.ListItem(label=newTit)
-            list_item.setInfo('video', {'title': newTit,'plot': info,'mediatype': 'movie','credits': 'ElSupremo'})
+            list_item.setInfo('video', {'title': newTit,'genre': 'generic','mediatype': 'movie','credits': 'ElSupremo'})
             list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
             list_item.setProperty('IsPlayable', 'true')
-            url = get_url(action='play', url=newLink)
-            if oldLink!=newLink:
-                oldLink=newLink
-                xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
-                numLink += 1
-    else:
-        logga("StreamUrl ==> " + retVal)
-        newTit="[COLOR lime]PLAY LINK ("+retVal[0:4]+")[/COLOR]"
-        list_item = xbmcgui.ListItem(label=newTit)
-        list_item.setInfo('video', {'title': newTit,'genre': 'generic','mediatype': 'movie','credits': 'ElSupremo'})
-        list_item.setArt({'thumb': thumb, 'icon': thumb, 'poster': thumb, 'landscape': fanart, 'fanart': fanart})
-        list_item.setProperty('IsPlayable', 'true')
-        url = get_url(action='play', url=retVal)
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
-    
+            url = get_url(action='play', url=retVal)
+            xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+        
     if metodo != "mac" and metodo != "scws":
         newTit="[COLOR gold]OPEN WEB LINK (WISE)[/COLOR]"
         list_item = xbmcgui.ListItem(label=newTit)
@@ -697,7 +711,7 @@ def checkDns():
         gate = xbmc.getInfoLabel('Network.GatewayAddress')
     except:
         pass
-    
+
     logging.warning("MANDRA_DNS")
     logga("############ START NETWORK INFO ############")
     logga("## IP: %s" %  (ip))
