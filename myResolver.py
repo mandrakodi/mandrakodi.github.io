@@ -1,8 +1,8 @@
-versione='1.1.65'
+versione='1.1.66'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 07.02.2023
+# Last update: 08.02.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -686,20 +686,46 @@ def GetLSProData(page_in, refe=None):
         return page_in
 
 def wigi(parIn=None):
-    import base64
-    if parIn.startswith('http'):
-        wigiUrl = parIn
-    else:
-        #wigiUrl = "https://starlive.xyz/embed.php?id="+parIn
-        wigiUrl = "https://starlive.xyz/"+parIn
-
-    video_urls = []
+    import jsunpack
     logga('PAR_WIGI: '+parIn)
-    video_url = GetLSProData(wigiUrl)
+    video_urls = []
+
+    refe = ""
+    wigiUrl = ""
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+    if "|" in parIn:
+        arr=parIn.split("|")
+        wigiUrl = arr[0]
+        refe = arr[1]
+        headers = {
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
+            "Referer": refe
+        }
+    else:
+       wigiUrl = parIn
+       refe = parIn 
+        
+    logga('URL_WIGI: '+wigiUrl)
+    logga('URL_REFE: '+refe)
+
+    s = requests.Session()
+    fu = s.get(wigiUrl, headers=headers)
+    video_url = wigiUrl
+    try:
+        find = re.findall('eval\(function(.+?.+)', fu.text)[0]
+        unpack = jsunpack.unpack(find)
+        c = re.findall('var src="([^"]*)',unpack)[0]
+        video_url = c + '|referer=' + wigiUrl
+    except:
+        logga("NO PACKED \n"+fu.text)
+        pass
+
+
     logga('video_url '+video_url)
     msg = "[COLOR lime]PLAY STREAM[/COLOR]"
     if video_url == '' or video_url == wigiUrl:
-        video_url = parIn
         msg = "NO LINK FOUND"
     video_urls.append((video_url+"&connection=keepalive", msg))
     return video_urls
