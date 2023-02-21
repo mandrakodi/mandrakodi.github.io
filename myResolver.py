@@ -1,8 +1,8 @@
-versione='1.1.66'
+versione='1.1.67'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 08.02.2023
+# Last update: 21.02.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -809,7 +809,7 @@ def get_resolved(url):
 
 def scommunity(parIn=None):
     import time, json
-    base="https://streamingcommunity.online/watch/"
+    base="https://streamingcommunity.blue/watch/"
     
     randomUA=getRandomUA()
 
@@ -839,7 +839,7 @@ def scws(parIn=None):
     import json
     video_urls = []
 
-    base="https://streamingcommunity.cafe/"
+    base="https://streamingcommunity.blue/"
     randomUA=getRandomUA()
 
     headSCt={'user-agent':randomUA}
