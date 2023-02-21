@@ -1,4 +1,4 @@
-versione='1.1.67'
+versione='1.1.68'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -229,6 +229,22 @@ def rocktalk(parIn=None):
                     linksTmp.append(link)
 
     return links
+
+
+def livetv(page_url):
+    video_urls = []
+    logga ("PAGE_LIVETV: "+page_url)
+    page_data = downloadHttpPage(page_url)
+    src = preg_match(page_data, '<iframe  allowFullScreen="true" scrolling=no frameborder="0 "width="700" height="480" src="([^"]*)')
+    if src != "":
+        final_url = findM3u8(src, page_url)
+        if final_url == "" or final_url == src:
+            final_url = GetLSProData(src)
+        video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
+    else:
+        video_urls.append((page_url, "[COLOR red]NO LINK FOUND[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
+    return video_urls
+
 
 def streamsb(page_url):
     import base64
@@ -3127,6 +3143,7 @@ def run (action, params=None):
         'stape': streamTape,
         'urlsolve': resolveMyUrl,
         'rocktalk': rocktalk,
+        'lvtv': livetv,
         'stsb' : streamsb
     }
 
