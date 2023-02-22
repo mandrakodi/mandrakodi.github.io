@@ -62,6 +62,11 @@
 			<args> "{0}"</args>
 			<hidexbmc>false</hidexbmc>
 		</player>
+		<player name="Amnis" type="ExternalPlayer" audio="false" video="true">
+			<filename>com.amnisr</filename>
+			<args> "{0}"</args>
+			<hidexbmc>false</hidexbmc>
+		</player>
 	</players>
 	
 	<rules action="overwrite">
