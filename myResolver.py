@@ -1,4 +1,4 @@
-versione='1.1.68'
+versione='1.1.69'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -225,7 +225,7 @@ def rocktalk(parIn=None):
             if link:
                 link = link.decode("utf-8")
                 if not link == "dummytext" and link not in linksTmp:
-                    links.append((link, chTit, stream, chImg))
+                    links.append((link+"|user-agent=mediaPlayerhttp%2F1.8+%28Linux%3BAndroid+7.1.2%29+ExoPlayerLib%2F2.5.3", chTit, stream, chImg))
                     linksTmp.append(link)
 
     return links
@@ -393,15 +393,16 @@ def wizhd(parIn=None):
 def findM3u8(linkIframe, refPage):
     import time
     vUrl = ""
+    ua = getRandomUA
     try:
         headers = {
-            'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+            'user-agent': ua
         }
         s = requests.Session()
         r = s.get(linkIframe, headers=headers) 
 
         headers = {
-            'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+            'user-agent': ua
         }
         time.sleep(2)
         s = requests.Session()
@@ -419,7 +420,7 @@ def findM3u8(linkIframe, refPage):
             express1 = r'file:"(.*?)"'
             video_url = preg_match(page_data2, express1)
         if video_url != "":
-            vUrl = video_url + '|User-Agent=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F74.0.3729.169+Safari%2F537.36&Referer='+linkIframe
+            vUrl = video_url + '|connection=keepalive&User-Agent='+myParse.quote(ua)+'&Referer='+linkIframe
         logga('video_url '+vUrl)
 
     except:
@@ -825,7 +826,7 @@ def get_resolved(url):
 
 def scommunity(parIn=None):
     import time, json
-    base="https://streamingcommunity.blue/watch/"
+    base="https://streamingcommunity.pw/watch/"
     
     randomUA=getRandomUA()
 
