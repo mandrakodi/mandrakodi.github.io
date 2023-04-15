@@ -1,3 +1,10 @@
+versione='1.1.1'
+# Module: myResolve
+# Author: ElSupremo
+# Created on: 10.04.2021
+# Last update: 15.04.2023
+# License: GPL v.3 https://www.gnu.org/copyleft/gpl.html--------------------------------------------------------
+
 import os
 import sys
 import re
@@ -12,6 +19,8 @@ addon_id = 'plugin.video.mandrakodi'
 debug = xbmcaddon.Addon(id=addon_id).getSetting("debug")
 
 PY3 = sys.version_info[0] == 3
+if PY3:
+    import xbmcvfs
 
 def logga(mess):
     if debug == "on":
@@ -19,20 +28,14 @@ def logga(mess):
 
 def getStartUrl():
     import json
-    urlStart = ""
-    urlBin="https://w3ubin.com/-gJWp2-gG.w3u"
-    
-    strJson = makeRequest(urlBin)
-    if (strJson != ""):
-        dataJson = json.loads(strJson)
-        urlStart = dataJson["groups"][0]["stations"][3]["url"]
+    urlStart = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/launcher.py"
 
     return urlStart
 
 def checkLauncher():
     home = ''
     if PY3:
-        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
+        home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
     else:
         home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     launcher_file = os.path.join(home, 'launcher.py')
@@ -72,7 +75,7 @@ def makeRequest(url, hdr=None):
     if PY3:
 	    import urllib.request as myRequest
     else:
-	    import urllib2 as myRequest
+        import urllib2 as myRequest
 
     pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
     version = xbmcaddon.Addon(id=addon_id).getAddonInfo("version")
@@ -81,11 +84,16 @@ def makeRequest(url, hdr=None):
         hdr = {"User-Agent" : ua}
     try:
         req = myRequest.Request(url, headers=hdr)
-        response = myRequest.urlopen(req)
+        response = myRequest.urlopen(req, timeout=5)
         html = response.read().decode('utf-8')
         response.close()
-    except:
-        logga('Error to open url')
+    except Exception as err:
+        import traceback
+        errMsg="ERRORE MANDRAKODI: {0}".format(err)
+        traceback.print_exc()
+        dialog = xbmcgui.Dialog()
+        dialog.ok("Mandrakodi", errMsg)
+        logga('Error to open start url')
         pass
     return html
 
@@ -103,9 +111,9 @@ try:
     launcher.run()
 except Exception as err:
     import traceback
-    errMsg="ERROR_MANDRAKODI: {0}".format(err)
-    logging.warning(errMsg+"\nPAR_ERR --> ")
+    errMsg="ERRORE MANDRAKODI: {0}".format(err)
+    #logging.warning(errMsg+"\nPAR_ERR --> ")
     traceback.print_exc()
     dialog = xbmcgui.Dialog()
     mess = "Accidenti!\nSembra che la fonte selezionata non funzioni.\nProva a cambiare 'Fonte/Lista/Sezione'.\nSe il problema persiste, contatta il gruppo di supporto @mandrakodihelp."
-    dialog.ok("Mandrakodi", mess)
+    dialog.ok("Mandrakodi", errMsg)
