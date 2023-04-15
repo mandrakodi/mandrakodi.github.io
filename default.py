@@ -1,9 +1,9 @@
-versione='1.1.1'
+versione='1.1.2'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
 # Last update: 15.04.2023
-# License: GPL v.3 https://www.gnu.org/copyleft/gpl.html--------------------------------------------------------
+# License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import os
 import sys
@@ -57,7 +57,7 @@ def checkLauncher():
         strSource = makeRequest(remoteLauncherUrl)
         if strSource is None or strSource == "":
             logga('We failed to get source from '+remoteLauncherUrl)
-            msgBox("Non è stato possibile contattare la sorgente.[CR]L'addon potrebbe non essere aggiornato.")
+            msgBox("Non e' stato possibile contattare la sorgente.[CR]L'addon potrebbe non essere aggiornato.")
             remote_vers = local_vers
         else:
             remote_vers = re.findall("versione='(.*)'",strSource)[0]
