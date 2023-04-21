@@ -1,8 +1,8 @@
-versione='1.1.71'
+versione='1.1.72'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 15.04.2023
+# Last update: 21.04.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1122,7 +1122,7 @@ def dplayLive(parIn):
 def taxi(parIn):
     import re
     video_urls = []
-    url="https://eurostreaming.taxi/stream/"+parIn+".html"
+    url="https://eurostreaming.care/stream/"+parIn+".html"
     
     headers = {
         'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
