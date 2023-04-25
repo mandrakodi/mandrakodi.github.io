@@ -1,8 +1,8 @@
-versione='1.1.72'
+versione='1.1.73'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 21.04.2023
+# Last update: 25.04.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -826,7 +826,9 @@ def get_resolved(url):
 
 def scommunity(parIn=None):
     import time, json
-    base="https://streamingcommunity.dance/watch/"
+    sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
+    scUrl=makeRequest(sc_url)
+    base=scUrl.replace("\n", '')+"watch/"
     
     randomUA=getRandomUA()
 
@@ -856,7 +858,9 @@ def scws(parIn=None):
     import json
     video_urls = []
 
-    base="https://streamingcommunity.dance/"
+    sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
+    scUrl=makeRequest(sc_url)
+    base=scUrl.replace("\n", '')+"watch/"
     randomUA=getRandomUA()
 
     headSCt={'user-agent':randomUA}
@@ -1201,7 +1205,7 @@ def makeRequest(url, hdr=None):
         response = myRequest.urlopen(req, timeout=45)
         html = response.read().decode('utf-8')
         response.close()
-        logga('OK REQUEST FROM '+url+": "+html)
+        logga('OK REQUEST FROM '+url)
     except:
         logging.warning('Error to open url: '+url)
         pass
