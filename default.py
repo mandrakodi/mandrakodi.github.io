@@ -1,8 +1,8 @@
-versione='1.1.2'
+versione='1.1.3'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 15.04.2023
+# Last update: 05.05.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import os
@@ -102,7 +102,7 @@ def msgBox(mess):
     dialog.ok("MandraKodi", mess)
 
 if sys.argv[2] == "":
-    logga("OPEN ADDON")
+    logga("OPEN ADDON 2.2.1a")
     checkLauncher()
 
 logga("CALL PAR - "+sys.argv[2])
