@@ -1,8 +1,8 @@
-versione='1.2.24'
+versione='1.2.25'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 06.05.2023
+# Last update: 07.02.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -1199,9 +1199,9 @@ def run():
                                 baseAce=setAce
                         except:
                             pass
-                        logga("BASE_ACE: "+baseAce)
                         uArr = url.split("/")
                         url=baseAce+"/ace/getstream?id="+uArr[-1]
+                        logga("URL_ACE: "+url)
                     elif (resp==2):
                         uArr = url.split("/")
                         url="plugin://script.module.horus?action=play&title=by%20MandraKodi&id="+uArr[-1]
