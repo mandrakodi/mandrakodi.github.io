@@ -1,8 +1,8 @@
-versione='1.2.23'
+versione='1.2.24'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 15.04.2023
+# Last update: 06.05.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -72,7 +72,7 @@ def makeRequest(url, hdr=None):
         response.close()
         retff="NOCODE"
         if html != "":
-            retff=html[0:150]
+            retff=html[0:15]
         logga('OK REQUEST FROM '+url+' resp: '+retff)
     except:
         logging.warning('Error to open url: '+url)
@@ -693,41 +693,6 @@ def checkResolver():
             msgBox("Codice Resolver aggiornato alla versione: "+remote_vers)
             logga('VERSION UPDATE')
 
-def checkDefault():
-    home = ''
-    if PY3:
-        home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
-    else:
-        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
-    resolver_file = os.path.join(home, 'default.py')
-    if os.path.exists(resolver_file)==True:
-        resF = open(resolver_file)
-        resolver_content = resF.read()
-        resF.close()
-        try:
-            local_vers = re.findall("versione='(.*)'",resolver_content)[0]
-        except:
-            local_vers = "1.0.0"
-        logga('local_vers '+local_vers)
-        
-        remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/default.py"
-        strSource = makeRequest(remoteResolverUrl)
-        if strSource is None or strSource == "":
-            logga('We failed to get source from '+remoteResolverUrl)
-            remote_vers = local_vers
-        else:
-            #if PY3:
-                #strSource = strSource.decode('utf-8')		
-            remote_vers = re.findall("versione='(.*)'",strSource)[0]
-        logga('remote_vers '+remote_vers)
-        if local_vers != remote_vers:
-            logga('TRY TO UPDATE VERSION')
-            f = open(resolver_file, "w")
-            f.write(strSource)
-            f.close()
-            msgBox("Codice Default aggiornato alla versione: "+remote_vers)
-            logga('VERSION UPDATE')
-
 def getIPAddress():
     import socket
     try:
@@ -1135,7 +1100,6 @@ def run():
         if not sys.argv[2]:
             logga("=== ADDON START ===")
             if (checkMsgOnLog()):
-                checkDefault()
                 checkResolver()
                 checkJsunpack()
                 checkPortalPy()
@@ -1228,8 +1192,16 @@ def run():
                     #mess="Vuoi usare l'engine per il link ace?"
                     #resp= dialog.yesno("MandraKodi", mess)
                     if (resp==0):
+                        baseAce="http://127.0.0.1:6878"
+                        try:
+                            setAce=xbmcaddon.Addon(id=addon_id).getSetting("urlAppo3")
+                            if (setAce[0:4]=="http"):
+                                baseAce=setAce
+                        except:
+                            pass
+                        logga("BASE_ACE: "+baseAce)
                         uArr = url.split("/")
-                        url="http://127.0.0.1:6878/ace/getstream?id="+uArr[-1]
+                        url=baseAce+"/ace/getstream?id="+uArr[-1]
                     elif (resp==2):
                         uArr = url.split("/")
                         url="plugin://script.module.horus?action=play&title=by%20MandraKodi&id="+uArr[-1]
