@@ -1,8 +1,8 @@
-versione='1.1.74'
+versione='1.1.75'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 21.04.2023
+# Last update: 07.05.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -372,6 +372,22 @@ def wizhdFind(parIn):
     vUrl = findM3u8(iframe_url, parIn)
     return vUrl
 
+def nopay(parIn):
+    video_urls = []
+    logga('CALL: '+parIn)
+    randomUa=getRandomUA()
+    page_data = requests.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://nopay.info/'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+
+    iframe_url = preg_match(page_data, r"iframe\s*src='([^']+)")
+    logga('IFRAME NOPAY: '+iframe_url)
+
+    vUrl = GetLSProData("https:"+iframe_url, parIn)
+    final_url = vUrl + "|connection=keepalive&Referer=https:"+iframe_url+"&User-Agent="+randomUa
+    video_urls.append((final_url, "PLAY STREAM"))
+    return video_urls
+
 def wizhd(parIn=None):
     video_urls = []
     if parIn.startswith('http'):
@@ -584,7 +600,10 @@ def checkUnpacked(page_in):
                 try:
                     toRet = re.findall('file:"([^"]*)',unpack)[0]
                 except:
-                    pass
+                    try:
+                        toRet = re.findall('src="([^"]*)',unpack)[0]
+                    except:
+                        pass
             logga('URL_UNPACK '+toRet)
         except:
             pass
@@ -705,6 +724,9 @@ def GetLSProData(page_in, refe=None):
 def wigi(parIn=None):
     import jsunpack
     logga('PAR_WIGI: '+parIn)
+    if "nopay.info" in parIn:
+        return nopay(parIn)
+    
     video_urls = []
 
     refe = ""
