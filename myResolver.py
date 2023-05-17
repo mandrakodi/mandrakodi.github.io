@@ -1,8 +1,8 @@
-versione='1.1.75'
+versione='1.1.76'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 07.05.2023
+# Last update: 17.05.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -173,61 +173,48 @@ def rocktalk(parIn=None):
     from Cryptodome.PublicKey import RSA
     from Cryptodome.Util.Padding import unpad
 
-    user_agent = 'USER-AGENT-tvtap-APP-V2'
-    headers = {
-        'User-Agent': user_agent,
-        'app-token': '37a6259cc0c1dae299a7866489dff0bd',
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Host': 'taptube.net',
-	}
-
-    _pubkey2 = RSA.importKey(
-        a2b_hex(
-            "30819f300d06092a864886f70d010101050003818d003081890281"
-            "8100bfa5514aa0550688ffde568fd95ac9130fcdd8825bdecc46f1"
-            "8f6c6b440c3685cc52ca03111509e262dba482d80e977a938493ae"
-            "aa716818efe41b84e71a0d84cc64ad902e46dbea2ec61071958826"
-            "4093e20afc589685c08f2d2ae70310b92c04f9b4c27d79c8b5dbb9"
-            "bd8f2003ab6a251d25f40df08b1c1588a4380a1ce8030203010001"
+    def payload():
+        _pubkey = RSA.importKey(
+            a2b_hex(
+                "30819f300d06092a864886f70d010101050003818d003081890281"
+                "8100bfa5514aa0550688ffde568fd95ac9130fcdd8825bdecc46f1"
+                "8f6c6b440c3685cc52ca03111509e262dba482d80e977a938493ae"
+                "aa716818efe41b84e71a0d84cc64ad902e46dbea2ec61071958826"
+                "4093e20afc589685c08f2d2ae70310b92c04f9b4c27d79c8b5dbb9"
+                "bd8f2003ab6a251d25f40df08b1c1588a4380a1ce8030203010001"
+            )
         )
-    )
+        _msg = a2b_hex(
+            "7b224d4435223a22695757786f45684237686167747948392b58563052513d3d5c6e222c22534"
+            "84131223a2242577761737941713841327678435c2f5450594a74434a4a544a66593d5c6e227d"
+        )
+        cipher = Cipher_PKCS1_v1_5.new(_pubkey)
+        return b64encode(cipher.encrypt(_msg))
 
-    _msg2 = a2b_hex(
-        "7b224d4435223a22695757786f45684237686167747948392b58563052513d3d5c6e222c22534"
-        "84131223a2242577761737941713841327678435c2f5450594a74434a4a544a66593d5c6e227d"
-    )
-
-    cipher = Cipher_PKCS1_v1_5.new(_pubkey2)	
-    tkn2 =  b64encode(cipher.encrypt(_msg2))
+    player_user_agent = "mediaPlayerhttp/1.8 (Linux;Android 7.1.2) ExoPlayerLib/2.5.3"
+    key = b"98221122"
+    user_agent = 'USER-AGENT-tvtap-APP-V2'
     ch_id = parIn
-    r2 = requests.post('https://rocktalk.net/tv/index.php?case=get_channel_link_with_token_latest', 
+    r = requests.post('https://rocktalk.net/tv/index.php?case=get_channel_link_with_token_latest', 
         headers={"app-token": "37a6259cc0c1dae299a7866489dff0bd"},
-        data={"payload": tkn2, "channel_id": ch_id, "username": "603803577"},
+        data={"payload": payload(), "channel_id": ch_id, "username": "603803577"},
         timeout=15)
 
-    logga('JSON TVTAP: '+str(r2.json()))
+    logga('JSON TVTAP: '+str(r.json()))
 
     from pyDes import des, PAD_PKCS5
-    key = b"98221122"
-
     links = []
-    linksTmp = []
-    jch = r2.json()["msg"]["channel"][0]
-    chName=jch["channel_name"]
-    chCountry=jch["country"]
-    chImg="https://rocktalk.net/tv/"+jch["img"]
-    chTit="[COLOR lime]"+chName+"[/COLOR] [COLOR aqua]("+chCountry+")[/COLOR]"
-
+    jch = r.json()["msg"]["channel"][0]
     for stream in jch.keys():
         if "stream" in stream or "chrome_cast" in stream:
             d = des(key)
             link = d.decrypt(b64decode(jch[stream]), padmode=PAD_PKCS5)
+    
             if link:
                 link = link.decode("utf-8")
-                if not link == "dummytext" and link not in linksTmp:
-                    links.append((link+"|user-agent=mediaPlayerhttp%2F1.8+%28Linux%3BAndroid+7.1.2%29+ExoPlayerLib%2F2.5.3", chTit, stream, chImg))
-                    linksTmp.append(link)
-
+                if not link == "dummytext" and link not in links:
+                    links.append((link+ "|connection=keepalive&Referer=https://rocktalk.net/&User-Agent="+player_user_agent, "[COLOR lime]PLAY STREAM[/COLOR]"))
+    
     return links
 
 
@@ -374,18 +361,23 @@ def wizhdFind(parIn):
 
 def nopay(parIn):
     video_urls = []
-    logga('CALL: '+parIn)
+    logga('CALL_NOPAY: '+parIn)
     randomUa=getRandomUA()
+    #page_data = downloadHttpPage(parIn)
     page_data = requests.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://nopay.info/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
 
     iframe_url = preg_match(page_data, r"iframe\s*src='([^']+)")
+    
     logga('IFRAME NOPAY: '+iframe_url)
+    if iframe_url == "":
+        iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
+        logga('IFRAME_2 NOPAY: '+iframe_url)
 
     vUrl = GetLSProData("https:"+iframe_url, parIn)
     final_url = vUrl + "|connection=keepalive&Referer=https:"+iframe_url+"&User-Agent="+randomUa
-    video_urls.append((final_url, "PLAY STREAM"))
+    video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]"))
     return video_urls
 
 def wizhd(parIn=None):
