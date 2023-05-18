@@ -1,0 +1,21 @@
+#EXTM3U
+#EXTINF:-1 tvg-logo="https://nopay.info/loghi/euleague.png" group-title="EUROPA LEAGUE",21:00 Diretta Gol (Ch1)
+https://nopay.info/embed.php?id=liveCh1
+#EXTINF:-1 tvg-logo="https://nopay.info/loghi/euleague.png" group-title="EUROPA LEAGUE",21:00 Diretta Gol (Ch31)
+https://nopay.info/embed.php?id=liveCh31
+#EXTINF:-1 tvg-logo="https://nopay.info/loghi/euleague.png" group-title="EUROPA LEAGUE",21:00 Bayern Leverkusen vs Roma (Ch18)
+https://nopay.info/embed.php?id=liveCh18
+#EXTINF:-1 tvg-logo="https://nopay.info/loghi/euleague.png" group-title="EUROPA LEAGUE",21:00 Sevilla vs Juventus (Ch14)
+https://nopay.info/embed.php?id=liveCh14
+#EXTINF:-1 tvg-logo="https://nopay.info/loghi/conference.png" group-title="CONFERENCE LEAGUE",21:00 Diretta Gol (Ch1)
+https://nopay.info/embed.php?id=liveCh1
+#EXTINF:-1 tvg-logo="https://nopay.info/loghi/conference.png" group-title="CONFERENCE LEAGUE",21:00 Basilea vs Fiorentina (Ch15)
+https://nopay.info/embed.php?id=liveCh15
+#EXTINF:-1 tvg-logo="https://nopay.info/loghi/conference.png" group-title="CONFERENCE LEAGUE",21:00 Basilea vs Fiorentina (Ch34)
+https://nopay.info/embed.php?id=liveCh34
+#EXTINF:-1 tvg-logo="https://cdn.livesoccertv.com/images/channels/thumbnails/bt-sport-1-uk.png" group-title="CANALI",BT SPORT 1 (Ch19)
+https://nopay.info/embed.php?id=liveCh19
+#EXTINF:-1 tvg-logo="https://cdn.livesoccertv.com/images/channels/thumbnails/bt-sport-2-uk.png" group-title="CANALI",BT SPORT 2 (Ch20)
+https://nopay.info/embed.php?id=liveCh20
+#EXTINF:-1 tvg-logo="https://cdn.livesoccertv.com/images/channels/thumbnails/movistar-liga-de-campeones.png" group-title="CANALI",LIGA DE CAMPEONES (Ch21)
+https://nopay.info/embed.php?id=liveCh21
