@@ -1,8 +1,8 @@
-versione='1.2.25'
+versione='1.2.26'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 07.02.2023
+# Last update: 23.05.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -464,7 +464,8 @@ def simpleRegex(page, find):
 def callReolver(metodo, parametro):
     global viewmode
     import myResolver
-    thumb="https://cdn.pixabay.com/photo/2012/04/12/20/56/play-30619_640.png"
+    thumb="https://static.vecteezy.com/system/resources/previews/018/842/642/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
+    thumb="https://icons.iconarchive.com/icons/double-j-design/ravenna-3d/256/Play-icon.png"
     fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         
     logga("METODO_RESOLVE: "+metodo+" - PAR: "+parametro)	
@@ -529,6 +530,7 @@ def callReolver(metodo, parametro):
             xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
         
     if metodo != "mac" and metodo != "scws":
+        viewmode="51"
         newTit="[COLOR gold]OPEN WEB LINK (WISE)[/COLOR]"
         list_item = xbmcgui.ListItem(label=newTit)
         list_item.setInfo('video', {'title': newTit,'genre': 'generic','mediatype': 'movie','credits': 'ElSupremo'})
