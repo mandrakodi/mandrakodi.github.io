@@ -1,8 +1,8 @@
-versione='1.1.76'
+versione='1.1.77'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 17.05.2023
+# Last update: 23.05.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -363,8 +363,12 @@ def nopay(parIn):
     video_urls = []
     logga('CALL_NOPAY: '+parIn)
     randomUa=getRandomUA()
-    #page_data = downloadHttpPage(parIn)
-    page_data = requests.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://nopay.info/'}).content
+    page_data = ""
+    try:
+        page_data = requests.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://nopay.info/'}, verify=False).content
+    except:
+        video_urls.append(("ignoreme", "[COLOR red]REQUEST ERROR[/COLOR]", "ERROR", "https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"))
+        return video_urls
     if PY3:
         page_data = page_data.decode('utf-8')
 
@@ -377,7 +381,7 @@ def nopay(parIn):
 
     vUrl = GetLSProData("https:"+iframe_url, parIn)
     final_url = vUrl + "|connection=keepalive&Referer=https:"+iframe_url+"&User-Agent="+randomUa
-    video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]"))
+    video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+vUrl, "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
     return video_urls
 
 def wizhd(parIn=None):
