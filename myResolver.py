@@ -1,8 +1,8 @@
-versione='1.1.77'
+versione='1.1.78'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.05.2023
+# Last update: 27.05.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -442,13 +442,19 @@ def findM3u8(linkIframe, refPage):
 
 def assiaFind(parIn):
     logga('ASSIA_PAR: '+parIn)
-    video_url = findM3u8(parIn, 'http://assia1.tv/')
+    randomUa=getRandomUA()
+    page_data = requests.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'http://assia1.tv/'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    video_url = preg_match(page_data, "source: '(.*?)'")
+    
     logga('video_url '+video_url)
     return video_url
 
 def assia(parIn=None):
     video_urls = []
-    video_url = assiaFind(parIn)
+    randomUa=getRandomUA()
+    video_url = assiaFind(parIn) + "|connection=keepalive&Referer=http://assia1.tv/&User-Agent="+randomUa
     video_urls.append((video_url, ""))
     if "|" in video_url:
         arrV = video_url.split("|")
@@ -507,6 +513,25 @@ def daddy(parIn=None):
 
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+arrTmp2[0]+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
     
+    return video_urls
+
+
+def pepper(parIn=None):
+    video_urls = []
+    randomUa=getRandomUA()
+    page_data = requests.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://www.pepperlive.info'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    iframe_url = preg_match(page_data, '<iframe width="100%" height="100%" allow=\'encrypted-media\' src="(.*?)"')
+    logga('URL PEPPER: https:'+iframe_url)
+    page_data2 = requests.get("https:"+iframe_url,headers={'user-agent':randomUa,'accept':'*/*','Referer':parIn}).content
+    if PY3:
+        page_data2 = page_data2.decode('utf-8')
+    iframe_url2 = preg_match(page_data2, '<iframe src="(.*?)"')
+    logga('URL PEPPER2: https:'+iframe_url2)
+    video_url = GetLSProData("https:"+iframe_url2)
+    final_url = video_url + "|connection=keepalive&Referer=https:"+iframe_url2+"&User-Agent="+randomUa
+    video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+video_url, "https://www.pepperlive.info/Live1.jpg"))
     return video_urls
 
 def PlayStream(link):
@@ -3172,7 +3197,8 @@ def run (action, params=None):
         'urlsolve': resolveMyUrl,
         'rocktalk': rocktalk,
         'lvtv': livetv,
-        'stsb' : streamsb
+        'stsb' : streamsb,
+        'pepper':pepper
     }
 
     if action in commands:
