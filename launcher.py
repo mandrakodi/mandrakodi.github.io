@@ -1,8 +1,8 @@
-versione='1.2.26'
+versione='1.2.27'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 23.05.2023
+# Last update: 27.05.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -34,6 +34,10 @@ if (lastView=="Not in use"):
 testoLog = "";
 viewmode=lastView
 ua = ""
+
+autoView = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
+if (autoView=="Not in use"):
+    autoView="1"
 
 PY3 = sys.version_info[0] == 3
 if PY3:
@@ -1234,7 +1238,7 @@ def run():
         traceback.print_exc()
         raise err
 
-    if not viewmode==None:
+    if not viewmode==None and autoView=="1":
         logga("setting viewmode")
         kodiSkin=xbmc.getSkinDir()
         kodiView=decodeSkinViewMode(kodiSkin, viewmode)
