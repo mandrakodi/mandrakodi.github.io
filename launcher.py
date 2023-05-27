@@ -1,4 +1,4 @@
-versione='1.2.27'
+versione='1.2.28'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -35,7 +35,11 @@ testoLog = "";
 viewmode=lastView
 ua = ""
 
-autoView = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
+autoView="Not in use"
+try:
+    autoView = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
+except:
+    pass
 if (autoView=="Not in use"):
     autoView="1"
 
