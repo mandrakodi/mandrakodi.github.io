@@ -1,8 +1,8 @@
-versione='1.1.78'
+versione='1.1.79'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 27.05.2023
+# Last update: 29.05.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -586,7 +586,7 @@ def PlayStream(link):
 def proData(parIn=None):
     video_urls = []
     logga('PAR: '+parIn)
-    if "supervideo.tv" in parIn:
+    if "supervideo.tvs" in parIn:
         logga('CALL SUPERVIDEO')
         return supervideo(parIn)
     video_url = GetLSProData(parIn)
@@ -1314,10 +1314,10 @@ def supervideo(page_url):
     data  = downloadHttpPage(page_url, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':page_url})
     
 
-    code_data = find_single_match(data, "<script type='text/javascript'>(eval.*)")
+    code_data = find_single_match(data, "<script type='text/javascript'>(eval.*?)")
     if code_data:
         code = jsunpack.unpack(code_data)
-
+        logga("unpack: " + code)
         # corrections
         if 'file' in code and not '"file"'in code: code = code.replace('file','"file"')
         if 'label' in code and not '"label"'in code: code = code.replace('label','"label"')
@@ -1333,9 +1333,8 @@ def supervideo(page_url):
             tit = source['file'].split('.')[-1] 
             src =  source['file']
             video_urls.append((src+"|referer="+page_url, "[COLOR lime]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
-            
-
     else:
+        logga ("NO PACKED")
         matches = find_multiple_matches(data, r'src:\s*"([^"]+)",\s*type:\s*"[^"]+"(?:\s*, res:\s(\d+))?')
         for url, quality in matches:
             if url.split('.')[-1] != 'm3u8':
