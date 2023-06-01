@@ -1,8 +1,8 @@
-versione='1.1.79'
+versione='1.1.80'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 29.05.2023
+# Last update: 01.06.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -887,19 +887,53 @@ def scommunity(parIn=None):
     page_data = s.get(urlComm, headers=headSCt).content
     if PY3:
         page_data = page_data.decode('utf-8')
-    patron = r'<video-player response="(.*?)">'
+    #writeFileLog("SCOMM_PAGE: "+urlComm+"\n\n"+page_data, "w+")
+    #patron = r'<video-player response="(.*?)">'
+    patron = r'<div id="app" data-page="(.*?)">'
     jsonVideo = preg_match(page_data, patron)
     dataJson=jsonVideo.replace('&quot;', '"')
     arrJ = json.loads(dataJson)
-    tit = (arrJ["title"]["name"]).replace("&#039;", "'").replace("&amp;", "&")
-    scws_id = +arrJ["scws_id"]
+    nameEp=arrJ["props"]["episode"]["name"]
+    numEp=arrJ["props"]["episode"]["number"]
+    numSeason=arrJ["props"]["episode"]["season"]["number"]
+    titleEp=str(numSeason)+"x"+str(numEp)+" - "+nameEp
+    scws_id = arrJ["props"]["episode"]["scws_id"]
     logga("scws_id => "+str(scws_id))
-    return scws(str(scws_id))
+    return getUrlSc(str(scws_id), titleEp)
+
+def getUrlSc(scws_id, tit=None):
+    from time import time
+    from base64 import b64encode
+    from hashlib import md5
+    import json
+    titolo="PLAY VIDEO"
+    if tit != None:
+        titolo=tit
+    video_urls = []
+    randomUA=getRandomUA()
+    page_data = requests.get("http://test34344.herokuapp.com/getMyIp.php", headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    logga('IP_community '+page_data)
+    try:
+        arrJ2 = json.loads(page_data)
+        clientIp = arrJ2["client_ip"]
+        logga("LOCAL IP: "+clientIp)
+    except:
+        logga("NO LOCAL IP")
+    if clientIp:
+        expires = int(time() + 172800)
+        token = b64encode(md5('{}{} Yc8U6r8KjAKAepEA'.format(expires, clientIp).encode('utf-8')).digest()).decode('utf-8').replace('=', '').replace('+', '-').replace('/', '_')
+        url = 'https://scws.work/master/{}?token={}&expires={}&n=1'.format(scws_id, token, expires)
+        url4 = url + "|User-Agent="+randomUA
+        video_urls.append((url4, "[COLOR lime]"+titolo+"[/COLOR]", "by @mandrakodi", "https://www.allmobileworld.it/wp-content/uploads/2023/03/Streamingcommunity.jpg"))
+    return video_urls
 
 
 def scws(parIn=None):
     import json
     video_urls = []
+    return getUrlSc(parIn)
 
     sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
     scUrl=makeRequest(sc_url)
