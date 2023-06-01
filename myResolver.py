@@ -1,4 +1,4 @@
-versione='1.1.80'
+versione='1.1.81'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -69,7 +69,7 @@ def downloadHttpPage(urlIn, **opt):
             toRet = toRet.decode('utf-8')
     except:
         pass
-    logga("PAGE:\n"+toRet.text)
+    #logga("PAGE:\n"+toRet.text)
     return toRet.text
 
 
@@ -524,12 +524,16 @@ def pepper(parIn=None):
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, '<iframe width="100%" height="100%" allow=\'encrypted-media\' src="(.*?)"')
     logga('URL PEPPER: https:'+iframe_url)
-    page_data2 = requests.get("https:"+iframe_url,headers={'user-agent':randomUa,'accept':'*/*','Referer':parIn}).content
-    if PY3:
-        page_data2 = page_data2.decode('utf-8')
-    iframe_url2 = preg_match(page_data2, '<iframe src="(.*?)"')
-    logga('URL PEPPER2: https:'+iframe_url2)
-    video_url = GetLSProData("https:"+iframe_url2)
+    if "embed" in iframe_url:
+        iframe_url2=iframe_url
+        video_url=checkUnpacked("https:"+iframe_url2)
+    else:
+        page_data2 = requests.get("https:"+iframe_url,headers={'user-agent':randomUa,'accept':'*/*','Referer':parIn}).content
+        if PY3:
+            page_data2 = page_data2.decode('utf-8')
+        iframe_url2 = preg_match(page_data2, '<iframe src="(.*?)"')
+        logga('URL PEPPER2: https:'+iframe_url2)
+        video_url = GetLSProData("https:"+iframe_url2, parIn)
     final_url = video_url + "|connection=keepalive&Referer=https:"+iframe_url2+"&User-Agent="+randomUa
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+video_url, "https://www.pepperlive.info/Live1.jpg"))
     return video_urls
@@ -608,8 +612,10 @@ def decodeProtected(linkIn):
 def checkUnpacked(page_in):
     import jsunpack
     toRet=""
+    logga("checkUnpacked: "+page_in)
     fu = downloadHttpPage(page_in, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':page_in})
     if fu != "":
+        logga("RESULT: "+fu)
         find = ""
         try:
             find = re.findall('eval\(function(.+?.+)', fu)[0]
