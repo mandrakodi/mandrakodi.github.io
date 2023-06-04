@@ -1,8 +1,8 @@
-versione='1.1.81'
+versione='1.1.82'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 01.06.2023
+# Last update: 04.06.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -938,96 +938,96 @@ def getUrlSc(scws_id, tit=None):
 
 def scws(parIn=None):
     import json
-    video_urls = []
-    return getUrlSc(parIn)
-
+    
+    
     sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
     scUrl=makeRequest(sc_url)
-    base=scUrl.replace("\n", '')+"watch/"
+    base=scUrl.replace("\n", '')+"titles/"+parIn
     randomUA=getRandomUA()
 
     headSCt={'user-agent':randomUA}
     pageT = requests.get(base,headers=headSCt).content
     if PY3:
         pageT = pageT.decode('utf-8')
-    patron = r'name="csrf-token" content="(.*?)"'
-    csrf_token = preg_match(pageT, patron)
-    logga('IP_token '+csrf_token)
-
-    refe=base+"watch/"
-    titFilm="PLAY VIDEO"
-    if "___" in parIn:
-        arrPar=parIn.split("___")
-        parIn=arrPar[0]
-        refe=base+"watch/"+arrPar[1]
+    patron = r'<div id="app" data-page="(.*?)"'
+    jsonCode = preg_match(pageT, patron)
+    scwsId = 0
+    titolo="NOT FOUND";
     try:
-        titFilm=arrPar[2]
+        arrJ2 = json.loads(jsonCode.replace("&quot;", '"'))
+        scwsId = arrJ2["props"]["title"]["scws_id"]
+        titolo = arrJ2["props"]["title"]["name"]
     except:
-        logga("NO TIT VIDEO")
-        titFilm="PLAY VIDEO"
+        logga("NO SCWS_ID FROM "+base)
+    return getUrlSc(scwsId, titolo)
 
-    
-    url = "https://scws.work/master/" + str(parIn)
+def getScSerie(parIn=None):
+    import json
+    video_urls = []
+    jsonText=""
+    x = parIn.split("---")
+    idSea=x[0]
+    numSea=x[1]
+    sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
+    scUrl=makeRequest(sc_url)
+    base=scUrl.replace("\n", '')+"titles/"+idSea+"/stagione-"+numSea
+    randomUA=getRandomUA()
 
-    def calculateToken(ip_client):
-        from time import time
-        from base64 import b64encode as b64
-        import hashlib
-
-        expires = int(time() + 172800)
-        token = b64(hashlib.md5('{}{} Yc8U6r8KjAKAepEA'.format(expires, localIp).encode('utf-8')).digest()).decode('utf-8').replace('=', '').replace('+', '-').replace('/', '_')
-
-        s = '?token={}&expires={}&n=1'.format(token, expires)
-
-        return s
-    
-    
-    page_data = requests.get("http://test34344.herokuapp.com/getMyIp.php", headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
-    if PY3:
-        page_data = page_data.decode('utf-8')
-    logga('IP_community '+page_data)
-    try:
-        arrJ2 = json.loads(page_data)
-        localIp = arrJ2["client_ip"]
-    except:
-        logga("NO LOCAL IP")
-
-    token = calculateToken(localIp)
-    
-    url2 = url + token
-    logga('URL_community '+url2)
-
-    pageT = requests.get(url2,headers=headSCt).content
+    headSCt={'user-agent':randomUA}
+    pageT = requests.get(base,headers=headSCt).content
     if PY3:
         pageT = pageT.decode('utf-8')
-    logga("MANIFEST: "+pageT)
-    
-    info = ""
-    if pageT[0:5] != "<!DOC":
-        patron=r'.*?(http[^"\s]+)'
-        info = preg_match(pageT, patron, -1)
+    patron = r'<div id="app" data-page="(.*?)"'
+    jsonCode = preg_match(pageT, patron)
+    scwsId = 0
+    titolo="NOT FOUND";
+    try:
+        arrJ2 = json.loads(jsonCode.replace("&quot;", '"'))
+        
+        titolo = arrJ2["props"]["title"]["name"]
+        logga("titolo: "+titolo)
+        img=""
+        jsonText='{"SetViewMode":"503","items":['
+        numIt=0
+        for (immagine) in arrJ2["props"]["title"]["images"]:
+            if (immagine["type"]=="cover"):
+                img="https://cdn.streamingcommunity.codes/images/"+immagine["filename"]
+                logga("img: "+img)
+        for (episodio) in arrJ2["props"]["loadedSeason"]["episodes"]:
+            scwsId = str(episodio["scws_id"])
+            logga("scwsId: "+scwsId)
+            numEp=str(episodio["number"])
+            if (len(numEp)==1):
+                numEp="0"+numEp
+            logga("numEp: "+numEp)
+            plot = "by MandraKodi"
+            try:
+                plot = episodio["plot"].replace("&#39;", "'").replace("&amp;", "&")
+            except:
+                pass    
+            
+            try:
+                imgEp="https://cdn.streamingcommunity.codes/images/"+episodio["images"][0]["filename"]
+            except:
+                imgEp=img
+            titolo=numSea+"x"+numEp+" - "+episodio["name"].replace("&#39;", "'").replace("&amp;", "&")
+            if (numIt > 0):
+                jsonText = jsonText + ','    
+            jsonText = jsonText + '{"title":"[COLOR lime]'+titolo+'[/COLOR]","myresolve":"scws@@'+scwsId+'",'
+            jsonText = jsonText + '"thumbnail":"'+imgEp+'",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"'+plot.replace('"','\\"')+'"}'
+            numIt=numIt+1
+    except:
+        logga("NO SCWS_ID FROM "+base)
+        jsonText = jsonText + '{"title":"[COLOR red]NO PAGE FOUND[/COLOR]","link":"ignore",'
+        jsonText = jsonText + '"thumbnail":"https://cdn-icons-png.flaticon.com/512/2748/2748558.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"NO PAGE FOUND"}'
 
-    if info:
-        logga ("OK INFO")
-        girancora=True
-        ind=0
-        cnt = len(info)
-        while ind < cnt:
-            url3=info[ind]
-            logga('video_community '+url3)
-            if "type=video" in url3:
-                patron=r'rendition=(.*?)p'
-                res = preg_match(url3, patron)
-                url4 = url3 + "|User-Agent="+randomUA+"&Referer="+base
-                video_urls.append((url4, "[COLOR gold]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR] [COLOR blue]("+res+"p)[/COLOR]", "by @mandrakodi"))
-            ind += 1
-    else:
-        video_url = url + token + "|User-Agent="+randomUA+"&Referer="+base
-        logga('video_community '+video_url)
-        video_urls.append((video_url, "[COLOR lime]"+myParse.unquote(titFilm).replace("+", " ")+"[/COLOR]", "by @mandrakodi"))
-    
-    remoteLog(titFilm)
-
+    jsonText = jsonText + "]}"
+    #logga('JSON-SC: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
 
@@ -3224,7 +3224,9 @@ def run (action, params=None):
         'dplay': dplay,
         'dplayLive': dplayLive,
         'mac': macLink,
-        'scws': scws,
+        'scws': getUrlSc,
+        'moviesc': scws,
+        'seriesc': getScSerie,
         'assia': assia,
         'vudeo': vudeo,
         'pulive': pulive,
