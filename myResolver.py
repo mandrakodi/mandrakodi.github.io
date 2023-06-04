@@ -1,4 +1,4 @@
-versione='1.1.82'
+versione='1.1.83'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -932,7 +932,7 @@ def getUrlSc(scws_id, tit=None):
         token = b64encode(md5('{}{} Yc8U6r8KjAKAepEA'.format(expires, clientIp).encode('utf-8')).digest()).decode('utf-8').replace('=', '').replace('+', '-').replace('/', '_')
         url = 'https://scws.work/master/{}?token={}&expires={}&n=1'.format(scws_id, token, expires)
         url4 = url + "|User-Agent="+randomUA
-        video_urls.append((url4, "[COLOR lime]"+titolo+"[/COLOR]", "by @mandrakodi", "https://www.allmobileworld.it/wp-content/uploads/2023/03/Streamingcommunity.jpg"))
+        video_urls.append((url4, "[COLOR lime]"+titolo+"[/COLOR]", "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
     return video_urls
 
 
