@@ -1,8 +1,8 @@
-versione='1.1.83'
+versione='1.1.84'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 04.06.2023
+# Last update: 05.06.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -590,7 +590,7 @@ def PlayStream(link):
 def proData(parIn=None):
     video_urls = []
     logga('PAR: '+parIn)
-    if "supervideo.tvs" in parIn:
+    if "supervideo.tv" in parIn:
         logga('CALL SUPERVIDEO')
         return supervideo(parIn)
     video_url = GetLSProData(parIn)
@@ -1032,7 +1032,7 @@ def getScSerie(parIn=None):
 
 
 def pulive(parIn=None):
-    url = "https://pulivetv82.com/player.html?id="+parIn
+    url = "https://pulivetv146.com/player.html?id="+parIn
     page_data = requests.get(url, headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
@@ -1352,9 +1352,9 @@ def supervideo(page_url):
     video_urls = []
     # data = httptools.downloadpage(page_url).data
     data  = downloadHttpPage(page_url, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':page_url})
-    
+    logga("supervideo: " + data)
 
-    code_data = find_single_match(data, "<script type='text/javascript'>(eval.*?)")
+    code_data = find_single_match(data, """<script type=["']text/javascript["']>(eval.*)""")
     if code_data:
         code = jsunpack.unpack(code_data)
         logga("unpack: " + code)
