@@ -1,21 +1,13 @@
 #EXTM3U
-#EXTINF:-1 tvg-logo="https://nopay.info/loghi/euleague.png" group-title="EUROPA LEAGUE",21:00 Diretta Gol (Ch1)
-https://nopay.info/embed.php?id=liveCh1
-#EXTINF:-1 tvg-logo="https://nopay.info/loghi/euleague.png" group-title="EUROPA LEAGUE",21:00 Diretta Gol (Ch31)
-https://nopay.info/embed.php?id=liveCh31
-#EXTINF:-1 tvg-logo="https://nopay.info/loghi/euleague.png" group-title="EUROPA LEAGUE",21:00 Bayern Leverkusen vs Roma (Ch18)
-https://nopay.info/embed.php?id=liveCh18
-#EXTINF:-1 tvg-logo="https://nopay.info/loghi/euleague.png" group-title="EUROPA LEAGUE",21:00 Sevilla vs Juventus (Ch14)
-https://nopay.info/embed.php?id=liveCh14
-#EXTINF:-1 tvg-logo="https://nopay.info/loghi/conference.png" group-title="CONFERENCE LEAGUE",21:00 Diretta Gol (Ch1)
-https://nopay.info/embed.php?id=liveCh1
-#EXTINF:-1 tvg-logo="https://nopay.info/loghi/conference.png" group-title="CONFERENCE LEAGUE",21:00 Basilea vs Fiorentina (Ch15)
-https://nopay.info/embed.php?id=liveCh15
-#EXTINF:-1 tvg-logo="https://nopay.info/loghi/conference.png" group-title="CONFERENCE LEAGUE",21:00 Basilea vs Fiorentina (Ch34)
-https://nopay.info/embed.php?id=liveCh34
-#EXTINF:-1 tvg-logo="https://cdn.livesoccertv.com/images/channels/thumbnails/bt-sport-1-uk.png" group-title="CANALI",BT SPORT 1 (Ch19)
-https://nopay.info/embed.php?id=liveCh19
-#EXTINF:-1 tvg-logo="https://cdn.livesoccertv.com/images/channels/thumbnails/bt-sport-2-uk.png" group-title="CANALI",BT SPORT 2 (Ch20)
-https://nopay.info/embed.php?id=liveCh20
-#EXTINF:-1 tvg-logo="https://cdn.livesoccertv.com/images/channels/thumbnails/movistar-liga-de-campeones.png" group-title="CANALI",LIGA DE CAMPEONES (Ch21)
-https://nopay.info/embed.php?id=liveCh21
+#EXTINF:-1 tvg-logo="https://img2.sport-tv-guide.live/images/stations/a97.png" group-title="BT Sport",BT Sport 1
+https://daddylivehd.sx/stream/stream-31.php
+#EXTINF:-1 tvg-logo="https://img2.sport-tv-guide.live/images/stations/a100.png" group-title="BT Sport",BT Sport 2
+https://daddylivehd.sx/stream/stream-32.php
+#EXTINF:-1 tvg-logo="https://img2.sport-tv-guide.live/images/stations/a108.png" group-title="BT Sport",BT Sport 3
+https://daddylivehd.sx/stream/stream-33.php
+#EXTINF:-1 tvg-logo="https://seeklogo.com/images/B/bbc-one-logo-98B01EA893-seeklogo.com.png" group-title="BBC",BBC One
+https://daddylivehd.sx/stream/stream-356.php
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/BBC_Two_logo_2021.svg/260px-BBC_Two_logo_2021.svg.png" group-title="BBC",BBC Two
+https://daddylivehd.sx/stream/stream-356.php
+#EXTINF:-1 tvg-logo="https://www.bbc.co.uk/staticarchive/4511484d66e80bfcb6feb94b060b480cc1eb39d7.jpgg" group-title="BBC",BBC Three
+https://daddylivehd.sx/stream/stream-356.php
