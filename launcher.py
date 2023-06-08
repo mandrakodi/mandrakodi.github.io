@@ -1,8 +1,8 @@
-versione='1.2.28'
+versione='1.2.29'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 27.05.2023
+# Last update: 08.06.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -417,7 +417,7 @@ def jsonToChannels(strJson):
             info = ""
             if 'name' in channel:
                 try:
-                    titolo = channel["name"].encode('ascii', 'ignore')
+                    titolo = channel["name"]
                 except:
                     titolo = "NO_TIT"
                 jobCh += 1
