@@ -1,8 +1,8 @@
-versione='1.1.84'
+versione='1.1.85'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 05.06.2023
+# Last update: 18.06.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -195,6 +195,7 @@ def rocktalk(parIn=None):
     key = b"98221122"
     user_agent = 'USER-AGENT-tvtap-APP-V2'
     ch_id = parIn
+    
     r = requests.post('https://rocktalk.net/tv/index.php?case=get_channel_link_with_token_latest', 
         headers={"app-token": "37a6259cc0c1dae299a7866489dff0bd"},
         data={"payload": payload(), "channel_id": ch_id, "username": "603803577"},
@@ -213,6 +214,7 @@ def rocktalk(parIn=None):
             if link:
                 link = link.decode("utf-8")
                 if not link == "dummytext" and link not in links:
+                    links.append((link, "[COLOR gold]PLAY STREAM[/COLOR]"))
                     links.append((link+ "|connection=keepalive&Referer=https://rocktalk.net/&User-Agent="+player_user_agent, "[COLOR lime]PLAY STREAM[/COLOR]"))
     
     return links
@@ -463,7 +465,7 @@ def assia(parIn=None):
 
 def daddyFind(parIn):
     video_url = ""
-    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://livetvon.click/'}).content
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylivehd.sx/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
