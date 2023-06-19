@@ -1,8 +1,8 @@
-versione='1.2.29'
+versione='1.2.30'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 08.06.2023
+# Last update: 19.06.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -902,10 +902,10 @@ def m3u2json(src):
             if (group == ""):
                 group = "VARIOUS"
             try:
-                row = group+"@@"+title+"@@"+link+"@@"+img
+                row = group+"@#@"+title+"@#@"+link+"@#@"+img
                 okGroup=True
             except:
-                row = group.encode('utf-8', 'ignore').decode('utf-8')+"@@"+title+"@@"+link+"@@"+img
+                row = group.encode('utf-8', 'ignore').decode('utf-8')+"@#@"+title+"@#@"+link+"@#@"+img
                 writeFileLog("\n"+row, "a+")
             #logging.warning(row)
             arrTmp.append(row)
@@ -930,7 +930,7 @@ def m3u2json(src):
         for rowTmp in arrTmp:
             if (rowTmp != ""):
                 strLog=rowTmp
-                arrRow = rowTmp.split("@@")
+                arrRow = rowTmp.split("@#@")
                 group = arrRow[0]
                 if (oldGroup != group):
                     oldGroup = group
@@ -945,20 +945,28 @@ def m3u2json(src):
                     numGoup += 1
                     numIt=0
                 
-                if (numIt > 0):
-                    strJson += ','
-                strJson += '{'
-                strJson += '"title":"'+arrRow[1]+'",'
-                strJson += '"thumbnail":"'+arrRow[3]+'",'
-                strJson += '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                strJsonNew = '{'
+                strJsonNew += '"title":"'+arrRow[1]+'",'
+                strJsonNew += '"thumbnail":"'+arrRow[3]+'",'
+                strJsonNew += '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
                 link = arrRow[2]
                 if link.endswith(".m3u"):
-                    strJson += '"m3u":"'+link+'",'
+                    strJsonNew += '"m3u":"'+link+'",'
                 else:
-                    strJson += '"link":"'+link+'",'
-                strJson += '"info":"NO INFO"'
-                strJson += '}'
-                numIt += 1
+                    strJsonNew += '"link":"'+link+'",'
+                strJsonNew += '"info":"NO INFO"'
+                strJsonNew += '}'
+
+                try:
+                    json.loads(strJsonNew)
+                    if (numIt > 0):
+                        strJson += ','
+                    strJson +=  strJsonNew
+                    numIt += 1
+                except:
+                    logga("BAD ITEMS: "+strJsonNew)
+                    pass
+                
 
         strJson += ']}]}'
 
