@@ -1,8 +1,8 @@
-versione='1.1.85'
+versione='1.1.86'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 18.06.2023
+# Last update: 19.06.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -932,9 +932,10 @@ def getUrlSc(scws_id, tit=None):
     if clientIp:
         expires = int(time() + 172800)
         token = b64encode(md5('{}{} Yc8U6r8KjAKAepEA'.format(expires, clientIp).encode('utf-8')).digest()).decode('utf-8').replace('=', '').replace('+', '-').replace('/', '_')
-        url = 'https://scws.work/master/{}?token={}&expires={}&n=1'.format(scws_id, token, expires)
+        url = 'https://scws.work/master/{}?token={}&expires={}&canCast=1&b=1&n=1'.format(scws_id, token, expires)
         url4 = url + "|User-Agent="+randomUA
         video_urls.append((url4, "[COLOR lime]"+titolo+"[/COLOR]", "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
+        video_urls.append((url6, "[COLOR gold]"+titolo+"[/COLOR]", "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
     return video_urls
 
 
