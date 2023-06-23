@@ -1,4 +1,4 @@
-versione='1.1.88'
+versione='1.1.89'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -925,6 +925,8 @@ def getUrlSc(scws_id, tit=None):
         titolo=tit
     video_urls = []
     randomUA=getRandomUA()
+    
+    randomUA="PlusMediaPlayer/0.0.9"
     page_data = requests.get("http://test34344.herokuapp.com/getMyIp.php", headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
