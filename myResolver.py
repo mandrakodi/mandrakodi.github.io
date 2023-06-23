@@ -1,8 +1,8 @@
-versione='1.1.87'
+versione='1.1.88'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 21.06.2023
+# Last update: 23.06.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -502,18 +502,24 @@ def daddy(parIn=None):
     logga('PAR: '+parIn)
     video_url = daddyFind(parIn)
     logga('URL DADDY: '+video_url)
-    arrTmp = parIn.split("stream-")
-    arrTmp2 = arrTmp[1].split(".")
-    vId = arrTmp2[0]
-    if video_url == "":
-        video_url = "https://webudi.vhls.ru.com/lb/premium"+vId+"/index.m3u8"
-    
+    tito = "DADDY"
+    refe = parIn
+    try:
+        arrTmp = parIn.split("stream-")
+        arrTmp2 = arrTmp[1].split(".")
+        vId = arrTmp2[0]
+        tito = vId
+        refe = "https://streamservicehd.click/premiumtv/livetvon.php?id="+vId
+        if video_url == "":
+            video_url = "https://webudi.vhls.ru.com/lb/premium"+vId+"/index.m3u8"
+    except:
+        pass
 
     randomUa=getRandomUA()
-    final_url = video_url + "|connection=keepalive&Referer=https://streamservicehd.click/premiumtv/livetvon.php?id="+vId+"&User-Agent="+randomUa
+    final_url = video_url + "|connection=keepalive&Referer="+refe+"&User-Agent="+randomUa
     
 
-    video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+arrTmp2[0]+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
+    video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+tito+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
     
     return video_urls
 
@@ -1013,13 +1019,21 @@ def getScSerie(parIn=None):
             except:
                 imgEp=img
             titolo=numSea+"x"+numEp+" - "+episodio["name"].replace("&#39;", "'").replace("&amp;", "&")
-            if (numIt > 0):
-                jsonText = jsonText + ','    
-            jsonText = jsonText + '{"title":"[COLOR lime]'+titolo+'[/COLOR]","myresolve":"scws@@'+scwsId+'",'
-            jsonText = jsonText + '"thumbnail":"'+imgEp+'",'
-            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-            jsonText = jsonText + '"info":"'+plot.replace('"','\\"')+'"}'
-            numIt=numIt+1
+            
+            newJson = '{"title":"[COLOR lime]'+titolo+'[/COLOR]","myresolve":"scws@@'+scwsId+'",'
+            newJson += '"thumbnail":"'+imgEp+'",'
+            newJson += '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            newJson += '"info":"'+plot.replace('"','\\"')+'"}'
+            
+            try:
+                json.loads(newJson)
+                if (numIt > 0):
+                    jsonText += ','
+                jsonText +=  newJson
+                numIt += 1
+            except:
+                logga("BAD ITEMS: "+newJson)
+                pass
     except:
         logga("NO SCWS_ID FROM "+base)
         jsonText = jsonText + '{"title":"[COLOR red]NO PAGE FOUND[/COLOR]","link":"ignore",'
