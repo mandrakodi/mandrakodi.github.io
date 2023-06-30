@@ -1,8 +1,8 @@
-versione='1.1.89'
+versione='1.1.90'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.06.2023
+# Last update: 30.06.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -160,9 +160,40 @@ def girc(page_data, url, co, size='invisible'):
     return ''
 
 
+def skyTV(parIn=None):
+    links = []
+    requrl = "https://apid.sky.it/vdp/v1/getLivestream?id={}&isMobile=false".format(parIn)
+    url = requests.get(requrl).json()["streaming_url"]
+    links.append((url, "[COLOR gold]PLAY SKY CH[/COLOR]"))
+    return links
 
-
-
+def discovery(parIn=None):
+    import uuid
+    links = []
+    host = "https://www.discoveryplus.com"
+    deviceId = uuid.uuid4().hex
+    session = requests.Session()
+    domain = 'https://' + session.get("https://prod-realmservice.mercury.dnitv.com/realm-config/www.discoveryplus.com%2Fit%2Fepg").json()["domain"]
+    token = session.get('{}/token?deviceId={}&realm=dplay&shortlived=true'.format(domain, deviceId)).json()['data']['attributes']['token']
+    session.headers = {'User-Agent': 'Mozilla/50.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
+            'Referer': host,
+            'Origin': host,
+            'Cookie': 'st={}'.format(token),
+            'content-type': 'application/json',
+            'x-disco-params': 'realm=dplay,siteLookupKey=dplus_it'}
+    content = 'channel'
+    post = {content + 'Id': parIn, 'deviceInfo': {'adBlocker': False,'drmSupported': True}}
+    url = ""
+    dataStr = "NO_DATA"
+    try:
+        dataStr = session.post('{}/playback/v3/{}PlaybackInfo'.format(domain, content), json=post)
+        data = dataStr.json().get('data',{}).get('attributes',{})
+        url = data['streaming'][0]['url']
+    except:
+        logga("ERRORE DISCOVERY: "+dataStr)
+        pass
+    links.append((url, "[COLOR gold]PLAY DISCOVERY[/COLOR]"))
+    return links
 
 
 def rocktalk(parIn=None):
@@ -3241,6 +3272,8 @@ def run (action, params=None):
         'risolvi': urlsolver,
         'dplay': dplay,
         'dplayLive': dplayLive,
+        'disco': discovery,
+        'skyTV': skyTV,
         'mac': macLink,
         'scws': getUrlSc,
         'moviesc': scws,
