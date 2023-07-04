@@ -1,4 +1,4 @@
-versione='1.1.90'
+versione='1.1.91'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -397,8 +397,9 @@ def nopay(parIn):
     logga('CALL_NOPAY: '+parIn)
     randomUa=getRandomUA()
     page_data = ""
+    currSess = requests.Session()
     try:
-        page_data = requests.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://nopay.info/'}, verify=False).content
+        page_data = currSess.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://nopay.info/'}, verify=False).content
     except:
         video_urls.append(("ignoreme", "[COLOR red]REQUEST ERROR[/COLOR]", "ERROR", "https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"))
         return video_urls
@@ -412,8 +413,27 @@ def nopay(parIn):
         iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
         logga('IFRAME_2 NOPAY: '+iframe_url)
 
-    vUrl = GetLSProData("https:"+iframe_url, parIn)
-    final_url = vUrl + "|connection=keepalive&Referer=https:"+iframe_url+"&User-Agent="+randomUa
+    newPage="https:"+iframe_url
+    try:
+        new_page_data = currSess.get(newPage,headers={'user-agent':randomUa,'accept':'*/*','Referer':parIn}, verify=False).content
+    except:
+        video_urls.append(("ignoreme", "[COLOR red]REQUEST ERROR[/COLOR]", "ERROR", "https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"))
+        return video_urls
+    if PY3:
+        new_page_data = new_page_data.decode('utf-8')
+
+    video_url = preg_match(new_page_data, r'source:\s*"([^"]+)')
+    if video_url == "":
+        video_url = preg_match(new_page_data, r"source:\s*'([^']+)")
+    if video_url == "":
+        express1 = r"source:'(.*?)'"
+        video_url = preg_match(new_page_data, express1)
+    
+    if video_url != "":
+        vUrl = video_url + '|connection=keepalive&User-Agent='+myParse.quote(randomUa)+'&Referer='+newPage
+    logga('video_url '+vUrl)
+
+    final_url = vUrl
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+vUrl, "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
     return video_urls
 
@@ -447,7 +467,8 @@ def findM3u8(linkIframe, refPage):
         r = s.get(linkIframe, headers=headers) 
 
         headers = {
-            'user-agent': ua
+            'user-agent': ua,
+            'referer': refPage
         }
         time.sleep(2)
         s = requests.Session()
