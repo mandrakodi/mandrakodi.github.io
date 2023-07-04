@@ -1,8 +1,8 @@
-versione='1.1.91'
+versione='1.1.92'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 30.06.2023
+# Last update: 04.07.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -394,6 +394,7 @@ def wizhdFind(parIn):
 
 def nopay(parIn):
     video_urls = []
+    vUrl = ""
     logga('CALL_NOPAY: '+parIn)
     randomUa=getRandomUA()
     page_data = ""
@@ -414,6 +415,13 @@ def nopay(parIn):
         logga('IFRAME_2 NOPAY: '+iframe_url)
 
     newPage="https:"+iframe_url
+    if "embed" in newPage:
+        logga("CALL proData")
+        vUrl = GetLSProData(newPage, parIn)
+        final_url = vUrl + "|connection=keepalive&Referer="+newPage+"&User-Agent="+randomUa
+        video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+vUrl, "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
+        return video_urls
+    
     try:
         new_page_data = currSess.get(newPage,headers={'user-agent':randomUa,'accept':'*/*','Referer':parIn}, verify=False).content
     except:
