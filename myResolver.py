@@ -1,4 +1,4 @@
-versione='1.1.94'
+versione='1.1.95'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1284,10 +1284,118 @@ def dplayLive(parIn):
     video_urls.append((link, dataErr))
     return video_urls
 
-def cb01(parIn):
+def webcam(parIn):
     import re
     video_urls = []
+    arrT=parIn.split('_')
+    mode=arrT[0]
+    page=parIn[2:]
+    urlPage="https://www.skylinewebcams.com/it/"+page+".html";
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
 
+    s = requests.Session()
+    r = s.get(urlPage, headers=headers)
+    htmlFlat=r.text.replace("\n", '').replace("\r", '').replace("\t", '')
+    logga("FIND CAM ON "+urlPage)
+    if mode == "0":
+        express1 = r'<a href="it/webcam/(.*?)" class="col-xs-12 col-sm-6 col-md-4">(.*?)</a>'
+        lista = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)
+        jsonText='{"SetViewMode":"503","items":['
+        numIt=0
+        for (link, tit) in lista:
+            titolo="Cam"
+            express1 = r'<p class="tcam">(.*?)</p>'
+            try:
+                titolo = re.compile(express1, re.MULTILINE | re.DOTALL).findall(tit)[0]
+            except:
+                pass
+            
+            img="https://image.winudf.com/v2/image1/Y29tLm1pY3pvbi5hbmRyb2lkLndlYmNhbWFwcGxpY2F0aW9uX2ljb25fMTU3MjUxMTU1M18wNDU/icon.png?w=512&fakeurl=1"
+            express1 = r'<img src="(.*?)"'
+            try:
+                img = re.compile(express1, re.MULTILINE | re.DOTALL).findall(tit)[0]
+            except:
+                pass
+            
+            info="by MandraKodi"
+            express1 = r'<p class="subt">(.*?)</p>'
+            try:
+                info = re.compile(express1, re.MULTILINE | re.DOTALL).findall(tit)[0]
+            except:
+                pass
+            
+            infoPlus=""
+            express1 = r'<span class="lcam">(.*?)</span>'
+            try:
+                infoPlus = re.compile(express1, re.MULTILINE | re.DOTALL).findall(tit)[0]
+            except:
+                pass
+            
+            if (numIt > 0):
+                jsonText = jsonText + ','    
+            jsonText = jsonText + '{"title":"[COLOR gold]'+titolo+'[/COLOR] [COLOR lime]('+infoPlus+')[/COLOR]","myresolve":"webcam@@1_webcam/'+link.replace(".html", '')+'",'
+            jsonText = jsonText + '"thumbnail":"'+img+'",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"'+info+'"}'
+            numIt=numIt+1
+    
+    if mode == "1":
+        titolo="Watch Stream"
+        info="by @mandrakodi"
+        infoPlus=""
+        img="https://image.winudf.com/v2/image1/Y29tLm1pY3pvbi5hbmRyb2lkLndlYmNhbWFwcGxpY2F0aW9uX2ljb25fMTU3MjUxMTU1M18wNDU/icon.png?w=512&fakeurl=1"
+
+        express1 = r'<h1>(.*?)</h1>'
+        try:
+            titolo = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)[0].replace("Live webcam", "")
+        except:
+            pass
+
+        express1 = r'<h2>(.*?)</h2>'
+        try:
+            info = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)[0]
+        except:
+            pass
+
+        express1 = r'<meta property="og:description" content="(.*?)"'
+        try:
+            infoPlus = " "+re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)[0]
+        except:
+            pass
+
+        express1 = r'<meta property="og:image" content="(.*?)"'
+        try:
+            img = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)[0]
+        except:
+            pass
+        
+        url1="ignore"
+        express1 = r"source:'(.*?)'"
+        try:
+            url = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)[0]
+            url1 = "https://hd-auth.skylinewebcams.com/"+url.replace("livee", 'live')+"|Referer="+urlPage+"&User-Agent=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F109.0.0.0+Safari%2F537.36"
+        except:
+            pass
+
+        jsonText='{"SetViewMode":"503","items":['
+        jsonText = jsonText + '{"title":"[COLOR gold]'+titolo+'[/COLOR]",'
+        jsonText = jsonText + '"link":"'+url1+'",'
+        jsonText = jsonText + '"thumbnail":"'+img+'",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"'+info+infoPlus+'"}'
+        
+
+    jsonText = jsonText + "]}"
+    logga('JSON-WEBCAM: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
+    
+
+def cb01(parIn):
+    import re
+    
     url="https://cb01.red/stream/"+parIn+"-movie.html";
     headers = {
         'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
@@ -3396,6 +3504,7 @@ def run (action, params=None):
         'stsb' : streamsb,
         'imdb' : imdb,
         'cb01' : cb01,
+        'webcam' : webcam,
         'pepper':pepper
     }
 
