@@ -1,8 +1,8 @@
-versione='1.1.92'
+versione='1.1.93'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 04.07.2023
+# Last update: 15.07.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1284,6 +1284,56 @@ def dplayLive(parIn):
     video_urls.append((link, dataErr))
     return video_urls
 
+def imdb(parIn):
+    import re
+    video_urls = []
+
+    url="https://guardahd.stream/movie/"+parIn
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+
+    s = requests.Session()
+    r = s.get(url, headers=headers)
+    logga("FIND HOSTS")
+
+    express = r'<title>(.*?)</title>'
+    title = re.compile(express, re.MULTILINE | re.DOTALL).findall(r.text)[0]
+    
+    
+    
+    express1 = r'<ul class="_player-mirrors">(.*?)</ul>'
+    ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)[0]
+    htmlFlat=ret1.replace("\n", '').replace("\r", '').replace("\t", '')
+    express2 = r'data-link="(.*?)">(.*?)<\/li>'
+    ret = re.compile(express2, re.MULTILINE | re.DOTALL).findall(htmlFlat)
+    jsonText='{"SetViewMode":"503","items":['
+    numIt=0
+    for (link, ep) in ret:
+        if "Player 4K" not in ep:
+            if link[0:2] == "//":
+                link = "https:"+link
+            #logga('LINK-IMDB: '+link+" "+ep)
+            if (numIt > 0):
+                jsonText = jsonText + ','    
+            jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"risolvi@@'+link+'",'
+            jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"'+title+'"}'
+            numIt=numIt+1
+    
+    if numIt==0:
+        jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","link":"ignore",'
+        jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"NO INFO"}'
+
+    jsonText = jsonText + "]}"
+    logga('JSON-IMDB: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
+
+
 def taxi(parIn):
     import re
     video_urls = []
@@ -1317,7 +1367,7 @@ def taxi(parIn):
     jsonText='{"SetViewMode":"503","items":['
     numIt=0
     for (link, id, ep, tito) in ret:
-        logga('LINK-TAXI: '+link+" "+ep)
+        #logga('LINK-TAXI: '+link+" "+ep)
         if (numIt > 0):
             jsonText = jsonText + ','    
         jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"proData@@'+link+'",'
@@ -1325,6 +1375,12 @@ def taxi(parIn):
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"'+ret1.replace("streaming SERIE TV - euroStreaming", "")+'"}'
         numIt=numIt+1
+
+    if numIt==0:
+        jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","link":"ignore",'
+        jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"NO INFO"}'
 
     jsonText = jsonText + "]}"
     logga('JSON-TAXI: '+jsonText)
@@ -3319,6 +3375,7 @@ def run (action, params=None):
         'rocktalk': rocktalk,
         'lvtv': livetv,
         'stsb' : streamsb,
+        'imdb' : imdb,
         'pepper':pepper
     }
 
