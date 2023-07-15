@@ -1317,14 +1317,14 @@ def imdb(parIn):
             if (numIt > 0):
                 jsonText = jsonText + ','    
             jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"risolvi@@'+link+'",'
-            jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
+            jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"info":"'+title+'"}'
             numIt=numIt+1
     
     if numIt==0:
         jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","link":"ignore",'
-        jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
+        jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"NO INFO"}'
 
