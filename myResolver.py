@@ -1,4 +1,4 @@
-versione='1.1.95'
+versione='1.1.96'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -976,6 +976,7 @@ def scommunity(parIn=None):
     return getUrlSc(str(scws_id), titleEp)
 
 def getUrlSc(scws_id, tit=None):
+    logga('getUrlSc '+scws_id)
     from time import time
     from base64 import b64encode
     from hashlib import md5
@@ -1001,8 +1002,40 @@ def getUrlSc(scws_id, tit=None):
         expires = int(time() + 172800)
         token = b64encode(md5('{}{} Yc8U6r8KjAKAepEA'.format(expires, clientIp).encode('utf-8')).digest()).decode('utf-8').replace('=', '').replace('+', '-').replace('/', '_')
         url = 'https://scws.work/master/{}?token={}&expires={}&canCast=1&b=1&n=1'.format(scws_id, token, expires)
-        url4 = url + "|User-Agent="+randomUA
+        url4 = url
+        #url4 = url + "|User-Agent="+randomUA
         video_urls.append((url4, "[COLOR lime]"+titolo+"[/COLOR]", "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
+    return video_urls
+
+def scwsNew(parIn=None):
+    import json
+    video_urls = []
+
+    sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
+    scUrl=makeRequest(sc_url)
+    base=scUrl.replace("\n", '')+"iframe/"+parIn
+
+    randomUA=getRandomUA()
+
+    headSCt={'user-agent':randomUA}
+
+    pageT = requests.get(base,headers=headSCt).content
+    if PY3:
+        pageT = pageT.decode('utf-8')
+    patron = r'src="(.*?)"'
+    m3u8Url = preg_match(pageT, patron)
+    logga("URL_M3U8: "+m3u8Url)
+    arrT=m3u8Url.split("?")
+    baseUrl=arrT[0]
+    pageT2 = requests.get(m3u8Url.replace("&amp;", "&"),headers=headSCt).content
+    if PY3:
+        pageT2 = pageT2.decode('utf-8')
+    patron = r'window.masterPlaylistParams = {(.*?)}'
+    jsonUrl = "{"+preg_match(pageT2, patron)+"}"
+    logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
+    arrJ2 = json.loads(jsonUrl.replace("'", '"'))
+    urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&token360p="+arrJ2["token360p"]+"&token480p="+arrJ2["token480p"]+"&token720p="+arrJ2["token720p"]+"&token1080p="+arrJ2["token1080p"]+"&expires="+arrJ2["expires"]+"&canCast=1&n=1"
+    video_urls.append((urlSc, "[COLOR lime]PLAY VIDEO[/COLOR]", "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
     return video_urls
 
 
@@ -1033,6 +1066,7 @@ def scws(parIn=None):
 
 def getScSerie(parIn=None):
     import json
+    logga("PAR_IN "+parIn)
     video_urls = []
     jsonText=""
     x = parIn.split("---")
@@ -1061,7 +1095,7 @@ def getScSerie(parIn=None):
         numIt=0
         for (immagine) in arrJ2["props"]["title"]["images"]:
             if (immagine["type"]=="cover"):
-                img="https://cdn.streamingcommunity.codes/images/"+immagine["filename"]
+                img="https://cdn.streamingcommunity.dog/images/"+immagine["filename"]
                 logga("img: "+img)
         for (episodio) in arrJ2["props"]["loadedSeason"]["episodes"]:
             scwsId = str(episodio["scws_id"])
@@ -1077,7 +1111,7 @@ def getScSerie(parIn=None):
                 pass    
             
             try:
-                imgEp="https://cdn.streamingcommunity.codes/images/"+episodio["images"][0]["filename"]
+                imgEp="https://cdn.streamingcommunity.dog/images/"+episodio["images"][0]["filename"]
             except:
                 imgEp=img
             titolo=numSea+"x"+numEp+" - "+episodio["name"].replace("&#39;", "'").replace("&amp;", "&")
@@ -3488,6 +3522,7 @@ def run (action, params=None):
         'skyTV': skyTV,
         'mac': macLink,
         'scws': getUrlSc,
+        'scws2': scwsNew,
         'moviesc': scws,
         'seriesc': getScSerie,
         'assia': assia,
