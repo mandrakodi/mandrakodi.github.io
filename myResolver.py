@@ -1,4 +1,4 @@
-versione='1.1.93'
+versione='1.1.94'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1284,6 +1284,25 @@ def dplayLive(parIn):
     video_urls.append((link, dataErr))
     return video_urls
 
+def cb01(parIn):
+    import re
+    video_urls = []
+
+    url="https://cb01.red/stream/"+parIn+"-movie.html";
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+
+    s = requests.Session()
+    r = s.get(url, headers=headers)
+    logga("FIND IMDB CODE")
+
+    express1 = r'<script src="https://guardahd.stream/ddl/tt(.*?)"'
+    code = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)[0]
+    
+    return imdb("tt"+code)
+
+
 def imdb(parIn):
     import re
     video_urls = []
@@ -1295,7 +1314,7 @@ def imdb(parIn):
 
     s = requests.Session()
     r = s.get(url, headers=headers)
-    logga("FIND HOSTS")
+    logga("FIND HOSTS FOR "+parIn)
 
     express = r'<title>(.*?)</title>'
     title = re.compile(express, re.MULTILINE | re.DOTALL).findall(r.text)[0]
@@ -3376,6 +3395,7 @@ def run (action, params=None):
         'lvtv': livetv,
         'stsb' : streamsb,
         'imdb' : imdb,
+        'cb01' : cb01,
         'pepper':pepper
     }
 
