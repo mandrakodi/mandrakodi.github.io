@@ -1,8 +1,8 @@
-versione='1.1.96'
+versione='1.1.97'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 15.07.2023
+# Last update: 16.07.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1030,12 +1030,19 @@ def scwsNew(parIn=None):
     pageT2 = requests.get(m3u8Url.replace("&amp;", "&"),headers=headSCt).content
     if PY3:
         pageT2 = pageT2.decode('utf-8')
-    patron = r'window.masterPlaylistParams = {(.*?)}'
-    jsonUrl = "{"+preg_match(pageT2, patron)+"}"
-    logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
-    arrJ2 = json.loads(jsonUrl.replace("'", '"'))
-    urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&token360p="+arrJ2["token360p"]+"&token480p="+arrJ2["token480p"]+"&token720p="+arrJ2["token720p"]+"&token1080p="+arrJ2["token1080p"]+"&expires="+arrJ2["expires"]+"&canCast=1&n=1"
-    video_urls.append((urlSc, "[COLOR lime]PLAY VIDEO[/COLOR]", "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
+
+    urlSc="ignore"
+    tito="[COLOR lime]PLAY VIDEO[/COLOR]"
+    try:    
+        patron = r'window.masterPlaylistParams = {(.*?)}'
+        jsonUrl = "{"+preg_match(pageT2, patron)+"}"
+        logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
+        arrJ2 = json.loads(jsonUrl.replace("'", '"'))
+        urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&token360p="+arrJ2["token360p"]+"&token480p="+arrJ2["token480p"]+"&token720p="+arrJ2["token720p"]+"&token1080p="+arrJ2["token1080p"]+"&expires="+arrJ2["expires"]+"&canCast=1&n=1"
+    except:
+        tito="[COLOR red]NO VIDEO FOUND[/COLOR]"
+
+    video_urls.append((urlSc, tito, "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
     return video_urls
 
 
