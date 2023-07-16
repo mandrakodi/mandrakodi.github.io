@@ -1,4 +1,4 @@
-versione='1.1.97'
+versione='1.1.98'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1106,7 +1106,8 @@ def getScSerie(parIn=None):
                 logga("img: "+img)
         for (episodio) in arrJ2["props"]["loadedSeason"]["episodes"]:
             scwsId = str(episodio["scws_id"])
-            logga("scwsId: "+scwsId)
+            urlIframe=idSea+"?episode_id="+str(episodio["id"])
+            logga("urlIframe: "+urlIframe)
             numEp=str(episodio["number"])
             if (len(numEp)==1):
                 numEp="0"+numEp
@@ -1123,7 +1124,7 @@ def getScSerie(parIn=None):
                 imgEp=img
             titolo=numSea+"x"+numEp+" - "+episodio["name"].replace("&#39;", "'").replace("&amp;", "&")
             
-            newJson = '{"title":"[COLOR lime]'+titolo+'[/COLOR]","myresolve":"scws@@'+scwsId+'",'
+            newJson = '{"title":"[COLOR lime]'+titolo+'[/COLOR]","myresolve":"scws2@@'+urlIframe+'",'
             newJson += '"thumbnail":"'+imgEp+'",'
             newJson += '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             newJson += '"info":"'+plot.replace('"','\\"')+'"}'
