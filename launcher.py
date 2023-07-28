@@ -1,8 +1,8 @@
-versione='1.2.30'
+versione='1.2.31'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 19.06.2023
+# Last update: 28.07.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -55,7 +55,29 @@ def logga(mess):
     if debug == "on":
         logging.warning("MANDRA_LOG: \n"+mess)
         testoLog += mess+"\n";
-		
+
+def makeRequestNoUa(url):
+    logga('TRY TO OPEN '+url)
+    html = ""
+    if PY3:
+        import urllib.request as myRequest
+    else:
+        import urllib2 as myRequest
+    try:
+        req = myRequest.Request(url)
+        response = myRequest.urlopen(req, timeout=45)
+        html = response.read().decode('utf-8')
+        response.close()
+        retff="NOCODE"
+        if html != "":
+            retff=html[0:15]
+        logga('OK REQUEST FROM '+url+' resp: '+retff)
+    except:
+        logging.warning('Error to open url: '+url)
+        pass
+    return html
+
+
 def makeRequest(url, hdr=None):
     logga('TRY TO OPEN '+url)
     html = ""
@@ -136,6 +158,11 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 def play_video(path):
     urlClean=path.replace(" ", "%20")
     play_item = xbmcgui.ListItem(path=urlClean)
+    if urlClean.endswith(".mpd") or ".mpd" in urlClean:
+        play_item.setProperty("inputstream", "inputstream.adaptive")
+        play_item.setProperty("inputstream.adaptive.manifest_type", "mpd")
+        #play_item.setProperty("inputstream.adaptive.license_key",  "https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/")
+        #play_item.setProperty("inputstream.adaptive.license_type", "com.widevine.alpha")
     xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
 
 def getTxtMessage(vName):
@@ -152,6 +179,7 @@ def getTxtMessage(vName):
 
 def getExternalJson(strPath):
     strSource = makeRequest(strPath)
+    #strSource = makeRequestNoUa(strPath)
     if (strSource == ""):
         msgBox("Spiacenti, la fonte non e' raggiungibile")
         remoteLog("NO_FONTE@@"+strPath)
