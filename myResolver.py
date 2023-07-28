@@ -1,8 +1,8 @@
-versione='1.1.98'
+versione='1.1.99'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 16.07.2023
+# Last update: 28.07.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -414,6 +414,13 @@ def nopay(parIn):
         iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
         logga('IFRAME_2 NOPAY: '+iframe_url)
 
+    if (iframe_url.startswith("multi.php")):
+        mpdUrl=iframe_url.split("#")[1]+"|connection=keepalive&Referer="+parIn+"&User-Agent="+randomUa
+        video_urls.append((mpdUrl, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
+        mpdUrl=iframe_url.split("#")[1]
+        video_urls.append((mpdUrl, "[COLOR gold]PLAY EXTERNAL[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
+        return video_urls
+    
     newPage="https:"+iframe_url
     if "embed" in newPage:
         logga("CALL proData")
