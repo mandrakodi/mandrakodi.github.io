@@ -1,4 +1,4 @@
-versione='1.2.1'
+versione='1.2.2'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1506,11 +1506,11 @@ def toonita(parIn):
     except:
         pass
     
-    express1 = r'>\s*(?:(?P<season>\d+)(?:&#215;|x|×))?(?P<episode>(\d+|\d+-\d+))(?:\s+&#8211;\s+)?[ –]+(?P<title2>[^<]+)[ –]+<a (?P<data>.*?)(?:<br|</p)'
-    arrMatch = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)
+    #express1 = r'>\s*(?:(?P<season>\d+)(?:&#215;|x|×))?(?P<episode>(\d+|\d+-\d+))(?:\s+&#8211;\s+)?[ –]+(?P<title2>[^<]+)[ –]+<a (?P<data>.*?)(?:<br|</p)'
+    #arrMatch = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)
 
     video_urls = []
-    video_urls.append("ignore", "[COLOR orange]FOUND "+arrMatch.lenght+"[/COLOR]", tit.replace("Watch", ""), img)
+    video_urls.append("ignore", "[COLOR orange]FOUND 0[/COLOR]", tit.replace("Watch", ""), img)
     return video_urls
 
     
