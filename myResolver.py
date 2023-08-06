@@ -1,8 +1,8 @@
-versione='1.2.2'
+versione='1.2.3'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 06.08.2023
+# Last update: 28.07.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -599,8 +599,6 @@ def pepper(parIn=None):
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, '<iframe width="100%" height="100%" allow=\'encrypted-media\' src="(.*?)"')
     logga('URL PEPPER: https:'+iframe_url)
-    if "nopay.info" in iframe_url:
-        return nopay("https:"+iframe_url)
     if "embed" in iframe_url:
         iframe_url2=iframe_url
         video_url=checkUnpacked("https:"+iframe_url2)
@@ -1442,79 +1440,7 @@ def webcam(parIn):
     logga('JSON-WEBCAM: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
-
-def gzip_decode(data):
-    import gzip
-    from io import BytesIO
-    """gzip encoded data -> unencoded data
-
-    Decode data using the gzip content encoding as described in RFC 1952
-    """
-    if not gzip:
-        raise NotImplementedError
-    f = BytesIO(data)
-    gzf = gzip.GzipFile(mode="rb", fileobj=f)
-    try:
-        decoded = gzf.read()
-    except IOError:
-        raise ValueError("invalid data")
-    f.close()
-    gzf.close()
-    return decoded
-
-def toonita(parIn):
-    import re, gzip
-    import cfscrape
-    from base64 import b64decode
-    headers = {
-        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Dnt": "1",
-        "referer": "https://toonitalia.xyz/"
-    }
-    s = requests.Session()
-    s.headers = headers
-
-    url="https://toonitalia.xyz/"+parIn
-    scraper = cfscrape.create_scraper(s)
-    #r = scraper.get(url).content.decode('utf-8')
-    r1 = scraper.request("GET", url)
     
-    r = gzip_decode(r1.content)
-
-    logga("htmlFlat: "+url+"\n\n"+r)
-    
-    
-    
-    htmlFlat=r.replace("\n", "").replace("\r", "").replace("\t", "")
-    logga("htmlFlat: "+url+"\n\n"+htmlFlat)
-    arrPl=htmlFlat.split("Trama:</span></h3>")
-    arrPl2=arrPl[1].split("<br> <span")
-    trama=arrPl2[0].replace("<br>").replace("<p>")
-    img="https://pbs.twimg.com/profile_images/848686618466816000/8MaqE-n5_400x400.jpg"
-    express1 = r'<meta property="og:image" content="(.*?)"'
-    try:
-        img = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)[0]
-    except:
-        pass
-    
-    tit = "TITOLO"
-    express1 = r'<meta property="og:title" content="(.*?)"'
-    try:
-        tit = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)[0].split("streaming")[0]
-    except:
-        pass
-    
-    #express1 = r'>\s*(?:(?P<season>\d+)(?:&#215;|x|×))?(?P<episode>(\d+|\d+-\d+))(?:\s+&#8211;\s+)?[ –]+(?P<title2>[^<]+)[ –]+<a (?P<data>.*?)(?:<br|</p)'
-    #arrMatch = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)
-
-    video_urls = []
-    video_urls.append("ignore", "[COLOR orange]FOUND 0[/COLOR]", tit.replace("Watch", ""), img)
-    return video_urls
-
-    
-
 
 def cb01(parIn):
     import re
@@ -1690,7 +1616,7 @@ def remoteLog(msgToLog):
     else:
         import urllib as myParse
     
-    baseLog = "http://test34344.herokuapp.com/filter.php?numTest=JOB998"
+    baseLog = "http://bkp34344.herokuapp.com/filter.php?numTest=JOB998"
     urlLog = baseLog + "&msgLog=" + myParse.quote(msgToLog)
     strSource = makeRequest(urlLog)
     if strSource is None or strSource == "":
@@ -3628,7 +3554,6 @@ def run (action, params=None):
         'stsb' : streamsb,
         'imdb' : imdb,
         'cb01' : cb01,
-        'toonita' : toonita,
         'webcam' : webcam,
         'pepper':pepper
     }
