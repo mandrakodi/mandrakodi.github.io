@@ -1,8 +1,8 @@
-versione='1.2.31'
+versione='1.2.32'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 28.07.2023
+# Last update: 06.08.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -706,12 +706,16 @@ def checkResolver():
     else:
         home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     resolver_file = os.path.join(home, 'myResolver.py')
+	local_vers = '0.0.0'
     if os.path.exists(resolver_file)==True:
         resF = open(resolver_file)
         resolver_content = resF.read()
         resF.close()
-        local_vers = re.findall("versione='(.*)'",resolver_content)[0]
-        logga('local_vers '+local_vers)
+		try:
+        	local_vers = re.findall("versione='(.*)'",resolver_content)[0]
+    	except:
+			pass
+		logga('local_vers '+local_vers)
         
         remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/myResolver.py"
         strSource = makeRequest(remoteResolverUrl)
