@@ -1,4 +1,4 @@
-versione='1.2.33'
+versione='1.2.34'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -714,6 +714,7 @@ def checkResolver():
         try:
             local_vers = re.findall("versione='(.*)'",resolver_content)[0]
         except:
+            logga('ERRORE FIND LOCAL VERS')
             pass
         logga('local_vers '+local_vers)
         
