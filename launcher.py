@@ -1,4 +1,4 @@
-versione='1.2.32'
+versione='1.2.33'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -706,16 +706,16 @@ def checkResolver():
     else:
         home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     resolver_file = os.path.join(home, 'myResolver.py')
-	local_vers = '0.0.0'
+    local_vers = '0.0.0'
     if os.path.exists(resolver_file)==True:
         resF = open(resolver_file)
         resolver_content = resF.read()
         resF.close()
-		try:
-        	local_vers = re.findall("versione='(.*)'",resolver_content)[0]
-    	except:
-			pass
-		logga('local_vers '+local_vers)
+        try:
+            local_vers = re.findall("versione='(.*)'",resolver_content)[0]
+        except:
+            pass
+        logga('local_vers '+local_vers)
         
         remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/myResolver.py"
         strSource = makeRequest(remoteResolverUrl)
@@ -1100,7 +1100,7 @@ def remoteLog(msgToLog):
         import urllib as myParse
     
     
-    baseLog = "https://bkp34344.herokuapp.com/filter.php?numTest=JOB999"
+    baseLog = "https://test34344.herokuapp.com/filter.php?numTest=JOB999"
     urlLog = baseLog + "&msgLog=" + myParse.quote(ua+"@@"+msgToLog)
     strSource = makeRequest(urlLog)
     if strSource is None or strSource == "":
