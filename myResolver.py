@@ -1,8 +1,8 @@
-versione='1.2.0'
+versione='1.2.1'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 05.08.2023
+# Last update: 06.08.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1690,7 +1690,7 @@ def remoteLog(msgToLog):
     else:
         import urllib as myParse
     
-    baseLog = "http://bkp34344.herokuapp.com/filter.php?numTest=JOB998"
+    baseLog = "http://test34344.herokuapp.com/filter.php?numTest=JOB998"
     urlLog = baseLog + "&msgLog=" + myParse.quote(msgToLog)
     strSource = makeRequest(urlLog)
     if strSource is None or strSource == "":
