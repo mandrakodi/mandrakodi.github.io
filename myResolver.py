@@ -1,4 +1,4 @@
-versione='1.2.3'
+versione='1.2.4'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -42,28 +42,31 @@ def downloadHttpPage(urlIn, **opt):
     import time
     toRet=""
     try:
-        headers = {
+        head = {
             'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
         }
         s = requests.Session()
         if opt.get('header', None) is not None:
-            headers = opt['header']
+            logga("SET HEADER")
+            head = opt['header']
         
         if opt.get('headers', None) is not None:
-            headers = opt['headers']
+            logga("SET HEADERS")
+            head = opt['headers']
         
         if opt.get('post', None) is not None:
             postData=opt['post']
-            toRet = s.post(urlIn, data=postData, allow_redirects=True, headers=headers, timeout=15).content
+            logga("POST DATA: "+postData)
+            toRet = s.post(urlIn, data=postData, allow_redirects=True, headers=head, timeout=15)
         else:    
             logga("START")
-            toRet = s.get(urlIn, headers=headers, timeout=45) 
+            toRet = s.get(urlIn, headers=head, timeout=45) 
             if opt.get('sleep', None) is not None:
                 logga("SLEEP")
                 time.sleep(opt['sleep'])
                 logga("RE-START")
                 s = requests.Session()
-                toRet = s.get(urlIn, headers=headers, timeout=45).content
+                toRet = s.get(urlIn, headers=head, timeout=45)
             logga("END")
         if PY3:
             toRet = toRet.decode('utf-8')
@@ -393,20 +396,30 @@ def wizhdFind(parIn):
     return vUrl
 
 def nopay(parIn):
+    import time
     video_urls = []
     vUrl = ""
-    logga('CALL_NOPAY: '+parIn)
+    logga('CALL NOPAY FOR: '+parIn)
     randomUa=getRandomUA()
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://nopay.info/index.php'}
     page_data = ""
-    currSess = requests.Session()
+    
     try:
-        page_data = currSess.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://nopay.info/'}, verify=False).content
+        currSess = requests.Session()
+        p=currSess.get("https://nopay.info/index.php")
+        time.sleep(1)
+        indexP = currSess.post("https://nopay.info/index.php", data="password=123nopay", headers=head)
+        time.sleep(1)
+        page_data = currSess.get(parIn,headers=head).content
     except:
         video_urls.append(("ignoreme", "[COLOR red]REQUEST ERROR[/COLOR]", "ERROR", "https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"))
         return video_urls
     if PY3:
-        page_data = page_data.decode('utf-8')
-
+        try:
+            page_data = page_data.decode('utf-8')
+        except:
+            page_data = page_data.decode('latin-1')
+    
     iframe_url = preg_match(page_data, r"iframe\s*src='([^']+)")
     
     logga('IFRAME NOPAY: '+iframe_url)
@@ -599,6 +612,9 @@ def pepper(parIn=None):
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, '<iframe width="100%" height="100%" allow=\'encrypted-media\' src="(.*?)"')
     logga('URL PEPPER: https:'+iframe_url)
+    if "nopay.info" in iframe_url:
+        iframe_url2=iframe_url
+        return nopay("https:"+iframe_url2)
     if "embed" in iframe_url:
         iframe_url2=iframe_url
         video_url=checkUnpacked("https:"+iframe_url2)
@@ -1459,6 +1475,24 @@ def cb01(parIn):
     
     return imdb("tt"+code)
 
+def bing(parIn):
+    import re
+    video_urls = []
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+
+    s = requests.Session()
+    r = s.get(parIn, headers=headers)
+    logga("FIND HOSTS FOR "+parIn)
+
+    express = r'<iframe src="(.*?)"'
+    link = re.compile(express, re.MULTILINE | re.DOTALL).findall(r.text)[0]
+    if "assia" in link:
+        return assia(link)
+    
+    video_urls.append(("ignore", "[COLOR red]NO LINK FOUND[/COLOR]"))
+    return video_urls
 
 def imdb(parIn):
     import re
@@ -3553,6 +3587,7 @@ def run (action, params=None):
         'lvtv': livetv,
         'stsb' : streamsb,
         'imdb' : imdb,
+        'bing' : bing,
         'cb01' : cb01,
         'webcam' : webcam,
         'pepper':pepper
