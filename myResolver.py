@@ -1,8 +1,8 @@
-versione='1.2.4'
+versione='1.2.5'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 28.07.2023
+# Last update: 16.08.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -910,6 +910,66 @@ def urlsolver(url):
     
     return url
 
+def uprot(parIn):
+    video_urls = []
+    logga("UPROT URL IN: "+parIn)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
+        "Referer": "https://toonita.green/"
+    }
+    s = requests.Session()
+    fu = s.get(parIn, headers=headers)
+    video_url = parIn
+    try:
+        fu2=fu.text.replace("\n", "").replace("\r", "").replace("\t", "")
+        find = preg_match(fu2, r'<div id="ad_space"> <center><a href="(.*?)"><button')
+        #find = re.findall('<div id="ad_space"><center><a href="(.*?)"><button class="button is-info">Continue</button></a>', fu.text.replace("\n").replace("\r").replace("\t"))[0]
+        return resolveMyUrl(find)
+    except:
+        logga("NO link \n"+fu2)
+        video_urls.append(("ignore", "[COLOR red]NO LINK FOUND[/COLOR]"))	
+        pass
+    return video_urls
+
+def toonIta(parIn):
+    logga("TOONITA URL IN: "+parIn)
+    video_urls = []
+    headers = {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
+        "Referer": "https://toonita.green/"
+    }
+    s = requests.Session()
+    fu = s.get(parIn, headers=headers)
+    video_url = parIn
+    try:
+        regEx= r'<a href="https://uprot.net/tape/(.*?)" target="_blank" rel="noopener nofollow" title="(.*?)">'
+        list = re.findall(regEx, fu.text)
+        jsonText='{"SetViewMode":"503","items":['
+        numIt=0
+        for (id, title) in list:
+            ep=title.replace("Streaming di ", "").replace(" su StreamTape", "")
+            if (numIt > 0):
+                jsonText = jsonText + ','    
+            jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"uprot@@https://uprot.net/tape/'+id+'",'
+            jsonText = jsonText + '"thumbnail":"https://pbs.twimg.com/profile_images/848686618466816000/8MaqE-n5_400x400.jpg",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"by MandraKodi"}'
+            numIt=numIt+1
+        
+        if numIt==0:
+            jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","link":"ignore",'
+            jsonText = jsonText + '"thumbnail":"https://pbs.twimg.com/profile_images/848686618466816000/8MaqE-n5_400x400.jpg",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"NO INFO"}'
+
+        jsonText = jsonText + "]}"
+        video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    except:
+        logga("NO PACKED \n"+fu.text)
+        video_urls.append(("ignore", "[COLOR red]NO LINK FOUND[/COLOR]"))	
+        pass
+    return video_urls
+
 def resolveMyUrl(url):
     try:
         import resolveurl
@@ -928,7 +988,6 @@ def resolveMyUrl(url):
     except:
         pass
     if resolved:
-        #logging.error("MANDRA URL_SOLVED: "+resolved)
         return resolved
     else:
         dialog = xbmcgui.Dialog()
@@ -1253,7 +1312,9 @@ def streamTape(parIn):
     video_urls = []
     ppIn = myParse.unquote(parIn)
     logga('PAR_STAPE: '+ppIn)
-    page_data = requests.get(ppIn, headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.eu/'}).content
+    randomUa=getRandomUA()
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://toonitalia.green/'}
+    page_data = requests.get(ppIn, headers=head).content
     if PY3:
         page_data = page_data.decode('utf-8')
     htmlCodice = preg_match(page_data, r'<\/video><script>(.*?)<\/body>')
@@ -3585,6 +3646,8 @@ def run (action, params=None):
         'urlsolve': resolveMyUrl,
         'rocktalk': rocktalk,
         'lvtv': livetv,
+        'toonita' : toonIta,
+        'uprot' : uprot,
         'stsb' : streamsb,
         'imdb' : imdb,
         'bing' : bing,
