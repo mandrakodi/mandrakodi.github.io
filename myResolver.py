@@ -1,8 +1,8 @@
-versione='1.2.5'
+versione='1.2.6'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 16.08.2023
+# Last update: 21.08.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -384,15 +384,21 @@ def decodeMyStream(data):
     return first_group.encode('ascii').decode('unicode-escape').encode('ascii').decode('unicode-escape')
 
 def wizhdFind(parIn):
+    randomUa=getRandomUA()
     logga('CALL: '+parIn)
-    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'http://wizhdsports.net/'}).content
+    page_data = requests.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'http://wizhdsports.net/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
 
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
     logga('IFRAME WIZ: '+iframe_url)
-
-    vUrl = findM3u8(iframe_url, parIn)
+    if iframe_url.startswith("//"):
+        iframe_url="https:"+iframe_url
+    if "embed" in iframe_url:
+        logga("CALL proData")
+        vUrl = GetLSProData(iframe_url, parIn)+"|connection=keepalive&Referer="+parIn+"&User-Agent="+randomUa
+    else:
+        vUrl = findM3u8(iframe_url, parIn)
     return vUrl
 
 def nopay(parIn):
@@ -441,6 +447,9 @@ def nopay(parIn):
         final_url = vUrl + "|connection=keepalive&Referer="+newPage+"&User-Agent="+randomUa
         video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+vUrl, "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
         return video_urls
+    
+    if "sportsonline" in newPage:
+        return proData(newPage)
     
     try:
         new_page_data = currSess.get(newPage,headers={'user-agent':randomUa,'accept':'*/*','Referer':parIn}, verify=False).content
