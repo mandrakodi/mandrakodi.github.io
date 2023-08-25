@@ -1,8 +1,8 @@
-versione='1.2.6'
+versione='1.2.7'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 21.08.2023
+# Last update: 25.08.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -434,6 +434,13 @@ def nopay(parIn):
         logga('IFRAME_2 NOPAY: '+iframe_url)
 
     if (iframe_url.startswith("multi.php")):
+        mpdUrl=iframe_url.split("#")[1]+"|connection=keepalive&Referer="+parIn+"&User-Agent="+randomUa
+        video_urls.append((mpdUrl, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
+        mpdUrl=iframe_url.split("#")[1]
+        video_urls.append((mpdUrl, "[COLOR gold]PLAY EXTERNAL[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
+        return video_urls
+    
+    if (iframe_url.startswith("hls.php")):
         mpdUrl=iframe_url.split("#")[1]+"|connection=keepalive&Referer="+parIn+"&User-Agent="+randomUa
         video_urls.append((mpdUrl, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
         mpdUrl=iframe_url.split("#")[1]
