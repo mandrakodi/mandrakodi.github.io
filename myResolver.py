@@ -1,8 +1,8 @@
-versione='1.2.7'
+versione='1.2.8'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 25.08.2023
+# Last update: 28.08.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -694,7 +694,7 @@ def PlayStream(link):
     return play_item
     
    
-def proData(parIn=None):
+def proData(parIn=None, flat=0):
     video_urls = []
     logga('PAR: '+parIn)
     if "supervideo.tv" in parIn:
@@ -702,6 +702,8 @@ def proData(parIn=None):
         return supervideo(parIn)
     video_url = GetLSProData(parIn)
     logga('URL PRODATA: '+video_url)
+    if flat==1:
+        return video_url
     video_urls.append((video_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi"))
     return video_urls
 
@@ -722,7 +724,7 @@ def checkUnpacked(page_in):
     logga("checkUnpacked: "+page_in)
     fu = downloadHttpPage(page_in, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':page_in})
     if fu != "":
-        logga("RESULT: "+fu)
+        #logga("RESULT: "+fu)
         find = ""
         try:
             find = re.findall('eval\(function(.+?.+)', fu)[0]
@@ -1673,6 +1675,40 @@ def taxi(parIn):
     logga('JSON-TAXI: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
+
+def platin(parIn=None):
+    video_urls = []
+    randomUa=getRandomUA()
+    
+    headers = {
+        'user-agent': randomUa
+    }
+
+    s = requests.Session()
+    r = s.get(parIn, headers=headers)
+    logga("FIND HOSTS")
+    ret1 = "by @mandrakodi"
+    
+    express1 = r'<a href="acestream://(.*?)" rel="nofollow">(.*?)</a>'
+    ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)
+
+    for aceId, aceTit in ret1:
+        video_urls.append(("acestream://"+aceId, "[COLOR lime]"+aceTit+" (ACE)[/COLOR]"))
+    
+    express2 = r'<a href="(.*?)" target="_blank" rel="noopener"><button'
+    ret2 = re.compile(express2, re.MULTILINE | re.DOTALL).findall(r.text)
+    numL=0
+    for linkTmp in ret2:
+        logga("TRY FOR "+linkTmp)
+        try:
+            video_url = proData(linkTmp.replace(" ", ""), 1)
+            numL=numL+1
+            video_urls.append((video_url, "[COLOR aqua]STREAM "+str(numL)+"[/COLOR]"))
+        except:
+            pass
+    return video_urls
+
+
 
 def writeFileLog(strIn, modo):
     home = ''
@@ -3668,6 +3704,7 @@ def run (action, params=None):
         'imdb' : imdb,
         'bing' : bing,
         'cb01' : cb01,
+        'platin' : platin,
         'webcam' : webcam,
         'pepper':pepper
     }
