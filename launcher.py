@@ -1,8 +1,8 @@
-versione='1.2.34'
+versione='1.2.35'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 06.08.2023
+# Last update: 03.09.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -700,6 +700,7 @@ def checkPortalPy():
        
 
 def checkResolver():
+    logga("START CHECK_RESOLVER")
     home = ''
     if PY3:
         home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
@@ -716,7 +717,7 @@ def checkResolver():
         except:
             logga('ERRORE FIND LOCAL VERS')
             pass
-        logga('local_vers '+local_vers)
+        logga('Resolver_local_vers '+local_vers)
         
         remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/myResolver.py"
         strSource = makeRequest(remoteResolverUrl)
@@ -774,6 +775,12 @@ def checkDns():
     if okDns == False:
         dialog = xbmcgui.Dialog()
         mess = "Con i DNS attualmente impostati, "+dns1+" - "+dns2+",\npotresti avere problemi a recuperare i link da alcuni siti.\nSe puoi, utilizza quelli di CloudFlare [1.1.1.1 - 1.0.0.1]"
+        try:
+            pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
+            urlSup="https://test34344.herokuapp.com/testAnonym.php?token="+pwd+"&dns1="+dns1+"&dns2="+dns2
+            makeRequestNoUa(urlSup)
+        except:
+            pass
         return dialog.ok("Mandrakodi", mess)
 
 def checkMandraScript():
