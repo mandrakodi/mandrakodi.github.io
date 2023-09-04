@@ -1,8 +1,8 @@
-versione='1.2.35'
+versione='1.2.36'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 03.09.2023
+# Last update: 04.09.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -764,17 +764,19 @@ def checkDns():
     logga("## DNS2: %s" %  (dns2))
     logga("############# END NETWORK INFO #############")
     okDns=False
-    if dns1 == "1.1.1.1" or dns1 == "8.8.8.8" or dns1 == gate:
+    router=0
+    if dns1 == gate or dns2 == gate:
+        router=1
+    elif dns1 == "1.1.1.1" or dns1 == "1.0.0.1" or dns1 == "208.67.222.222" or dns1 == "208.67.220.220":
         okDns=True
-    elif dns1 == "1.0.0.1" or dns1 == "8.8.4.4" or dns1 == gate:
+    elif dns2 == "1.1.1.1" or dns2 == "1.0.0.1" or dns2 == "208.67.222.222" or dns2 == "208.67.220.220":
         okDns=True
-    elif dns2 == "1.1.1.1" or dns2 == "8.8.8.8" or dns2 == gate:
-        okDns=True
-    elif dns2 == "1.1.1.1" or dns2 == "8.8.4.4" or dns2 == gate:
-        okDns=True
+    
     if okDns == False:
         dialog = xbmcgui.Dialog()
-        mess = "Con i DNS attualmente impostati, "+dns1+" - "+dns2+",\npotresti avere problemi a recuperare i link da alcuni siti.\nSe puoi, utilizza quelli di CloudFlare [1.1.1.1 - 1.0.0.1]"
+        mess = "Con i DNS attualmente impostati, "+dns1+" - "+dns2+",\npotresti avere problemi a recuperare i link da alcuni siti.\nSe puoi, utilizza quelli di CloudFlare [1.1.1.1 - 1.0.0.1] o OpenDNS [208.67.222.222 - 208.67.220.220]"
+        if router == 1:
+            mess = "Stai utilizzando i DNS impostati sul router ["+gate+"].\nSe hai problemi di visione controlla che siano quelli di CloudFlare [1.1.1.1 - 1.0.0.1] o OpenDNS [208.67.222.222 - 208.67.220.220]"
         try:
             pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
             urlSup="https://test34344.herokuapp.com/testAnonym.php?token="+pwd+"&dns1="+dns1+"&dns2="+dns2
