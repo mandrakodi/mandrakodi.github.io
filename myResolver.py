@@ -1,8 +1,8 @@
-versione='1.2.8'
+versione='1.2.9'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 28.08.2023
+# Last update: 16.09.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -400,6 +400,60 @@ def wizhdFind(parIn):
     else:
         vUrl = findM3u8(iframe_url, parIn)
     return vUrl
+def msgBox(mess):
+    dialog = xbmcgui.Dialog()
+    dialog.ok("MandraKodi", mess)
+
+def testDns(parIn=""):
+    import time
+    video_urls = []
+    vUrl = ""
+    logga('CALL NOPAY 4 DNS TEST '+parIn)
+    randomUa=getRandomUA()
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://nopay.info/index.php'}
+    page_data = ""
+    
+    ret="[COLOR lime]TEST DNS: OK[/COLOR]"
+    thumb="https://upload.wikimedia.org/wikipedia/commons/f/fb/2000px-ok_x_nuvola_green.png"
+    try:
+        currSess = requests.Session()
+        p=currSess.get("https://nopay.info/index.php")
+        time.sleep(1)
+        page_data1 = currSess.get("https://nopay.info/embe.php?id=liveCh1",headers=head)
+        page_data = page_data1.content
+        
+        if (page_data1.status_code != 200):
+            ret="[COLOR red]ERRORE DNS[/COLOR]"
+            thumb="https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"
+        else:
+            if PY3:
+                try:
+                    page_data = page_data.decode('utf-8')
+                except:
+                    page_data = page_data.decode('latin-1')
+            
+            iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
+            if (iframe_url==""):
+                ret="[COLOR red]ERRORE DNS[/COLOR]"
+                thumb="https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"
+    except Exception as err:
+        import traceback
+        
+        #errMsg="ERROR_MK2: {0}".format(err)
+        #msgBox(errMsg)
+        traceback.print_exc()
+        ret="[COLOR red]ERRORE REQUEST[/COLOR]"
+        thumb="https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"
+    
+    jsonText='{"SetViewMode":"500","items":['
+    jsonText = jsonText + '{"title":"'+ret+'","myresolve":"wigi@@https://nopay.info/embe.php?id=liveCh1",'
+    jsonText = jsonText + '"thumbnail":"'+thumb+'",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"}'
+    jsonText = jsonText + "]}"
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    
+    return video_urls
 
 def nopay(parIn):
     import time
@@ -3706,7 +3760,8 @@ def run (action, params=None):
         'cb01' : cb01,
         'platin' : platin,
         'webcam' : webcam,
-        'pepper':pepper
+        'pepper':pepper,
+        'testDns':testDns
     }
 
     if action in commands:
