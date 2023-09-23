@@ -1,8 +1,8 @@
-versione='1.2.9'
+versione='1.2.10'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 16.09.2023
+# Last update: 23.09.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -223,11 +223,29 @@ def rocktalk(parIn=None):
             "84131223a2242577761737941713841327678435c2f5450594a74434a4a544a66593d5c6e227d"
         )
         cipher = Cipher_PKCS1_v1_5.new(_pubkey)
-        return b64encode(cipher.encrypt(_msg))
+        ret64=b64encode(cipher.encrypt(_msg))
+        logga('JSON PAYLOAD: '+str(ret64))
+        return ret64
 
+    logga('TVTAP PARIN: '+parIn)
+    links = []
+    
     player_user_agent = "mediaPlayerhttp/1.8 (Linux;Android 7.1.2) ExoPlayerLib/2.5.3"
     key = b"98221122"
     user_agent = 'USER-AGENT-tvtap-APP-V2'
+    if parIn=="0":
+        headers = {
+            'User-Agent': user_agent,
+            'app-token': '37a6259cc0c1dae299a7866489dff0bd',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'Host': 'taptube.net',
+        }
+        
+        r = requests.post('https://rocktalk.net/tv/index.php?case=get_all_channels', headers=headers, data={"payload": payload(), "username": "603803577"}, timeout=15)
+        logga('JSON ALL_CH: '+str(r.json()))
+        links.append(("ignoreme", "[COLOR gold]END JOB[/COLOR]"))
+        return links
+
     ch_id = parIn
     
     r = requests.post('https://rocktalk.net/tv/index.php?case=get_channel_link_with_token_latest', 
@@ -236,9 +254,13 @@ def rocktalk(parIn=None):
         timeout=15)
 
     logga('JSON TVTAP: '+str(r.json()))
-
+    msgRes = r.json()["msg"]
+    if msgRes == "Invalid request!":
+        links.append(("ignoreme", "[COLOR red]No Link Found[/COLOR]"))
+        return links
+    
     from pyDes import des, PAD_PKCS5
-    links = []
+    
     jch = r.json()["msg"]["channel"][0]
     for stream in jch.keys():
         if "stream" in stream or "chrome_cast" in stream:
@@ -971,13 +993,16 @@ def urlsolver(url):
     else:
         logga('video_resolved_url '+resolvedUrl)
         if (resolvedUrl != url):
-            video_urls.append((resolvedUrl, "LINK 1"))
+            video_urls.append((resolvedUrl, "[COLOR gold]LINK 1[/COLOR]"))
             if "|" in resolvedUrl:
                 arrV = resolvedUrl.split("|")
                 linkClean=arrV[0]
                 logga('video_resolved_cleaned '+linkClean)
-                video_urls.append((linkClean, "LINK 2"))		
-
+                video_urls.append((linkClean, "[COLOR orange]LINK 2[/COLOR]"))		
+            else:
+                randomUa=getRandomUA()
+                final_url = resolvedUrl + "|connection=keepalive&Referer=https://antena-sport.online/&User-Agent="+randomUa
+                video_urls.append((final_url, "[COLOR lime]LINK 2[/COLOR]"))
             return video_urls
     
     return url
