@@ -1,5 +1,9 @@
 <playercorefactory>
 	<players>
+		<player name="MVP" type="ExternalPlayer" audio="false" video="true">
+			<filename>is.xyz.mpv</filename>
+			<hidexbmc>false</hidexbmc>
+		</player>
 		<player name="VLC" type="ExternalPlayer" audio="false" video="true">
 			<filename>org.videolan.vlc</filename>
 			<hidexbmc>false</hidexbmc>
