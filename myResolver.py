@@ -1,8 +1,8 @@
-versione='1.2.10'
+versione='1.2.11'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.09.2023
+# Last update: 25.09.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -483,15 +483,15 @@ def nopay(parIn):
     vUrl = ""
     logga('CALL NOPAY FOR: '+parIn)
     randomUa=getRandomUA()
-    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://nopay.info/index.php'}
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://nopay2.info/index.php'}
     page_data = ""
     
     try:
         currSess = requests.Session()
-        p=currSess.get("https://nopay.info/index.php")
-        time.sleep(1)
-        indexP = currSess.post("https://nopay.info/index.php", data="password=123nopay", headers=head)
-        time.sleep(1)
+        #p=currSess.get("https://nopay.info/index.php")
+        #time.sleep(1)
+        #indexP = currSess.post("https://nopay.info/index.php", data="password=123nopay", headers=head)
+        #time.sleep(1)
         page_data = currSess.get(parIn,headers=head).content
     except:
         video_urls.append(("ignoreme", "[COLOR red]REQUEST ERROR[/COLOR]", "ERROR", "https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"))
@@ -523,16 +523,30 @@ def nopay(parIn):
         video_urls.append((mpdUrl, "[COLOR gold]PLAY EXTERNAL[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
         return video_urls
     
-    newPage="https:"+iframe_url
+    if (iframe_url.startswith("https")):
+        newPage=iframe_url 
+    else:
+        newPage="https:"+iframe_url 
+
+    if "sportsonline" in newPage:
+        return proData(newPage)
+    
+    if "daddylivehd.sx" in newPage:
+        jsonText='{"SetViewMode":"503","items":['
+        jsonText = jsonText + '{"title":"[COLOR lime]FIND VIDEO[/COLOR]","myresolve":"daddy@@'+newPage+'",'
+        jsonText = jsonText + '"thumbnail":"https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"by MandraKodi"}'
+        jsonText = jsonText + "]}"
+        video_urls.append((jsonText, "FIND VIDEO", "No info", "noThumb", "json"))
+        return video_urls
+    
     if "embed" in newPage:
         logga("CALL proData")
         vUrl = GetLSProData(newPage, parIn)
         final_url = vUrl + "|connection=keepalive&Referer="+newPage+"&User-Agent="+randomUa
         video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+vUrl, "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
         return video_urls
-    
-    if "sportsonline" in newPage:
-        return proData(newPage)
     
     try:
         new_page_data = currSess.get(newPage,headers={'user-agent':randomUa,'accept':'*/*','Referer':parIn}, verify=False).content
@@ -671,7 +685,7 @@ def daddyFind(parIn):
 
 def daddy(parIn=None):
     video_urls = []
-    logga('PAR: '+parIn)
+    logga('PAR_DADDY: '+parIn)
     video_url = daddyFind(parIn)
     logga('URL DADDY: '+video_url)
     tito = "DADDY"
@@ -722,7 +736,8 @@ def pepper(parIn=None):
     return video_urls
 
 def PlayStream(link):
-    baseurl='https://daddylivehd.sx/'
+    logga("PlayStream "+link)
+    baseurl='https://daddylivehd.com/'
     UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0'
     logga("TRY TO GET STREAM FROM "+link)
     url=link
@@ -936,8 +951,8 @@ def GetLSProData(page_in, refe=None):
 def wigi(parIn=None):
     import jsunpack
     logga('PAR_WIGI: '+parIn)
-    if "nopay.info" in parIn:
-        return nopay(parIn)
+    if "nopay.info" in parIn or "nopay2.info" in parIn:
+        return nopay(parIn.replace("nopay.info", "nopay2.info"))
     
     video_urls = []
 
