@@ -1,8 +1,8 @@
-versione='1.2.11'
+versione='1.2.12'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 25.09.2023
+# Last update: 27.09.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -432,16 +432,16 @@ def testDns(parIn=""):
     vUrl = ""
     logga('CALL NOPAY 4 DNS TEST '+parIn)
     randomUa=getRandomUA()
-    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://nopay.info/index.php'}
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://nopay2.info/index.php'}
     page_data = ""
     
     ret="[COLOR lime]TEST DNS: OK[/COLOR]"
     thumb="https://upload.wikimedia.org/wikipedia/commons/f/fb/2000px-ok_x_nuvola_green.png"
     try:
         currSess = requests.Session()
-        p=currSess.get("https://nopay.info/index.php")
+        p=currSess.get("https://nopay2.info/index.php")
         time.sleep(1)
-        page_data1 = currSess.get("https://nopay.info/embe.php?id=liveCh1",headers=head)
+        page_data1 = currSess.get("https://nopay2.info/embe.php?id=liveCh1",headers=head)
         page_data = page_data1.content
         
         if (page_data1.status_code != 200):
