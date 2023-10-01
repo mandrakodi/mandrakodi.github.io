@@ -1,8 +1,8 @@
-versione='1.2.12'
+versione='1.2.13'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 27.09.2023
+# Last update: 01.10.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -177,7 +177,9 @@ def discovery(parIn=None):
     deviceId = uuid.uuid4().hex
     session = requests.Session()
     domain = 'https://' + session.get("https://prod-realmservice.mercury.dnitv.com/realm-config/www.discoveryplus.com%2Fit%2Fepg").json()["domain"]
-    token = session.get('{}/token?deviceId={}&realm=dplay&shortlived=true'.format(domain, deviceId)).json()['data']['attributes']['token']
+    urlTk='{}/token?deviceId={}&realm=dplay&shortlived=true'.format(domain, deviceId)
+    logga("URL TOKEN DISCOVERY: "+urlTk)
+    token = session.get(urlTk).json()['data']['attributes']['token']
     session.headers = {'User-Agent': 'Mozilla/50.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
             'Referer': host,
             'Origin': host,
@@ -428,6 +430,8 @@ def msgBox(mess):
 
 def testDns(parIn=""):
     import time
+    dns1 = xbmc.getInfoLabel('Network.DNS1Address')
+    dns2 = xbmc.getInfoLabel('Network.DNS2Address')
     video_urls = []
     vUrl = ""
     logga('CALL NOPAY 4 DNS TEST '+parIn)
@@ -454,9 +458,9 @@ def testDns(parIn=""):
                 except:
                     page_data = page_data.decode('latin-1')
             
-            iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
+            iframe_url = preg_match(page_data, r"iframe\s*src='([^']+)")
             if (iframe_url==""):
-                ret="[COLOR red]ERRORE DNS[/COLOR]"
+                ret="[COLOR red]DNS ERRORS[/COLOR]"
                 thumb="https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"
     except Exception as err:
         import traceback
@@ -467,7 +471,9 @@ def testDns(parIn=""):
         ret="[COLOR red]ERRORE REQUEST[/COLOR]"
         thumb="https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"
     
-    jsonText='{"SetViewMode":"500","items":['
+    ret += "[COLOR yellow] ["+dns1+" - "+dns2+"][/COLOR]"
+
+    jsonText='{"SetViewMode":"51","items":['
     jsonText = jsonText + '{"title":"'+ret+'","myresolve":"wigi@@https://nopay.info/embe.php?id=liveCh1",'
     jsonText = jsonText + '"thumbnail":"'+thumb+'",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
@@ -830,13 +836,17 @@ def checkUnpacked(page_in):
                     try:
                         toRet = re.findall('src="([^"]*)',unpack)[0]
                     except:
-                        pass
+                        try:
+                            toRet = re.findall('source:"([^"]*)',unpack)[0]
+                        except:
+                            pass
             logga('URL_UNPACK '+toRet)
         except:
             pass
     else:
         logga('LA PAGINA '+page_in+' NON RISPONDE')
         toRet="NO_PAGE"
+    toRet = 'https:' + toRet if toRet.startswith('//') else toRet
     return toRet
 
 def GetLSProData(page_in, refe=None):
@@ -1010,13 +1020,14 @@ def urlsolver(url):
         if (resolvedUrl != url):
             video_urls.append((resolvedUrl, "[COLOR gold]LINK 1[/COLOR]"))
             if "|" in resolvedUrl:
+                video_urls.append((resolvedUrl+"&verifypeer=false", "[COLOR lime]LINK 2[/COLOR]"))
                 arrV = resolvedUrl.split("|")
                 linkClean=arrV[0]
                 logga('video_resolved_cleaned '+linkClean)
-                video_urls.append((linkClean, "[COLOR orange]LINK 2[/COLOR]"))		
+                video_urls.append((linkClean, "[COLOR orange]LINK 3[/COLOR]"))		
             else:
                 randomUa=getRandomUA()
-                final_url = resolvedUrl + "|connection=keepalive&Referer=https://antena-sport.online/&User-Agent="+randomUa
+                final_url = resolvedUrl + "|verifyPeer=false&connection=keepalive&Referer="+url+"&User-Agent="+randomUa
                 video_urls.append((final_url, "[COLOR lime]LINK 2[/COLOR]"))
             return video_urls
     
@@ -1031,11 +1042,12 @@ def uprot(parIn):
     }
     s = requests.Session()
     fu = s.get(parIn, headers=headers)
+    
     video_url = parIn
     try:
         fu2=fu.text.replace("\n", "").replace("\r", "").replace("\t", "")
-        find = preg_match(fu2, r'<div id="ad_space"> <center><a href="(.*?)"><button')
-        #find = re.findall('<div id="ad_space"><center><a href="(.*?)"><button class="button is-info">Continue</button></a>', fu.text.replace("\n").replace("\r").replace("\t"))[0]
+        logga("HTML\n"+fu2)
+        find = preg_match(fu2, r'<div id="ad_space">\s*<center><a href="(.*?)"><button')
         return resolveMyUrl(find)
     except:
         logga("NO link \n"+fu2)
@@ -1056,7 +1068,7 @@ def toonIta(parIn):
     try:
         regEx= r'<a href="https://uprot.net/tape/(.*?)" target="_blank" rel="noopener nofollow" title="(.*?)">'
         list = re.findall(regEx, fu.text)
-        jsonText='{"SetViewMode":"503","items":['
+        jsonText='{"SetViewMode":"51","items":['
         numIt=0
         for (id, title) in list:
             ep=title.replace("Streaming di ", "").replace(" su StreamTape", "")
@@ -1067,7 +1079,22 @@ def toonIta(parIn):
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"info":"by MandraKodi"}'
             numIt=numIt+1
-        
+
+        if numIt==0:
+            regEx= r'<a href="https://uprot.net/msf/(.*?)" target="_blank" rel="noopener nofollow" title="(.*?)">'
+            list = re.findall(regEx, fu.text)
+            jsonText='{"SetViewMode":"51","items":['
+            numIt=0
+            for (id, title) in list:
+                ep=title.replace("Streaming di ", "").replace(" su Max", "")
+                if (numIt > 0):
+                    jsonText = jsonText + ','    
+                jsonText = jsonText + '{"title":"[COLOR gold]'+ep+'[/COLOR]","myresolve":"uprot@@https://uprot.net/msf/'+id+'",'
+                jsonText = jsonText + '"thumbnail":"https://pbs.twimg.com/profile_images/848686618466816000/8MaqE-n5_400x400.jpg",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"info":"by MandraKodi"}'
+                numIt=numIt+1
+
         if numIt==0:
             jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","link":"ignore",'
             jsonText = jsonText + '"thumbnail":"https://pbs.twimg.com/profile_images/848686618466816000/8MaqE-n5_400x400.jpg",'
@@ -1094,6 +1121,7 @@ def resolveMyUrl(url):
     xxx_plugins_path = 'special://home/addons/script.module.resolveurl.xxx/resources/plugins/'
     if xbmcvfs.exists(xxx_plugins_path):
         resolveurl.add_plugin_dirs(xbmcvfs.translatePath(xxx_plugins_path))
+    logga ("TRY TO RESOLVE "+url)
     resolved = ""
     try:
         resolved = resolveurl.resolve(url)
