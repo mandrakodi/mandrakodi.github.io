@@ -1,8 +1,8 @@
-versione='1.2.13'
+versione='1.2.14'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 01.10.2023
+# Last update: 02.10.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1743,6 +1743,60 @@ def imdb(parIn):
     logga('JSON-IMDB: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
+
+
+def nopayMenu(parIn=""):
+    import re
+    video_urls = []
+
+    url="https://nopay2.info/"
+
+    
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+    s = requests.Session()
+    r = s.get(url, headers=headers)
+    jsonText='{"SetViewMode":"51","items":['
+    express1 = r'<div class="card text-white (.*?) mb-5">(.*?)</div></div></div>'
+    ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)
+    numIt=0
+    for color, div in ret1:
+        logga("DIV\n"+div)
+        express2 = r'<div class="card-header" style="background-image: (.*?)">(.*?)</div>'
+        ret2 = re.compile(express2, re.MULTILINE | re.DOTALL).findall(div)
+        immagine=""
+        evento=""
+        for (img, event) in ret2:
+            immagine=img
+            evento=event.replace("\n", "").replace("\r", "").replace("\t", "").replace("<br>", "")
+
+        expressDay = r'<div class="card-body"><p>(.*?)</p>'
+        day = re.compile(expressDay, re.MULTILINE | re.DOTALL).findall(div)[0]
+
+        express3 = r'href="\/embe.php\?id=(.*?)" target="_blank" class="btn btn-primary"><i class="flag (.*?)" style="vertical-align: baseline;"></i>(.*?)</a>'
+        ret3 = re.compile(express3, re.MULTILINE | re.DOTALL).findall(div)
+        for (ch, flag, tit) in ret3:
+            if (numIt > 0):
+                jsonText = jsonText + ','    
+            jsonText = jsonText + '{"title":"[COLOR gold]'+day.strip()+'[/COLOR] [COLOR lime]'+evento.strip()+'[/COLOR] [COLOR aqua]('+tit+')[/COLOR]",'
+            jsonText = jsonText + '"myresolve":"wigi@@https://nopay2.info/embe.php?id='+ch+'",'
+            jsonText = jsonText + '"thumbnail":"https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"by MandraKodi"}'
+            numIt=numIt+1
+    
+    if numIt==0:
+        jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","link":"ignore",'
+        jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"NO INFO"}'
+
+    jsonText = jsonText + "]}"
+    logga('JSON-NOPAY: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
+    
 
 
 def taxi(parIn):
@@ -3829,7 +3883,8 @@ def run (action, params=None):
         'platin' : platin,
         'webcam' : webcam,
         'pepper':pepper,
-        'testDns':testDns
+        'testDns':testDns,
+        'nopayMenu':nopayMenu
     }
 
     if action in commands:
