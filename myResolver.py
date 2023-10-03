@@ -1,8 +1,8 @@
-versione='1.2.14'
+versione='1.2.15'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 02.10.2023
+# Last update: 03.10.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1744,6 +1744,299 @@ def imdb(parIn):
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
+def createSportMenu(parIn=""):
+    if parIn=="nopay":
+        return nopayMenu()
+    if parIn=="zonline":
+        return sportsonlineMenu()
+    if parIn=="daddy":
+        return daddyLiveMenu()
+    
+def getSportLogo(sportName):
+    toRet="https://autyzmwszkole.files.wordpress.com/2015/11/sport2.jpg"
+    if (sportName=="Soccer" or sportName==" Calcio"):
+        toRet="https://play-lh.googleusercontent.com/lsJjbVdV5fNzgVS9RALpiPxUWcZkHkCQAxD7I_26d-gGejt45r1SNZV5-lFBfQtcHg"
+    if (sportName=="Cricket"):
+        toRet="https://seeklogo.com/images/C/cricket-logo-DC6957DD66-seeklogo.com.png"
+    if (sportName=="Tennis"):
+        toRet="https://img.bestdealplus.com/ae04/kf/Hf448267801434196b98c876992ed9bc3Y.jpg";
+    if (sportName=="MMA"):
+        toRet="https://i.pinimg.com/originals/ac/00/d5/ac00d52d06acbbd6ce3af3777e785e23.jpg";
+    if "Moto" in sportName or "moto" in sportName:
+        toRet="https://i.pinimg.com/originals/c6/1d/d2/c61dd299176c82de8bde053331e76e17.jpg";
+    if (sportName=="Golf"):
+        toRet="https://chip-ing.com/wp-content/uploads/2021/10/Golfer_1-1170x10331-1-1024x904.png";
+    if (sportName=="Baseball"):
+        toRet="https://seeklogo.com/images/R/red-and-black-baseball-logo-BAE3744108-seeklogo.com.png";
+    if (sportName=="Basketball" or sportName=="Basket"):
+        toRet="https://i.pinimg.com/originals/97/b5/95/97b595b930ac325d7e03a2c0d84c265b.jpg";
+    if "Hockey" in sportName:
+        toRet="https://image.freepik.com/vettori-gratuito/distintivo-di-hockey-su-ghiaccio-logo-modello-di-torneo-della-squadra-emblema_7112-199.jpg";
+    if "Combat"in sportName:
+        toRet="https://pngimg.com/d/ufc_PNG75.png";
+    if (sportName=="Cycling"):
+        toRet="https://freepngimg.com/download/bike/23211-1-bike-ride-image.png";
+    if (sportName=="Beach Soccer"):
+        toRet="https://images.squarespace-cdn.com/content/v1/5a32532ae9bfdfec59a39d04/1516203783799-49KUS1XV4XH0174U1E5E/Beach+Soccer.png";
+    if (sportName=="Darts"):
+        toRet="https://img.freepik.com/free-vector/darts-game-emblem_109132-92.jpg";
+    if (sportName=="Badminton"):
+        toRet="https://banner2.cleanpng.com/20180324/fye/kisspng-badminton-shuttlecock-yonex-logo-sport-badminton-5ab6916c3415b0.2726775915219142202134.jpg";
+    if (sportName=="Futsal"):
+        toRet="https://images-platform.99static.com/2YNHyBVTpcMsiCsLid0oJkDtUkQ=/0x0:2000x2000/500x500/top/smart/99designs-contests-attachments/112/112918/attachment_112918109";
+    if "Rugby" in sportName:
+        toRet="https://image.freepik.com/vettori-gratuito/rugby-logo-american-logo-sport_7112-532.jpg"
+    if "Aussie" in sportName:
+        toRet="https://image.freepik.com/vettori-gratuito/rugby-logo-american-logo-sport_7112-532.jpg"
+    if "Equestrian" in sportName or "Horse" in sportName:
+        toRet="https://i.pinimg.com/originals/43/72/58/437258335411310ed156680a78f1b911.jpg"
+    if (sportName=="Tennis da tavolo"):
+        toRet="https://e7.pngegg.com/pngimages/783/738/png-clipart-table-tennis-racket-addicting-games-ping-pong-game-sports-thumbnail.png"
+    if (sportName=="Chess"):
+        toRet="https://i.pinimg.com/736x/3c/4f/18/3c4f1886e5b1d47f3126703fd20f56b7.jpg"
+    if (sportName=="Pallamano" or sportName=="Handball"):
+        toRet="https://png.pngitem.com/pimgs/s/19-197475_handball-logo-minis-handball-logo-hd-png-download.png"
+    if (sportName=="Pallavolo" or sportName=="Volleyball"):
+        toRet="https://cdn6.f-cdn.com/contestentries/1471562/33395594/5c789de756a88_thumb900.jpg"
+    if (sportName=="WWE"):
+        toRet="https://www.wrestling-news.net/wp-content/uploads/2019/04/WWE.png"
+    if (sportName=="Snooker"):
+        toRet="https://t3.ftcdn.net/jpg/03/20/04/28/360_F_320042878_AJvfy22rnAtFZ6msEOhXlGMM2hbCBXYC.jpg"
+    if "Ski" in sportName:
+        toRet="https://us.123rf.com/450wm/baldyrgan/baldyrgan1701/baldyrgan170100008/69262433-sci-simbolo-stilizzato-logo-o-emblema-modello.jpg?ver=6"
+    if (sportName=="Boxe" or sportName=="Boxing" or sportName=="Pugilato"):
+        toRet="https://image.freepik.com/vecteurs-libre/logo-graphique-insigne-boxe_24908-54891.jpg"
+    if (sportName=="Lacrosse"):
+        toRet="https://img0-placeit-net.s3-accelerate.amazonaws.com/uploads/stage/stage_image/30400/optimized_large_thumb_stage.jpg"
+    if (sportName=="WaterPolo"):
+        toRet="https://images.vexels.com/media/users/3/203460/isolated/preview/57a4cd98f07284a832f66e0c726e1e30-waterpolo-male-player-blue.png"
+    if (sportName=="Biathlon"):
+        toRet="https://skitrax.com/wp-content/uploads/2017/02/IBU-Logo.3-2017-01-22-at-6.55.22-AM.png"
+    if (sportName=="Squash"):
+        toRet="https://www.pngkit.com/png/full/206-2061953_squash-player-png.png"
+    if (sportName=="Kick Volleyball"):
+        toRet="https://i.pinimg.com/originals/4f/59/af/4f59af612f275a1420724dff57baecff.png"
+    if "Sailing" in sportName or "Boating" in sportName:
+        toRet="https://second-hand.decathlon.it/bundles/front/img/icons-sports/minis/canoeing.png"
+	
+    return toRet
+
+
+def daddyLiveMenu():
+    import re, datetime
+    video_urls = []
+    url="https://daddylivehd.sx/"
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+    s = requests.Session()
+    r = s.get(url, headers=headers)
+    dataFile = r.text.replace("\n", "").replace("\r", "").replace("\t", "")
+    arrDiv = dataFile.split("<h2")
+    #logga("H2: "+str(len(arrDiv)))
+    arrTemp = []
+    logoSp="https://autyzmwszkole.files.wordpress.com/2015/11/sport2.jpg"
+    cont=0
+    okRow=0
+    for div in arrDiv:
+        cont=cont+1
+        if cont==1:
+            continue
+        #logga ("DIV DADDY: "+div)
+        if "background-color" in div:
+            #logga ("OK BGR")
+            express = r'>(.*?)</h2>'
+            try:
+                sportName = re.compile(express, re.MULTILINE | re.DOTALL).findall(div)[0]
+                #logga("sportName: "+sportName)
+                if sportName == "Soccer":
+                    sportName = " Calcio"
+                    okRow=1
+            except:
+                pass
+            if okRow==0:
+                continue
+            logoSp=getSportLogo(sportName)
+            arrH=div.split("<hr>")
+            #logga("HR: "+str(len(arrH)))
+            conta=0
+            for hr in arrH:
+                conta=conta+1
+                if conta==1:
+                    continue
+                arrEv=hr.split("<span")
+                titol=arrEv[0].replace("<strong>", "").replace("</strong>", "")
+                #logga ("titolo: "+titolo)
+                if "<" in titol:
+                    continue
+                hh = titol[0:2]
+                mm = titol[3:5]
+                dt = datetime.datetime(2000, 6, 10, int(hh), int(mm), 45)
+                dt1 = dt + datetime.timedelta(hours=-3)
+                newDate = dt1 + datetime.timedelta(minutes=-30)
+                hh2=str(newDate.hour)
+                if newDate.hour < 10:
+                    hh2="0"+str(newDate.hour)
+                mm2=str(newDate.minute)
+                if newDate.minute < 10:
+                    mm2="0"+str(newDate.minute)
+                timeMatch=hh2+":"+mm2
+                titolo=timeMatch+titol[5:]
+                links=hr[len(titolo):]
+                if "|" in links:
+                    arrPP = links.split("|")
+                    for tfgr in arrPP:
+                        express = r'href="(.*)" target'
+                        ret1 = re.compile(express, re.MULTILINE | re.DOTALL).findall(tfgr)
+                        express = r'"noopener">(.*)</a>'
+                        ret2 = re.compile(express, re.MULTILINE | re.DOTALL).findall(tfgr)
+                        numRe=0
+                        for linkR in ret1:
+                            titR=ret2[numRe]
+                            arrTemp.append(sportName+"@@"+titolo+"@@"+logoSp+"@@"+linkR+"@@"+titR)
+                            numRe=numRe+1
+                else:
+                    express = r'href="(.*)" target'
+                    ret1 = re.compile(express, re.MULTILINE | re.DOTALL).findall(links)
+                    express = r'"noopener">(.*)</a>'
+                    ret2 = re.compile(express, re.MULTILINE | re.DOTALL).findall(links)
+                    numRe=0
+                    for linkR in ret1:
+                        titR=ret2[numRe]
+                        arrTemp.append(sportName+"@@"+titolo+"@@"+logoSp+"@@"+linkR+"@@"+titR)
+                        numRe=numRe+1
+
+                
+
+            
+    jsonText='{"SetViewMode":"50","channels":['
+    sorted(arrTemp)
+    oldSport=""
+    numCh=0
+    numIt=0
+    for row in arrTemp:
+        arrRow=row.split("@@")        
+        sport=arrRow[0]
+        match=arrRow[1]
+        logo=arrRow[2]
+        link=arrRow[3]
+        ch=arrRow[4]
+        if oldSport != sport:
+            if (numCh > 0):
+                jsonText = jsonText + ']},'    
+            jsonText = jsonText + '{"name":"[COLOR gold]'+sport.strip()+'[/COLOR] ",'
+            jsonText = jsonText + '"thumbnail":"'+logo+'",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"SetViewMode":"51","items":['
+            oldSport = sport
+            numIt=0
+            numCh=numCh+1
+        if (numIt > 0):
+            jsonText = jsonText + ','    
+        
+        jsonText = jsonText + '{"title":"[COLOR lime]'+match.strip()+'[/COLOR] [COLOR orange]'+ch+'[/COLOR]",'
+        jsonText = jsonText + '"myresolve":"daddy@@https://daddylivehd.sx'+link+'",'
+        jsonText = jsonText + '"thumbnail":"'+logo+'",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"by MandraKodi"}'
+        numIt=numIt+1
+    
+    if (numIt > 0):
+        jsonText = jsonText + ']}' 
+
+    
+    if numIt==0:
+        jsonText = jsonText + '{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",'
+        jsonText = jsonText + '"thumbnail":"https://www.avis.it/wp-content/uploads/2018/06/Sport_balls.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"NO INFO"}'
+
+    jsonText = jsonText + "]}"
+    logga('JSON-DADDY: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
+
+
+def sportsonlineMenu():
+    import datetime
+    video_urls = []
+
+    arrWeek={"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"}
+    url="https://sportsonline.gl/prog.txt"
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+    s = requests.Session()
+    r = s.get(url, headers=headers)
+    jsonText='{"SetViewMode":"500","channels":['
+    #arrLine = r.text.splitlines
+    numIt=0
+    numCh=0
+    start=0
+    for line in r.text.splitlines():
+        if line == "":
+            continue
+        logga("ROW: "+line)
+        for day in arrWeek:
+            if day in line:
+                if (numCh > 0):
+                    jsonText = jsonText + ']},'    
+                jsonText = jsonText + '{"name":"[COLOR gold]'+line.strip()+'[/COLOR] ",'
+                jsonText = jsonText + '"thumbnail":"https://ullmansails.com/wp-content/uploads/2020/05/png-hd-calendar-calendar-png-hd-png-image-500.png",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"SetViewMode":"51","items":['
+                numIt=0
+                numCh=numCh+1
+                start=1
+        if start==1:
+            if "|" in line:
+                arrT=line.split(" | ")
+                titolMatch=arrT[0].replace(" x ", " vs ").replace(" @ ", " vs ")
+                hh = titolMatch[0:2]
+                mm = titolMatch[3:5]
+                titMatch=titolMatch[6:]
+                data = hh+":"+mm+" 2000-06-10"
+                dt = datetime.datetime(2000, 6, 10, int(hh), int(mm), 45)
+                newDate = dt + datetime.timedelta(hours=1)
+                hh2=str(newDate.hour)
+                if newDate.hour < 10:
+                    hh2="0"+str(newDate.hour)
+                mm2=str(newDate.minute)
+                if newDate.minute < 10:
+                    mm2="0"+str(newDate.minute)
+                timeMatch=hh2+":"+mm2
+                linkMatch=arrT[1]
+                arrL=linkMatch.split("/")
+                tit=arrL[-1].replace(".php", "")
+                if (numIt > 0):
+                    jsonText = jsonText + ','    
+                
+                jsonText = jsonText + '{"title":"[COLOR gold]'+timeMatch+'[/COLOR] [COLOR lime]'+titMatch.strip()+'[/COLOR] [COLOR aqua]('+tit+')[/COLOR]",'
+                jsonText = jsonText + '"myresolve":"proData@@'+linkMatch+'",'
+                jsonText = jsonText + '"thumbnail":"https://www.avis.it/wp-content/uploads/2018/06/Sport_balls.png",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"info":"by MandraKodi"}'
+                numIt=numIt+1
+            #except:
+                #logga("ERRORE")
+                #pass
+    if (numIt > 0):
+        jsonText = jsonText + ']}' 
+
+
+    
+    
+    
+    if numIt==0:
+        jsonText = jsonText + '{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",'
+        jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"NO INFO"}'
+
+    jsonText = jsonText + "]}"
+    logga('JSON-ZONLINE: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
 
 def nopayMenu(parIn=""):
     import re
@@ -1762,7 +2055,6 @@ def nopayMenu(parIn=""):
     ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)
     numIt=0
     for color, div in ret1:
-        logga("DIV\n"+div)
         express2 = r'<div class="card-header" style="background-image: (.*?)">(.*?)</div>'
         ret2 = re.compile(express2, re.MULTILINE | re.DOTALL).findall(div)
         immagine=""
@@ -1787,8 +2079,8 @@ def nopayMenu(parIn=""):
             numIt=numIt+1
     
     if numIt==0:
-        jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","link":"ignore",'
-        jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
+        jsonText = jsonText + '{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",'
+        jsonText = jsonText + '"thumbnail":"https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"NO INFO"}'
 
@@ -3884,7 +4176,8 @@ def run (action, params=None):
         'webcam' : webcam,
         'pepper':pepper,
         'testDns':testDns,
-        'nopayMenu':nopayMenu
+        'nopayMenu':nopayMenu,
+        'sportMenu': createSportMenu
     }
 
     if action in commands:
