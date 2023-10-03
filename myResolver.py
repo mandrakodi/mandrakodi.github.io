@@ -1,4 +1,4 @@
-versione='1.2.16'
+versione='1.2.17'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1778,7 +1778,7 @@ def platinumMenu():
         numIt=numIt+1
     
     if numIt==0:
-        jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","link":"ignore",'
+        jsonText = jsonText + '{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",'
         jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"NO INFO"}'
@@ -1983,7 +1983,7 @@ def daddyLiveMenu():
 
     
     if numIt==0:
-        jsonText = jsonText + '{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",'
+        jsonText = '{"SetViewMode":"503","items":[{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",'
         jsonText = jsonText + '"thumbnail":"https://www.avis.it/wp-content/uploads/2018/06/Sport_balls.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"NO INFO"}'
@@ -2065,7 +2065,7 @@ def sportsonlineMenu():
     
     
     if numIt==0:
-        jsonText = jsonText + '{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",'
+        jsonText = '{"SetViewMode":"503","items":[{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",'
         jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"NO INFO"}'
@@ -2147,7 +2147,7 @@ def nopayMenu(parIn=""):
         jsonText = jsonText + ']}' 
 
     if numIt==0:
-        jsonText = jsonText + '{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",'
+        jsonText = '{"SetViewMode":"503","items":[{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",'
         jsonText = jsonText + '"thumbnail":"https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"NO INFO"}'
