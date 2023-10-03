@@ -1,4 +1,4 @@
-versione='1.2.15'
+versione='1.2.16'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1751,7 +1751,44 @@ def createSportMenu(parIn=""):
         return sportsonlineMenu()
     if parIn=="daddy":
         return daddyLiveMenu()
+    if parIn=="platin":
+        return platinumMenu()
+
+def platinumMenu():
+    video_urls = []
+
+    url="https://www.platinsport.com/"
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+    s = requests.Session()
+    ret1 = s.get(url, headers=headers)
+    htmlFlat=ret1.text.replace("\n", '').replace("\r", '').replace("\t", '').replace("İ", "I").replace("Ä°", "")
+    express2 = r'<td><img decoding="async" loading="lazy" class="(.*?)" src="(.*?)" (.*?)/></td><td>(.*?)</td><td><a href="http://bc.vc/(.*?)/(.*?)" target="_blank" rel="noopener noreferrer">'
+    ret = re.compile(express2, re.MULTILINE | re.DOTALL).findall(htmlFlat)
+    jsonText='{"SetViewMode":"51","items":['
+    numIt=0
+    for (par1, img, par2, tit, par3, link) in ret:
+        if (numIt > 0):
+            jsonText = jsonText + ','    
+        jsonText = jsonText + '{"title":"[COLOR lime]'+tit+'[/COLOR]","myresolve":"platin@@'+link+'",'
+        jsonText = jsonText + '"thumbnail":"'+img+'",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"'+tit+'"}'
+        numIt=numIt+1
     
+    if numIt==0:
+        jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","link":"ignore",'
+        jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"NO INFO"}'
+
+    jsonText = jsonText + "]}"
+    logga('JSON-PLATIN: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
+
+
 def getSportLogo(sportName):
     toRet="https://autyzmwszkole.files.wordpress.com/2015/11/sport2.jpg"
     if (sportName=="Soccer" or sportName==" Calcio"):
@@ -2050,17 +2087,18 @@ def nopayMenu(parIn=""):
     }
     s = requests.Session()
     r = s.get(url, headers=headers)
-    jsonText='{"SetViewMode":"51","items":['
+    #jsonText='{"SetViewMode":"51","items":['
     express1 = r'<div class="card text-white (.*?) mb-5">(.*?)</div></div></div>'
     ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)
-    numIt=0
+    
+    arrTemp = []
     for color, div in ret1:
         express2 = r'<div class="card-header" style="background-image: (.*?)">(.*?)</div>'
         ret2 = re.compile(express2, re.MULTILINE | re.DOTALL).findall(div)
         immagine=""
         evento=""
         for (img, event) in ret2:
-            immagine=img
+            immagine=img.replace("url(", "").replace(");", "")
             evento=event.replace("\n", "").replace("\r", "").replace("\t", "").replace("<br>", "")
 
         expressDay = r'<div class="card-body"><p>(.*?)</p>'
@@ -2069,15 +2107,45 @@ def nopayMenu(parIn=""):
         express3 = r'href="\/embe.php\?id=(.*?)" target="_blank" class="btn btn-primary"><i class="flag (.*?)" style="vertical-align: baseline;"></i>(.*?)</a>'
         ret3 = re.compile(express3, re.MULTILINE | re.DOTALL).findall(div)
         for (ch, flag, tit) in ret3:
-            if (numIt > 0):
-                jsonText = jsonText + ','    
-            jsonText = jsonText + '{"title":"[COLOR gold]'+day.strip()+'[/COLOR] [COLOR lime]'+evento.strip()+'[/COLOR] [COLOR aqua]('+tit+')[/COLOR]",'
-            jsonText = jsonText + '"myresolve":"wigi@@https://nopay2.info/embe.php?id='+ch+'",'
-            jsonText = jsonText + '"thumbnail":"https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png",'
-            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-            jsonText = jsonText + '"info":"by MandraKodi"}'
-            numIt=numIt+1
+            row=day.strip()+"@@"+evento.strip()+"@@"+tit+"@@"+ch+"@@https://nopay2.info/"+immagine
+            arrTemp.append(row)
+            
     
+    sorted(arrTemp)
+    numIt=0
+    oldDay=""
+    numCh=0
+    jsonText='{"SetViewMode":"500","channels":['
+    for row in arrTemp:
+        arrRow=row.split("@@")
+        day=arrRow[0]
+        evento=arrRow[1]
+        tit=arrRow[2]
+        ch=arrRow[3]
+        img=arrRow[4]
+        if (oldDay != day):
+            if (numCh > 0):
+                jsonText = jsonText + ']},'    
+            jsonText = jsonText + '{"name":"[COLOR gold]'+day+'[/COLOR] ",'
+            jsonText = jsonText + '"thumbnail":"https://ullmansails.com/wp-content/uploads/2020/05/png-hd-calendar-calendar-png-hd-png-image-500.png",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"SetViewMode":"51","items":['
+            oldDay = day
+            numIt=0
+            numCh=numCh+1
+        if (numIt > 0):
+            jsonText = jsonText + ','    
+        
+        jsonText = jsonText + '{"title":"[COLOR lime]'+evento.strip()+'[/COLOR] [COLOR aqua]('+tit+')[/COLOR]",'
+        jsonText = jsonText + '"myresolve":"wigi@@https://nopay2.info/embe.php?id='+ch+'",'
+        jsonText = jsonText + '"thumbnail":"'+img+'",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"by MandraKodi"}'
+        numIt=numIt+1
+
+    if (numIt > 0):
+        jsonText = jsonText + ']}' 
+
     if numIt==0:
         jsonText = jsonText + '{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",'
         jsonText = jsonText + '"thumbnail":"https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png",'
