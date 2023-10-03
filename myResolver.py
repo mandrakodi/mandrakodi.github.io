@@ -1,4 +1,4 @@
-versione='1.2.17'
+versione='1.2.18'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1763,7 +1763,7 @@ def platinumMenu():
     }
     s = requests.Session()
     ret1 = s.get(url, headers=headers)
-    htmlFlat=ret1.text.replace("\n", '').replace("\r", '').replace("\t", '').replace("İ", "I").replace("Ä°", "")
+    htmlFlat=ret1.text.replace("\n", '').replace("\r", '').replace("\t", '')
     express2 = r'<td><img decoding="async" loading="lazy" class="(.*?)" src="(.*?)" (.*?)/></td><td>(.*?)</td><td><a href="http://bc.vc/(.*?)/(.*?)" target="_blank" rel="noopener noreferrer">'
     ret = re.compile(express2, re.MULTILINE | re.DOTALL).findall(htmlFlat)
     jsonText='{"SetViewMode":"51","items":['
