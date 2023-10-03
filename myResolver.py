@@ -1,4 +1,4 @@
-versione='1.2.18'
+versione='1.2.19'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1771,7 +1771,8 @@ def platinumMenu():
     for (par1, img, par2, tit, par3, link) in ret:
         if (numIt > 0):
             jsonText = jsonText + ','    
-        jsonText = jsonText + '{"title":"[COLOR lime]'+tit+'[/COLOR]","myresolve":"platin@@'+link+'",'
+        newTit = re.sub('[^a-zA-Z0-9 \n\.]', 'I', tit)
+        jsonText = jsonText + '{"title":"[COLOR lime]'+newTit.replace("II", 'I')+'[/COLOR]","myresolve":"platin@@'+link+'",'
         jsonText = jsonText + '"thumbnail":"'+img+'",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"'+tit+'"}'
