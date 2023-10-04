@@ -1,8 +1,8 @@
-versione='1.2.19'
+versione='1.2.20'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 03.10.2023
+# Last update: 04.10.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1931,8 +1931,11 @@ def daddyLiveMenu():
                         numRe=0
                         for linkR in ret1:
                             titR=ret2[numRe]
-                            arrTemp.append(sportName+"@@"+titolo+"@@"+logoSp+"@@"+linkR+"@@"+titR)
-                            numRe=numRe+1
+                            if linkR.startswith("/extra"):
+                                logga("NO BUONO")
+                            else:
+                                arrTemp.append(sportName+"@@"+titolo+"@@"+logoSp+"@@"+linkR+"@@"+titR)
+                                numRe=numRe+1
                 else:
                     express = r'href="(.*)" target'
                     ret1 = re.compile(express, re.MULTILINE | re.DOTALL).findall(links)
@@ -1941,8 +1944,11 @@ def daddyLiveMenu():
                     numRe=0
                     for linkR in ret1:
                         titR=ret2[numRe]
-                        arrTemp.append(sportName+"@@"+titolo+"@@"+logoSp+"@@"+linkR+"@@"+titR)
-                        numRe=numRe+1
+                        if linkR.startswith("/extra"):
+                            logga("NO BUONO")
+                        else:
+                            arrTemp.append(sportName+"@@"+titolo+"@@"+logoSp+"@@"+linkR+"@@"+titR)
+                            numRe=numRe+1
 
                 
 
@@ -1973,7 +1979,7 @@ def daddyLiveMenu():
             jsonText = jsonText + ','    
         
         jsonText = jsonText + '{"title":"[COLOR lime]'+match.strip()+'[/COLOR] [COLOR orange]'+ch+'[/COLOR]",'
-        jsonText = jsonText + '"myresolve":"daddy@@https://daddylivehd.sx'+link+'",'
+        jsonText = jsonText + '"myresolve":"daddy@@'+link+'",'
         jsonText = jsonText + '"thumbnail":"'+logo+'",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"by MandraKodi"}'
