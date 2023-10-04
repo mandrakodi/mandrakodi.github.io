@@ -1,8 +1,8 @@
-versione='1.2.21'
+versione='1.2.22'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 04.10.2023
+# Last update: 05.10.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -2095,7 +2095,7 @@ def nopayMenu(parIn=""):
     s = requests.Session()
     r = s.get(url, headers=headers)
     #jsonText='{"SetViewMode":"51","items":['
-    express1 = r'<div class="card text-white (.*?) mb-5">(.*?)</div></div></div>'
+    express1 = r'<div class="card text-white (.*?)>(.*?)</div></div></div>'
     ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)
     
     arrTemp = []
