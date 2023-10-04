@@ -1,4 +1,4 @@
-versione='1.2.20'
+versione='1.2.21'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -2110,7 +2110,9 @@ def nopayMenu(parIn=""):
 
         expressDay = r'<div class="card-body"><p>(.*?)</p>'
         day = re.compile(expressDay, re.MULTILINE | re.DOTALL).findall(div)[0]
-
+        if "</br>" in day:
+            arrD=day.split("</br>")
+            day=arrD[0]
         express3 = r'href="\/embe.php\?id=(.*?)" target="_blank" class="btn btn-primary"><i class="flag (.*?)" style="vertical-align: baseline;"></i>(.*?)</a>'
         ret3 = re.compile(express3, re.MULTILINE | re.DOTALL).findall(div)
         for (ch, flag, tit) in ret3:
