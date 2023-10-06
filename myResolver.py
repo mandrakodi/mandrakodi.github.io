@@ -1,8 +1,8 @@
-versione='1.2.22'
+versione='1.2.23'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 05.10.2023
+# Last update: 06.10.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1979,7 +1979,7 @@ def daddyLiveMenu():
             jsonText = jsonText + ','    
         
         jsonText = jsonText + '{"title":"[COLOR lime]'+match.strip()+'[/COLOR] [COLOR orange]'+ch+'[/COLOR]",'
-        jsonText = jsonText + '"myresolve":"daddy@@'+link+'",'
+        jsonText = jsonText + '"myresolve":"daddy@@https://dlhd.sx'+link+'",'
         jsonText = jsonText + '"thumbnail":"'+logo+'",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"by MandraKodi"}'
@@ -2034,12 +2034,12 @@ def sportsonlineMenu():
                 start=1
         if start==1:
             if "|" in line:
-                arrT=line.split(" | ")
+                arrT=line.split("|")
                 titolMatch=arrT[0].replace(" x ", " vs ").replace(" @ ", " vs ")
                 hh = titolMatch[0:2]
                 mm = titolMatch[3:5]
-                titMatch=titolMatch[6:]
-                data = hh+":"+mm+" 2000-06-10"
+                titMatch=titolMatch[6:].strip()
+                newTit = re.sub('[^a-zA-Z0-9 \n\.]', '*', titMatch)
                 dt = datetime.datetime(2000, 6, 10, int(hh), int(mm), 45)
                 newDate = dt + datetime.timedelta(hours=1)
                 hh2=str(newDate.hour)
@@ -2049,13 +2049,13 @@ def sportsonlineMenu():
                 if newDate.minute < 10:
                     mm2="0"+str(newDate.minute)
                 timeMatch=hh2+":"+mm2
-                linkMatch=arrT[1]
+                linkMatch=arrT[1].strip()
                 arrL=linkMatch.split("/")
                 tit=arrL[-1].replace(".php", "")
                 if (numIt > 0):
                     jsonText = jsonText + ','    
                 
-                jsonText = jsonText + '{"title":"[COLOR gold]'+timeMatch+'[/COLOR] [COLOR lime]'+titMatch.strip()+'[/COLOR] [COLOR aqua]('+tit+')[/COLOR]",'
+                jsonText = jsonText + '{"title":"[COLOR gold]'+timeMatch+'[/COLOR] [COLOR lime]'+newTit.strip()+'[/COLOR] [COLOR aqua]('+tit+')[/COLOR]",'
                 jsonText = jsonText + '"myresolve":"proData@@'+linkMatch+'",'
                 jsonText = jsonText + '"thumbnail":"https://www.avis.it/wp-content/uploads/2018/06/Sport_balls.png",'
                 jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
@@ -2094,12 +2094,14 @@ def nopayMenu(parIn=""):
     }
     s = requests.Session()
     r = s.get(url, headers=headers)
-    #jsonText='{"SetViewMode":"51","items":['
-    express1 = r'<div class="card text-white (.*?)>(.*?)</div></div></div>'
-    ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)
     
+    express1 = r'<div class="card text(.*?)>(.*?)</div></div></div>'
+    htmlFlat=r.text.replace("\n", "").replace("\r", "").replace("\t", "")
+    #logga("HTML\n"+htmlFlat)
+    ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)
+    #logga("TROVATI "+str(len(ret1[0]))+" RECORDS")
     arrTemp = []
-    for color, div in ret1:
+    for card, div in ret1:
         express2 = r'<div class="card-header" style="background-image: (.*?)">(.*?)</div>'
         ret2 = re.compile(express2, re.MULTILINE | re.DOTALL).findall(div)
         immagine=""
