@@ -1,8 +1,8 @@
-versione='1.2.23'
+versione='1.2.24'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 06.10.2023
+# Last update: 07.10.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -537,15 +537,18 @@ def nopay(parIn):
     if "sportsonline" in newPage:
         return proData(newPage)
     
-    if "daddylivehd.sx" in newPage:
+    if "daddylivehd.sx" in newPage or "dlhd.sx" in newPage:
         jsonText='{"SetViewMode":"503","items":['
-        jsonText = jsonText + '{"title":"[COLOR lime]FIND VIDEO[/COLOR]","myresolve":"daddy@@'+newPage+'",'
+        jsonText = jsonText + '{"title":"[COLOR lime]FIND DADDY VIDEO[/COLOR]","myresolve":"daddy@@'+newPage+'",'
         jsonText = jsonText + '"thumbnail":"https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"by MandraKodi"}'
         jsonText = jsonText + "]}"
         video_urls.append((jsonText, "FIND VIDEO", "No info", "noThumb", "json"))
         return video_urls
+    
+    if "projectlive.info" in newPage:
+        return pepper(newPage)
     
     if "embed" in newPage:
         logga("CALL proData")
