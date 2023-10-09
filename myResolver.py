@@ -1,8 +1,8 @@
-versione='1.2.24'
+versione='1.2.25'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 07.10.2023
+# Last update: 09.10.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1710,31 +1710,34 @@ def imdb(parIn):
     s = requests.Session()
     r = s.get(url, headers=headers)
     logga("FIND HOSTS FOR "+parIn)
-
-    express = r'<title>(.*?)</title>'
-    title = re.compile(express, re.MULTILINE | re.DOTALL).findall(r.text)[0]
-    
-    
-    
-    express1 = r'<ul class="_player-mirrors">(.*?)</ul>'
-    ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)[0]
-    htmlFlat=ret1.replace("\n", '').replace("\r", '').replace("\t", '')
-    express2 = r'data-link="(.*?)">(.*?)<\/li>'
-    ret = re.compile(express2, re.MULTILINE | re.DOTALL).findall(htmlFlat)
     jsonText='{"SetViewMode":"503","items":['
     numIt=0
-    for (link, ep) in ret:
-        if "Player 4K" not in ep:
-            if link[0:2] == "//":
-                link = "https:"+link
-            #logga('LINK-IMDB: '+link+" "+ep)
-            if (numIt > 0):
-                jsonText = jsonText + ','    
-            jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"risolvi@@'+link+'",'
-            jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
-            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-            jsonText = jsonText + '"info":"'+title+'"}'
-            numIt=numIt+1
+    
+    if "not found" in r.text:
+        logga("NO LINK FOUND FOR "+parIn)
+    else:
+        express = r'<title>(.*?)</title>'
+        title = re.compile(express, re.MULTILINE | re.DOTALL).findall(r.text)[0]
+        
+        
+        
+        express1 = r'<ul class="_player-mirrors">(.*?)</ul>'
+        ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)[0]
+        htmlFlat=ret1.replace("\n", '').replace("\r", '').replace("\t", '')
+        express2 = r'data-link="(.*?)">(.*?)<\/li>'
+        ret = re.compile(express2, re.MULTILINE | re.DOTALL).findall(htmlFlat)
+        for (link, ep) in ret:
+            if "Player 4K" not in ep:
+                if link[0:2] == "//":
+                    link = "https:"+link
+                #logga('LINK-IMDB: '+link+" "+ep)
+                if (numIt > 0):
+                    jsonText = jsonText + ','    
+                jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"risolvi@@'+link+'",'
+                jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"info":"'+title+'"}'
+                numIt=numIt+1
     
     if numIt==0:
         jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","link":"ignore",'
@@ -2181,7 +2184,7 @@ def taxi(parIn):
     scUrl=makeRequest(sc_url)
     url=scUrl.replace("\n", '')+"stream/"+parIn+".html"
 
-    #url="https://eurostreaming.care/stream/"+parIn+".html"
+    #url="https://guardaserie.events/serietv/"+parIn+".html"
     
     headers = {
         'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
