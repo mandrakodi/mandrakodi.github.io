@@ -1,8 +1,8 @@
-versione='1.2.26'
+versione='1.2.27'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 13.10.2023
+# Last update: 14.10.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1935,11 +1935,18 @@ def daddyLiveMenu():
                         express = r'"noopener">(.*)</a>'
                         ret2 = re.compile(express, re.MULTILINE | re.DOTALL).findall(tfgr)
                         numRe=0
+                        oldTit=""
                         for linkR in ret1:
-                            titR=ret2[numRe]
                             if linkR.startswith("/extra"):
                                 logga("NO BUONO")
                             else:
+                                try:
+                                    titR=ret2[numRe]
+                                    oldTit=titR
+                                except:
+                                    logga("NO TIT FOR "+sportName+" - "+titolo+" ["+str(numRe))
+                                    titR=oldTit
+
                                 arrTemp.append(sportName+"@@"+titolo+"@@"+logoSp+"@@"+linkR+"@@"+titR)
                                 numRe=numRe+1
                 else:
