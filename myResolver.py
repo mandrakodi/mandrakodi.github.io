@@ -1,8 +1,8 @@
-versione='1.2.25'
+versione='1.2.26'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 09.10.2023
+# Last update: 13.10.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -494,10 +494,10 @@ def nopay(parIn):
     
     try:
         currSess = requests.Session()
-        #p=currSess.get("https://nopay.info/index.php")
-        #time.sleep(1)
-        #indexP = currSess.post("https://nopay.info/index.php", data="password=123nopay", headers=head)
-        #time.sleep(1)
+        p=currSess.get("https://nopay2.info/index.php")
+        time.sleep(1)
+        indexP = currSess.post("https://nopay2.info/index.php", data="password=1234", headers=head)
+        time.sleep(1)
         page_data = currSess.get(parIn,headers=head).content
     except:
         video_urls.append(("ignoreme", "[COLOR red]REQUEST ERROR[/COLOR]", "ERROR", "https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"))
