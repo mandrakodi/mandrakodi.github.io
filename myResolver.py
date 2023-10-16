@@ -1,8 +1,8 @@
-versione='1.2.27'
+versione='1.2.28'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 14.10.2023
+# Last update: 16.10.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1910,8 +1910,8 @@ def daddyLiveMenu():
                     continue
                 arrEv=hr.split("<span")
                 titol=arrEv[0].replace("<strong>", "").replace("</strong>", "")
-                #logga ("titolo: "+titolo)
-                if "<" in titol:
+                #logga ("titolo: "+titol)
+                if "<" in titol or len(titol) < 6:
                     continue
                 hh = titol[0:2]
                 mm = titol[3:5]
