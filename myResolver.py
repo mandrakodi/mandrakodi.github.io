@@ -1,8 +1,8 @@
-versione='1.2.28'
+versione='1.2.29'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 16.10.2023
+# Last update: 17.10.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -444,6 +444,8 @@ def testDns(parIn=""):
     try:
         currSess = requests.Session()
         p=currSess.get("https://nopay2.info/index.php")
+        time.sleep(1)
+        indexP = currSess.post("https://nopay2.info/index.php", data="password=1234", headers=head)
         time.sleep(1)
         page_data1 = currSess.get("https://nopay2.info/embe.php?id=liveCh1",headers=head)
         page_data = page_data1.content
