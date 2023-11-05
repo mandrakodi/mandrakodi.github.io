@@ -1,8 +1,8 @@
-versione='1.2.36'
+versione='1.2.37'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 04.09.2023
+# Last update: 05.11.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -324,7 +324,7 @@ def jsonToItems(strJson):
                 link = item["chrome"]
             if 'yatse' in item:
                 is_yatse = True
-                is_folder = True
+                #is_folder = True
                 link = item["yatse"]
             if 'm3u' in item:
                 is_m3u = True
@@ -380,7 +380,14 @@ def jsonToItems(strJson):
                 url = get_url(action='delSet', url=link)
             elif is_yatse == True:
                 list_item.setProperty('IsPlayable', 'true')
-                url = get_urlYatse(action='share', type='unresolvedurl', data=link)
+                arrT=link.split("@@")
+                tipo=arrT[0]
+                link1=arrT[1]
+                if tipo=="pls":
+                    url = get_urlYatse(playlist_id=link1)
+                else:
+                    url = get_urlYatse(video_id=link1)
+                #url = get_urlYatse(action='share', type='unresolvedurl', data=link)
             elif is_magnet == True:
                 list_item.setProperty('IsPlayable', 'true')
                 url = get_urlMagnet(uri=link)
@@ -420,7 +427,9 @@ def get_urlChrome(**kwargs):
     return '{0}?{1}'.format("plugin://plugin.program.browser.launcher/", urlencode(kwargs))
 
 def get_urlYatse(**kwargs):
-    return '{0}?{1}'.format("plugin://script.mandra.kodi/", urlencode(kwargs))
+    #return "plugin://plugin.video.youtube/play/?"+ppa+"="+link
+    return '{0}?{1}'.format("plugin://plugin.video.youtube/play/", urlencode(kwargs))
+    #return '{0}?{1}={2}'.format("plugin://plugin.video.youtube/play/", ppa, urlencode(link))
 
 def parameters_string_to_dict(parameters):
     params = dict(parse_qsl(parameters.split('?')[1]))
@@ -505,11 +514,11 @@ def callReolver(metodo, parametro):
     fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         
     logga("METODO_RESOLVE: "+metodo+" - PAR: "+parametro)	
-    if metodo=="daddy" and "daddylivehd.sx" in parametro:
+    if metodo=="daddy" and "dlhd.sx" in parametro:
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png"
         newTit="[COLOR lime]PLAY STREAM DADDY[/COLOR]"
-    
+        logga("CALL myResolver.PlayStream for "+parametro)
         list_item = myResolver.PlayStream(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
@@ -829,7 +838,7 @@ def uploadLog():
     try:
         addon_log_uploader = xbmcaddon.Addon('script.kodi.loguploader')
     except:
-        logga.info('loguploader seems to be not installed or disabled')
+        logga('loguploader seems to be not installed or disabled')
         
         
     if not addon_log_uploader:
@@ -838,7 +847,7 @@ def uploadLog():
         try:
             addon_log_uploader = xbmcaddon.Addon('script.kodi.loguploader')
         except:
-            logga.info('Logfile Uploader cannot be found')
+            logga('Logfile Uploader cannot be found')
             
     if not addon_log_uploader:
         logga('Cannot send log because Logfile Uploader cannot be found')
@@ -1208,7 +1217,7 @@ def run():
                 logga("OPEN CHANNEL: "+url)
                 channelToItems(url, _handle)
             elif action == 'personal':
-                logga("OPEN CHANNEL: "+url)
+                logga("OPEN PERSONAL: "+url)
                 personalList(url)
             elif action == 'regex':
                 express =  params['exp']
