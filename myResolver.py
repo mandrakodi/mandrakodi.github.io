@@ -1,8 +1,8 @@
-versione='1.2.29'
+versione='1.2.30'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 17.10.2023
+# Last update: 08.11.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -280,11 +280,31 @@ def rocktalk(parIn=None):
 
 def livetv(page_url):
     video_urls = []
+    randomUa=getRandomUA()
     logga ("PAGE_LIVETV: "+page_url)
     page_data = downloadHttpPage(page_url)
     src = preg_match(page_data, '<iframe  allowFullScreen="true" scrolling=no frameborder="0 "width="700" height="480" src="([^"]*)')
     if src != "":
-        final_url = findM3u8(src, page_url)
+        final_url=""
+        try:
+            logga ("PAGE2_LIVETV: "+src)
+            page_data2 = downloadHttpPage(src)
+            logga ("PAGE2_LIVETV_HTML:\n"+page_data2)
+            final_url=preg_match(page_data2, "source: '(.*?)'")
+            if final_url == "":
+                jsCode=preg_match(page_data2, '<script type="text/javascript" src="(.*?)"')
+                if jsCode != "":
+                    #logga ("JSCODE: "+jsCode)
+                    arrJs=jsCode.split("/")
+                    urlJs="https://"+arrJs[2]+"/player/m/"+arrJs[-1]+"/"+arrJs[-2]
+                    #logga ("JSCODE_A: "+urlJs)
+                    page_data3 = downloadHttpPage(urlJs)
+                    #logga ("PAGE3_LIVETV_HTML:\n"+page_data3)
+                    final_url=preg_match(page_data3, "\"file\": '(.*?)'")+"|connection=keepalive&Referer="+page_url+"&User-Agent="+randomUa
+                else:
+                    final_url = findM3u8(src, page_url)
+        except:
+            pass
         if final_url == "" or final_url == src:
             final_url = GetLSProData(src)
         video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
@@ -518,14 +538,14 @@ def nopay(parIn):
         logga('IFRAME_2 NOPAY: '+iframe_url)
 
     if (iframe_url.startswith("multi.php")):
-        mpdUrl=iframe_url.split("#")[1]+"|connection=keepalive&Referer="+parIn+"&User-Agent="+randomUa
+        mpdUrl=iframe_url.split("#")[1]+"|connection=keepalive&verifypeer=false&Referer="+parIn+"&User-Agent="+randomUa
         video_urls.append((mpdUrl, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
         mpdUrl=iframe_url.split("#")[1]
         video_urls.append((mpdUrl, "[COLOR gold]PLAY EXTERNAL[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
         return video_urls
     
     if (iframe_url.startswith("hls.php")):
-        mpdUrl=iframe_url.split("#")[1]+"|connection=keepalive&Referer="+parIn+"&User-Agent="+randomUa
+        mpdUrl=iframe_url.split("#")[1]+"|connection=keepalive&verifypeer=false&Referer="+parIn+"&User-Agent="+randomUa
         video_urls.append((mpdUrl, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
         mpdUrl=iframe_url.split("#")[1]
         video_urls.append((mpdUrl, "[COLOR gold]PLAY EXTERNAL[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
@@ -552,10 +572,17 @@ def nopay(parIn):
     if "projectlive.info" in newPage:
         return pepper(newPage)
     
+    if "tutele1.net" in newPage:
+        logga("CALL proData 4 tutele1")
+        vUrl = GetLSProData(newPage, parIn)
+        final_url = vUrl + "|connection=keepalive&verifypeer=false&Referer="+newPage+"&User-Agent="+randomUa
+        video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+vUrl, "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
+        return video_urls
+    
     if "embed" in newPage:
         logga("CALL proData")
         vUrl = GetLSProData(newPage, parIn)
-        final_url = vUrl + "|connection=keepalive&Referer="+newPage+"&User-Agent="+randomUa
+        final_url = vUrl + "|connection=keepalive&verifypeer=false&Referer="+newPage+"&User-Agent="+randomUa
         video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+vUrl, "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
         return video_urls
     
@@ -807,6 +834,7 @@ def proData(parIn=None, flat=0):
     if flat==1:
         return video_url
     video_urls.append((video_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi"))
+    video_urls.append((video_url+"&verifypeer=false", "[COLOR orange]PLAY STREAM 2 [/COLOR]", "by @MandraKodi"))
     return video_urls
 
 
@@ -918,18 +946,18 @@ def GetLSProData(page_in, refe=None):
 
 
     src = 'https:' + src if src.startswith('//') else src
-    logga('iframe_url '+src)
+    logga('GetLSProData_iframe_url '+src)
 
-    if "nopay.info" in page_in and src.startswith('/ch/'):
+    if "nopay2.info" in page_in and src.startswith('/ch/'):
         logga('starlive.xyz ')
-        pageNew="https://nopay.info"+src
+        pageNew="https://nopay2.info"+src
         fu = requests.get(pageNew, headers={'user-agent':'iPad','referer':page_in}).text
         find = re.findall("source: '(.*?)'", fu)[0]
         return find+"|referer=https://nopay.info"+src
     elif "buzztv" in src:
         logga('BUZZTV ')
         return GetLSProData(src)
-    elif "embed" in src and ("starlive" in page_in or "elixx" in page_in or "sportsonline" in page_in or "pepperlive" in page_in or "l1l1.to" in page_in or "buzztv" in page_in):
+    elif "embed" in src and ("tutele1" in page_in or "starlive" in page_in or "elixx" in page_in or "sportsonline" in page_in or "pepperlive" in page_in or "l1l1.to" in page_in or "buzztv" in page_in):
         logga('iframe_embed for '+page_in)
     elif "starlive.xyz" in src:
         logga('starlive.xyz ')
