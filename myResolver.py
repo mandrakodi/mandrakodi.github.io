@@ -1,4 +1,4 @@
-versione='1.2.31'
+versione='1.2.32'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1290,12 +1290,13 @@ def scwsNew(parIn=None):
     pageT2 = requests.get(m3u8Url.replace("&amp;", "&"),headers=headSCt).content
     if PY3:
         pageT2 = pageT2.decode('utf-8')
-
+    pageT3=pageT2.replace("\n", "").replace("\r", "").replace("\t", "")
+    logga("pageT2: "+pageT3)
     urlSc="ignore"
     tito="[COLOR lime]PLAY VIDEO[/COLOR]"
     try:    
-        patron = r'window.masterPlaylistParams = {(.*?)}'
-        jsonUrl = "{"+preg_match(pageT2, patron)+"}"
+        patron = r'window.masterPlaylist\s=\s{\s.*params:\s(.*?)}'
+        jsonUrl = preg_match(pageT3, patron)+'"sex":"ok"}'
         logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
         arrJ2 = json.loads(jsonUrl.replace("'", '"'))
         urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&token360p="+arrJ2["token360p"]+"&token480p="+arrJ2["token480p"]+"&token720p="+arrJ2["token720p"]+"&token1080p="+arrJ2["token1080p"]+"&expires="+arrJ2["expires"]+"&canCast=1&n=1"
