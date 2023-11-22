@@ -1,8 +1,8 @@
-versione='1.2.33'
+versione='1.2.34'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 16.11.2023
+# Last update: 22.11.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -456,18 +456,18 @@ def testDns(parIn=""):
     vUrl = ""
     logga('CALL NOPAY 4 DNS TEST '+parIn)
     randomUa=getRandomUA()
-    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://nopay2.info/index.php'}
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://soloper.pro/index.php'}
     page_data = ""
     
     ret="[COLOR lime]TEST DNS: OK[/COLOR]"
     thumb="https://upload.wikimedia.org/wikipedia/commons/f/fb/2000px-ok_x_nuvola_green.png"
     try:
         currSess = requests.Session()
-        p=currSess.get("https://nopay2.info/index.php")
+        p=currSess.get("https://soloper.pro/index.php")
         time.sleep(1)
-        indexP = currSess.post("https://nopay2.info/index.php", data="password=1234", headers=head)
+        indexP = currSess.post("https://soloper.pro/index.php", data="password=2023", headers=head)
         time.sleep(1)
-        page_data1 = currSess.get("https://nopay2.info/embe.php?id=liveCh1",headers=head)
+        page_data1 = currSess.get("https://soloper.pro/embe.php?id=Magenta1",headers=head)
         page_data = page_data1.content
         
         if (page_data1.status_code != 200):
@@ -753,6 +753,11 @@ def daddy(parIn=None):
     
     return video_urls
 
+def daddyCode(codeIn=None):
+    video_urls = []
+    final_url="https://webudit.hlsjs.ru/lb/premium"+codeIn+"/index.m3u8|referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
+    return video_urls
 
 def pepper(parIn=None):
     video_urls = []
@@ -762,7 +767,7 @@ def pepper(parIn=None):
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, '<iframe width="100%" height="100%" allow=\'encrypted-media\' src="(.*?)"')
     logga('URL PEPPER: https:'+iframe_url)
-    if "nopay2.info" in iframe_url:
+    if "soloper.pro" in iframe_url:
         iframe_url2=iframe_url
         return nopay("https:"+iframe_url2)
     if "embed" in iframe_url:
@@ -4307,6 +4312,7 @@ def run (action, params=None):
         'pepper':pepper,
         'testDns':testDns,
         'nopayMenu':nopayMenu,
+        'daddyCode':daddyCode,
         'sportMenu': createSportMenu
     }
 
