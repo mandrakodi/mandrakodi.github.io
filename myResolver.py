@@ -1,8 +1,8 @@
-versione='1.2.34'
+versione='1.2.35'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 22.11.2023
+# Last update: 17.12.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -503,6 +503,31 @@ def testDns(parIn=""):
     jsonText = jsonText + "]}"
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     
+    return video_urls
+
+def markky(parIn):
+    video_urls = []
+    vUrl = ""
+    logga('CALL NOPAY FOR: '+parIn)
+    randomUa=getRandomUA()
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://markkystreams.com/'}
+    page_data = ""
+    
+    try:
+        currSess = requests.Session()
+        page_data = currSess.get(parIn,headers=head).content
+    except:
+        video_urls.append(("ignoreme", "[COLOR red]REQUEST ERROR[/COLOR]", "ERROR", "https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"))
+        return video_urls
+    if PY3:
+        try:
+            page_data = page_data.decode('utf-8')
+        except:
+            page_data = page_data.decode('latin-1')
+    
+    logga("page_soloper "+page_data)
+    url = preg_match(page_data, r'source: "(.*?)"')
+    video_urls.append((url+"|connection=keepalive&verifypeer=false&Referer="+parIn, "[COLOR gold]PLAY STREAM[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
     return video_urls
 
 def nopay(parIn):
@@ -4309,6 +4334,7 @@ def run (action, params=None):
         'cb01' : cb01,
         'platin' : platin,
         'webcam' : webcam,
+        'markky' : markky,
         'pepper':pepper,
         'testDns':testDns,
         'nopayMenu':nopayMenu,
