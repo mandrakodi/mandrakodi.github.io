@@ -1,8 +1,8 @@
-versione='1.2.35'
+versione='1.2.36'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 17.12.2023
+# Last update: 22.12.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -283,6 +283,8 @@ def livetv(page_url):
     randomUa=getRandomUA()
     logga ("PAGE_LIVETV: "+page_url)
     page_data = downloadHttpPage(page_url)
+    page_data_flat=page_data.replace("\n", "").replace("\r", "").replace("\t", "")
+    logga ("HTML_LIVETV: "+page_data_flat)
     src = preg_match(page_data, '<iframe  allowFullScreen="true" scrolling=no frameborder="0 "width="700" height="480" src="([^"]*)')
     if src != "":
         final_url=""
@@ -2099,7 +2101,7 @@ def sportsonlineMenu():
     numCh=0
     start=0
     for line in r.text.splitlines():
-        if line == "":
+        if line == "" or line[0:1]== "." or line[0:1]== "|":
             continue
         logga("ROW: "+line)
         for day in arrWeek:
