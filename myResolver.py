@@ -1,8 +1,8 @@
-versione='1.2.36'
+versione='1.2.37'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 22.12.2023
+# Last update: 28.12.2023
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -458,18 +458,18 @@ def testDns(parIn=""):
     vUrl = ""
     logga('CALL NOPAY 4 DNS TEST '+parIn)
     randomUa=getRandomUA()
-    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://soloper.pro/index.php'}
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://amstaff.city/index.php'}
     page_data = ""
     
     ret="[COLOR lime]TEST DNS: OK[/COLOR]"
     thumb="https://upload.wikimedia.org/wikipedia/commons/f/fb/2000px-ok_x_nuvola_green.png"
     try:
         currSess = requests.Session()
-        p=currSess.get("https://soloper.pro/index.php")
+        p=currSess.get("https://amstaff.city/index.php")
         time.sleep(1)
-        indexP = currSess.post("https://soloper.pro/index.php", data="password=2023", headers=head)
+        indexP = currSess.post("https://amstaff.city/index.php", data="password=equino", headers=head)
         time.sleep(1)
-        page_data1 = currSess.get("https://soloper.pro/embe.php?id=Magenta1",headers=head)
+        page_data1 = currSess.get("https://amstaff.city/embe.php?id=Magenta1",headers=head)
         page_data = page_data1.content
         
         if (page_data1.status_code != 200):
@@ -538,14 +538,14 @@ def nopay(parIn):
     vUrl = ""
     logga('CALL NOPAY FOR: '+parIn)
     randomUa=getRandomUA()
-    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://soloper.pro/index.php'}
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://amstaff.city/index.php'}
     page_data = ""
     
     try:
         currSess = requests.Session()
-        p=currSess.get("https://soloper.pro/index.php")
+        p=currSess.get("https://amstaff.city/index.php")
         time.sleep(1)
-        indexP = currSess.post("https://soloper.pro/index.php", data="password=2023", headers=head)
+        indexP = currSess.post("https://amstaff.city/index.php", data="password=equino", headers=head)
         time.sleep(1)
         page_data = currSess.get(parIn,headers=head).content
     except:
@@ -584,6 +584,11 @@ def nopay(parIn):
         video_urls.append((mpdUrl, "[COLOR gold]PLAY EXTERNAL[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
         return video_urls
     
+    if iframe_url.startswith("chrome-extension"):
+        arrV = iframe_url.split("#")
+        video_urls.append((arrV[1], "[COLOR lime]PLAY STREAM[/COLOR]"))
+        return video_urls
+
     if (iframe_url.startswith("https")):
         newPage=iframe_url 
     else:
@@ -727,6 +732,9 @@ def daddyFind(parIn):
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
     logga('IFRAME DADDY: '+iframe_url)
+    if iframe_url.endswith(".mp4"):
+        video_url = iframe_url
+        return video_url
     if iframe_url.startswith("http"):
         page_data2 = requests.get(iframe_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':parIn}).content
         if PY3:
@@ -794,7 +802,7 @@ def pepper(parIn=None):
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, '<iframe width="100%" height="100%" allow=\'encrypted-media\' src="(.*?)"')
     logga('URL PEPPER: https:'+iframe_url)
-    if "soloper.pro" in iframe_url:
+    if "amstaff.city" in iframe_url:
         iframe_url2=iframe_url
         return nopay("https:"+iframe_url2)
     if "embed" in iframe_url:
@@ -1032,7 +1040,7 @@ def GetLSProData(page_in, refe=None):
 def wigi(parIn=None):
     import jsunpack
     logga('PAR_WIGI: '+parIn)
-    if "soloper.pro" in parIn or "nopay2.info" in parIn:
+    if "amstaff.city" in parIn or "nopay2.info" in parIn:
         return nopay(parIn.replace("nopay.info", "nopay2.info"))
     
     video_urls = []
