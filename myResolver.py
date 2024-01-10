@@ -1,8 +1,8 @@
-versione='1.2.37'
+versione='1.2.38'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 28.12.2023
+# Last update: 10.01.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -282,6 +282,28 @@ def livetv(page_url):
     video_urls = []
     randomUa=getRandomUA()
     logga ("PAGE_LIVETV: "+page_url)
+
+    arrP=page_url.split("webplayer2.php?")
+    try:
+        newStr=arrP[1]
+        arrP1=newStr.split("&")
+        if (arrP1[0]=="t=youtube" or arrP1[0]=="t=youtub"):
+            codeYT=arrP1[1].split("c=")[1]
+            ytp="https://www.youtube.com/watch?v="+codeYT
+            logga ("PAGE_YOUTUBE: "+ytp)
+            return resolveMyUrl(ytp)
+        if (arrP1[0]=="t=alieztv"):
+            codeAL=arrP1[1].split("c=")[1]
+            alp="https://emb.apl305.me/player/live.php?id="+codeAL+"&w=700&h=480"
+            page_data = downloadHttpPage(alp)
+            page_data_flat=page_data.replace("\n", "").replace("\r", "").replace("\t", "")
+            logga ("HTML_ALP305: "+page_data_flat)
+            src = preg_match(page_data, "pl.init\('([^']*)")
+            logga ("SRC ==> "+src)
+            video_urls.append(("https:"+src, "[COLOR lime]PLAY STREAM AL[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
+            return video_urls
+    except:
+        pass
     page_data = downloadHttpPage(page_url)
     page_data_flat=page_data.replace("\n", "").replace("\r", "").replace("\t", "")
     logga ("HTML_LIVETV: "+page_data_flat)
@@ -290,6 +312,15 @@ def livetv(page_url):
         final_url=""
         try:
             logga ("PAGE2_LIVETV: "+src)
+            arrP2=src.split("play?url=")
+            try:
+                m3url=arrP2[1]
+                video_urls.append((myParse.unquote(m3url), "[COLOR lime]PLAY STREAM PL[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
+                return video_urls
+            except:
+                pass
+            if (src.startswith("//")):
+                src="https:"+src
             page_data2 = downloadHttpPage(src)
             logga ("PAGE2_LIVETV_HTML:\n"+page_data2)
             final_url=preg_match(page_data2, "source: '(.*?)'")
@@ -790,7 +821,8 @@ def daddy(parIn=None):
 
 def daddyCode(codeIn=None):
     video_urls = []
-    final_url="https://webudit.hlsjs.ru/lb/premium"+codeIn+"/index.m3u8|referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    
+    final_url="https://webudit.hlsjs.ru/lb/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
 
