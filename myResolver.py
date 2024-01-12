@@ -1,4 +1,4 @@
-versione='1.2.39'
+versione='1.2.40'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -822,7 +822,7 @@ def daddy(parIn=None):
 def daddyCode(codeIn=None):
     video_urls = []
     
-    final_url="https://webudit.hlsjs.ru/lb/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    final_url="https://01-24.webhd.ru/lb/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
 
