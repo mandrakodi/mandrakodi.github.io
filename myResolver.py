@@ -1,8 +1,8 @@
-versione='1.2.38'
+versione='1.2.39'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 10.01.2024
+# Last update: 12.01.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1376,7 +1376,7 @@ def scwsNew(parIn=None):
     except:
         tito="[COLOR red]NO VIDEO FOUND[/COLOR]"
 
-    video_urls.append((urlSc, tito, "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
+    video_urls.append((urlSc+"|referer=https://streamingcommunity.cz&user-agent=Mozilla", tito, "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
     return video_urls
 
 
@@ -4337,7 +4337,25 @@ def getRandomUA():
     ]
     return random.choice(userAgentArray)    
 
-
+def infoCode(parIn=''):
+    logga('ParIn: '+parIn)
+    video_urls = []
+    launcher_vers="1.0.0"
+    home = ''
+    if PY3:
+        home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
+    else:
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
+    launcher_file = os.path.join(home, 'launcher.py')
+    if os.path.exists(launcher_file)==True:
+        resF = open(launcher_file)
+        resolver_content = resF.read()
+        resF.close()
+        launcher_vers = re.findall("versione='(.*)'",resolver_content)[0]
+    mess="L_V: "+launcher_vers+" - R_V: "+versione
+    msgBox(mess)
+    return None
+        
 
 def run (action, params=None):
     logga('Run version '+versione)
@@ -4381,6 +4399,7 @@ def run (action, params=None):
         'testDns':testDns,
         'nopayMenu':nopayMenu,
         'daddyCode':daddyCode,
+        'infoCode':infoCode,
         'sportMenu': createSportMenu
     }
 
