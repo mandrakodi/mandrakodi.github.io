@@ -1,8 +1,8 @@
-versione='1.2.37'
+versione='1.2.39'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 05.11.2023
+# Last update: 12.01.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -529,6 +529,8 @@ def callReolver(metodo, parametro):
     else:
         retVal = myResolver.run(metodo, parametro)
 
+        if retVal == None:
+            return
         xbmcplugin.setContent(_handle, 'movies')
         if isinstance(retVal, list):
             numLink=1
@@ -973,7 +975,7 @@ def m3u2json(src):
         arrTmp.sort()
         
     try:
-        strJson = '{"SetViewMode": "500","channels": ['
+        strJson = '{"SetViewMode": "503","channels": ['
         oldGroup = ""
         numGoup = 0
         numIt=0
@@ -992,7 +994,7 @@ def m3u2json(src):
                     strJson += '"thumbnail": "https://www.dropbox.com/s/3j4wf8b67xt8gry/fold_tube.png?dl=1",'
                     strJson += '"fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
                     strJson += '"info": "[COLOR lime]Category: '+group+'[/COLOR]",'
-                    strJson += '"items":['
+                    strJson += '"SetViewMode": "503","items":['
                     numGoup += 1
                     numIt=0
                 
