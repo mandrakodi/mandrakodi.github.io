@@ -1,8 +1,8 @@
-versione='1.2.41'
+versione='1.2.42'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 21.01.2024
+# Last update: 25.01.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -822,7 +822,7 @@ def daddy(parIn=None):
 def daddyCode(codeIn=None):
     video_urls = []
     
-    final_url="https://01-24.webhd.ru/lb/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    final_url="https://webudit.webhd.ru/lb/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
 
@@ -852,9 +852,11 @@ def pepper(parIn=None):
     return video_urls
 
 def PlayStream(link):
+    import inputstreamhelper 
     from urllib.parse import quote
     logga("PlayStream "+link)
-    baseurl='https://daddylivehd.com/'
+    #baseurl='https://daddylivehd.com/'
+    baseurl='https://dlhd.sx/'
     UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0'
     logga("TRY TO GET STREAM FROM "+link)
     url=link
@@ -874,15 +876,16 @@ def PlayStream(link):
     
     resp=requests.post(url_1, headers=hea).text
     stream=re.compile('source:\'(.*)\'').findall(resp)[-1]
-    stream_url=stream
+    logga("PlayStream_URL "+stream)
     hdr='Referer='+quote(str(url_1))+'&User-Agent='+UA
     play_item = xbmcgui.ListItem(path=stream+'|'+hdr)
     # xbmcplugin.setResolvedUrl(addon_handle, True, listitem=play_item)
     
-    import inputstreamhelper
     PROTOCOL = 'hls'
+    
     is_helper = inputstreamhelper.Helper(PROTOCOL)
     if is_helper.check_inputstream():
+        logga("ok protocol")
         play_item = xbmcgui.ListItem(path=stream)
         play_item.setMimeType('application/x-mpegurl')
         play_item.setContentLookup(False)
@@ -890,7 +893,8 @@ def PlayStream(link):
             play_item.setProperty('inputstream', is_helper.inputstream_addon)
         else:
             play_item.setProperty('inputstreamaddon', is_helper.inputstream_addon)
-        play_item.setProperty('inputstream.adaptive.stream_headers', hdr), play_item.setProperty('inputstream.adaptive.manifest_headers', hdr)        
+        play_item.setProperty('inputstream.adaptive.stream_headers', hdr) 
+        play_item.setProperty('inputstream.adaptive.manifest_headers', hdr)        
         play_item.setProperty("IsPlayable", "true")
         play_item.setProperty('inputstream.adaptive.manifest_type', PROTOCOL)
 
