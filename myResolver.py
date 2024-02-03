@@ -1,8 +1,8 @@
-versione='1.2.42'
+versione='1.2.43'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 25.01.2024
+# Last update: 03.02.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -824,6 +824,12 @@ def daddyCode(codeIn=None):
     
     final_url="https://webudit.webhd.ru/lb/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
+    final_url="https://webudit.webhd.ru/lb/premium"+codeIn+"/tracks-v1a1/mono.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    video_urls.append((final_url, "[COLOR aqua]PLAY STREAM 2[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
+    final_url="https://02-24.webhd.ru/ddy2/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    video_urls.append((final_url, "[COLOR gold]PLAY STREAM 3[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
+    final_url="https://02-24.webhd.ru/ddy2/premium"+codeIn+"/tracks-v1a1/mono.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    video_urls.append((final_url, "[COLOR orange]PLAY STREAM 4[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
 
 def pepper(parIn=None):
@@ -2163,15 +2169,19 @@ def sportsonlineMenu():
                 mm = titolMatch[3:5]
                 titMatch=titolMatch[6:].strip()
                 newTit = re.sub('[^a-zA-Z0-9 \n\.]', '*', titMatch)
-                dt = datetime.datetime(2000, 6, 10, int(hh), int(mm), 45)
-                newDate = dt + datetime.timedelta(hours=1)
-                hh2=str(newDate.hour)
-                if newDate.hour < 10:
-                    hh2="0"+str(newDate.hour)
-                mm2=str(newDate.minute)
-                if newDate.minute < 10:
-                    mm2="0"+str(newDate.minute)
-                timeMatch=hh2+":"+mm2
+                timeMatch="00:00"
+                try:
+                    dt = datetime.datetime(2000, 6, 10, int(hh), int(mm), 45)
+                    newDate = dt + datetime.timedelta(hours=1)
+                    hh2=str(newDate.hour)
+                    if newDate.hour < 10:
+                        hh2="0"+str(newDate.hour)
+                    mm2=str(newDate.minute)
+                    if newDate.minute < 10:
+                        mm2="0"+str(newDate.minute)
+                    timeMatch=hh2+":"+mm2
+                except:
+                    pass
                 linkMatch=arrT[1].strip()
                 arrL=linkMatch.split("/")
                 tit=arrL[-1].replace(".php", "")
