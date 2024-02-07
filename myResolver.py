@@ -1,8 +1,8 @@
-versione='1.2.43'
+versione='1.2.44'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 03.02.2024
+# Last update: 07.02.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -2452,7 +2452,7 @@ def remoteLog(msgToLog):
         logga('OK REMOTE LOG')
 
 def vudeo(parIn):
-    page_in="https://vudeo.io/"+parIn+".html"
+    page_in="https://vudeo.ws/"+parIn+".html"
     page_data = requests.get(page_in,headers={'user-agent':'iPad','accept':'*/*','referer':page_in}).content
 
     if PY3:
