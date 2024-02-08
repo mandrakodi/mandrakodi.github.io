@@ -1,8 +1,8 @@
-versione='1.2.44'
+versione='1.2.45'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 07.02.2024
+# Last update: 08.02.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1163,8 +1163,15 @@ def uprot(parIn):
     video_url = parIn
     try:
         fu2=fu.text.replace("\n", "").replace("\r", "").replace("\t", "")
-        logga("HTML\n"+fu2)
         find = preg_match(fu2, r'<div id="ad_space">\s*<center><a href="(.*?)"><button')
+        #logga("HTML\n"+fu2+"\n"+find)
+        if "maxstream.video" in find:
+            fu = s.get(find, headers=headers)
+            fu3=fu.text.replace("\n", "").replace("\r", "").replace("\t", "")
+            find2 = preg_match(fu3, r'src="https://maxstream.video/(.*?)" scrolling="no">')
+            #logga("UPROT URL maxstream: "+find2+"\n"+fu3)
+            if find2!="":
+                find=find2
         return resolveMyUrl(find)
     except:
         logga("NO link \n"+fu2)
@@ -1183,42 +1190,48 @@ def toonIta(parIn):
     fu = s.get(parIn, headers=headers)
     video_url = parIn
     try:
-        regEx= r'<a href="https://uprot.net/tape/(.*?)" target="_blank" rel="noopener nofollow" title="(.*?)">'
+        #logga("TOONITA HTML: "+fu.text)
+        regEx= r'<a href="https://uprot.net/(.*?)/(.*?)" target="_blank" rel="noopener nofollow" title="(.*?)">'
         list = re.findall(regEx, fu.text)
-        jsonText='{"SetViewMode":"51","items":['
-        numIt=0
-        for (id, title) in list:
-            ep=title.replace("Streaming di ", "").replace(" su StreamTape", "")
+        jsonText='{"SetViewMode":"51","channels":['
+        numIt = 0
+        numCh = -1
+        oldEp = ""
+        for (host, id, title) in list:
+            ep=title.replace("Streaming di ", "").replace(" su StreamTape", "").replace(" su Max", "").replace(" su Flexy", "")
+            #logga("EP_07:"+ep[:7])
+            if ep[:7]=="Scarica":
+                continue
+            
+            if oldEp != ep:
+                numCh = numCh+1
+                oldEp = ep
+                numIt = 0
+                if (numCh > 0):
+                    jsonText = jsonText + ']},'
+                jsonText = jsonText + '{"name":"[COLOR lime]'+ep+'[/COLOR]",'
+                jsonText = jsonText + '"thumbnail":"https://pbs.twimg.com/profile_images/848686618466816000/8MaqE-n5_400x400.jpg",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"SetViewMode":"51","items":['
+            
             if (numIt > 0):
-                jsonText = jsonText + ','    
-            jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"uprot@@https://uprot.net/tape/'+id+'",'
+                jsonText = jsonText + ',' 
+            jsonText = jsonText + '{"title":"[COLOR gold]'+host+'[/COLOR]","myresolve":"uprot@@https://uprot.net/'+host+'/'+id+'",'
             jsonText = jsonText + '"thumbnail":"https://pbs.twimg.com/profile_images/848686618466816000/8MaqE-n5_400x400.jpg",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"info":"by MandraKodi"}'
             numIt=numIt+1
-
-        if numIt==0:
-            regEx= r'<a href="https://uprot.net/msf/(.*?)" target="_blank" rel="noopener nofollow" title="(.*?)">'
-            list = re.findall(regEx, fu.text)
-            jsonText='{"SetViewMode":"51","items":['
-            numIt=0
-            for (id, title) in list:
-                ep=title.replace("Streaming di ", "").replace(" su Max", "")
-                if (numIt > 0):
-                    jsonText = jsonText + ','    
-                jsonText = jsonText + '{"title":"[COLOR gold]'+ep+'[/COLOR]","myresolve":"uprot@@https://uprot.net/msf/'+id+'",'
-                jsonText = jsonText + '"thumbnail":"https://pbs.twimg.com/profile_images/848686618466816000/8MaqE-n5_400x400.jpg",'
-                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-                jsonText = jsonText + '"info":"by MandraKodi"}'
-                numIt=numIt+1
-
+        
+        
+        
         if numIt==0:
             jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","link":"ignore",'
             jsonText = jsonText + '"thumbnail":"https://pbs.twimg.com/profile_images/848686618466816000/8MaqE-n5_400x400.jpg",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"info":"NO INFO"}'
 
-        jsonText = jsonText + "]}"
+        jsonText = jsonText + "]}]}"
+        #logga("TOONITA JSON: "+jsonText)
         video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     except:
         logga("NO PACKED \n"+fu.text)
