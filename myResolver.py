@@ -1,8 +1,8 @@
-versione='1.2.45'
+versione='1.2.46'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 08.02.2024
+# Last update: 13.02.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1254,7 +1254,9 @@ def resolveMyUrl(url):
     logga ("TRY TO RESOLVE "+url)
     resolved = ""
     try:
-        resolved = resolveurl.resolve(url)
+        hmf = resolveurl.HostedMediaFile(url)
+        if hmf:
+            resolved = hmf.resolve()
     except:
         pass
     if resolved:
@@ -2465,17 +2467,21 @@ def remoteLog(msgToLog):
         logga('OK REMOTE LOG')
 
 def vudeo(parIn):
+    video_urls = []
     page_in="https://vudeo.ws/"+parIn+".html"
     page_data = requests.get(page_in,headers={'user-agent':'iPad','accept':'*/*','referer':page_in}).content
 
     if PY3:
         page_data = page_data.decode('utf-8')
-
+    nf = preg_match(page_data, '<b>File Not Found</b>')
+    if nf != "":
+        img = "https://www.online-tech-tips.com/wp-content/uploads/2019/08/cropped-video-not-found.png"
+        video_urls.append(("ignore", "[COLOR red]VIDEO NOT FOUND[/COLOR]", "Video non trovato", img))
+        return video_urls
     src = preg_match(page_data, 'sources: \["(.*?)"\]')
     tit = preg_match(page_data, '<title>(.*?)<\/title>')
     img = preg_match(page_data, 'poster: "(.*?)"')
 
-    video_urls = []
     video_urls.append((src+"|referer="+page_in, "[COLOR lime]PLAY VIDEO[/COLOR]", tit.replace("Watch", ""), img))
     video_urls.append((src+"|referer="+page_in+"&verifypeer=false", "[COLOR orange]PLAY VIDEO[/COLOR]", tit.replace("Watch", ""), img))
     return video_urls
