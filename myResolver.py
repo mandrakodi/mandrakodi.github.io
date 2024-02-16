@@ -1,8 +1,8 @@
-versione='1.2.46'
+versione='1.2.47'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 13.02.2024
+# Last update: 16.02.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -489,18 +489,14 @@ def testDns(parIn=""):
     vUrl = ""
     logga('CALL NOPAY 4 DNS TEST '+parIn)
     randomUa=getRandomUA()
-    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://amstaff.city/index.php'}
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'http://dlhd.sx/'}
     page_data = ""
     
     ret="[COLOR lime]TEST DNS: OK[/COLOR]"
     thumb="https://upload.wikimedia.org/wikipedia/commons/f/fb/2000px-ok_x_nuvola_green.png"
     try:
         currSess = requests.Session()
-        p=currSess.get("https://amstaff.city/index.php")
-        time.sleep(1)
-        indexP = currSess.post("https://amstaff.city/index.php", data="password=equino", headers=head)
-        time.sleep(1)
-        page_data1 = currSess.get("https://amstaff.city/embe.php?id=Magenta1",headers=head)
+        page_data1 = currSess.get("http://dlhd.sx/embed/stream-877.php",headers=head)
         page_data = page_data1.content
         
         if (page_data1.status_code != 200):
@@ -513,7 +509,7 @@ def testDns(parIn=""):
                 except:
                     page_data = page_data.decode('latin-1')
             
-            iframe_url = preg_match(page_data, r"iframe\s*src='([^']+)")
+            iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
             if (iframe_url==""):
                 ret="[COLOR red]DNS ERRORS[/COLOR]"
                 thumb="https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"
