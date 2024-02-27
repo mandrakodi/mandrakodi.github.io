@@ -1,8 +1,8 @@
-versione='1.2.47'
+versione='1.2.48'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 16.02.2024
+# Last update: 26.02.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -772,12 +772,7 @@ def daddyFind(parIn):
         if iframe_url2=="":
             video_url = preg_match(page_data2.replace('//source:','//source_no:'), "source:'(.*?)'")
             logga('VIDEO DADDY2: '+video_url)
-            if video_url != "":
-                page_m3u8 = requests.get(video_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':parIn}).content
-                if PY3:
-                    page_m3u8 = page_m3u8.decode('utf-8')
-                logga('M3U8 DADDY2: '+page_m3u8)
-
+            
         if "http" in iframe_url2:
             page_data3 = requests.get(iframe_url2,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://widevine.licenses4.me/'}).content
             if PY3:
@@ -801,9 +796,9 @@ def daddy(parIn=None):
         arrTmp2 = arrTmp[1].split(".")
         vId = arrTmp2[0]
         tito = vId
-        refe = "https://streamservicehd.click/premiumtv/livetvon.php?id="+vId
+        refe = "https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+vId
         if video_url == "":
-            video_url = "https://webudi.vhls.ru.com/lb/premium"+vId+"/index.m3u8"
+            return daddyCode(vId)
     except:
         pass
 
@@ -818,9 +813,9 @@ def daddy(parIn=None):
 def daddyCode(codeIn=None):
     video_urls = []
     
-    final_url="https://webudit.webhd.ru/lb/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    final_url="https://webhdrus.onlinehdhls.ru/lb/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    final_url="https://webudit.webhd.ru/lb/premium"+codeIn+"/tracks-v1a1/mono.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    final_url="https://webhdrus.onlinehdhls.ru/lb/premium"+codeIn+"/tracks-v1a1/mono.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
     video_urls.append((final_url, "[COLOR aqua]PLAY STREAM 2[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     final_url="https://02-24.webhd.ru/ddy2/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
     video_urls.append((final_url, "[COLOR gold]PLAY STREAM 3[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
@@ -1677,6 +1672,58 @@ def dplayLive(parIn):
         link = dataJ["errors"][0]["detail"]
     logga('LINK_DPLAY: '+link)
     video_urls.append((link, dataErr))
+    return video_urls
+
+def imdbList(parIn):
+    import re
+    video_urls = []
+    page=1
+    info = "NO - TIT"
+    jsonText='{"SetViewMode":"503","items":['
+    numIt=0
+    while page < 6:
+        urlPage="https://www.imdb.com/list/"+parIn+"/?page="+str(page)
+        headers = {
+            'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+        }
+
+        s = requests.Session()
+        r = s.get(urlPage, headers=headers)
+        htmlFlat=r.text.replace("\n", '').replace("\r", '').replace("\t", '')
+        
+        if page==1:
+            info = preg_match(htmlFlat, '<title>(.*?)</title>')
+        
+        express1 = r'<img alt="(.*?)"class="loadlate"loadlate="(.*?)"data-tconst="(.*?)"height="209"(.*?)<span class="lister-item-year text-muted unbold">(.*?)</span>'
+        lista = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)
+        
+        for (titolo, img, idImdb, par4, year) in lista:
+            if (numIt > 0):
+                jsonText = jsonText + ','    
+            jsonText = jsonText + '{"title":"[COLOR gold]'+titolo+' '+year+'[/COLOR]","myresolve":"imdb@@'+idImdb+'",'
+            jsonText = jsonText + '"thumbnail":"'+img+'",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"'+idImdb+' - '+info.replace(" - IMDB", '')+'"}'
+            numIt=numIt+1
+        
+        intEnd=1
+        intMax=1
+        try:
+            (start, end, max) = preg_match(htmlFlat, '<span class="pagination-range">(.*?) - (.*?) of (.*?)</span>')
+            logga('NUM REC: '+max)
+            intEnd=int(end)
+            intMax=int(max)
+        except:
+            pass
+        nump = 1
+        if intMax > intEnd:
+            page = page + 1
+        else:
+            page = 6
+
+    jsonText = jsonText + "]}"
+    
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
 def webcam(parIn):
@@ -4425,6 +4472,7 @@ def run (action, params=None):
         'nopayMenu':nopayMenu,
         'daddyCode':daddyCode,
         'infoCode':infoCode,
+        'imdbList':imdbList,
         'sportMenu': createSportMenu
     }
 
