@@ -2,48 +2,48 @@
 	<players>
 		<player name="MVP" type="ExternalPlayer" audio="false" video="true">
 			<filename>is.xyz.mpv</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="VLC" type="ExternalPlayer" audio="false" video="true">
 			<filename>org.videolan.vlc</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="MX" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.mxtech.videoplayer.ad</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="AceStream" type="ExternalPlayer" audio="false" video="true">
 			<filename>org.acestream.media</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="AceEngine" type="ExternalPlayer" audio="false" video="true">
 			<filename>org.acestream.core</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="AceStreamTV" type="ExternalPlayer" audio="false" video="true">
 			<filename>org.acestream.media.atv</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="AceEngineTV" type="ExternalPlayer" audio="false" video="true">
 			<filename>org.acestream.core.atv</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="Wiseplay" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.wiseplay</filename>
 			<args> "{0}"</args>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="WuffyPlayer" type="ExternalPlayer" audio="false" video="true">
 			<filename>co.wuffy.player</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="Downloader" type="ExternalPlayer" audio="false" video="true">
 			<filename>downloader.vitmate.downloaderapp</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="WebVideoCaster" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.instantbits.cast.webvideo</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="VideoDownloader" type="ExternalPlayer" audio="false" video="true">
 			<filename>video.downloader.videodownloader</filename>
@@ -51,25 +51,25 @@
 		</player>
 		<player name="Chrome" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.android.chrome</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="Firefox TV" type="ExternalPlayer" audio="false" video="true">
 			<filename>org.mozilla.tv.firefox</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="SilkBrowser" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.amazon.cloud9</filename>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="MagnetTorrentPlayer" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.iiplayer.sunplayer</filename>
 			<args> "{0}"</args>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="Amnis" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.amnisr</filename>
 			<args> "{0}"</args>
-			<hidexbmc>false</hidexbmc>
+			<hidexbmc>true</hidexbmc>
 		</player>
 	</players>
 	
