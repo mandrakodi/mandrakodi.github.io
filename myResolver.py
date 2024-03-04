@@ -1,8 +1,8 @@
-versione='1.2.48'
+versione='1.2.49'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 26.02.2024
+# Last update: 04.03.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -788,7 +788,7 @@ def daddy(parIn=None):
     video_urls = []
     logga('PAR_DADDY: '+parIn)
     video_url = daddyFind(parIn)
-    logga('URL DADDY: '+video_url)
+    logga('URL DADDYS: '+video_url)
     tito = "DADDY"
     refe = parIn
     try:
@@ -796,7 +796,7 @@ def daddy(parIn=None):
         arrTmp2 = arrTmp[1].split(".")
         vId = arrTmp2[0]
         tito = vId
-        refe = "https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+vId
+        refe = "https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+vId+"&Origin=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+vId
         if video_url == "":
             return daddyCode(vId)
     except:
@@ -813,13 +813,13 @@ def daddy(parIn=None):
 def daddyCode(codeIn=None):
     video_urls = []
     
-    final_url="https://webhdrus.onlinehdhls.ru/lb/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    final_url="https://webhdrus.onlinehdhls.ru/lb/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn+"&Origin=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    final_url="https://webhdrus.onlinehdhls.ru/lb/premium"+codeIn+"/tracks-v1a1/mono.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    final_url="https://webhdrus.onlinehdhls.ru/lb/premium"+codeIn+"/tracks-v1a1/mono.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://claplivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
     video_urls.append((final_url, "[COLOR aqua]PLAY STREAM 2[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    final_url="https://02-24.webhd.ru/ddy2/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    final_url="https://salamus2023.onlinehdhls.ru/ddy4/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://claplivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
     video_urls.append((final_url, "[COLOR gold]PLAY STREAM 3[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    final_url="https://02-24.webhd.ru/ddy2/premium"+codeIn+"/tracks-v1a1/mono.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
+    final_url="https://salamus2023.onlinehdhls.ru/ddy4/premium"+codeIn+"/tracks-v1a1/mono.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://claplivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
     video_urls.append((final_url, "[COLOR orange]PLAY STREAM 4[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
 
@@ -1254,7 +1254,7 @@ def resolveMyUrl(url):
         return resolved
     else:
         dialog = xbmcgui.Dialog()
-        mess = "Spiacenti, ResolveUrl non ha trovato il link."
+        mess = "Spiacenti, ResolveUrl non ha trovato il link su "+url
         dialog.ok("Mandrakodi", mess)
     return url
 
