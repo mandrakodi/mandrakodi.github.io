@@ -1,8 +1,8 @@
-versione='1.2.39'
+versione='1.2.40'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 12.01.2024
+# Last update: 04.03.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -158,11 +158,6 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 def play_video(path):
     urlClean=path.replace(" ", "%20")
     play_item = xbmcgui.ListItem(path=urlClean)
-    if urlClean.endswith(".mpd") or ".mpd" in urlClean:
-        play_item.setProperty("inputstream", "inputstream.adaptive")
-        play_item.setProperty("inputstream.adaptive.manifest_type", "mpd")
-        #play_item.setProperty("inputstream.adaptive.license_key",  "https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/")
-        #play_item.setProperty("inputstream.adaptive.license_type", "com.widevine.alpha")
     xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
 
 def getTxtMessage(vName):
@@ -514,7 +509,7 @@ def callReolver(metodo, parametro):
     fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         
     logga("METODO_RESOLVE: "+metodo+" - PAR: "+parametro)	
-    if metodo=="daddy" and "dlhd.sx" in parametro:
+    if metodo=="daddys" and "dlhd.sx" in parametro:
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png"
         newTit="[COLOR lime]PLAY STREAM DADDY[/COLOR]"
