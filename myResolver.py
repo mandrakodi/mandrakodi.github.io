@@ -1,8 +1,8 @@
-versione='1.2.49'
+versione='1.2.50'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 04.03.2024
+# Last update: 10.03.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -823,6 +823,20 @@ def daddyCode(codeIn=None):
     video_urls.append((final_url, "[COLOR orange]PLAY STREAM 4[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
 
+def enigma4k(parIn=None):
+    import json
+    
+    randomUa=getRandomUA()
+    urlP="https://enigma4k.live/get_video_link.php?id="+parIn
+    dataJson = requests.get(urlP,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://enigma4k.live'}).content
+    if PY3:
+        dataJson = dataJson.decode('utf-8')
+    arrJ = json.loads(dataJson)
+    videoLink=arrJ["videoLink"]
+    return urlsolver(videoLink)
+
+
+    logga('URL PEPPER: https:'+iframe_url)
 def pepper(parIn=None):
     video_urls = []
     randomUa=getRandomUA()
@@ -4468,6 +4482,7 @@ def run (action, params=None):
         'webcam' : webcam,
         'markky' : markky,
         'pepper':pepper,
+        'enigma4k':enigma4k,
         'testDns':testDns,
         'nopayMenu':nopayMenu,
         'daddyCode':daddyCode,
