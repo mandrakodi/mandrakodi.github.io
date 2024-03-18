@@ -1,4 +1,4 @@
-versione='1.2.51'
+versione='1.2.52'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -803,7 +803,8 @@ def daddy(parIn=None):
         pass
 
     randomUa=getRandomUA()
-    final_url = video_url + "|connection=keepalive&Referer="+refe+"&User-Agent="+randomUa
+    ip64="MTUxLjI1LjIzMS43MQ=="
+    final_url = video_url + "?auth="+ip64+"|Keep-Alive=true&Referer="+refe+"&User-Agent="+randomUa
     
 
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+tito+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
@@ -912,53 +913,45 @@ def anyplay(parIn=None):
 
 
 def PlayStream(link):
-    import inputstreamhelper 
-    from urllib.parse import quote
+    from urllib.parse import quote, quote_plus
     logga("PlayStream "+link)
     #baseurl='https://daddylivehd.com/'
-    baseurl='https://dlhd.sx/'
+    baseurl='https://1.dlhd.sx/'
     UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0'
     logga("TRY TO GET STREAM FROM "+link)
-    url=link
-    
-    hea={
-        'Referer':baseurl+'/',
-        'user-agent':UA,
-    }
-    
-    resp=requests.post(url, headers=hea).text
-    url_1=re.compile('iframe src="(.*)" width').findall(resp)[0]
-    
-    hea={
-        'Referer':url,
-        'user-agent':UA,
-    }
-    
-    resp=requests.post(url_1, headers=hea).text
-    stream=re.compile('source:\'(.*)\'').findall(resp)[-1]
-    logga("PlayStream_URL "+stream)
-    hdr='Referer='+quote(str(url_1))+'&User-Agent='+UA
-    play_item = xbmcgui.ListItem(path=stream+'|'+hdr)
-    # xbmcplugin.setResolvedUrl(addon_handle, True, listitem=play_item)
-    
-    PROTOCOL = 'hls'
-    
-    is_helper = inputstreamhelper.Helper(PROTOCOL)
-    if is_helper.check_inputstream():
-        logga("ok protocol")
-        play_item = xbmcgui.ListItem(path=stream)
-        play_item.setMimeType('application/x-mpegurl')
-        play_item.setContentLookup(False)
-        if sys.version_info >= (3,0,0):
-            play_item.setProperty('inputstream', is_helper.inputstream_addon)
-        else:
-            play_item.setProperty('inputstreamaddon', is_helper.inputstream_addon)
-        play_item.setProperty('inputstream.adaptive.stream_headers', hdr) 
-        play_item.setProperty('inputstream.adaptive.manifest_headers', hdr)        
-        play_item.setProperty("IsPlayable", "true")
-        play_item.setProperty('inputstream.adaptive.manifest_type', PROTOCOL)
+    url = link
 
-    return play_item
+    hea = {
+        'Referer': baseurl + '/',
+        'user-agent': UA,
+    }
+
+    resp = requests.post(url, headers=hea).text
+    url_1 = re.compile('iframe src="(.*)" width').findall(resp)[0]
+
+    hea = {
+        'Referer': url,
+        'user-agent': UA,
+    }
+
+    resp2 = requests.get(url_1, headers=hea, timeout=10)
+    links = re.findall("source:'(.+?)'", resp2.text)
+    liz = xbmcgui.ListItem('Daddylive', path=url_1)
+    if links:
+        link = str(links[0])
+        referer = quote_plus(url_1)
+        user_agent = quote_plus(UA)
+        link = f'{link}|Referer={referer}&Origin={referer}&Keep-Alive=true&User-Agent={user_agent}'
+        logga("PlayStream_URL "+link)
+
+        liz = xbmcgui.ListItem('Daddylive', path=link)
+        liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
+        liz.setMimeType('application/x-mpegURL')
+        liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
+        liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
+        liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
+    
+    return liz
     
    
 def proData(parIn=None, flat=0):
