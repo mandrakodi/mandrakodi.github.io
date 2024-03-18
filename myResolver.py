@@ -1,8 +1,8 @@
-versione='1.2.50'
+versione='1.2.51'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 10.03.2024
+# Last update: 18.03.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -862,6 +862,53 @@ def pepper(parIn=None):
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+video_url, "https://www.pepperlive.info/Live1.jpg"))
     return video_urls
 
+
+def anyplay(parIn=None):
+    import json
+    logoCh="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
+    video_urls = []
+    randomUa=getRandomUA()
+    urlAny="https://aniplay.co/series/"+parIn
+    page_data = requests.get(urlAny,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://aniplay.co/'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    dataJ = preg_match(page_data, 'const data = \[(.*?)\];')
+    #logga('ANY JSON'+dataJ)
+    arrP1 = dataJ.split(',episodes:')
+    srrs = arrP1[1]
+    arrP2 = srrs.split(',similarSeries:')
+    dj2='{"episodes":'+arrP2[0]
+    #logga("ANY PAGE ANTE\n"+dj2)
+    mapping = {'old_id:':'"old_id":', 'id:':'"id":', 'subbed:':'"subbed":', 'download_link:':'"download_link":', 'title:':'"title":', 'slug:':'"slug":', 'number:':'"number":', 'score:':'"score":', 'user:':'"user":', 'username:':'"username":', 'email:':'"email":', 'provider:':'"provider":', 'password:':'"password":', 'resetPasswordToken:':'"resetPasswordToken":', 'confirmationToken:':'"confirmationToken":', 'confirmed:':'"confirmed":', 'blocked:':'"blocked":', 'avatar_url:':'"avatar_url":', 'gender:':'"gender":', 'banner_url:':'"banner_url":', 'bio:':'"bio":', 'settingsProfileVisibility:':'"settingsProfileVisibility":', 'title:':'"title":', 'temp_sub:':'"temp_sub":', 'quality:':'"quality":', 'release_date:':'"release_date":', 'seconds:null':'"seconds":"0"', 'streaming_link:':'"streaming_link":', 'birth_date:':'"birth_date":', 'seconds:':'"seconds":', 'embed:':'"embed":', 'createdAt:':'"createdAt":', 'updatedAt:':'"updatedAt":', 'publishedAt:':'"publishedAt":', 'settingsProfileComments:':'"settingsProfileComments":', 'home_visibile:':'"home_visibile":', 'location:':'"location":', 'release_hour:':'"release_hour":'}
+    for k, v in mapping.items():
+        dj2 = dj2.replace(k, v)
+
+    #logga("ANY PAGE POST\n"+dj2)
+    jsonText='{"SetViewMode":"503","items":['
+    numIt=0
+    arrJ = json.loads(dj2)
+    for ep in arrJ["episodes"]:
+        link=ep["streaming_link"]
+        title=ep["title"]
+        numEp=str(ep["number"])
+        if (int(numEp)<0):
+            numEp="0"+numEp
+        tit="Ep. "+numEp+" - "+title
+        #logga(tit+" "+link) 
+        if (numIt > 0):
+            jsonText = jsonText + ','    
+        jsonText = jsonText + '{"title":"[COLOR gold]'+tit+'[/COLOR]","link":"'+link+'",'
+        jsonText = jsonText + '"thumbnail":"'+logoCh+'",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"by MandraKodi"}'
+        numIt=numIt+1
+    
+    jsonText = jsonText + "]}"
+    logga('JSON-ANY: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
+
+
 def PlayStream(link):
     import inputstreamhelper 
     from urllib.parse import quote
@@ -1043,6 +1090,9 @@ def GetLSProData(page_in, refe=None):
         fu = requests.get(pageNew, headers={'user-agent':'iPad','referer':page_in}).text
         find = re.findall("source: '(.*?)'", fu)[0]
         return find+"|referer=https://nopay.info"+src
+    elif "enigma4k.live" in page_in:
+        logga('enigma4k.live ')
+        return GetLSProData(src, page_in)
     elif "buzztv" in src:
         logga('BUZZTV ')
         return GetLSProData(src)
@@ -4482,6 +4532,7 @@ def run (action, params=None):
         'webcam' : webcam,
         'markky' : markky,
         'pepper':pepper,
+        'anyplay':anyplay,
         'enigma4k':enigma4k,
         'testDns':testDns,
         'nopayMenu':nopayMenu,
