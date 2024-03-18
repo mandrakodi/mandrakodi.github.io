@@ -1,8 +1,8 @@
-versione='1.2.52'
+versione='1.2.53'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 17.03.2024
+# Last update: 18.03.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -100,9 +100,9 @@ def find_multiple_matches(text, pattern):
 
 def get_domain_from_url(url):
     if PY3:
-       import urllib.parse as urlparse                             # It is very slow in PY2. In PY3 it is native
+       import urllib.parse as urlparse       
     else:
-       import urlparse                                             # We use the native of PY2 which is faster
+       import urlparse                       
 
     parsed_url = urlparse.urlparse(url)
     try:
