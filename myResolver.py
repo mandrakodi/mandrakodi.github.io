@@ -2,7 +2,7 @@ versione='1.2.51'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 18.03.2024
+# Last update: 17.03.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -889,7 +889,9 @@ def anyplay(parIn=None):
     arrJ = json.loads(dj2)
     for ep in arrJ["episodes"]:
         link=ep["streaming_link"]
-        title=ep["title"]
+        title=""
+        if not ep["title"] is None: 
+            title=ep["title"]
         numEp=str(ep["number"])
         if (int(numEp)<0):
             numEp="0"+numEp
