@@ -1,8 +1,8 @@
-versione='1.2.40'
+versione='1.2.41'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 04.03.2024
+# Last update: 18.03.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -509,7 +509,7 @@ def callReolver(metodo, parametro):
     fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         
     logga("METODO_RESOLVE: "+metodo+" - PAR: "+parametro)	
-    if metodo=="daddys" and "dlhd.sx" in parametro:
+    if metodo=="daddy" and "dlhd.sx" in parametro:
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png"
         newTit="[COLOR lime]PLAY STREAM DADDY[/COLOR]"
