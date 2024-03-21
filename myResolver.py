@@ -1,8 +1,8 @@
-versione='1.2.53'
+versione='1.2.54'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 18.03.2024
+# Last update: 21.03.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -941,10 +941,11 @@ def PlayStream(link):
         link = str(links[0])
         referer = quote_plus(url_1)
         user_agent = quote_plus(UA)
-        link = f'{link}|Referer={referer}&Origin={referer}&Keep-Alive=true&User-Agent={user_agent}'
-        logga("PlayStream_URL "+link)
+        #link = f'{link}|Referer={referer}&Origin={referer}&Keep-Alive=true&User-Agent={user_agent}'
+        urlV=link+"|Referer="+referer+"&Origin="+referer+"&Keep-Alive=true&User-Agent="+user_agent
+        logga("PlayStream_URL "+urlV)
 
-        liz = xbmcgui.ListItem('Daddylive', path=link)
+        liz = xbmcgui.ListItem('Daddylive', path=urlV)
         liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
         liz.setMimeType('application/x-mpegURL')
         liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
