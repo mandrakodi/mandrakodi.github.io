@@ -1,8 +1,8 @@
-versione='1.2.54'
+versione='1.2.55'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 21.03.2024
+# Last update: 22.03.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -911,9 +911,46 @@ def anyplay(parIn=None):
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
+def getSourceFrame(parIn):
+    import re
+    from urllib.parse import quote_plus
+    toRet="ignore"
+    video_urls = []
+    UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0'
+    referer = parIn
+    headers = {
+        'user-agent': UA
+    }
+
+    s = requests.Session()
+    r = s.get(parIn, headers=headers)
+    express = r"<iframe src='(.*?)'"
+    try:
+        srcIfra = re.compile(express, re.MULTILINE | re.DOTALL).findall(r.text)[0]
+        logga("FIND IFRAME: "+srcIfra)
+        headers = {
+            "user-agent": UA,
+            "referer": parIn
+        }
+        a = s.get(srcIfra, headers=headers)
+        express = r"source:'(.*?)'"
+        toRet = re.compile(express, re.MULTILINE | re.DOTALL).findall(a.text)[0]
+    except:
+        pass
+    texto="[COLOR red]NO LINK FOUND[/COLOR]"
+    if toRet != "ignore":
+        referer = quote_plus(srcIfra)
+        origin = quote_plus(parIn)
+        user_agent = quote_plus(UA)
+        toRet += "|Referer="+referer+"&Origin="+origin+"&Keep-Alive=true&User-Agent="+user_agent
+        texto="[COLOR lime]PLAY[/COLOR]"
+    video_urls.append((toRet, texto))
+    return video_urls
+
+
 
 def PlayStream(link):
-    from urllib.parse import quote, quote_plus
+    from urllib.parse import quote_plus
     logga("PlayStream "+link)
     #baseurl='https://daddylivehd.com/'
     baseurl='https://1.dlhd.sx/'
@@ -1931,6 +1968,9 @@ def bing(parIn):
     video_urls.append(("ignore", "[COLOR red]NO LINK FOUND[/COLOR]"))
     return video_urls
 
+
+
+
 def imdb(parIn):
     import re
     video_urls = []
@@ -2419,7 +2459,21 @@ def nopayMenu(parIn=""):
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
     
-
+def menuIstorm(parIn=""):
+    video_urls = []
+    jsonText='{"SetViewMode":"503","items":['
+    for x in range(1, 99):
+        if (x > 1):
+            jsonText = jsonText + ','    
+        jsonText = jsonText + '{"title":"[COLOR lime]CHANNEL '+str(x)+'[/COLOR]","myresolve":"frame@@https://istorm.live/ch'+str(x)+'",'
+        jsonText = jsonText + '"thumbnail":"https://upload.wikimedia.org/wikipedia/commons/d/db/Sports_portal_bar_icon.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"CHANNEL '+str(x)+'"}'
+    
+    jsonText = jsonText + "]}"
+    logga('JSON-STORM: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
 
 def taxi(parIn):
     import re
@@ -4532,9 +4586,11 @@ def run (action, params=None):
         'enigma4k':enigma4k,
         'testDns':testDns,
         'nopayMenu':nopayMenu,
+        'menuIstorm':menuIstorm,
         'daddyCode':daddyCode,
         'infoCode':infoCode,
         'imdbList':imdbList,
+        'frame':getSourceFrame,
         'sportMenu': createSportMenu
     }
 
