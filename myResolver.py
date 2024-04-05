@@ -1,8 +1,8 @@
-versione='1.2.55'
+versione='1.2.56'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 22.03.2024
+# Last update: 04.04.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -965,7 +965,7 @@ def PlayStream(link):
 
     resp = requests.post(url, headers=hea).text
     url_1 = re.compile('iframe src="(.*)" width').findall(resp)[0]
-
+    logga("STREAM IFRAME: "+url_1)
     hea = {
         'Referer': url,
         'user-agent': UA,
@@ -976,6 +976,7 @@ def PlayStream(link):
     liz = xbmcgui.ListItem('Daddylive', path=url_1)
     if links:
         link = str(links[0])
+        logga("STREAM FOUND "+link)
         referer = quote_plus(url_1)
         user_agent = quote_plus(UA)
         #link = f'{link}|Referer={referer}&Origin={referer}&Keep-Alive=true&User-Agent={user_agent}'
