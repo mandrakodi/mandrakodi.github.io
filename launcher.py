@@ -1,8 +1,8 @@
-versione='1.2.41'
+versione='1.2.42'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 18.03.2024
+# Last update: 06.04.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -751,6 +751,7 @@ def getIPAddress():
         return "0.0.0.0"
 
 def checkDns():
+    import time, requests
     ip = getIPAddress()
     dns1 = "0.0.0.0"
     dns2 = "0.0.0.0"
@@ -761,8 +762,22 @@ def checkDns():
         gate = xbmc.getInfoLabel('Network.GatewayAddress')
     except:
         pass
+    time.sleep(2)
+    
+    responseCode=404
+    try:
+        currSess = requests.Session()
+        head={'user-agent':'iPad','Content-Type':'application/x-www-form-urlencoded','Referer':'http://1.dlhd.sx/'}
+        page_data1 = currSess.get("http://1.dlhd.sx/embed/stream-877.php",headers=head)
+        responseCode=page_data1.status_code
+        dns1 = xbmc.getInfoLabel('Network.DNS1Address')
+        dns2 = xbmc.getInfoLabel('Network.DNS2Address')
+        gate = xbmc.getInfoLabel('Network.GatewayAddress')
+    except:
+        pass
 
-    logging.warning("MANDRA_DNS")
+
+    logging.warning("MANDRA_DNS: "+str(responseCode))
     logga("############ START NETWORK INFO ############")
     logga("## IP: %s" %  (ip))
     logga("## GATE: %s" %  (gate))
