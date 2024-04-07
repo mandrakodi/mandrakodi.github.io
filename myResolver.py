@@ -1,4 +1,4 @@
-versione='1.2.58'
+versione='1.2.59'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -864,6 +864,23 @@ def pepper(parIn=None):
         video_url = GetLSProData("https:"+iframe_url2, parIn)
     final_url = video_url + "|connection=keepalive&Referer=https:"+iframe_url2+"&User-Agent="+randomUa
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+video_url, "https://www.pepperlive.info/Live1.jpg"))
+    return video_urls
+
+def daily(parIn=None):
+    import json
+    video_urls = []
+    randomUa=getRandomUA()
+    urlAny="https://www.dailymotion.com/player/metadata/video/"+parIn
+    data = requests.get(urlAny,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://www.dailymotion.com'}).content
+    if PY3:
+        data = data.decode('utf-8')
+    logga('JSON DAILY: '+data)
+    dataJ = json.loads(data)
+    name=dataJ["title"]
+    img=dataJ["posters"]["720"]
+    url=dataJ["qualities"]["auto"][0]["url"]
+     
+    video_urls.append((url, "[COLOR lime]"+name+"[/COLOR]", "by MandraKodi", img))
     return video_urls
 
 
@@ -4593,6 +4610,7 @@ def run (action, params=None):
         'webcam' : webcam,
         'markky' : markky,
         'pepper':pepper,
+        'daily':daily,
         'anyplay':anyplay,
         'enigma4k':enigma4k,
         'testDns':testDns,
