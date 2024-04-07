@@ -1,8 +1,8 @@
-versione='1.2.57'
+versione='1.2.58'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 06.04.2024
+# Last update: 07.04.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1004,6 +1004,13 @@ def proData(parIn=None, flat=0):
         return supervideo(parIn)
     video_url = GetLSProData(parIn)
     logga('URL PRODATA: '+video_url)
+    if "sportsonline.si" in parIn:
+        arrTT=video_url.split("|")
+        ref=arrTT[1]
+        vid=arrTT[0]
+        video_url = vid + "|Referer=https://forgepattern.net&Origin=https://forgepattern.net&User-Agent=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%3B+rv%3A98.0%29+Gecko%2F20100101+Firefox%2F98.0&Keep-Alive=true"
+        #video_url += ref.replace("referer", "&Origin") + "&User-Agent=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%3B+rv%3A98.0%29+Gecko%2F20100101+Firefox%2F98.0&Keep-Alive=true"
+        logga('URL sportsonline: '+video_url)
     if flat==1:
         return video_url
     video_urls.append((video_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi"))
