@@ -1,8 +1,8 @@
-versione='1.2.59'
+versione='1.2.60'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 07.04.2024
+# Last update: 09.04.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -864,6 +864,20 @@ def pepper(parIn=None):
         video_url = GetLSProData("https:"+iframe_url2, parIn)
     final_url = video_url + "|connection=keepalive&Referer=https:"+iframe_url2+"&User-Agent="+randomUa
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+video_url, "https://www.pepperlive.info/Live1.jpg"))
+    return video_urls
+
+def wikisport(parIn=None):
+    video_urls = []
+    randomUa = getRandomUA()
+    pageUrl = "https://fiveyardlab.com/wiki.php?player=desktop&live="+parIn
+    page_data = requests.get(pageUrl,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://wikisport.click'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    #logga('wikisport page: '+pageUrl+"\n"+page_data)
+    iframe_url = preg_match(page_data, 'return\(\[(.*?)\]')
+    final_url = iframe_url.replace('"', '').replace(",", "").replace("\\", "").replace("https:////", "https://")
+    logga('URL wikisport: '+final_url)
+    video_urls.append((final_url+ "|connection=keepalive&Referer="+pageUrl+"&Origin=https://wikisport.click&User-Agent="+randomUa, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: ", "https://www.pepperlive.info/Live1.jpg"))
     return video_urls
 
 def daily(parIn=None):
@@ -4610,6 +4624,7 @@ def run (action, params=None):
         'webcam' : webcam,
         'markky' : markky,
         'pepper':pepper,
+        'wiki':wikisport,
         'daily':daily,
         'anyplay':anyplay,
         'enigma4k':enigma4k,
