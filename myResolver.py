@@ -1,4 +1,4 @@
-versione='1.2.60'
+versione='1.2.61'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -2389,7 +2389,7 @@ def sportsonlineMenu():
                     jsonText = jsonText + ','    
                 
                 jsonText = jsonText + '{"title":"[COLOR gold]'+timeMatch+'[/COLOR] [COLOR lime]'+newTit.strip()+'[/COLOR] [COLOR aqua]('+tit+')[/COLOR]",'
-                jsonText = jsonText + '"myresolve":"proData@@'+linkMatch+'",'
+                jsonText = jsonText + '"myresolve":"proData@@'+linkMatch.replace("v2.sportsonline", "sportsonline")+'",'
                 jsonText = jsonText + '"thumbnail":"https://www.avis.it/wp-content/uploads/2018/06/Sport_balls.png",'
                 jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
                 jsonText = jsonText + '"info":"by MandraKodi"}'
