@@ -1,8 +1,8 @@
-versione='1.2.62'
+versione='1.2.63'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 15.04.2024
+# Last update: 17.04.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -826,6 +826,36 @@ def daddyCode(codeIn=None):
     final_url="https://salamus2023.onlinehdhls.ru/ddy4/premium"+codeIn+"/tracks-v1a1/mono.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://claplivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
     video_urls.append((final_url, "[COLOR orange]PLAY STREAM 4[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
+
+def sibNet(parIn=None):
+    video_urls = []
+    
+    randomUa=getRandomUA()
+    urlP="https://video.sibnet.ru/shell.php?videoid="+parIn
+    dataJson = requests.get(urlP,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://video.sibnet.ru'}).content
+    if PY3:
+        dataJson = dataJson.decode('Latin-1')
+    
+    
+    tito = preg_match(dataJson, "title: '(.*?)',")
+    if tito != None:
+        tito= tito.replace("[B]","").replace("[/B]","").replace("[/COLOR]","")
+        tito= tito.replace("[COLOR lime]","").replace("[COLOR aqua]","").replace("[COLOR gold]","")
+        tito= tito.replace("[COLOR white]","").replace("[COLOR red]","").replace("[COLOR blue]","")
+        tito = "[COLOR lime]"+tito+"[/COLOR]"
+    else:
+        tito = "[COLOR orange]PLAY STREAM[/COLOR]"
+    iframe_url = preg_match(dataJson, 'player.src\(\[\{src: "(.*?)", type')
+    logga('URL SIB: '+iframe_url)
+    if iframe_url != None:
+        iframe_url ="https://video.sibnet.ru"+iframe_url
+    else:
+        iframe_url = "https://static.videezy.com/system/resources/previews/000/039/863/original/Movie-countdown-2.mp4"
+        tito = "[COLOR red]NO LINK FOUND[/COLOR]"
+    video_urls.append((iframe_url+"|Referer=https://video.sibnet.ru", tito , "PLAY VIDEO ", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
+    return video_urls
+
+
 
 def enigma4k(parIn=None):
     import json
@@ -4635,6 +4665,7 @@ def run (action, params=None):
         'infoCode':infoCode,
         'imdbList':imdbList,
         'frame':getSourceFrame,
+        'sib':sibNet,
         'sportMenu': createSportMenu
     }
 
