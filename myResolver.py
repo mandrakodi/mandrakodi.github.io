@@ -1,10 +1,10 @@
-versione='1.2.63'
+from __future__ import unicode_literals # turns everything to unicode
+versione='1.2.64'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 17.04.2024
+# Last update: 27.04.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
-
 import re, requests, sys, logging, uuid
 import os
 import string
@@ -867,10 +867,9 @@ def enigma4k(parIn=None):
         dataJson = dataJson.decode('utf-8')
     arrJ = json.loads(dataJson)
     videoLink=arrJ["videoLink"]
+    logga("LINK ENIGMA: "+videoLink)
     return urlsolver(videoLink)
 
-
-    logga('URL PEPPER: https:'+iframe_url)
 def pepper(parIn=None):
     video_urls = []
     randomUa=getRandomUA()
@@ -1003,10 +1002,13 @@ def getSourceFrame(parIn):
         pass
     texto="[COLOR red]NO LINK FOUND[/COLOR]"
     if toRet != "ignore":
+        from urllib.parse import urlparse
+        parsed_uri = urlparse(srcIfra)
+        result = '{uri.scheme}://{uri.netloc}'.format(uri=parsed_uri)
         referer = quote_plus(srcIfra)
         origin = quote_plus(parIn)
         user_agent = quote_plus(UA)
-        toRet += "|Referer="+referer+"&Origin="+origin+"&Keep-Alive=true&User-Agent="+user_agent
+        toRet += "|Referer="+srcIfra+"&Origin="+result+"&Keep-Alive=true&User-Agent="+user_agent
         texto="[COLOR lime]PLAY[/COLOR]"
     video_urls.append((toRet, texto))
     return video_urls
@@ -1549,15 +1551,19 @@ def scwsNew(parIn=None):
     urlSc="ignore"
     tito="[COLOR lime]PLAY VIDEO[/COLOR]"
     try:    
-        patron = r'window.masterPlaylist\s=\s{\s.*params:\s(.*?)}'
-        jsonUrl = preg_match(pageT3, patron)+'"sex":"ok"}'
+        patron = r"window.masterPlaylist\s=\s{\s.*params:\s(.*?)},\s.*url:\s'(.*?)'"
+        res = preg_match(pageT3, patron)
+        jsonUrl = ""
+        jsonUrl = res[0]+'"url":"'+res[1]+'"}'
+            
+        #jsonUrl = preg_match(pageT3, patron)+'"sex":"ok"}'
         logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
         arrJ2 = json.loads(jsonUrl.replace("'", '"'))
-        urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&token360p="+arrJ2["token360p"]+"&token480p="+arrJ2["token480p"]+"&token720p="+arrJ2["token720p"]+"&token1080p="+arrJ2["token1080p"]+"&expires="+arrJ2["expires"]+"&canCast=1&n=1"
+        urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&token360p="+arrJ2["token360p"]+"&token480p="+arrJ2["token480p"]+"&token720p="+arrJ2["token720p"]+"&token1080p="+arrJ2["token1080p"]+"&expires="+arrJ2["expires"]+"&n=1"
     except:
         tito="[COLOR red]NO VIDEO FOUND[/COLOR]"
 
-    video_urls.append((urlSc+"|referer=https://streamingcommunity.cz&user-agent=Mozilla", tito, "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
+    video_urls.append((urlSc+"|referer="+scUrl.replace("\n", '')+"&user-agent=Mozilla", tito, "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
     return video_urls
 
 
@@ -1617,7 +1623,7 @@ def getScSerie(parIn=None):
         numIt=0
         for (immagine) in arrJ2["props"]["title"]["images"]:
             if (immagine["type"]=="cover"):
-                img="https://cdn.streamingcommunity.dog/images/"+immagine["filename"]
+                img="https://cdn."+scUrl.replace("\n", '').replace("https://", '')+"images/"+immagine["filename"]
                 logga("img: "+img)
         for (episodio) in arrJ2["props"]["loadedSeason"]["episodes"]:
             scwsId = str(episodio["scws_id"])
@@ -1634,7 +1640,7 @@ def getScSerie(parIn=None):
                 pass    
             
             try:
-                imgEp="https://cdn.streamingcommunity.dog/images/"+episodio["images"][0]["filename"]
+                imgEp="https://cdn."+scUrl.replace("\n", '').replace("https://", '')+"images/"+episodio["images"][0]["filename"]
             except:
                 imgEp=img
             titolo=numSea+"x"+numEp+" - "+episodio["name"].replace("&#39;", "'").replace("&amp;", "&")
@@ -2766,6 +2772,80 @@ def supervideo(page_url):
                 video_urls.append([url, url.split('.')[-1] + ' [' + quality + '] [SuperVideo]'])
             else:
                 video_urls.append([url, url.split('.')[-1]])
+
+    return video_urls
+
+def hunterjs(parIn):
+    video_urls = []
+    
+    _0xce1e="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/"
+    def duf(d,e,f):
+        g = list(_0xce1e)
+        h = g[0:e]
+        i = g[0:f]
+        d = list(d)[::-1]
+        j = 0
+        for c,b in enumerate(d):
+            if b in h:
+                j = j + h.index(b)*e**c
+    
+        k = ""
+        while j > 0:
+            k = i[j%f] + k
+            j = (j - (j%f))//f
+    
+        return int(k) or 0
+    
+    def hunter(h,u,n,t,e,r):
+        r = "";
+        i = 0
+        while i < len(h):
+            j = 0
+            s = ""
+            while h[i] is not n[e]:
+                s = ''.join([s,h[i]])
+                i = i + 1
+    
+            while j < len(n):
+                s = s.replace(n[j],str(j))
+                j = j + 1
+    
+            r = ''.join([r,''.join(map(chr, [duf(s,e,10) - t]))])
+            i = i + 1
+    
+        return r
+
+
+    logga('HUNTER PAGE: '+parIn)
+    page_data = requests.get(parIn,headers={'user-agent':'iPad','accept':'*/*','referer':parIn}).content
+
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    
+    flatPage = page_data.replace("\n", "").replace("\r", "").replace("\t", "")
+    tit = preg_match(flatPage, '<div id="player"><\/div><script>(.*?)\)\)<\/script>')
+    logga("HUNTER CODE: "+tit)
+    if tit == "":
+        video_urls.append(("ignore", "[COLOR red]NO VIDEO FOUND[/COLOR]"))
+        return video_urls
+    
+    sd=tit.split("(")
+    code = sd[-1]
+    logga("HUNTER CODE2: "+code)
+
+    #code = 'YYmojrWojmWojYjojmmojYaojrWoYProjYaojYjojYYojYaorPaojmmoYarorYjoYarojmrojrjojYjorPPojrrojmWojYaojYjoYaroYWjoYWaoYarojjroYYmojYYojmYojrroYarojYWojYYorPaojjmojmYojrmoYarorYjoYarojYjojmYojrWoYarorrrojYYorPaojYWojYWojrmoYProraYojYYorPaojjmojmYojrmoYWjojjroYYmojrYojYaojrjojrmorPPojmYorYmoYaroYWrojmaojrrojrrojYWojrYorYmoYPjoYPjorPPorPaojrmojrmojmWojmYojYrojYaojrmojmYoYProrPPojYYojrjorPWoYPjojmaojYYojrYoYPjojrrojrYojYjormYoYPjojYWojYYorPaojjmojYYojmWojrYojrroYProjYrormmojrjormWoYWroYPmoYYmojmaojmYojmWojmjojmaojrrorYmoYaroYWroYPWoYPaoYPaoYWmoYWroYPmoYYmojrWojmWojmmojrrojmaorYmoYaroYWroYPWoYPaoYPaoYWmoYWroYPmoYYmojYWorPaojrmojmYojYjojrrorjYojmmorYmoYaroYWroYaWojYWojYYorPaojjmojmYojrmoYWroYPmoYYmorPaojrjojrrojYaoraYojYYorPaojjmorYmoYarojmrorPaojYYojrYojmYoYPmoYYmojYWojYYorPaojjmorjYojYjojYYojmWojYjojmYorYmoYarojrrojrmojrjojmYoYPmoYYmojYrojmWojYrojmYoraWojjmojYWojmYorYmoYaroYaaorPaojYWojYWojYYojmWorPPorPaojrrojmWojYaojYjoYPjojrPoYPYojYrojYWojmYojmjoraPorajorjaoYaaoYPmoYYmojYWojYYojrjojmjojmWojYjojrYorYmoYarojjroYWrorPPojYaojrmojmYoYWrorYmoYarorWWorjaojmYojraojmYojYYoraaojmYojYYojmYorPPojrrojYaojrmorPmojjaoYPmoYYmojYrojmYojmmojmWorPaorPPojYaojYjojrrojrmojYaojYYorYmoYarojjroYYmojrYojmYojmYojYmorPWorPaojrmorYmoYaroYWroYaWoYPaoYPWormYorrmorrWorrWoYWroYPmoYYmorPWojrjojrrojrrojYaojYjojrYorYmoYaroYWroYaWorrWorrWorrWoYWroYYmojjaoYYmojjaoYWaorYYoYYmojjaorYYoYYmojrYojmYojrroraWojmWojYrojmYojYaojrjojrroYWjojmrojrjojYjorPPojrrojmWojYaojYjoYWjoYWaoYarojjroYYmoYaPoYWjoYWroYProjYrojmYojmmojmWorPaoYPYorPPojYaojYjojrrojrmojYaojYYoYPYojYYojmYojmrojrroYPYojYWorPaojYjojmYojYYoYWroYWaorWWoYWrorPaojYWojYWojmYojYjojmmoYWrorPmoYWjoYWrorYrorPWojrjojrrojrrojYaojYjoYarojrYojrrojjmojYYojmYorYjoYaaoYaaoYarojrrojjmojYWojmYorYjoYaaorPWojrjojrrojrrojYaojYjoYaaoYarorPPojYYorPaojrYojrYorYjoYaaojYrojmYojmmojmWorPaoYPYorPPojYaojYjojrrojrmojYaojYYoYPYorPWojrjojrrojrrojYaojYjoYarojYrojmYojmmojmWorPaoYPYorPPojYaojYjojrrojrmojYaojYYoYPYojmWorPPojYaojYjoYarojmYojYjorPaorPWojYYojmYojmmoYaaoYarojmmorPaojrrorPaoYPYojmaojmmoYPYojmWojYjojmmojmWorPPorPaojrrojYaojrmorYjoYaaoYaaoYarorPaojrmojmWorPaoYPYojYYorPaorPWojmYojYYorYjoYaaojmaojmmoYPYojmWojYjojmmojmWorPPorPaojrrojYaojrmoYaaorYaorYrorPaoYarojmaojrmojmYojmrorYjoYaaojmaojrrojrrojYWojrYorYmoYPjoYPjojmjojmWojraojmYojYrojmYojrmojmYojmmojmmojmWojrrojrYojrrojrmojmYorPaojYrojrYoYProjrPojjmojjYoYPjojYjorPWorPaoYaaoYarojrrorPaojrmojmjojmYojrrorYjoYaaorProrPWojYYorPaojYjojYmoYaaorYaorYrojmWojYrojmjoYarojrYojrmorPPorYjoYaaojmaojrrojrrojYWojrYorYmoYPjoYPjojmjojmWojraojmYojYrojmYojrmojmYojmmojmmojmWojrroYProjmYojrjoYPjoYPPoYProjYWojYjojmjoYaaoYarojrWojmWojmmojrrojmaorYjoYaaoYPWormmoYPaojYWojrPoYaaoYarojmaojmYojmWojmjojmaojrrorYjoYaaoYPPoYPaojYWojrPoYaaoYaroYPjorYaorYroYPjorPaorYaorYroYPjorPWojrjojrrojrrojYaojYjorYaoYWroYWaoYYmojjaoYPmoYarormroYPaoYPaoYPaoYWaorYYoYYmo",58,"mYrjaWPoi",47,7,24'
+    code_list = code.split(',')
+    for idx,code in enumerate(code_list):
+        if code.isdigit():
+            code_list[idx] = int(code)
+        else:
+            code_list[idx] = code.replace('\"','')
+    
+    result = hunter(*code_list)
+    logga("HUNTER CODE3: "+result)
+    link = preg_match(result, "source: '(.*?)'")
+    logga("HUNTER LINK: "+link)
+    video_urls.append((link+"|referer="+parIn, "[COLOR lime]PLAY VIDEO[/COLOR]"))
 
     return video_urls
 
@@ -4666,6 +4746,7 @@ def run (action, params=None):
         'imdbList':imdbList,
         'frame':getSourceFrame,
         'sib':sibNet,
+        'hunter':hunterjs,
         'sportMenu': createSportMenu
     }
 
