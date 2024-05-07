@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.64'
+versione='1.2.65'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 27.04.2024
+# Last update: 07.05.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -816,15 +816,10 @@ def daddy(parIn=None):
 
 def daddyCode(codeIn=None):
     video_urls = []
+    randomUa=getRandomUA()
+    final_url="https://webhdrus.onlinehdhls.ru/lb/premium"+codeIn+"/index.m3u8|Referer=https://weblivehdplay.ru/&Origin=https://weblivehdplay.ru&Connection=keep-alive&User-Agent="+randomUa
+    video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     
-    final_url="https://webhdrus.onlinehdhls.ru/lb/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn+"&Origin=https://weblivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
-    video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    final_url="https://webhdrus.onlinehdhls.ru/lb/premium"+codeIn+"/tracks-v1a1/mono.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://claplivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
-    video_urls.append((final_url, "[COLOR aqua]PLAY STREAM 2[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    final_url="https://salamus2023.onlinehdhls.ru/ddy4/premium"+codeIn+"/index.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://claplivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
-    video_urls.append((final_url, "[COLOR gold]PLAY STREAM 3[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    final_url="https://salamus2023.onlinehdhls.ru/ddy4/premium"+codeIn+"/tracks-v1a1/mono.m3u8|connection=keepalive&User-Agent=Mozilla/5.0&Referer=https://claplivehdplay.ru/premiumtv/daddyhd.php?id="+codeIn
-    video_urls.append((final_url, "[COLOR orange]PLAY STREAM 4[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
 
 def sibNet(parIn=None):
@@ -1020,7 +1015,7 @@ def PlayStream(link):
     logga("PlayStream "+link)
     #baseurl='https://daddylivehd.com/'
     baseurl='https://1.dlhd.sx/'
-    UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0'
+    UA = getRandomUA()
     logga("TRY TO GET STREAM FROM "+link)
     url = link
 
@@ -1043,10 +1038,7 @@ def PlayStream(link):
     if links:
         link = str(links[0])
         logga("STREAM FOUND "+link)
-        referer = quote_plus(url_1)
-        user_agent = quote_plus(UA)
-        #link = f'{link}|Referer={referer}&Origin={referer}&Keep-Alive=true&User-Agent={user_agent}'
-        urlV=link+"|Referer="+referer+"&Origin="+referer+"&Keep-Alive=true&User-Agent="+user_agent
+        urlV=link+"|Referer=https://weblivehdplay.ru/&Origin=https://weblivehdplay.ru&Connection=keep-alive&User-Agent="+UA
         logga("PlayStream_URL "+urlV)
 
         liz = xbmcgui.ListItem('Daddylive', path=urlV)
