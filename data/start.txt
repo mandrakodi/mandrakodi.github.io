@@ -12,7 +12,7 @@
       {
          "title":"[COLOR aqua][B]Buy Me a Coffe.[/B][/COLOR]",
          "externallink":"https://test34344.herokuapp.com/filter.php?numTest=JOB949",
-         "thumbnail":"https://www.pngkit.com/png/full/699-6995452_buy-me-coffee.png",
+         "thumbnail":"https://static.vecteezy.com/system/resources/thumbnails/021/049/268/small_2x/3d-realistic-coffee-cup-coffee-cup-cartoon-free-png.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Buy Me a Coffe",
          "enabled":1
