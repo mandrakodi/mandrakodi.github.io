@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.65'
+versione='1.2.66'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 07.05.2024
+# Last update: 08.05.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -175,6 +175,7 @@ def discovery(parIn=None):
     links = []
     host = "https://www.discoveryplus.com"
     deviceId = uuid.uuid4().hex
+    logga("URL DEVICEID 4 DISCOVERY: "+deviceId)
     session = requests.Session()
     domain = 'https://' + session.get("https://prod-realmservice.mercury.dnitv.com/realm-config/www.discoveryplus.com%2Fit%2Fepg").json()["domain"]
     urlTk='{}/token?deviceId={}&realm=dplay&shortlived=true'.format(domain, deviceId)
@@ -2841,6 +2842,19 @@ def hunterjs(parIn):
 
     return video_urls
 
+def nflinsider(parIn):
+    video_urls = []
+    urlPage="https://nflinsider.net/"+parIn
+    page_data = requests.get(urlPage,headers={'user-agent':'iPad','accept':'*/*','referer':'https://basketball-video.com/'}).content
+
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    
+    link = preg_match(page_data, '<iframe allowfullscreen="" frameborder="0" height="419" src="(.*?)" width="720">')
+    if (link.startswith("//")):
+        link="https:"+link
+    logga("NFLINSIDER LINK: "+link)
+    return urlsolver(link)
 
 def getRandomUA():
     import random
@@ -4739,6 +4753,7 @@ def run (action, params=None):
         'frame':getSourceFrame,
         'sib':sibNet,
         'hunter':hunterjs,
+        'nflinsider':nflinsider,
         'sportMenu': createSportMenu
     }
 
