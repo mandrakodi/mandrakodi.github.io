@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.66'
+versione='1.2.67'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 08.05.2024
+# Last update: 16.05.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -861,6 +861,7 @@ def enigma4k(parIn=None):
     dataJson = requests.get(urlP,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://enigma4k.live'}).content
     if PY3:
         dataJson = dataJson.decode('utf-8')
+    logga("JSON ENIGMA: "+dataJson)
     arrJ = json.loads(dataJson)
     videoLink=arrJ["videoLink"]
     logga("LINK ENIGMA: "+videoLink)
@@ -1345,14 +1346,34 @@ def toonIta(parIn):
     fu = s.get(parIn, headers=headers)
     video_url = parIn
     try:
-        #logga("TOONITA HTML: "+fu.text)
-        regEx= r'<a href="https://uprot.net/(.*?)/(.*?)" target="_blank" rel="noopener nofollow" title="(.*?)">'
-        list = re.findall(regEx, fu.text)
+        pageHtml=fu.text
+        logga("TOONITA HTML: "+pageHtml)
+        listaHtml=pageHtml.split("</td>")
+        numero=len(listaHtml)
+        logga("TOONITA TR: "+str(numero))
+        my_list = []
+        for (row) in listaHtml:
+            logga("TOONITA ROW: "+row)
+            regEx= r'href="https:\/\/uprot.net\/(.*?)\/(.*?)" target="_blank" rel="noopener nofollow" title="(.*?)"'
+            list=preg_match(row, regEx)
+            #list = re.compile(regEx, re.MULTILINE | re.DOTALL).findall(row)
+            for (host, id, title) in list:
+                ep=title.replace("Streaming di ", "").replace(" su StreamTape", "").replace(" su Max", "").replace(" su Flexy", "")
+                my_list.append(ep+"@@"+host+"@@"+id)
+
+
+        #list = re.findall(regEx, fu.text)
+        numero=len(my_list)
+        logga("TOONITA TROVATI: "+str(numero))
         jsonText='{"SetViewMode":"51","channels":['
         numIt = 0
         numCh = -1
         oldEp = ""
-        for (host, id, title) in list:
+        for (elem) in my_list:
+            arrEl=elem.split("@@")
+            title=arrEl[0]
+            host=arrEl[1]
+            id=arrEl[2]
             ep=title.replace("Streaming di ", "").replace(" su StreamTape", "").replace(" su Max", "").replace(" su Flexy", "")
             #logga("EP_07:"+ep[:7])
             if ep[:7]=="Scarica":
@@ -1371,6 +1392,7 @@ def toonIta(parIn):
             
             if (numIt > 0):
                 jsonText = jsonText + ',' 
+            #jsonText = jsonText + '{"title":"[COLOR gold]'+host+'[/COLOR]","myresolve":"uprot@@https://uprot.net/'+host+'/'+id+'",'
             jsonText = jsonText + '{"title":"[COLOR gold]'+host+'[/COLOR]","myresolve":"uprot@@https://uprot.net/'+host+'/'+id+'",'
             jsonText = jsonText + '"thumbnail":"https://pbs.twimg.com/profile_images/848686618466816000/8MaqE-n5_400x400.jpg",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
@@ -1386,9 +1408,15 @@ def toonIta(parIn):
             jsonText = jsonText + '"info":"NO INFO"}'
 
         jsonText = jsonText + "]}]}"
-        #logga("TOONITA JSON: "+jsonText)
+        logga("TOONITA JSON: "+jsonText)
         video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
-    except:
+    except Exception as err:
+        import traceback
+        errMsg="ERRORE MANDRAKODI: {0}".format(err)
+        #logging.warning(errMsg+"\nPAR_ERR --> ")
+        traceback.print_exc()
+        dialog = xbmcgui.Dialog()
+        dialog.ok("Mandrakodi", errMsg)
         logga("NO PACKED \n"+fu.text)
         video_urls.append(("ignore", "[COLOR red]NO LINK FOUND[/COLOR]"))	
         pass
@@ -1552,7 +1580,23 @@ def scwsNew(parIn=None):
         #jsonUrl = preg_match(pageT3, patron)+'"sex":"ok"}'
         logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
         arrJ2 = json.loads(jsonUrl.replace("'", '"'))
-        urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&token360p="+arrJ2["token360p"]+"&token480p="+arrJ2["token480p"]+"&token720p="+arrJ2["token720p"]+"&token1080p="+arrJ2["token1080p"]+"&expires="+arrJ2["expires"]+"&n=1"
+        urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&h=1"
+        try:
+           urlSc += "&token360p="+arrJ2["token360p"]
+        except:
+            pass
+        try:
+           urlSc += "&token480p="+arrJ2["token480p"]
+        except:
+            pass
+        try:
+           urlSc += "&token720p="+arrJ2["token720p"]
+        except:
+            pass
+        try:
+           urlSc += "&token1080p="+arrJ2["token1080p"]
+        except:
+            pass
     except:
         tito="[COLOR red]NO VIDEO FOUND[/COLOR]"
 
