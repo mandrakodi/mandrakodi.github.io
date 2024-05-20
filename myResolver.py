@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.67'
+versione='1.2.68'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 16.05.2024
+# Last update: 20.05.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -490,14 +490,14 @@ def testDns(parIn=""):
     vUrl = ""
     logga('CALL DADDY 4 DNS TEST '+parIn)
     randomUa=getRandomUA()
-    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'http://1.dlhd.sx/'}
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'http://dlhd.so/'}
     page_data = ""
     time.sleep(2)
     ret="[COLOR lime]TEST DNS: OK[/COLOR]"
     thumb="https://upload.wikimedia.org/wikipedia/commons/f/fb/2000px-ok_x_nuvola_green.png"
     try:
         currSess = requests.Session()
-        page_data1 = currSess.get("http://1.dlhd.sx/embed/stream-877.php",headers=head)
+        page_data1 = currSess.get("http://dlhd.so/embed/stream-877.php",headers=head)
         page_data = page_data1.content
         
         if (page_data1.status_code != 200):
@@ -529,7 +529,7 @@ def testDns(parIn=""):
     ret += "[COLOR yellow] ["+dns1+" - "+dns2+"][/COLOR]"
 
     jsonText='{"SetViewMode":"51","items":['
-    jsonText = jsonText + '{"title":"'+ret+'","myresolve":"daddy@@http://1.dlhd.sx/embed/stream-877.php",'
+    jsonText = jsonText + '{"title":"'+ret+'","myresolve":"daddy@@http://dlhd.so/embed/stream-877.php",'
     jsonText = jsonText + '"thumbnail":"'+thumb+'",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
     jsonText = jsonText + '"info":"by MandraKodi"}'
@@ -1015,8 +1015,7 @@ def getSourceFrame(parIn):
 def PlayStream(link):
     from urllib.parse import quote_plus
     logga("PlayStream "+link)
-    #baseurl='https://daddylivehd.com/'
-    baseurl='https://1.dlhd.sx/'
+    baseurl='https://dlhd.so/'
     UA = getRandomUA()
     logga("TRY TO GET STREAM FROM "+link)
     url = link
@@ -1051,7 +1050,35 @@ def PlayStream(link):
         liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
     
     return liz
-    
+
+def amstaff(parIn):
+    import base64, urllib.parse
+    headers = dict()
+    headers["User-Agent"] = "Mozilla/5.0 (Windows NT 5.1; U; en; rv:1.8.0) Gecko/20060728 Firefox/1.5.0 Opera 9.22"
+    headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+    headers["Accept-Language"] = "it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3"
+    headers["Accept-Charset"] = "UTF-8"
+    headers["Accept-Encoding"] = "gzip"
+    headers['Referer'] = "https://amstaff.city/index.php"
+
+    arrT=parIn.split("|")
+    link=arrT[0]
+    key=arrT[1]
+    b64_string = key
+    b64_string += "=" * ((4 - len(b64_string) % 4) % 4)
+    key64=base64.b64decode(b64_string).decode("utf-8")
+    logga("AMSTAFF64: "+key64)
+    liz = xbmcgui.ListItem('Amstaff', path=link)
+    liz.setMimeType('application/dash+xml')
+    liz.setContentLookup(False)
+    liz.setProperty('inputstream', 'inputstream.adaptive')
+    liz.setProperty('inputstream.adaptive.manifest_type', 'mpd')
+    liz.setProperty('inputstream.adaptive.license_type', 'org.w3.clearkey')
+    liz.setProperty('inputstream.adaptive.license_key', key64)
+    liz.setProperty('inputstream.adaptive.stream_headers', urllib.parse.urlencode(headers))
+    liz.setProperty('inputstream.adaptive.manifest_headers', urllib.parse.urlencode(headers))
+    return liz
+
    
 def proData(parIn=None, flat=0):
     video_urls = []
