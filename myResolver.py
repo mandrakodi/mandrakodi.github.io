@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.68'
+versione='1.2.69'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1573,6 +1573,7 @@ def getUrlSc(scws_id, tit=None):
 
 def scwsNew(parIn=None):
     import json
+    logga("SCWS: "+parIn)
     video_urls = []
 
     sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
@@ -1607,7 +1608,7 @@ def scwsNew(parIn=None):
         #jsonUrl = preg_match(pageT3, patron)+'"sex":"ok"}'
         logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
         arrJ2 = json.loads(jsonUrl.replace("'", '"'))
-        urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&h=1"
+        urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
         try:
            urlSc += "&token360p="+arrJ2["token360p"]
         except:
