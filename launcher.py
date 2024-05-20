@@ -1,8 +1,8 @@
-versione='1.2.42'
+versione='1.2.43'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 06.04.2024
+# Last update: 20.05.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -521,6 +521,18 @@ def callReolver(metodo, parametro):
         url=list_item.getPath()
         xbmcplugin.setContent(_handle, 'videos')
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+    elif metodo=="amstaff":
+        fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        img="https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png"
+        newTit="[COLOR lime]PLAY STREAM[/COLOR]"
+        logga("CALL myResolver.amstaff for "+parametro)
+        list_item = myResolver.amstaff(parametro)
+        list_item.setLabel(newTit)
+        list_item.setLabel2(newTit)
+        list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url=list_item.getPath()
+        xbmcplugin.setContent(_handle, 'movies')
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     else:
         retVal = myResolver.run(metodo, parametro)
 
@@ -767,8 +779,8 @@ def checkDns():
     responseCode=404
     try:
         currSess = requests.Session()
-        head={'user-agent':'iPad','Content-Type':'application/x-www-form-urlencoded','Referer':'http://1.dlhd.sx/'}
-        page_data1 = currSess.get("http://1.dlhd.sx/embed/stream-877.php",headers=head)
+        head={'user-agent':'iPad','Content-Type':'application/x-www-form-urlencoded','Referer':'http://dlhd.so/'}
+        page_data1 = currSess.get("http://dlhd.so/embed/stream-877.php",headers=head)
         responseCode=page_data1.status_code
         dns1 = xbmc.getInfoLabel('Network.DNS1Address')
         dns2 = xbmc.getInfoLabel('Network.DNS2Address')
