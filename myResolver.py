@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.69'
+versione='1.2.70'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 20.05.2024
+# Last update: 24.05.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1591,6 +1591,7 @@ def scwsNew(parIn=None):
     m3u8Url = preg_match(pageT, patron)
     logga("URL_M3U8: "+m3u8Url)
     arrT=m3u8Url.split("?")
+    arrPar=m3u8Url.split("&amp;")
     baseUrl=arrT[0]
     pageT2 = requests.get(m3u8Url.replace("&amp;", "&"),headers=headSCt).content
     if PY3:
@@ -1609,22 +1610,17 @@ def scwsNew(parIn=None):
         logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
         arrJ2 = json.loads(jsonUrl.replace("'", '"'))
         urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
-        try:
-           urlSc += "&token360p="+arrJ2["token360p"]
-        except:
-            pass
-        try:
-           urlSc += "&token480p="+arrJ2["token480p"]
-        except:
-            pass
-        try:
-           urlSc += "&token720p="+arrJ2["token720p"]
-        except:
-            pass
-        try:
-           urlSc += "&token1080p="+arrJ2["token1080p"]
-        except:
-            pass
+        newPar=""
+        numPar=0
+        for param in arrPar:
+            if numPar > 0:
+                arrP2=param.split("=")
+                if (arrP2[0]=="canPlayFHD"):
+                    param = param+"&h=1"
+                newPar = newPar+"&"+param
+            numPar=numPar+1
+        urlSc= urlSc + newPar
+        logga("FINAL URL: "+urlSc)
     except:
         tito="[COLOR red]NO VIDEO FOUND[/COLOR]"
 
