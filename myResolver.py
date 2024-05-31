@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.70'
+versione='1.2.71'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 24.05.2024
+# Last update: 31.05.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -788,6 +788,29 @@ def daddyFind(parIn):
 
     return video_url
 
+def antena(parIn=None):
+    img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
+    video_urls = []
+    logga('PAR_ANTENA: '+parIn)
+    video_url = daddyFind(parIn)
+    logga('URL ANTENA: '+video_url)
+    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+    final_url = video_url + "|Connection=keep-alive&Referer=https://viwlivehdplay.ru/&Origin=https://viwlivehdplay.ru&User-Agent="+randomUa
+    
+    video_urls.append((final_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi", img))
+    
+    #return video_urls
+
+    liz = xbmcgui.ListItem('AntenaSport', path=final_url)
+    liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
+    liz.setMimeType('application/x-mpegURL')
+    liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
+    liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
+    liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
+    
+    return liz
+    
+
 def daddy(parIn=None):
     video_urls = []
     logga('PAR_DADDY: '+parIn)
@@ -1016,7 +1039,7 @@ def PlayStream(link):
     from urllib.parse import quote_plus
     logga("PlayStream "+link)
     baseurl='https://dlhd.so/'
-    UA = getRandomUA()
+    UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
     logga("TRY TO GET STREAM FROM "+link)
     url = link
 
@@ -1027,14 +1050,14 @@ def PlayStream(link):
 
     resp = requests.post(url, headers=hea).text
     url_1 = re.compile('iframe src="(.*)" width').findall(resp)[0]
-    logga("STREAM IFRAME: "+url_1)
     hea = {
         'Referer': url,
         'user-agent': UA,
     }
 
     resp2 = requests.get(url_1, headers=hea, timeout=10)
-    links = re.findall("source:'(.+?)'", resp2.text)
+    logga("STREAM IFRAME: "+url_1)
+    links = re.findall("source: '(.+?)'", resp2.text)
     liz = xbmcgui.ListItem('Daddylive', path=url_1)
     if links:
         link = str(links[0])
@@ -2600,17 +2623,41 @@ def nopayMenu(parIn=""):
     
 def menuIstorm(parIn=""):
     video_urls = []
+    
+    urlPage="https://antenasports.ru/channels.php"
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+
+    s = requests.Session()
+    r = s.get(urlPage, headers=headers)
+    
+    express2 = r'<div class="grid-item"><a href="(.*?)" target="_blank" rel="noopener"><span style="(.*?)"><strong>(.*?)</strong>'
+    ret = re.compile(express2, re.MULTILINE | re.DOTALL).findall(r.text)
+    
+    lst = []
+    x=1
+    for (link, id, tito) in ret:
+        if (x > 2):
+            lst.append(tito+"@@"+link)
+        x=x+1
+    lst.sort()
     jsonText='{"SetViewMode":"503","items":['
-    for x in range(1, 99):
+    x=1
+    for (row) in lst:
+        arrL=row.split("@@")
+        tito=arrL[0]
+        link=arrL[1]
         if (x > 1):
             jsonText = jsonText + ','    
-        jsonText = jsonText + '{"title":"[COLOR lime]CHANNEL '+str(x)+'[/COLOR]","myresolve":"frame@@https://istorm.live/ch'+str(x)+'",'
+        jsonText = jsonText + '{"title":"[COLOR lime]'+tito+'[/COLOR]","myresolve":"antena@@https://antenasports.ru'+link+'",'
         jsonText = jsonText + '"thumbnail":"https://upload.wikimedia.org/wikipedia/commons/d/db/Sports_portal_bar_icon.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-        jsonText = jsonText + '"info":"CHANNEL '+str(x)+'"}'
+        jsonText = jsonText + '"info":"CHANNEL '+tito+'"}'
+        x=x+1
     
     jsonText = jsonText + "]}"
-    logga('JSON-STORM: '+jsonText)
+    logga('JSON-ANTENA: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
@@ -4775,6 +4822,7 @@ def run (action, params=None):
         'myStream': myStream,
         'wizhd': wizhd,
         'daddy': daddy,
+        'antena': antena,
         'wigi': wigi,
         'proData': proData,
         'risolvi': urlsolver,
