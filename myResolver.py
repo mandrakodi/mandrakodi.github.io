@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.71'
+versione='1.2.72'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 31.05.2024
+# Last update: 01.06.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1633,16 +1633,19 @@ def scwsNew(parIn=None):
         logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
         arrJ2 = json.loads(jsonUrl.replace("'", '"'))
         urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
+        urlSc=arrJ2["url"]+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
         newPar=""
         numPar=0
         for param in arrPar:
             if numPar > 0:
                 arrP2=param.split("=")
                 if (arrP2[0]=="canPlayFHD"):
-                    param = param+"&h=1"
-                newPar = newPar+"&"+param
+                    urlSc= urlSc + "&h=1"
+                if (arrP2[0]=="b"):
+                    urlSc= urlSc + "&b=1"
+                #newPar = newPar+"&"+param
             numPar=numPar+1
-        urlSc= urlSc + newPar
+        #urlSc= urlSc + newPar
         logga("FINAL URL: "+urlSc)
     except:
         tito="[COLOR red]NO VIDEO FOUND[/COLOR]"
