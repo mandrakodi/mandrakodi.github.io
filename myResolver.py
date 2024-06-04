@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.72'
+versione='1.2.73'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 01.06.2024
+# Last update: 04.06.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -804,9 +804,12 @@ def antena(parIn=None):
     liz = xbmcgui.ListItem('AntenaSport', path=final_url)
     liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
     liz.setMimeType('application/x-mpegURL')
-    liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
-    liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
     liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
+    liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
+    timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo3")
+    if timeShift != "no_time_shift":
+        liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
+    
     
     return liz
     
@@ -1068,38 +1071,43 @@ def PlayStream(link):
         liz = xbmcgui.ListItem('Daddylive', path=urlV)
         liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
         liz.setMimeType('application/x-mpegURL')
-        liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
-        liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
         liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
+        liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
+        timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo3")
+        logga("TimeShift ==> "+timeShift)
+        if timeShift != "no_time_shift":
+            logga("OK TimeShift")
+            liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
     
     return liz
 
 def amstaff(parIn):
     import base64, urllib.parse
     headers = dict()
-    headers["User-Agent"] = "Mozilla/5.0 (Windows NT 5.1; U; en; rv:1.8.0) Gecko/20060728 Firefox/1.5.0 Opera 9.22"
-    headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
-    headers["Accept-Language"] = "it-IT,it;q=0.8,en-US;q=0.5,en;q=0.3"
-    headers["Accept-Charset"] = "UTF-8"
-    headers["Accept-Encoding"] = "gzip"
-    headers['Referer'] = "https://amstaff.city/index.php"
+    headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+    headers['Referer'] = "https://amstaff.city/"
+    headers['Origin'] = "https://amstaff.city"
+    parHead=urllib.parse.urlencode(headers)
+    logga("AMSTAFF_HEAD: "+parHead)
 
+
+    phd="Referer=https://amstaff.city/&Origin=https://amstaff.city&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
     arrT=parIn.split("|")
     link=arrT[0]
     key=arrT[1]
     b64_string = key
-    b64_string += "=" * ((4 - len(b64_string) % 4) % 4)
+    #b64_string += "=" * ((4 - len(b64_string) % 4) % 4)
     key64=base64.b64decode(b64_string).decode("utf-8")
     logga("AMSTAFF64: "+key64)
     liz = xbmcgui.ListItem('Amstaff', path=link)
     liz.setMimeType('application/dash+xml')
-    liz.setContentLookup(False)
+    #liz.setContentLookup(False)
     liz.setProperty('inputstream', 'inputstream.adaptive')
     liz.setProperty('inputstream.adaptive.manifest_type', 'mpd')
     liz.setProperty('inputstream.adaptive.license_type', 'org.w3.clearkey')
     liz.setProperty('inputstream.adaptive.license_key', key64)
-    liz.setProperty('inputstream.adaptive.stream_headers', urllib.parse.urlencode(headers))
-    liz.setProperty('inputstream.adaptive.manifest_headers', urllib.parse.urlencode(headers))
+    liz.setProperty('inputstream.adaptive.stream_headers', phd)
+    liz.setProperty('inputstream.adaptive.manifest_headers', phd)
     return liz
 
    
