@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.73'
+versione='1.2.74'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 04.06.2024
+# Last update: 07.06.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -806,7 +806,7 @@ def antena(parIn=None):
     liz.setMimeType('application/x-mpegURL')
     liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
     liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
-    timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo3")
+    timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
     if timeShift != "no_time_shift":
         liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
     
@@ -1073,7 +1073,7 @@ def PlayStream(link):
         liz.setMimeType('application/x-mpegURL')
         liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
         liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
-        timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo3")
+        timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
         logga("TimeShift ==> "+timeShift)
         if timeShift != "no_time_shift":
             logga("OK TimeShift")
@@ -1101,7 +1101,7 @@ def amstaff(parIn):
     logga("AMSTAFF64: "+key64)
     liz = xbmcgui.ListItem('Amstaff', path=link)
     liz.setMimeType('application/dash+xml')
-    #liz.setContentLookup(False)
+    liz.setContentLookup(False)
     liz.setProperty('inputstream', 'inputstream.adaptive')
     liz.setProperty('inputstream.adaptive.manifest_type', 'mpd')
     liz.setProperty('inputstream.adaptive.license_type', 'org.w3.clearkey')
