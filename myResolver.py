@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.74'
+versione='1.2.75'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 07.06.2024
+# Last update: 17.06.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -209,6 +209,7 @@ def rocktalk(parIn=None):
     from Cryptodome.Cipher import DES
     from Cryptodome.PublicKey import RSA
     from Cryptodome.Util.Padding import unpad
+    import json
 
     def payload():
         _pubkey = RSA.importKey(
@@ -245,8 +246,32 @@ def rocktalk(parIn=None):
         }
         
         r = requests.post('https://rocktalk.net/tv/index.php?case=get_all_channels', headers=headers, data={"payload": payload(), "username": "603803577"}, timeout=15)
-        logga('JSON ALL_CH: '+str(r.json()))
-        links.append(("ignoreme", "[COLOR gold]END JOB[/COLOR]"))
+        jj=str(r.json())
+        logga('JSON ALL_CH: '+jj.replace("'", '"'))
+
+        jsonText='{"SetViewMode":"503","items":['
+        numIt=0
+        arrJ = json.loads(jj)
+        for ep in arrJ["msg"]["channels"]:
+            chId=ep["pk_id"]
+            chName=ep["channel_name"]
+            chCountry=ep["country"]
+            logoCh=ep["img"]
+            tit=chName+" ("+chCountry+")"
+            if (numIt > 0):
+                jsonText = jsonText + ','    
+            jsonText = jsonText + '{"title":"[COLOR gold]'+tit+'[/COLOR]","myresolve":"rocktalk@@'+chId+'",'
+            jsonText = jsonText + '"thumbnail":"https://rocktalk.net/tv/'+logoCh+'",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"by MandraKodi"}'
+            numIt=numIt+1
+        
+        jsonText = jsonText + "]}"
+        logga('JSON-ANY: '+jsonText)
+        links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+
+        
+        #links.append(("ignoreme", "[COLOR gold]END JOB[/COLOR]"))
         return links
 
     ch_id = parIn
@@ -844,7 +869,7 @@ def daddy(parIn=None):
 def daddyCode(codeIn=None):
     video_urls = []
     randomUa=getRandomUA()
-    final_url="https://webhdrus.onlinehdhls.ru/lb/premium"+codeIn+"/index.m3u8|Referer=https://weblivehdplay.ru/&Origin=https://weblivehdplay.ru&Connection=keep-alive&User-Agent="+randomUa
+    final_url="https://webhdrunns.mizhls.ru/lb/premium"+codeIn+"/index.m3u8|Referer=https://lewblivehdplay.ru/&Origin=https://lewblivehdplay.ru&Connection=keep-alive&User-Agent="+randomUa
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     
     return video_urls
@@ -1065,7 +1090,9 @@ def PlayStream(link):
     if links:
         link = str(links[0])
         logga("STREAM FOUND "+link)
-        urlV=link+"|Referer=https://weblivehdplay.ru/&Origin=https://weblivehdplay.ru&Connection=keep-alive&User-Agent="+UA
+        arrD=url_1.split("/")
+        refe=arrD[2]
+        urlV=link+"|Referer=https://"+refe+"/&Origin=https://"+refe+"&Connection=keep-alive&User-Agent="+UA
         logga("PlayStream_URL "+urlV)
 
         liz = xbmcgui.ListItem('Daddylive', path=urlV)
@@ -1373,7 +1400,7 @@ def uprot(parIn):
     }
     s = requests.Session()
     fu = s.get(parIn, headers=headers)
-    
+    logga("UPROT TEXT: "+fu.text)
     video_url = parIn
     try:
         fu2=fu.text.replace("\n", "").replace("\r", "").replace("\t", "")
@@ -2841,6 +2868,7 @@ def vudeo(parIn):
     return video_urls
 
 def voe(parIn):
+    import base64
     logga('VOE PAGE: '+parIn)
     page_data = requests.get(parIn,headers={'user-agent':'iPad','accept':'*/*','referer':parIn}).content
 
@@ -2852,8 +2880,8 @@ def voe(parIn):
     src1 = preg_match(page_data, "'mp4': '(.*?)'")
 
     video_urls = []
-    video_urls.append((src+"|referer="+parIn, "[COLOR lime]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
-    video_urls.append((src1+"|referer="+parIn, "[COLOR gold]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
+    video_urls.append((base64.b64decode(src).decode("utf-8")+"|referer="+parIn, "[COLOR lime]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
+    video_urls.append((base64.b64decode(src1).decode("utf-8")+"|referer="+parIn, "[COLOR gold]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
     return video_urls
 
 def supervideo(page_url):
