@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.75'
+versione='1.2.76'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 17.06.2024
+# Last update: 01.07.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -181,14 +181,53 @@ def discovery(parIn=None):
     urlTk='{}/token?deviceId={}&realm=dplay&shortlived=true'.format(domain, deviceId)
     logga("URL TOKEN DISCOVERY: "+urlTk)
     token = session.get(urlTk).json()['data']['attributes']['token']
-    session.headers = {'User-Agent': 'Mozilla/50.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
+    session.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Referer': host,
             'Origin': host,
             'Cookie': 'st={}'.format(token),
             'content-type': 'application/json',
+            'x-disco-client': 'WEB:UNKNOWN:dplus_us:2.46.0',
             'x-disco-params': 'realm=dplay,siteLookupKey=dplus_it'}
     content = 'channel'
-    post = {content + 'Id': parIn, 'deviceInfo': {'adBlocker': False,'drmSupported': True}}
+    #post = {content + 'Id': parIn, 'deviceInfo': {'adBlocker': False,'drmSupported': True}}
+
+    post =  {content + 'Id': parIn,
+            'deviceInfo': {
+                'adBlocker': 'true',
+                'drmSupported': 'true',
+                'hwDecodingCapabilities': [],
+                'screen':{
+                    'width':1920,
+                    'height':1080
+                },
+                'player':{
+                    'width':1920,
+                    'height':1080
+                }
+            },
+            'wisteriaProperties':{
+                'advertiser': {
+                    'firstPlay': 0,
+                    'fwIsLat': 0
+                },
+                'device':{
+                    'browser':{
+                        'name': 'chrome',
+                        'version': '120.0.6099.225'
+                    },
+                    'type': 'desktop'
+                },
+                'platform': 'desktop',
+                'product': 'dplus_emea',
+                'sessionId': deviceId,
+                'streamProvider': {
+                    'suspendBeaconing': 0,
+                    'hlsVersion': 6,
+                    'pingConfig': 1
+                }
+            }
+        }
+
     url = ""
     dataStr = "NO_DATA"
     try:
@@ -867,9 +906,17 @@ def daddy(parIn=None):
     return video_urls
 
 def daddyCode(codeIn=None):
+    import re
     video_urls = []
-    randomUa=getRandomUA()
-    final_url="https://webhdrunns.mizhls.ru/lb/premium"+codeIn+"/index.m3u8|Referer=https://lewblivehdplay.ru/&Origin=https://lewblivehdplay.ru&Connection=keep-alive&User-Agent="+randomUa
+    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+    link="https://webhdrunns.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
+    refe="https://lewblivehdplay.ru/"
+    origin="https://lewblivehdplay.ru"
+    
+    
+    final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
+    
+    
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     
     return video_urls
@@ -1069,42 +1116,55 @@ def PlayStream(link):
     baseurl='https://dlhd.so/'
     UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
     logga("TRY TO GET STREAM FROM "+link)
-    url = link
+    arrL=link.split("stream-")
+    codeIn=arrL[1].replace(".php", "")
+    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+    link="https://webhdrunns.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
+    refe="https://lewblivehdplay.ru/"
+    origin="https://lewblivehdplay.ru"
+    
+    
+    urlV=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
 
-    hea = {
-        'Referer': baseurl + '/',
-        'user-agent': UA,
-    }
+    try:
+        url = link
 
-    resp = requests.post(url, headers=hea).text
-    url_1 = re.compile('iframe src="(.*)" width').findall(resp)[0]
-    hea = {
-        'Referer': url,
-        'user-agent': UA,
-    }
+        hea = {
+            'Referer': baseurl + '/',
+            'user-agent': UA,
+        }
 
-    resp2 = requests.get(url_1, headers=hea, timeout=10)
-    logga("STREAM IFRAME: "+url_1)
-    links = re.findall("source: '(.+?)'", resp2.text)
-    liz = xbmcgui.ListItem('Daddylive', path=url_1)
-    if links:
-        link = str(links[0])
-        logga("STREAM FOUND "+link)
-        arrD=url_1.split("/")
-        refe=arrD[2]
-        urlV=link+"|Referer=https://"+refe+"/&Origin=https://"+refe+"&Connection=keep-alive&User-Agent="+UA
-        logga("PlayStream_URL "+urlV)
+        resp = requests.post(url, headers=hea).text
+        url_1 = re.compile('iframe src="(.*)" width').findall(resp)[0]
+        hea = {
+            'Referer': url,
+            'user-agent': UA,
+        }
 
-        liz = xbmcgui.ListItem('Daddylive', path=urlV)
-        liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
-        liz.setMimeType('application/x-mpegURL')
-        liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
-        liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
-        timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
-        logga("TimeShift ==> "+timeShift)
-        if timeShift != "no_time_shift":
-            logga("OK TimeShift")
-            liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
+        resp2 = requests.get(url_1, headers=hea, timeout=10)
+        logga("STREAM IFRAME: "+url_1)
+        links = re.findall("source: '(.+?)'", resp2.text)
+        liz = xbmcgui.ListItem('Daddylive', path=url_1)
+        if links:
+            link = str(links[0])
+            logga("STREAM FOUND "+link)
+            arrD=url_1.split("/")
+            refe=arrD[2]
+            urlV=link+"|Referer=https://"+refe+"/&Origin=https://"+refe+"&Connection=keep-alive&User-Agent="+UA
+            logga("PlayStream_URL "+urlV)
+    except:
+        pass
+    
+    liz = xbmcgui.ListItem('Daddylive', path=urlV)
+    liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
+    liz.setMimeType('application/x-mpegURL')
+    liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
+    liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
+    timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
+    logga("TimeShift ==> "+timeShift)
+    if timeShift != "no_time_shift":
+        logga("OK TimeShift")
+        liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
     
     return liz
 
@@ -1124,7 +1184,7 @@ def amstaff(parIn):
     key=arrT[1]
     b64_string = key
     #b64_string += "=" * ((4 - len(b64_string) % 4) % 4)
-    key64=base64.b64decode(b64_string).decode("utf-8")
+    key64=base64.b64decode(b64_string).decode("utf-8").replace("{","").replace("}","").replace('"',"")
     logga("AMSTAFF64: "+key64)
     liz = xbmcgui.ListItem('Amstaff', path=link)
     liz.setMimeType('application/dash+xml')
