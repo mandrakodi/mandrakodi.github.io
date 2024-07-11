@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.76'
+versione='1.2.77'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 01.07.2024
+# Last update: 11.07.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -908,16 +908,21 @@ def daddy(parIn=None):
 def daddyCode(codeIn=None):
     import re
     video_urls = []
-    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+    randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
     link="https://webhdrunns.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
-    refe="https://lewblivehdplay.ru/"
-    origin="https://lewblivehdplay.ru"
+    #link="https://ddy5.mizhls.ru/ddy5/premium"+codeIn+"/tracks-v1a1/mono.m3u8"
+    link2="https://ddy6.mizhls.ru/ddy6/premium"+codeIn+"/tracks-v1a1/mono.m3u8"
+    refe="https://qqwebplay.xyz/"
+    origin="https://qqwebplay.xyz"
     
     
+    #final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
+    final_url2=link2+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
     
     
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
+    #video_urls.append((final_url2, "[COLOR gold]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     
     return video_urls
 
@@ -1114,47 +1119,18 @@ def PlayStream(link):
     from urllib.parse import quote_plus
     logga("PlayStream "+link)
     baseurl='https://dlhd.so/'
-    UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+    UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
     logga("TRY TO GET STREAM FROM "+link)
     arrL=link.split("stream-")
     codeIn=arrL[1].replace(".php", "")
-    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+    randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
     link="https://webhdrunns.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
-    refe="https://lewblivehdplay.ru/"
-    origin="https://lewblivehdplay.ru"
+    refe="https://qqwebplay.xyz/"
+    origin="https://qqwebplay.xyz"
     
     
     urlV=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
 
-    try:
-        url = link
-
-        hea = {
-            'Referer': baseurl + '/',
-            'user-agent': UA,
-        }
-
-        resp = requests.post(url, headers=hea).text
-        url_1 = re.compile('iframe src="(.*)" width').findall(resp)[0]
-        hea = {
-            'Referer': url,
-            'user-agent': UA,
-        }
-
-        resp2 = requests.get(url_1, headers=hea, timeout=10)
-        logga("STREAM IFRAME: "+url_1)
-        links = re.findall("source: '(.+?)'", resp2.text)
-        liz = xbmcgui.ListItem('Daddylive', path=url_1)
-        if links:
-            link = str(links[0])
-            logga("STREAM FOUND "+link)
-            arrD=url_1.split("/")
-            refe=arrD[2]
-            urlV=link+"|Referer=https://"+refe+"/&Origin=https://"+refe+"&Connection=keep-alive&User-Agent="+UA
-            logga("PlayStream_URL "+urlV)
-    except:
-        pass
-    
     liz = xbmcgui.ListItem('Daddylive', path=urlV)
     liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
     liz.setMimeType('application/x-mpegURL')
