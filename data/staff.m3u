@@ -1,0 +1,95 @@
+#EXTM3U
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=4ea1bc7ef2734fd2b17b399f1387ec3a:90ed1ac75cebed74e248d5cb3b5d5a61
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 1
+https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport1)/manifest.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=2abd9ff2cd494f829a607250746a1a08:879cc8e7a94e046b4ea77537ac2fe0ec
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 2
+https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport2)/manifest.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=292681198f7c44a8adbfcdae2605916c:6dc7964041ec945dab5adfc6c4a094f7
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 3
+https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport7)/manifest.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=2717a6c7f97d46098e852c272fbc6c0f:ab835b820974ac22ea68aad675dec05a
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 4
+https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport8)/manifest.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=9a5be7cf33f548cc80a04ae3731742e3:184f19e461a31e2fa0f56a2dae936609
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 5
+https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport9)/manifest.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=98ab5c875f7c43bc946f4db5a412bd05:8b95735181740076941c4b48850d6aa2
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 6
+https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport10)/manifest.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=3c355aec1a1941aab1902d64bf029736:b9ce0b5eadf3f768e8206c721297fa73
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 7
+https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport11)/manifest.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=fccdc0c4d14c486a9db522c254462095:d773e18f9b4de9d70acbbc102e14423b
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 8
+https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport12)/manifest.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=5ee049bddbc947eabcd49c814aa16bce:b91ca136bee9de420572067b195bdaa6
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 9
+https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport13)/manifest.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=0036fb7c564c4eb99e310f5fa82ab2f2:647f07b6858a669456e73ca103b4c2c0
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Sky_Sport_Tennis.svg/512px-Sky_Sport_Tennis.svg.png" group-title="Sky Sport",Tennis
+https://linear310-it-dash1-prd.selector.skycdn.it/016a/32559/FHD/skysporttennis/master.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=00368f2bf10736c9c2c02ab0fa694d00:92eec9d841ac0c1ff16b90a0db82c792
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Sky_Sport_Arena_-_Logo_2020.svg/512px-Sky_Sport_Arena_-_Logo_2020.svg.png" group-title="Sky Sport",Arena
+https://linear304-it-dash1-prd.selector.skycdn.it/016a/31024/FHD/skysportarena/master_stereo.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=0036f13bca1c5603b9f3bb28ec28fa80:f01403bcb5a02c61153d297fb0c4395f
+#EXTINF:-1 tvg-logo="https://www.lyngsat.com/logo/tv/ss/sky-sport-max-it.png" group-title="Sky Sport",Max
+https://linear305-it-dash1-prd.selector.skycdn.it/016a/31248/FHD/skysportmax/master_stereo.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=0036dc70e4d659fe5ae57b52793a1ff3:55517f806b6be917c2bf0e9cf9acc44f
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Sky_Sport_Uno_-_Logo_2020.svg/512px-Sky_Sport_Uno_-_Logo_2020.svg.png" group-title="Sky Sport",Uno
+https://linear301-it-dash1-prd.selector.skycdn.it/016a/31023/FHD/skysportuno/master_stereo.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=0036a96b6bbbf1828488f90e6b2ca1f4:d24e6ae926e88f8303b6926271ff8155
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Sky_Sport_F1_-_Logo_2020.svg/512px-Sky_Sport_F1_-_Logo_2020.svg.png" group-title="Sky Sport",F1
+https://linear307-it-dash1-prd.selector.skycdn.it/016a/31478/FHD/skysportf1/master_stereo.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=00362e9181eaa0c5f91761ade3515eb8:52cf3c27885d58ad76aaf36d4217a984
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Sky_Sport_MotoGP_-_Logo_2020.svg/512px-Sky_Sport_MotoGP_-_Logo_2020.svg.png" group-title="Sky Sport",Moto GP
+https://linear306-it-dash1-prd.selector.skycdn.it/016a/31483/FHD/skysportmotogp/master_stereo.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=0036422cf4293ae7cf1e7f7062cc29e8:37a223fcc17c087043bc837432fd25d8
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",251
+https://linear311-it-dash1-prd.selector.skycdn.it/016a/31917/FHD/skysport251/master.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=003643bc9d61268c987504fa93b397f6:b8d5767c73ff8bba68d955035b56f4c1
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",252
+https://linear311-it-dash1-prd.selector.skycdn.it/016a/32951/FHD/skysport252/master.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=0036077996d02761a9d4c29ddfac7466:e83d078779ae5b53e2eb999513d55682
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",253
+https://linear311-it-dash1-prd.selector.skycdn.it/016a/32233/FHD/skysport253/master.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",DAZN 1
+https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-024/stream.mpd
