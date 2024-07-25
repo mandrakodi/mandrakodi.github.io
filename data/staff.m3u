@@ -1,48 +1,120 @@
 #EXTM3U
+#KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=4ea1bc7ef2734fd2b17b399f1387ec3a:90ed1ac75cebed74e248d5cb3b5d5a61
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 1
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 1
 https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport1)/manifest.mpd
 
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 1 (Dazn)
+https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-029/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=2abd9ff2cd494f829a607250746a1a08:879cc8e7a94e046b4ea77537ac2fe0ec
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 2
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 2
 https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport2)/manifest.mpd
 
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 2 (Dazn)
+https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-030/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=292681198f7c44a8adbfcdae2605916c:6dc7964041ec945dab5adfc6c4a094f7
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 3
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 3
 https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport7)/manifest.mpd
 
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 3 (Dazn)
+https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-060/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=2717a6c7f97d46098e852c272fbc6c0f:ab835b820974ac22ea68aad675dec05a
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 4
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 4
 https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport8)/manifest.mpd
 
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 4 (Dazn)
+https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-061/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=9a5be7cf33f548cc80a04ae3731742e3:184f19e461a31e2fa0f56a2dae936609
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 5
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 5
 https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport9)/manifest.mpd
 
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 5 (Dazn)
+https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-062/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=98ab5c875f7c43bc946f4db5a412bd05:8b95735181740076941c4b48850d6aa2
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 6
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 6
 https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport10)/manifest.mpd
 
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 6 (Dazn)
+https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-063/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=3c355aec1a1941aab1902d64bf029736:b9ce0b5eadf3f768e8206c721297fa73
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 7
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 7
 https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport11)/manifest.mpd
 
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 7 (Dazn)
+https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-064/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=fccdc0c4d14c486a9db522c254462095:d773e18f9b4de9d70acbbc102e14423b
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 8
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 8
 https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport12)/manifest.mpd
 
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 8 (Dazn)
+https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-065/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=5ee049bddbc947eabcd49c814aa16bce:b91ca136bee9de420572067b195bdaa6
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EuroSport",Eurosport 9
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 9
 https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport13)/manifest.mpd
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 9 (Dazn)
+https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-066/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=0036fb7c564c4eb99e310f5fa82ab2f2:647f07b6858a669456e73ca103b4c2c0
