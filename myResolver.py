@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.77'
+versione='1.2.78'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 11.07.2024
+# Last update: 30.07.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1793,7 +1793,7 @@ def getScSerie(parIn=None):
             logga("numEp: "+numEp)
             plot = "by MandraKodi"
             try:
-                plot = episodio["plot"].replace("&#39;", "'").replace("&amp;", "&")
+                plot = episodio["plot"].replace("&#39;", "'").replace("&amp;", "&").replace("\n", " ").replace("\r", " ")
             except:
                 pass    
             
@@ -2757,7 +2757,7 @@ def taxi(parIn):
 
     s = requests.Session()
     r = s.get(url, headers=headers)
-    logga("FIND HOSTS")
+    logga("FIND HOSTS AT "+url)
     ret1 = "by @mandrakodi"
     express1 = r'<title>(.*?)</title>'
     ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)[0]
