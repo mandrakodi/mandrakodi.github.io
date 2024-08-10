@@ -212,5 +212,6 @@ https://linear311-it-dash1-prd.selector.skycdn.it/016a/32233/FHD/skysport253/mas
 
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",DAZN 1
-https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-024/stream.mpd
+https://dce-de-livedazn.daznedge.net/dash/dazn-linear-024/stream.mpd?p=web
