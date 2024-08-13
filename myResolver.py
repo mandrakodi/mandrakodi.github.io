@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.78'
+versione='1.2.79'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 30.07.2024
+# Last update: 13.08.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -909,20 +909,24 @@ def daddyCode(codeIn=None):
     import re
     video_urls = []
     randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
+    randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
     link="https://webhdrunns.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
-    #link="https://ddy5.mizhls.ru/ddy5/premium"+codeIn+"/tracks-v1a1/mono.m3u8"
-    link2="https://ddy6.mizhls.ru/ddy6/premium"+codeIn+"/tracks-v1a1/mono.m3u8"
-    refe="https://qqwebplay.xyz/"
-    origin="https://qqwebplay.xyz"
+    link5="https://ddy5.mizhls.ru/ddy5/premium"+codeIn+"/tracks-v1a1/mono.m3u8"
+    link6="https://ddy6.mizhls.ru/ddy6/premium"+codeIn+"/tracks-v1a1/mono.m3u8"
+    refe="https://quest4play.xyz/"
+    origin="https://quest4play.xyz"
+    refe2="https://webhdrunns.mizhls.ru/"
     
     
     #final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
-    final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
-    final_url2=link2+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
+    final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
+    final_url2=link5+"|Referer="+refe2+"&Connection=keep-alive&User-Agent="+randomUa
+    final_url3=link6+"|Referer="+refe2+"&Connection=keep-alive&User-Agent="+randomUa
     
     
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     #video_urls.append((final_url2, "[COLOR gold]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
+    #video_urls.append((final_url3, "[COLOR aqua]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     
     return video_urls
 
@@ -1125,11 +1129,11 @@ def PlayStream(link):
     codeIn=arrL[1].replace(".php", "")
     randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
     link="https://webhdrunns.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
-    refe="https://qqwebplay.xyz/"
-    origin="https://qqwebplay.xyz"
+    refe="https://quest4play.xyz/"
+    origin="https://quest4play.xyz"
     
     
-    urlV=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
+    urlV=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
 
     liz = xbmcgui.ListItem('Daddylive', path=urlV)
     liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
