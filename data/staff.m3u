@@ -26,7 +26,7 @@ https://linear312-it-dash1-prd.selector.skycdn.it/016a/31150/FHD/eurosport2/mast
 https://dcf-ak-livedazn.akamaized.net/dashdrm/dazn-linear-030/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN 1 (IT)
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-024/stream.mpd?p=web
@@ -34,8 +34,80 @@ https://dce-de-livedazn.daznedge.net/dash/dazn-linear-024/stream.mpd?p=web
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",NFL Nerwork
+https://dce-de-livedazn.daznedge.net/dash/dazn-linear-023/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",Milan TV
+https://dce-de-livedazn.daznedge.net/dash/dazn-linear-025/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",Inter TV
+https://dce-de-livedazn.daznedge.net/dash/dazn-linear-033/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",MLB
+https://dce-de-livedazn.daznedge.net/dash/dazn-linear-026/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",NBA TV
+https://dce-de-livedazn.daznedge.net/dash/dazn-linear-035/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",EuroSport 1 (DE)
+https://dce-de-livedazn.daznedge.net/dash/dazn-linear-027/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",EuroSport 2 (DE)
+https://dce-de-livedazn.daznedge.net/dash/dazn-linear-028/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",EuroSport 1 (ES)
+https://dce-de-livedazn.daznedge.net/dash/dazn-linear-031/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",EuroSport 2 (ES)
+https://dce-de-livedazn.daznedge.net/dash/dazn-linear-032/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",Rally TV
+https://dce-de-livedazn.daznedge.net/dash/dazn-linear-039/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN LaLiga (ES)
 https://dce-ac-live.cdn.indazn.com/dash/dazn-linear-043/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",LaLiga TV (ES)
+https://dce-ac-live.cdn.indazn.com/dash/dazn-linear-040/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",Radio TV SerieA
+https://dce-ac-live.cdn.indazn.com/dash/dazn-linear-042/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
@@ -50,6 +122,20 @@ https://dce-ac-live.cdn.indazn.com/dash/dazn-linear-037/stream.mpd?p=web
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN 2 (ES)
 https://dce-ac-live.cdn.indazn.com/dash/dazn-linear-038/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN 1 (EN)
+https://dce-ac-live.cdn.indazn.com/dash/dazn-linear-045/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN 1 (NL)
+https://dce-ac-live.cdn.indazn.com/dash/dazn-linear-047/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
@@ -99,6 +185,20 @@ https://dce-ac-live.cdn.indazn.com/dash/dazn-linear-056/stream.mpd?p=web
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN 4 (PT)
 https://dce-ac-live.cdn.indazn.com/dash/dazn-linear-057/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN 5 (PT)
+https://dce-ac-live.cdn.indazn.com/dash/dazn-linear-058/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN 6 (PT)
+https://dce-ac-live.cdn.indazn.com/dash/dazn-linear-059/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
@@ -180,21 +280,6 @@ https://linear307-it-dash1-prd.selector.skycdn.it/016a/31478/FHD/skysportf1/mast
 https://linear306-it-dash1-prd.selector.skycdn.it/016a/31483/FHD/skysportmotogp/master_stereo.mpd
 
 #KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=0036422cf4293ae7cf1e7f7062cc29e8:37a223fcc17c087043bc837432fd25d8
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",251
-https://linear311-it-dash1-prd.selector.skycdn.it/016a/31917/FHD/skysport251/master.mpd
-
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=003643bc9d61268c987504fa93b397f6:b8d5767c73ff8bba68d955035b56f4c1
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",252
-https://linear311-it-dash1-prd.selector.skycdn.it/016a/32951/FHD/skysport252/master.mpd
-
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=0036077996d02761a9d4c29ddfac7466:e83d078779ae5b53e2eb999513d55682
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",253
-https://linear311-it-dash1-prd.selector.skycdn.it/016a/32233/FHD/skysport253/master.mpd
-
-#KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=003618ccd7be22b6367207ed8d64d505:36e97f29ec5ea6126077cc040cc2ceeb
 #EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Sky_Sport_24_-_Logo_2012.svg/512px-Sky_Sport_24_-_Logo_2012.svg.png" group-title="Sky Sport",Sport 24
 https://linear303-it-dash1-prd.selector.skycdn.it/016a/31035/FHD/skysport24/master_stereo.mpd
@@ -268,27 +353,3 @@ https://topembed.mizhls.ru/lb/eplayerSPORTTV5/playlist.m3u8
 #EXTVLCOPT:http-referrer=https://topembed.pw/
 #EXTINF:-1 player-buffer="5" tvg-id="" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE50BbLbQYD6Qkn9NQ357tzDo90sCXElIyMA&s" group-title="Sport TV",Sport TV6
 https://topembed.mizhls.ru/lb/eplayerSPORTTV6/playlist.m3u8
-
-#KODIPROP:inputstream.adaptive.stream_headers=origin=https://quest4play.xyz
-#KODIPROP:inputstream.adaptive.stream_headers=referer=https://quest4play.xyz/
-#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36
-#EXTVLCOPT:http-origin=https://quest4play.xyz
-#EXTVLCOPT:http-referrer=https://quest4play.xyz/
-#EXTINF:-1 player-buffer="15" tvg-id="" tvg-logo="https://www.kodi-tipps.de/wp-content/uploads/2023/01/daddylive-kodi-addon-installieren-banner.jpg" group-title="DaddyLive",DAZN 1 
-https://webhdrunns.mizhls.ru/lb/premium877/index.m3u8
-
-#KODIPROP:inputstream.adaptive.stream_headers=origin=https://quest4play.xyz
-#KODIPROP:inputstream.adaptive.stream_headers=referer=https://quest4play.xyz/
-#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36
-#EXTVLCOPT:http-origin=https://quest4play.xyz
-#EXTVLCOPT:http-referrer=https://quest4play.xyz/
-#EXTINF:-1 player-buffer="15" tvg-id="" tvg-logo="https://www.kodi-tipps.de/wp-content/uploads/2023/01/daddylive-kodi-addon-installieren-banner.jpg" group-title="DaddyLive",Sky Sport Football 
-https://webhdrunns.mizhls.ru/lb/premium460/index.m3u8
-
-#KODIPROP:inputstream.adaptive.stream_headers=origin=https://quest4play.xyz
-#KODIPROP:inputstream.adaptive.stream_headers=referer=https://quest4play.xyz/
-#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36
-#EXTVLCOPT:http-origin=https://quest4play.xyz
-#EXTVLCOPT:http-referrer=https://quest4play.xyz/
-#EXTINF:-1 player-buffer="15" tvg-id="" tvg-logo="https://www.kodi-tipps.de/wp-content/uploads/2023/01/daddylive-kodi-addon-installieren-banner.jpg" group-title="DaddyLive",Sky Sport Uno 
-https://webhdrunns.mizhls.ru/lb/premium461/index.m3u8
