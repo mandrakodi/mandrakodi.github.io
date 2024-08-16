@@ -2,167 +2,83 @@
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=0036bb3fa7e6f2c334d7cba5c28b6caf:217fa35739cd68e90b2cd23322c01312
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 1
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",Eurosport 1
 https://linear311-it-dash1-prd.selector.skycdn.it/016a/313073/FHD/eurosport/master_stereo.mpd
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 1 (Dazn)
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="EUROSPORT",Eurosport 1 (Dazn)
 https://dcf-ak-livedazn.akamaized.net/dashdrm/dazn-linear-029/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=2abd9ff2cd494f829a607250746a1a08:879cc8e7a94e046b4ea77537ac2fe0ec
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 2
-https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport2)/manifest.mpd
+#KODIPROP:inputstream.adaptive.license_key=003670a7034342a4a07c91173818c61c:7b90055c1a1ea34d9090e9ebf6c4db8a
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",Eurosport 2
+https://linear312-it-dash1-prd.selector.skycdn.it/016a/31150/FHD/eurosport2/master_stereo.mpd
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 2 (Dazn)
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="EUROSPORT",Eurosport 2 (Dazn)
 https://dcf-ak-livedazn.akamaized.net/dashdrm/dazn-linear-030/stream.mpd?p=web
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=292681198f7c44a8adbfcdae2605916c:6dc7964041ec945dab5adfc6c4a094f7
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 3
-https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport7)/manifest.mpd
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 3 (Dazn)
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="DAZN",DAZN 1 (PT)
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-060/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=0036422cf4293ae7cf1e7f7062cc29e8:37a223fcc17c087043bc837432fd25d8
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 3 (Sky 251)
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="Sky Sport",Sky 251
 https://linear311-it-dash1-prd.selector.skycdn.it/016a/31917/FHD/skysport251/master_stereo.mpd
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=2717a6c7f97d46098e852c272fbc6c0f:ab835b820974ac22ea68aad675dec05a
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 4
-https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport8)/manifest.mpd
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 4 (Dazn)
-https://dce-de-livedazn.daznedge.net/dash/dazn-linear-061/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=003643bc9d61268c987504fa93b397f6:b8d5767c73ff8bba68d955035b56f4c1
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 4 (Sky 252)
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="Sky Sport",Sky 252
 https://linear312-it-dash1-prd.selector.skycdn.it/016a/32951/FHD/skysport252/master_stereo.mpd
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=9a5be7cf33f548cc80a04ae3731742e3:184f19e461a31e2fa0f56a2dae936609
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 5
-https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport9)/manifest.mpd
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 5 (Dazn)
-https://dce-de-livedazn.daznedge.net/dash/dazn-linear-062/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=0036077996d02761a9d4c29ddfac7466:e83d078779ae5b53e2eb999513d55682
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 5 (Sky 253)
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="Sky Sport",Sky 253
 https://linear311-it-dash1-prd.selector.skycdn.it/016a/32233/FHD/skysport253/master_stereo.mpd
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=98ab5c875f7c43bc946f4db5a412bd05:8b95735181740076941c4b48850d6aa2
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 6
-https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport10)/manifest.mpd
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 6 (Dazn)
-https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-063/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=00369c14c20b78aadb1ec0e3c0e74979:e768767e2c7238d8069887bb36aed7fa
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 6 (Sky 254)
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="Sky Sport",Sky 254
 https://linear312-it-dash1-prd.selector.skycdn.it/016a/31234/FHD/skysport254/master_stereo.mpd
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=3c355aec1a1941aab1902d64bf029736:b9ce0b5eadf3f768e8206c721297fa73
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 7
-https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport11)/manifest.mpd
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 7 (Dazn)
-https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-064/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=0036b781a22ebb0c20c16ac27d5d1448:f309b94acfda720bf1ed5741489f8967
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 7 (Sky 255)
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="Sky Sport",Sky 255
 https://linear311-it-dash1-prd.selector.skycdn.it/016a/32910/FHD/skysport255/master_stereo.mpd
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=fccdc0c4d14c486a9db522c254462095:d773e18f9b4de9d70acbbc102e14423b
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 8
-https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport12)/manifest.mpd
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 8 (Dazn)
-https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-065/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=00366f263859fc1cc82d2c4da6a66ef6:754ae922d113c54349002cd9a88694a4
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 8 (Sky 256)
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="Sky Sport",Sky 256
 https://linear312-it-dash1-prd.selector.skycdn.it/016a/31912/FHD/skysport256/master_stereo.mpd
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=5ee049bddbc947eabcd49c814aa16bce:b91ca136bee9de420572067b195bdaa6
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="OLIMPIADI 2024",Eurosport 9
-https://timlivetu0.cb.ticdn.it/Content/DASH/live/channel(eurosport13)/manifest.mpd
-
-#KODIPROP:inputstream.adaptive.file_type=mpd
-#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 9 (Dazn)
-https://dcf-de-livedazn.daznedge.net/dash/dazn-linear-066/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=0036faeace9872d3ceeb8b1b63f0baa3:dbd41ee944243307d39b7b27f16615a8
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="OLIMPIADI 2024",Eurosport 9 (Sky 257)
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="Sky Sport",Sky 257
 https://linear311-it-dash1-prd.selector.skycdn.it/016a/31775/FHD/skysport257/master_stereo.mpd
 
 #KODIPROP:inputstream.adaptive.license_type=clearkey
@@ -213,5 +129,11 @@ https://linear311-it-dash1-prd.selector.skycdn.it/016a/32233/FHD/skysport253/mas
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=82f8e2a17dac44c0a18f660479349c59:1b144f73e6fefe91cd05f850e2b589d0
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",DAZN 1
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="DAZN",DAZN 1 (IT)
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-024/stream.mpd?p=web
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="DAZN",DAZN LaLiga (ES)
+https://dce-ac-live.cdn.indazn.com/dash/dazn-linear-043/stream.mpd?p=web
