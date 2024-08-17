@@ -231,28 +231,28 @@ https://linear311-it-dash1-prd.selector.skycdn.it/016a/32233/FHD/skysport253/mas
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=00369c14c20b78aadb1ec0e3c0e74979:e768767e2c7238d8069887bb36aed7fa
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="Sky Sport",Sky 254
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",Sport 254
 https://linear312-it-dash1-prd.selector.skycdn.it/016a/31234/FHD/skysport254/master_stereo.mpd
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=0036b781a22ebb0c20c16ac27d5d1448:f309b94acfda720bf1ed5741489f8967
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="Sky Sport",Sky 255
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",Sport 255
 https://linear311-it-dash1-prd.selector.skycdn.it/016a/32910/FHD/skysport255/master_stereo.mpd
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=00366f263859fc1cc82d2c4da6a66ef6:754ae922d113c54349002cd9a88694a4
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="Sky Sport",Sky 256
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",Sport 256
 https://linear312-it-dash1-prd.selector.skycdn.it/016a/31912/FHD/skysport256/master_stereo.mpd
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=0036faeace9872d3ceeb8b1b63f0baa3:dbd41ee944243307d39b7b27f16615a8
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="Sky Sport",Sky 257
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Sky_Sport_-_Logo_2020.svg/512px-Sky_Sport_-_Logo_2020.svg.png" group-title="Sky Sport",Sport 257
 https://linear311-it-dash1-prd.selector.skycdn.it/016a/31775/FHD/skysport257/master_stereo.mpd
 
 #KODIPROP:inputstream.adaptive.license_type=clearkey
@@ -311,19 +311,44 @@ https://linear031-ie-dash1-prd-ak.cdn.skycdp.com/016a/Content/DASH_003_720_120/L
 https://linear009-gb-dash7-prd-ll.cdn.skycdp.com/016a/Content/DASH_003_720_120/Live/channel(skysportspremierleague)/manifest_720.mpd
 
 #KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=00051ad8db73a944abe9ec83ad88987b:100c985696718d923c4b1289c1cf0d7d
+#EXTINF:-1 tvg-logo="https://eu1-prod-images.disco-api.com/2023/07/03/d90c87a7-968b-47b4-bf66-98686bcd043b.png" group-title="TNT Sport",TNT Sport 1
+https://linear001-ie-dash1-prd-ak.cdn.skycdp.com/016a/Content/DASH_003_720_120/Live/channel(tntsport1)/manifest_720.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=00050654545edbcf400de7c11a3ace78:7fc6cab788206f4b2c10fe5225def411
+#EXTINF:-1 tvg-logo="https://eu1-prod-images.disco-api.com/2023/07/03/a2cef6c1-542c-4895-968e-db40ccf822c8.png" group-title="TNT Sport",TNT Sport 2
+https://linear014-ie-dash1-prd-ak.cdn.skycdp.com/016a/Content/DASH_003_720_120/Live/channel(tntsport2)/manifest_720.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=000540adbb30871d80550825b28bc4c3:402edc50e9288aadc551bceaf347a517
+#EXTINF:-1 tvg-logo="https://eu1-prod-images.disco-api.com/2023/07/03/2c51d406-d2dc-49b0-87fa-d240b8baf8ba.png" group-title="TNT Sport",TNT Sport 3
+https://linear001-ie-dash1-prd-ak.cdn.skycdp.com/016a/Content/DASH_003_720_120/Live/channel(tntsport3)/manifest_720.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=0005091188d73981c2bbd51bbe4a81ab:2ee68af747c05c250b6a1c80abe57d2d
+#EXTINF:-1 tvg-logo="https://eu1-prod-images.disco-api.com/2023/07/03/d90c87a7-968b-47b4-bf66-98686bcd043b.png" group-title="TNT Sport",TNT Sport 4
+https://linear014-ie-dash1-prd-ak.cdn.skycdp.com/016a/Content/DASH_003_720_120/Live/channel(tntsport4)/manifest_720.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=5269ab07e6a6db7585324ae20542f191:dba0dccffba1b26f658ec85a616102e8
-#EXTINF:-1 tvg-logo="https://www.thesportsdb.com/images/media/channel/logo/cz682u1628519810.png" group-title="Match! Futbol",Futbol 1
+#EXTINF:-1 tvg-logo="https://www.thesportsdb.com/images/media/channel/logo/cz682u1628519810.png" group-title="Match!",Match! Futbol 1
 https://strm.yandex.ru/kal/match_football1_hd/manifest.mpd
 
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=56f7dcb5d20eeed212ff58620acb8931:76e139c0676ed2d7ae46392ce6fd9e89
-#EXTINF:-1 tvg-logo="https://www.thesportsdb.com/images/media/channel/logo/am4ot71628519853.png" group-title="Match! Futbol",Futbol 2
+#EXTINF:-1 tvg-logo="https://www.thesportsdb.com/images/media/channel/logo/am4ot71628519853.png" group-title="Match!",Match! Futbol 2
 https://strm.yandex.ru/kal/match_football2_hd/manifest.mpd
 
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=b356d2c5bd7b4a71e99485906f6beeed:f2e7cb0fcdfb6a3fc0299eed50d29c97
-#EXTINF:-1 tvg-logo="https://www.thesportsdb.com/images/media/channel/logo/69eju21628519874.png" group-title="Match! Futbol",Futbol 3
+#EXTINF:-1 tvg-logo="https://www.thesportsdb.com/images/media/channel/logo/69eju21628519874.png" group-title="Match!",Match! Futbol 3
 https://strm.yandex.ru/kal/match_football3_hd/manifest.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=bac86c2e302cc86924b4eb01fb6362b3:bdb588d78930a7388123e89739668e16
+#EXTINF:-1 tvg-logo="https://www.thesportsdb.com/images/media/channel/logo/k3gmp81628519750.png" group-title="Match!",Match! TV
+https://strm.yandex.ru/kal/match_tv/manifest.mpd
 
 #KODIPROP:inputstream.adaptive.stream_headers=origin=https://topembed.pw
 #KODIPROP:inputstream.adaptive.stream_headers=referer=https://topembed.pw/
