@@ -32,6 +32,42 @@ https://dcf-ak-livedazn.akamaized.net/dashdrm/dazn-linear-030/stream.mpd?p=web
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-024/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=cfb5e2b73bef4f3c878f25ab86a7451f:0d6712bf2a84edcc93d001a9613f6fec
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN EV 1(IT)
+https://dcb-ak-livedazn.akamaized.net/mduojbdngy391lfr4y0pou9aw/web/stream.mpd?&mta=en&outlet=dazn-italy&plang=it
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=cfb5e2b73bef4f3c878f25ab86a7451f:0d6712bf2a84edcc93d001a9613f6fec
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN EV 2(IT)
+https://dcb-tm-livedazn.dazn.ticdn.it/1dg713cm5b7oq1g5mlqxt8qgey/web/stream.mpd?&mta=en&outlet=dazn-italy&plang=it
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=94e608d4434953d0aea874b46ae6d077:e387422d57d2a7f1184cfb82141533b4
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 staff-id="DaznB1" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN SERIE B 1(IT)
+https://dcb-deit-livedazn.daznedge.net/aiiy0wieu1cb1qiofczcd0ue2/web/stream.mpd?&outlet=dazn-italy&plang=en
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=49d169962b735fb080faf14077ae7b3e:f449b64edf48028b0226e96ea59e0e1d
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 staff-id="DaznB2" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN SERIE B 2(IT)
+https://dca-deit-livedazn.daznedge.net/1wlbeol9eofek1kpygzad2qupe/web/stream.mpd?&outlet=dazn-italy&plang=en
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=1b9e1187fa2a5251ba831293a7045d61:2f76a61d7693b9e3bca88f227e7600ed
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 staff-id="DaznB3" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN SERIE B 3(IT)
+https://dcb-deit-livedazn.daznedge.net/tgyctzr2avvz1hj1daa556u1w/web/stream.mpd?&outlet=dazn-italy&plang=en
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=56d4ec5c89f75e1ba18ad9798f046480:c27bbe6b5a438cb1f05f94c3882bdc89
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
+#EXTINF:-1 staff-id="DaznB4" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",DAZN SERIE B 4(IT)
+https://dcb-ak-livedazn.akamaized.net/1b7pq243dn1zv12gt9e6pl9sj4/web/stream.mpd?&outlet=dazn-italy&plang=en
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg" group-title="DAZN",NFL Nerwork
