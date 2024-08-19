@@ -526,7 +526,7 @@ def callReolver(metodo, parametro):
         img="https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
         logga("CALL myResolver.amstaff for "+parametro)
-        list_item = myResolver.amstaff(parametro)
+        list_item = myResolver.amstaffTest(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
         list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
