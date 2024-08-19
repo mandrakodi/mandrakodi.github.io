@@ -423,4 +423,52 @@ https://strm.yandex.ru/kal/match_football3_hd/manifest.mpd
 #EXTINF:-1 tvg-logo="https://www.thesportsdb.com/images/media/channel/logo/k3gmp81628519750.png" group-title="Match!",Match! TV
 https://strm.yandex.ru/kal/match_tv/manifest.mpd
 
+#KODIPROP:inputstream.adaptive.stream_headers=origin=https://topembed.pw
+#KODIPROP:inputstream.adaptive.stream_headers=referer=https://topembed.pw/
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/127.0.6533.107 Mobile/15E148 Safari/604.1
+#EXTVLCOPT:http-origin=https://topembed.pw
+#EXTVLCOPT:http-referrer=https://topembed.pw/
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE50BbLbQYD6Qkn9NQ357tzDo90sCXElIyMA&s" group-title="Sport TV",Sport TV1
+https://topembed.mizhls.ru/lb/eplayerSPORTTV1/playlist.m3u8
+
+#KODIPROP:inputstream.adaptive.stream_headers=origin=https://topembed.pw
+#KODIPROP:inputstream.adaptive.stream_headers=referer=https://topembed.pw/
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/127.0.6533.107 Mobile/15E148 Safari/604.1
+#EXTVLCOPT:http-origin=https://topembed.pw
+#EXTVLCOPT:http-referrer=https://topembed.pw/
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE50BbLbQYD6Qkn9NQ357tzDo90sCXElIyMA&s" group-title="Sport TV",Sport TV2
+https://topembed.mizhls.ru/lb/eplayerSPORTTV2/playlist.m3u8
+
+#KODIPROP:inputstream.adaptive.stream_headers=origin=https://topembed.pw
+#KODIPROP:inputstream.adaptive.stream_headers=referer=https://topembed.pw/
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/127.0.6533.107 Mobile/15E148 Safari/604.1
+#EXTVLCOPT:http-origin=https://topembed.pw
+#EXTVLCOPT:http-referrer=https://topembed.pw/
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE50BbLbQYD6Qkn9NQ357tzDo90sCXElIyMA&s" group-title="Sport TV",Sport TV3
+https://topembed.mizhls.ru/lb/eplayerSPORTTV3/playlist.m3u8
+
+#KODIPROP:inputstream.adaptive.stream_headers=origin=https://topembed.pw
+#KODIPROP:inputstream.adaptive.stream_headers=referer=https://topembed.pw/
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/127.0.6533.107 Mobile/15E148 Safari/604.1
+#EXTVLCOPT:http-origin=https://topembed.pw
+#EXTVLCOPT:http-referrer=https://topembed.pw/
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE50BbLbQYD6Qkn9NQ357tzDo90sCXElIyMA&s" group-title="Sport TV",Sport TV4
+https://topembed.mizhls.ru/lb/eplayerSPORTTV4/playlist.m3u8
+
+#KODIPROP:inputstream.adaptive.stream_headers=origin=https://topembed.pw
+#KODIPROP:inputstream.adaptive.stream_headers=referer=https://topembed.pw/
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/127.0.6533.107 Mobile/15E148 Safari/604.1
+#EXTVLCOPT:http-origin=https://topembed.pw
+#EXTVLCOPT:http-referrer=https://topembed.pw/
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE50BbLbQYD6Qkn9NQ357tzDo90sCXElIyMA&s" group-title="Sport TV",Sport TV5
+https://topembed.mizhls.ru/lb/eplayerSPORTTV5/playlist.m3u8
+
+#KODIPROP:inputstream.adaptive.stream_headers=origin=https://topembed.pw
+#KODIPROP:inputstream.adaptive.stream_headers=referer=https://topembed.pw/
+#KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/127.0.6533.107 Mobile/15E148 Safari/604.1
+#EXTVLCOPT:http-origin=https://topembed.pw
+#EXTVLCOPT:http-referrer=https://topembed.pw/
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE50BbLbQYD6Qkn9NQ357tzDo90sCXElIyMA&s" group-title="Sport TV",Sport TV6
+https://topembed.mizhls.ru/lb/eplayerSPORTTV6/playlist.m3u8
+
 
