@@ -1,8 +1,8 @@
-versione='1.2.45'
+versione='1.2.46'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 31.05.2024
+# Last update: 19.08.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
