@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.79'
+versione='1.2.80'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 13.08.2024
+# Last update: 19.08.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -852,19 +852,43 @@ def daddyFind(parIn):
 
     return video_url
 
+def antenaCode(codeIn=None):
+    import re
+    video_urls = []
+    randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
+    randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+    link="https://webufffit.mizhls.ru/lb/prima"+codeIn+"/index.m3u8"
+    refe="https://1qwebplay.xyz/"
+    origin="https://1qwebplay.xyz"
+    
+    final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
+        
+    video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
+    return video_urls
+
+
+
 def antena(parIn=None):
     img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
     video_urls = []
     logga('PAR_ANTENA: '+parIn)
-    video_url = daddyFind(parIn)
-    logga('URL ANTENA: '+video_url)
-    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
-    final_url = video_url + "|Connection=keep-alive&Referer=https://viwlivehdplay.ru/&Origin=https://viwlivehdplay.ru&User-Agent="+randomUa
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://antenasports.ru/'}).content
+    if PY3:
+        page_data = page_data.decode('utf-8')
+    iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
+    logga('IFRAME ANTENA: '+iframe_url)
     
-    video_urls.append((final_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi", img))
+    arrL=iframe_url.split("=")
+    idCh=arrL[1]
+    logga('IDCH ANTENA: '+idCh)
     
-    #return video_urls
-
+    randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+    link="https://webufffit.mizhls.ru/lb/"+idCh+"/index.m3u8"
+    refe="https://1qwebplay.xyz/"
+    origin="https://1qwebplay.xyz"
+    
+    final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
+    
     liz = xbmcgui.ListItem('AntenaSport', path=final_url)
     liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
     liz.setMimeType('application/x-mpegURL')
@@ -1147,6 +1171,21 @@ def PlayStream(link):
         liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
     
     return liz
+def amstaffTest(parIn):
+    link="https://linear310-it-dash1-prd.selector.skycdn.it/016a/32559/FHD/skysporttennis/master.mpd"
+    key64="0036fb7c564c4eb99e310f5fa82ab2f2:647f07b6858a669456e73ca103b4c2c0"
+    liz = xbmcgui.ListItem('Amstaff', path=link)
+    liz.setMimeType('application/dash+xml')
+    liz.setContentLookup(False)
+    liz.setProperty('inputstream', 'inputstream.adaptive')
+    liz.setProperty('inputstream.adaptive.manifest_type', 'mpd')
+    liz.setProperty('inputstream.adaptive.file_type', 'mpd')
+    liz.setProperty('inputstream.adaptive.license_type', 'clearkey')
+    liz.setProperty('inputstream.adaptive.license_key', key64)
+    liz.setProperty('inputstream.adaptive.stream_headers', "user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager")
+    return liz
+
+
 
 def amstaff(parIn):
     import base64, urllib.parse
@@ -1170,8 +1209,8 @@ def amstaff(parIn):
     liz.setMimeType('application/dash+xml')
     liz.setContentLookup(False)
     liz.setProperty('inputstream', 'inputstream.adaptive')
-    liz.setProperty('inputstream.adaptive.manifest_type', 'mpd')
-    liz.setProperty('inputstream.adaptive.license_type', 'org.w3.clearkey')
+    liz.setProperty('inputstream.adaptive.file_type', 'mpd')
+    liz.setProperty('inputstream.adaptive.license_type', 'clearkey')
     liz.setProperty('inputstream.adaptive.license_key', key64)
     liz.setProperty('inputstream.adaptive.stream_headers', phd)
     liz.setProperty('inputstream.adaptive.manifest_headers', phd)
@@ -4943,6 +4982,7 @@ def run (action, params=None):
         'nopayMenu':nopayMenu,
         'menuIstorm':menuIstorm,
         'daddyCode':daddyCode,
+        'antenaCode':antenaCode,
         'infoCode':infoCode,
         'imdbList':imdbList,
         'frame':getSourceFrame,
