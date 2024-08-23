@@ -1,3 +1,4 @@
+
 #EXTM3U player-buffer="15" 
 
 #KODIPROP:inputstream.adaptive.file_type=mpd
@@ -567,4 +568,43 @@ https://webtvstream.bhtelecom.ba/hls6/arena6.mpd
 #EXTINF:-1 group-title="ARENA SPORT" tvg-logo="https://d18qjk21m0yx5q.cloudfront.net/wp-content/uploads/2022/09/EPL.png",Arena Sport Premier League
 https://webtvstream.bhtelecom.ba/hls6/premier_league.mpd
 
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=000b0e3422812fcf3d1eb8cdf7511193:1fe928a3793feb3739f293b0b1b81d1d
+#EXTINF:-1 staff-id="Bundesliga1" tvg-logo="https://upload.wikimedia.org/wikipedia/it/thumb/9/98/Logo_Bundesliga.svg/512px-Logo_Bundesliga.svg.png" group-title="Bundesliga",Bundesliga 1
+https://linear205-de-dash1-prd-ak.cdn12.skycdp.com/031122-50/index_stereo.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=000befd7c86292bb122e08bcfc0a06c2:d1cdb3b40de46f75910b2b69ffea9dab
+#EXTINF:-1 staff-id="Bundesliga2" tvg-logo="https://upload.wikimedia.org/wikipedia/it/thumb/9/98/Logo_Bundesliga.svg/512px-Logo_Bundesliga.svg.png" group-title="Bundesliga",Bundesliga 2
+https://linear204-de-dash1-prd-ak.cdn12.skycdp.com/031123-50/index_stereo.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=000b2bff43fd13add0f7e3fd8a7d3066:cf859a91af1aed3d87b148e8fcb9111f
+#EXTINF:-1 staff-id="Bundesliga3" tvg-logo="https://upload.wikimedia.org/wikipedia/it/thumb/9/98/Logo_Bundesliga.svg/512px-Logo_Bundesliga.svg.png" group-title="Bundesliga",Bundesliga 3
+https://linear204-de-dash1-prd-ak.cdn12.skycdp.com/031124-50/index_stereo.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=000ba721a0fffe492656276b76701d85:746161b7ed203532f40ac3f3852bd12a
+#EXTINF:-1 staff-id="Bundesliga4" tvg-logo="https://upload.wikimedia.org/wikipedia/it/thumb/9/98/Logo_Bundesliga.svg/512px-Logo_Bundesliga.svg.png" group-title="Bundesliga",Bundesliga 4
+https://linear204-de-dash1-prd-ak.cdn12.skycdp.com/031125-50/index_stereo.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=000b4dd98709c99e7d3ca61284971da3:d37b0eafb4859024bfe415c37b967ce2
+#EXTINF:-1 staff-id="Bundesliga5 tvg-logo="https://upload.wikimedia.org/wikipedia/it/thumb/9/98/Logo_Bundesliga.svg/512px-Logo_Bundesliga.svg.png" group-title="Bundesliga",Bundesliga 5
+https://linear204-de-dash1-prd-ak.cdn12.skycdp.com/031126-50/index_stereo.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=000b93f4cd3cf2e0a79b4f570de9064e:c04740423c9d905fb2b42c94984a07c2
+#EXTINF:-1 staff-id="Bundesliga6 tvg-logo="https://upload.wikimedia.org/wikipedia/it/thumb/9/98/Logo_Bundesliga.svg/512px-Logo_Bundesliga.svg.png" group-title="Bundesliga",Bundesliga 6
+https://linear204-de-dash1-prd-ak.cdn12.skycdp.com/031127-50/index_stereo.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=000bd8b6c5f00ed56c0bc8a34b2d2ca4:5e298929447466673d71435c2d7fa6c0
+#EXTINF:-1 staff-id="Bundesliga7 tvg-logo="https://upload.wikimedia.org/wikipedia/it/thumb/9/98/Logo_Bundesliga.svg/512px-Logo_Bundesliga.svg.png" group-title="Bundesliga",Bundesliga 7
+https://linear204-de-dash1-prd-ak.cdn12.skycdp.com/031128-50/index_stereo.mpd
+
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=000b515a54f277731478899911227339:5350da39164e676184b82f30953cf0a9
+#EXTINF:-1 staff-id="Bundesliga8 tvg-logo="https://upload.wikimedia.org/wikipedia/it/thumb/9/98/Logo_Bundesliga.svg/512px-Logo_Bundesliga.svg.png" group-title="Bundesliga",Bundesliga 8
+https://linear204-de-dash1-prd-ak.cdn12.skycdp.com/031129-50/index_stereo.mpd
 
