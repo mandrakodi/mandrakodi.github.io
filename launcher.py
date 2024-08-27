@@ -1,8 +1,8 @@
-versione='1.2.46'
+versione='1.2.47'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 19.08.2024
+# Last update: 27.08.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -594,8 +594,8 @@ def callReolver(metodo, parametro):
             list_item.setProperty('IsPlayable', 'true')
             url = get_url(action='play', url=retVal)
             xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
-        
-    if metodo != "mac" and metodo != "scws":
+    ppop=0    
+    if metodo != "mac" and metodo != "scws" and ppop==1:
         viewmode="51"
         newTit="[COLOR gold]OPEN WEB LINK (WISE)[/COLOR]"
         list_item = xbmcgui.ListItem(label=newTit)
