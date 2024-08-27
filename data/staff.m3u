@@ -1,138 +1,137 @@
-
 #EXTM3U player-buffer="15" 
 
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",Eurosport 1 (SKY)
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=0036bb3fa7e6f2c334d7cba5c28b6caf:217fa35739cd68e90b2cd23322c01312
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",Eurosport 1 (SKY)
 https://linear311-it-dash1-prd.selector.skycdn.it/016a/313073/FHD/eurosport/master_stereo.mpd
 
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="EUROSPORT",Eurosport 1 (IT)
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="EUROSPORT",Eurosport 1 (IT)
 https://dcf-ak-livedazn.akamaized.net/dashdrm/dazn-linear-029/stream.mpd?p=web
 
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",Eurosport 2 (SKY)
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=003670a7034342a4a07c91173818c61c:7b90055c1a1ea34d9090e9ebf6c4db8a
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",Eurosport 2 (SKY)
 https://linear312-it-dash1-prd.selector.skycdn.it/016a/31150/FHD/eurosport2/master_stereo.mpd
 
+#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="EUROSPORT",Eurosport 2 (IT)
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
-#EXTINF:-1 tvg-logo="https://i.imgur.com/zC6djqm.jpeg" group-title="EUROSPORT",Eurosport 2 (IT)
 https://dcf-ak-livedazn.akamaized.net/dashdrm/dazn-linear-030/stream.mpd?p=web
 
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",EuroSport 1 (DE)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",EuroSport 1 (DE)
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-027/stream.mpd?p=web
 
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",EuroSport 2 (DE)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",EuroSport 2 (DE)
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-028/stream.mpd?p=web
 
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",EuroSport 1 (ES)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",EuroSport 1 (ES)
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-031/stream.mpd?p=web
 
+#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",EuroSport 2 (ES)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 tvg-logo="https://i.imgur.com/oopyNyP.jpeg" group-title="EUROSPORT",EuroSport 2 (ES)
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-032/stream.mpd?p=web
 
+#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN 1 (IT)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN 1 (IT)
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-024/stream.mpd?p=web
 
+#EXTINF:-1 staff-id="DaznEV1_IT" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN EV 1(IT)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=cfb5e2b73bef4f3c878f25ab86a7451f:0d6712bf2a84edcc93d001a9613f6fec
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 staff-id="DaznEV1_IT" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN EV 1(IT)
 https://dcb-ak-livedazn.akamaized.net/tj44r07keq8b1d6tdqcypzm3n/web/stream.mpd?&mta=en&outlet=dazn-italy&plang=it
 
+#EXTINF:-1 staff-id="DaznEV2_IT" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN EV 2(IT)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=cfb5e2b73bef4f3c878f25ab86a7451f:0d6712bf2a84edcc93d001a9613f6fec
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 staff-id="DaznEV2_IT" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN EV 2(IT)
 https://dcb-tm-livedazn.dazn.ticdn.it/1dg713cm5b7oq1g5mlqxt8qgey/web/stream.mpd?&mta=en&outlet=dazn-italy&plang=it
 
+#EXTINF:-1 staff-id="DaznB1" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN SERIE B 1(IT)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=828af0b486d65b8bb161c2cf46331779:aae0269354b0570261d35417f0cefab5
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 staff-id="DaznB1" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN SERIE B 1(IT)
 https://dca-deit-livedazn.daznedge.net/6irdrwz6catp1blki5cze6a32/web/stream.mpd?&outlet=dazn-italy&plang=en
 
+#EXTINF:-1 staff-id="DaznB2" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN SERIE B 2(IT)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=c32992434dc45ce1b483966e5c9909fd:317e3c030fc3746efcce884ae217ba15
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 staff-id="DaznB2" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN SERIE B 2(IT)
 https://dcb-deit-livedazn.daznedge.net/jb19qwa5vv5q13zfzz470qhrc/web/stream.mpd?&outlet=dazn-italy&plang=en
 
+#EXTINF:-1 staff-id="DaznB3" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN SERIE B 3(IT)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=aed095b6fc675851ba665dc47e92b3b6:31d7451fff971c66fb3823ca35837bde
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 staff-id="DaznB3" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN SERIE B 3(IT)
 https://dcb-deit-livedazn.daznedge.net/o82bs40ba11q1d1v019swhosi/web/stream.mpd?&outlet=dazn-italy&plang=en
 
+#EXTINF:-1 staff-id="DaznB4" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN SERIE B 4(IT)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=bb313a30b7ad508484a4c7b25ed6deee:d83baa50014ddd5b20efd1328a1749b7
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 staff-id="DaznB4" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN SERIE B 4(IT)
 https://dcb-tm-livedazn.dazn.ticdn.it/l0xn98e4fhoa1qslp67rfu2ca/web/stream.mpd?&outlet=dazn-italy&plang=en
 
+#EXTINF:-1 staff-id="DaznB4" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN SERIE B 5(IT)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=a4a8d186f98852769b9424cc7d497073:4ec8613dec794329ef5eb2a004ff00b2
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 staff-id="DaznB4" tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",DAZN SERIE B 5(IT)
 https://dcb-deit-livedazn.daznedge.net/nren50pajbmh1of4i7vang786/web/stream.mpd?&outlet=dazn-italy&plang=en
 
+#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",Milan TV
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",Milan TV
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-025/stream.mpd?p=web
 
+#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",Inter TV
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",Inter TV
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-033/stream.mpd?p=web
 
+#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",MLB
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",MLB
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-026/stream.mpd?p=web
 
+#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",NBA TV
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",NBA TV
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-035/stream.mpd?p=web
 
+#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",NFL Nerwork
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",NFL Nerwork
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-023/stream.mpd?p=web
 
+#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",Rally TV
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=8ab47741930c476780515f9a00decb0a:7ab4b9ae5a48aa526e511a913b832769
 #KODIPROP:inputstream.adaptive.stream_headers=user-agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager
-#EXTINF:-1 tvg-logo="https://cdn.icon-icons.com/icons2/2389/PNG/512/dazn_logo_icon_145353.png" group-title="DAZN",Rally TV
 https://dce-de-livedazn.daznedge.net/dash/dazn-linear-039/stream.mpd?p=web
 
 #KODIPROP:inputstream.adaptive.license_type=clearkey
