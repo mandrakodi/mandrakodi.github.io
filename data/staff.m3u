@@ -1,5 +1,17 @@
 #EXTM3U player-buffer="15" 
 
+#EXTINF:-1 staff-id="skyuno" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Sky_Uno_-_Logo_2018.svg/512px-Sky_Uno_-_Logo_2018.svg.png" group-title="SKY TV",Sky Uno
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=003610b8556000936e48061cdb4ee11a:2cd6bcc2160aa6ec048e5a5f7a0f73c8
+https://linear313-it-dash1-prd-akp2.cdn13.skycdp.com/016a/32477/FHD/skyuno/master_stereo.mpd
+
+#EXTINF:-1 staff-id="skyatlantic" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Sky_Atlantic_-_Logo_2020.svg/512px-Sky_Atlantic_-_Logo_2020.svg.png" group-title="SKY TV",Sky Atlantic
+#KODIPROP:inputstream.adaptive.file_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=003610b8556000936e48061cdb4ee11a:2cd6bcc2160aa6ec048e5a5f7a0f73c8
+https://linear315-it-dash1-prd-akp2.cdn13.skycdp.com/016a/31226/FHD/skyatlantic/master_stereo.mpd
+
 #EXTINF:-1 staff-id="Eurosport1_IT" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Eurosport_1_Logo_2015.svg/512px-Eurosport_1_Logo_2015.svg.png" group-title="EUROSPORT",Eurosport 1 (SKY)
 #KODIPROP:inputstream.adaptive.file_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
