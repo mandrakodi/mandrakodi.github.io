@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.80'
+versione='1.2.81'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 19.08.2024
+# Last update: 12.09.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -934,12 +934,12 @@ def daddyCode(codeIn=None):
     video_urls = []
     randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
     randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
-    link="https://webhdrunns.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
+    link="https://xyzdddd.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
     link5="https://ddy5.mizhls.ru/ddy5/premium"+codeIn+"/tracks-v1a1/mono.m3u8"
     link6="https://ddy6.mizhls.ru/ddy6/premium"+codeIn+"/tracks-v1a1/mono.m3u8"
     refe="https://quest4play.xyz/"
     origin="https://quest4play.xyz"
-    refe2="https://webhdrunns.mizhls.ru/"
+    refe2="https://xyzdddd.mizhls.ru/"
     
     
     #final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
@@ -1152,7 +1152,7 @@ def PlayStream(link):
     arrL=link.split("stream-")
     codeIn=arrL[1].replace(".php", "")
     randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
-    link="https://webhdrunns.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
+    link="https://xyzdddd.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
     refe="https://quest4play.xyz/"
     origin="https://quest4play.xyz"
     
