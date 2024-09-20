@@ -1,8 +1,8 @@
-versione='1.2.47'
+versione='1.2.48'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 27.08.2024
+# Last update: 20.09.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -501,6 +501,26 @@ def simpleRegex(page, find):
     logga("urlSteam:\n"+urlSteam)	
     return urlSteam
 
+def jsonrpcRequest(method, params=None):
+    request = {
+        "jsonrpc": "2.0",
+        "method": method,
+        "params": params if params else {},
+        "id": 1
+    }
+
+    response = xbmc.executeJSONRPC(json.dumps(request))
+    return json.loads(response)
+
+def getInstalledVersion():
+    kodiVersionInstalled = 0
+    # retrieve kodi installed version
+    jsonProperties = jsonrpcRequest("Application.GetProperties", {"properties": ["version", "name"]})
+    kodiVersionInstalled = int(jsonProperties['result']['version']['major'])
+    
+    return kodiVersionInstalled
+
+
 def callReolver(metodo, parametro):
     global viewmode
     import myResolver
@@ -522,8 +542,16 @@ def callReolver(metodo, parametro):
         xbmcplugin.setContent(_handle, 'videos')
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     elif metodo=="amstaff":
+        kodi_vers=getInstalledVersion()
+        if kodi_vers<21:
+            msgBox("Per visualizzare questo link, e necessaria la versione 21, o superiore, di Kodi")
+            return
+        if checkPluginInstalled("inputstream.adaptive") == False:
+            msgBox("Installare l'addon [B]YouTube[/B] dalla repository di Kodi")
+            return
+        
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
-        img="https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png"
+        img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
         logga("CALL myResolver.amstaff for "+parametro)
         list_item = myResolver.amstaffTest(parametro)
@@ -539,6 +567,26 @@ def callReolver(metodo, parametro):
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
         logga("CALL myResolver.antena for "+parametro)
         list_item = myResolver.antena(parametro)
+        list_item.setLabel(newTit)
+        list_item.setLabel2(newTit)
+        list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url=list_item.getPath()
+        xbmcplugin.setContent(_handle, 'movies')
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+    elif metodo=="mpd":
+        logga("PAR: "+parametro)
+        arrTmp=parametro.split("____")
+        link=arrTmp[0]
+        newTit="[COLOR lime]PLAY MPD[/COLOR]"
+        try:
+            newTit="[COLOR lime]PLAY "+arrTmp[1]+"[/COLOR]"
+        except:
+            pass
+        fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
+       
+        logga("CALL myResolver.play_mpd for "+link)
+        list_item = myResolver.play_mpd(link)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
         list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
