@@ -1174,7 +1174,6 @@ def PlayStream(link):
 def amstaffTest(parIn):
     import base64
     parametro=base64.b64decode(parIn).decode("utf-8")
-    logga("AMSTAFF_PAR: "+parametro)
     arrT=parametro.split("|")
     link=arrT[0]
     key64=arrT[1]
