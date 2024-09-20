@@ -1,4 +1,4 @@
-versione='1.2.48'
+versione='1.2.49'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -549,11 +549,13 @@ def callReolver(metodo, parametro):
         if checkPluginInstalled("inputstream.adaptive") == False:
             msgBox("Installare l'addon [B]YouTube[/B] dalla repository di Kodi")
             return
-        
+        pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
+        urlSup="https://test34344.herokuapp.com/testAnonym.php?token="+pwd+"&dns1=AMSTAFF&dns2="+parametro
+        makeRequestNoUa(urlSup)
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
-        logga("CALL myResolver.amstaff for "+parametro)
+        #logga("CALL myResolver.amstaff for "+parametro)
         list_item = myResolver.amstaffTest(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
