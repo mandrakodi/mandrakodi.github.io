@@ -1,8 +1,8 @@
-versione='1.2.49'
+versione='1.2.50'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 20.09.2024
+# Last update: 23.09.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -516,7 +516,7 @@ def getInstalledVersion():
     kodiVersionInstalled = 0
     # retrieve kodi installed version
     jsonProperties = jsonrpcRequest("Application.GetProperties", {"properties": ["version", "name"]})
-    kodiVersionInstalled = int(jsonProperties['result']['version']['major'])
+    kodiVersionInstalled = str(jsonProperties['result']['version']['major'])+"@@"+str(jsonProperties['result']['version']['minor'])
     
     return kodiVersionInstalled
 
@@ -542,15 +542,31 @@ def callReolver(metodo, parametro):
         xbmcplugin.setContent(_handle, 'videos')
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     elif metodo=="amstaff":
-        kodi_vers=getInstalledVersion()
-        if kodi_vers<21:
-            msgBox("Per visualizzare questo link, e necessaria la versione 21, o superiore, di Kodi")
+        kodi_version=getInstalledVersion()
+        arrVer=kodi_version.split("@@")
+        kodi_vers=int(arrVer[0])
+        kodi_minVers=int(arrVer[1])
+        if kodi_vers<21 or (kodi_vers==21 and kodi_minVers<1):
+            msgBox("Per visualizzare questo link, è necessaria la versione [B]21.1[/B], o superiore, di Kodi ["+str(kodi_vers)+"."+str(kodi_minVers)+"]")
             return
+        
         if checkPluginInstalled("inputstream.adaptive") == False:
             msgBox("Installare l'addon [B]YouTube[/B] dalla repository di Kodi")
             return
+        
+        version = xbmcaddon.Addon(id="inputstream.adaptive").getAddonInfo("version")
+       
+        arrVerAd = version.split(".")
+        major = int(arrVerAd[0])
+        medium = int(arrVerAd[1])
+        minor = int(arrVerAd[2])
+
+        if major<21 or (major==21 and medium < 5) or (major==21 and medium == 5 and minor < 4):
+            msgBox("Per visualizzare questo link, è necessaria la versione [B]21.5.4[/B], o superiore, di [B]inputstream.adaptive[/B] ["+str(major)+"."+str(medium)+"."+str(minor)+"]")
+            return
+
         pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
-        urlSup="https://test34344.herokuapp.com/testAnonym.php?token="+pwd+"&dns1=AMSTAFF&dns2="+parametro
+        urlSup="https://test34344.herokuapp.com/testAnonym.php?token="+pwd+"&dns1=AMSTAFF&dns2="+version
         makeRequestNoUa(urlSup)
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
