@@ -1,4 +1,4 @@
-versione='1.2.50'
+versione='1.2.51'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -547,7 +547,7 @@ def callReolver(metodo, parametro):
         kodi_vers=int(arrVer[0])
         kodi_minVers=int(arrVer[1])
         if kodi_vers<21 or (kodi_vers==21 and kodi_minVers<1):
-            msgBox("Per visualizzare questo link, è necessaria la versione [B]21.1[/B], o superiore, di Kodi ["+str(kodi_vers)+"."+str(kodi_minVers)+"]")
+            msgBox("Per visualizzare questo link, e' necessaria la versione [B]21.1[/B], o superiore, di Kodi ["+str(kodi_vers)+"."+str(kodi_minVers)+"]")
             return
         
         if checkPluginInstalled("inputstream.adaptive") == False:
@@ -562,7 +562,7 @@ def callReolver(metodo, parametro):
         minor = int(arrVerAd[2])
 
         if major<21 or (major==21 and medium < 5) or (major==21 and medium == 5 and minor < 4):
-            msgBox("Per visualizzare questo link, è necessaria la versione [B]21.5.4[/B], o superiore, di [B]inputstream.adaptive[/B] ["+str(major)+"."+str(medium)+"."+str(minor)+"]")
+            msgBox("Per visualizzare questo link, e' necessaria la versione [B]21.5.4[/B], o superiore, di [B]inputstream.adaptive[/B] ["+str(major)+"."+str(medium)+"."+str(minor)+"]")
             return
 
         pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
