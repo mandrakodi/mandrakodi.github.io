@@ -1,8 +1,8 @@
-versione='1.2.51'
+versione='1.2.52'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 23.09.2024
+# Last update: 24.09.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -561,8 +561,8 @@ def callReolver(metodo, parametro):
         medium = int(arrVerAd[1])
         minor = int(arrVerAd[2])
 
-        if major<21 or (major==21 and medium < 5) or (major==21 and medium == 5 and minor < 4):
-            msgBox("Per visualizzare questo link, e' necessaria la versione [B]21.5.4[/B], o superiore, di [B]inputstream.adaptive[/B] ["+str(major)+"."+str(medium)+"."+str(minor)+"]")
+        if major<21 or (major==21 and medium < 5) or (major==21 and medium == 5 and minor < 2):
+            msgBox("Per visualizzare questo link, e' necessaria la versione [B]21.5.2[/B], o superiore, di [B]inputstream.adaptive[/B] ["+str(major)+"."+str(medium)+"."+str(minor)+"]")
             return
 
         pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
