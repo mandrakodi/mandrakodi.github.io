@@ -1,8 +1,8 @@
-versione='1.2.53'
+versione='1.2.54'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 24.09.2024
+# Last update: 25.09.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -447,6 +447,13 @@ def jsonToChannels(strJson):
             fanart = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
             genre = "generic"
             info = ""
+            is_enabled = True
+
+            if 'enabled' in channel:
+                is_enabled = channel["enabled"]
+            if is_enabled == False:
+                continue
+
             if 'name' in channel:
                 try:
                     titolo = channel["name"]
