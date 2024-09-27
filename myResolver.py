@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.83'
+versione='1.2.84'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 20.09.2024
+# Last update: 27.09.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1174,6 +1174,7 @@ def PlayStream(link):
 def amstaffTest(parIn):
     import base64
     parametro=base64.b64decode(parIn).decode("utf-8")
+    headers={'user-agent':'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager', 'Referer':'https://dce-de-livedazn.daznedge.net', 'Origin':'https://dce-de-livedazn.daznedge.net'}
     arrT=parametro.split("|")
     link=arrT[0]
     key64=arrT[1]
@@ -1181,10 +1182,11 @@ def amstaffTest(parIn):
     liz.setMimeType('application/dash+xml')
     liz.setContentLookup(False)
     liz.setProperty('inputstream', 'inputstream.adaptive')
+    liz.setProperty('inputstream.adaptive.file_type', 'mpd')
     liz.setProperty('inputstream.adaptive.drm_legacy', 'org.w3.clearkey|'+key64)
-    liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager')
-    liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager')
-    ##liz.setProperty('inputstream.adaptive.stream_params', 'p=web')
+    if "dazn-linear" in link:
+        liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager&Referer=https://dce-de-livedazn.daznedge.net/&Origin=https://dce-de-livedazn.daznedge.net')
+        liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager&Referer=https://dce-de-livedazn.daznedge.net/&Origin=https://dce-de-livedazn.daznedge.net')
     return liz
 
 
