@@ -1,14 +1,14 @@
-versione='1.1.0'
+versione='1.1.1'
 from datetime import datetime
 
-import requests
+import requests, logging
 import math
 import re
 
 try:
     from urllib.parse import quote as quoter
     from urllib.parse import unquote as unquoter
-    from urllib.parse import urlparse
+    from urllib.parse import urlparse, urlsplit
     from urllib.parse import parse_qs
 
 except ImportError:
@@ -20,9 +20,18 @@ class PortalApi:
 
     def __init__(self, url, mac=None, **kwargs):
 
-        if not mac:
-            url, mac = url.split("?")
+        self.params = []
 
+        if not mac:
+            match = re.compile(r'(.*?)\?(.*?)($|(&.*?$))', re.MULTILINE).findall(url)[0]
+            url = match[0]
+            mac = match[1]
+            try:
+                self.params = re.compile(r'([^&?]*?)=([^&?]*)').findall(match[2])
+            except:
+                pass
+
+        # ([^&?]*?)=([^&?]*)
         self.url = url
         self.mac = mac
         self.api_url = self.url + "/portal.php?"
@@ -91,7 +100,8 @@ class PortalApi:
             for gen in res:
                 if "all" == gen["title"].encode('utf-8', errors='ignore').lower().decode():
                     continue
-                ret.append((gen["id"], gen["title"].encode('utf-8', errors='ignore').decode(), self.url + "?" + self.mac))
+                ret.append(
+                    (gen["id"], gen["title"].encode('utf-8', errors='ignore').decode(), self.url + "?" + self.mac))
 
             # print(ret)
             return ret
@@ -213,8 +223,19 @@ class PortalApi:
             pass
 
         # link = re.sub(r"(http.*?//.*?:[\d]+)", self.url, link, 0, re.MULTILINE)
+        params = ""
+        if self.params:
+            for par in self.params:
+                params += "=".join(par) + "&"
 
-        return link
+        params = params.strip("&")
+
+        if "User-Agent" not in params:
+            params += "!User-Agent=Lavf53.32.100"
+        if "Icy-MetaData" not in params:
+            params += "&Icy-MetaData=1"
+
+        return link + "|" + params
 
     def do_request(self, url, is_get=False):
         self.set_headers()
@@ -222,20 +243,30 @@ class PortalApi:
 
         parsed_url = urlparse(request_url)
         payload = parse_qs(parsed_url.query)
-        print(payload)
+        # print(payload)
         try:
             if is_get:
                 res = requests.get(self.api_url, headers=self.request_headers, params=payload, timeout=1)
             else:
                 res = requests.post(self.api_url, headers=self.request_headers, data=payload, timeout=1)
-            print(res.text)
+            # print(res.text)
 
             if res.status_code > 399:
                 return None
         except Exception as e:
             print(e)
             return None
+        logging.warning("MANDRA_PORTAL: "+res.text)
 
+        try:
+            if "AVVISO" in res.text and "680/13/CONS" in res.text:
+                import xbmcgui
+                dialog = xbmcgui.Dialog()
+                mess="La lista e' stata bloccata dalla magistratura.[CR]Prova ad usare una VPN"
+                dialog.ok("MandraKodi", mess)
+                return None
+        except Exception:
+            pass
         jres = res.json()
 
         if "js" in jres:
