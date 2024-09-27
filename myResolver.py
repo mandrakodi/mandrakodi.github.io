@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.84'
+versione='1.2.85'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1184,7 +1184,7 @@ def amstaffTest(parIn):
     liz.setProperty('inputstream', 'inputstream.adaptive')
     liz.setProperty('inputstream.adaptive.file_type', 'mpd')
     liz.setProperty('inputstream.adaptive.drm_legacy', 'org.w3.clearkey|'+key64)
-    if "dazn-linear" in link:
+    if "dazn-linear" in link or "livedazn" in link:
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager&Referer=https://dce-de-livedazn.daznedge.net/&Origin=https://dce-de-livedazn.daznedge.net')
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager&Referer=https://dce-de-livedazn.daznedge.net/&Origin=https://dce-de-livedazn.daznedge.net')
     return liz
