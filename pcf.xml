@@ -28,6 +28,10 @@
 			<filename>co.wuffy.player</filename>
 			<hidexbmc>true</hidexbmc>
 		</player>
+		<player name="Amnis" type="ExternalPlayer" audio="false" video="true">
+			<filename>com.amnis</filename>
+			<hidexbmc>true</hidexbmc>
+		</player>
 		<player name="Chrome" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.android.chrome</filename>
 			<hidexbmc>true</hidexbmc>
@@ -68,6 +72,7 @@
 	
 	<rules action="overwrite">
 		<rule name="acestream" filename="acestream://.*" player="AceStreamMedia" />
+		<rule name="torrent" filename="magnet:.*" player="Amnis" />
 		<rule name="wise" filename=".*extPL=wise" player="Wiseplay" />
 		<rule name="other" video="true" player="videodefaultplayer" />
 	</rules>
