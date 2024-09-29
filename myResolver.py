@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.85'
+versione='1.2.86'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 27.09.2024
+# Last update: 29.09.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1184,9 +1184,14 @@ def amstaffTest(parIn):
     liz.setProperty('inputstream', 'inputstream.adaptive')
     liz.setProperty('inputstream.adaptive.file_type', 'mpd')
     liz.setProperty('inputstream.adaptive.drm_legacy', 'org.w3.clearkey|'+key64)
-    if "dazn-linear" in link or "livedazn" in link:
-        liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager&Referer=https://dce-de-livedazn.daznedge.net/&Origin=https://dce-de-livedazn.daznedge.net')
-        liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent=Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager&Referer=https://dce-de-livedazn.daznedge.net/&Origin=https://dce-de-livedazn.daznedge.net')
+    ua="Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManage"
+    if "dazn-linear" in link or "livedazn" in link or "voddazn" in link:
+        arrLL2=link.split("/")
+        host="https://"+arrLL2[2]
+        if "dazn-linear-029" in link or "dazn-linear-030" in link:
+            ua="Dalvik/2.1.0 (Linux; U; Android 10; STK-L22 Build/HUAWEISTK-L22)"
+        liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
+        liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     return liz
 
 
