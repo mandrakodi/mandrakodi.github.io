@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.86'
+versione='1.2.87'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 29.09.2024
+# Last update: 10.10.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -935,23 +935,14 @@ def daddyCode(codeIn=None):
     randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
     randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
     link="https://xyzdddd.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
-    link5="https://ddy5.mizhls.ru/ddy5/premium"+codeIn+"/tracks-v1a1/mono.m3u8"
-    link6="https://ddy6.mizhls.ru/ddy6/premium"+codeIn+"/tracks-v1a1/mono.m3u8"
-    refe="https://quest4play.xyz/"
-    origin="https://quest4play.xyz"
-    refe2="https://xyzdddd.mizhls.ru/"
+    refe="https://ilovetoplay.xyz/"
+    origin="https://ilovetoplay.xyz"
     
     
-    #final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
-    final_url2=link5+"|Referer="+refe2+"&Connection=keep-alive&User-Agent="+randomUa
-    final_url3=link6+"|Referer="+refe2+"&Connection=keep-alive&User-Agent="+randomUa
     
     
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    #video_urls.append((final_url2, "[COLOR gold]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    #video_urls.append((final_url3, "[COLOR aqua]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    
     return video_urls
 
 def sibNet(parIn=None):
@@ -1153,8 +1144,8 @@ def PlayStream(link):
     codeIn=arrL[1].replace(".php", "")
     randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
     link="https://xyzdddd.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
-    refe="https://quest4play.xyz/"
-    origin="https://quest4play.xyz"
+    refe="https://ilovetoplay.xyz/"
+    origin="https://ilovetoplay.xyz"
     
     
     urlV=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
@@ -1190,6 +1181,7 @@ def amstaffTest(parIn):
         host="https://"+arrLL2[2]
         if "dazn-linear-029" in link or "dazn-linear-030" in link:
             ua="Dalvik/2.1.0 (Linux; U; Android 10; STK-L22 Build/HUAWEISTK-L22)"
+            host="https://www.dazn.com"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     return liz
