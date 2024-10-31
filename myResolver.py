@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.88'
+versione='1.2.89'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 13.10.2024
+# Last update: 31.10.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -900,7 +900,27 @@ def antena(parIn=None):
     
     
     return liz
+
+def ffmpeg(link=None):
+    randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+    arrT=link.split("/")
     
+    refe=arrT[0]+"//"+arrT[2]+"/"
+    origin=arrT[0]+"//"+arrT[2]
+    
+    final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
+    
+    liz = xbmcgui.ListItem('FfMpeg', path=final_url)
+    liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
+    liz.setMimeType('application/x-mpegURL')
+    liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
+    liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
+    timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
+    if timeShift != "no_time_shift":
+        liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
+    
+    
+    return liz
 
 def daddy(parIn=None):
     video_urls = []
@@ -1179,8 +1199,8 @@ def amstaffTest(parIn):
     if "dazn-linear" in link or "livedazn" in link or "voddazn" in link or "bhtelecom" in link:
         arrLL2=link.split("/")
         host="https://"+arrLL2[2]
-        if "dazn-linear-029" in link or "dazn-linear-030" in link:
-            ua="Dalvik/2.1.0 (Linux; U; Android 10; STK-L22 Build/HUAWEISTK-L22)"
+        if "dazn" in link:
+            ua="Dalvik/2.1.0 (Linux; U; Android 10; STK-L22 Build/HUAWEISTK-L22"
             host="https://www.dazn.com"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
@@ -4989,6 +5009,7 @@ def run (action, params=None):
         'sib':sibNet,
         'hunter':hunterjs,
         'nflinsider':nflinsider,
+        'ffmpeg':ffmpeg,
         'sportMenu': createSportMenu
     }
 
