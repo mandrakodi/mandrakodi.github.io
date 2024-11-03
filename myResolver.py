@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.89'
+versione='1.2.90'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 31.10.2024
+# Last update: 03.11.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1196,12 +1196,9 @@ def amstaffTest(parIn):
     liz.setProperty('inputstream.adaptive.file_type', 'mpd')
     liz.setProperty('inputstream.adaptive.drm_legacy', 'org.w3.clearkey|'+key64)
     ua="Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManage"
-    if "dazn-linear" in link or "livedazn" in link or "voddazn" in link or "bhtelecom" in link:
-        arrLL2=link.split("/")
-        host="https://"+arrLL2[2]
-        if "dazn" in link:
-            ua="Dalvik/2.1.0 (Linux; U; Android 10; STK-L22 Build/HUAWEISTK-L22"
-            host="https://www.dazn.com"
+    if "dazn" in link:
+        ua="Dalvik/2.1.0 (Linux; U; Android 10; STK-L22 Build/HUAWEISTK-L22"
+        host="https://www.dazn.com"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     return liz
@@ -3097,16 +3094,19 @@ def hunterjs(parIn):
 
 def nflinsider(parIn):
     video_urls = []
-    urlPage="https://nflinsider.net/"+parIn
+    urlPage="https://nfl-replays.com/"+parIn
     page_data = requests.get(urlPage,headers={'user-agent':'iPad','accept':'*/*','referer':'https://basketball-video.com/'}).content
 
     if PY3:
         page_data = page_data.decode('utf-8')
     
-    link = preg_match(page_data, '<iframe allowfullscreen="" frameborder="0" height="419" src="(.*?)" width="720">')
+    link = preg_match(page_data, '<iframe allowfullscreen="" frameborder="0" height="315" src="(.*?)" width="520">')
     if (link.startswith("//")):
         link="https:"+link
     logga("NFLINSIDER LINK: "+link)
+    if ".mkv" in link:
+        video_urls.append((link+"|referer=https://nfl-replays.com/", "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
+        return video_urls
     return urlsolver(link)
 
 def getRandomUA():
