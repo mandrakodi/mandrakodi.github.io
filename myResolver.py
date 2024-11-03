@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.90'
+versione='1.2.91'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1195,9 +1195,9 @@ def amstaffTest(parIn):
     liz.setProperty('inputstream', 'inputstream.adaptive')
     liz.setProperty('inputstream.adaptive.file_type', 'mpd')
     liz.setProperty('inputstream.adaptive.drm_legacy', 'org.w3.clearkey|'+key64)
-    ua="Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManage"
+    ua="Mozilla/5.0 (Linux; Android 14.0; Build/AP2A.240905.003) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.0 Safari/537.36 CrKey/1.56.500000 DeviceType/AndroidTV"
     if "dazn" in link:
-        ua="Dalvik/2.1.0 (Linux; U; Android 10; STK-L22 Build/HUAWEISTK-L22"
+        #ua="Dalvik/2.1.0 (Linux; U; Android 10; STK-L22 Build/HUAWEISTK-L22"
         host="https://www.dazn.com"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
