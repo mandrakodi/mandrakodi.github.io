@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.91'
+versione='1.2.92'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 03.11.2024
+# Last update: 19.11.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -3094,18 +3094,18 @@ def hunterjs(parIn):
 
 def nflinsider(parIn):
     video_urls = []
-    urlPage="https://nfl-replays.com/"+parIn
+    urlPage="https://basketball-video.com/"+parIn
     page_data = requests.get(urlPage,headers={'user-agent':'iPad','accept':'*/*','referer':'https://basketball-video.com/'}).content
 
     if PY3:
         page_data = page_data.decode('utf-8')
     
-    link = preg_match(page_data, '<iframe allowfullscreen="" frameborder="0" height="315" src="(.*?)" width="520">')
+    link = preg_match(page_data, '<iframe allowfullscreen="" frameborder="0" height="315" src="(.*?)"')
     if (link.startswith("//")):
         link="https:"+link
     logga("NFLINSIDER LINK: "+link)
     if ".mkv" in link:
-        video_urls.append((link+"|referer=https://nfl-replays.com/", "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
+        video_urls.append((link+"|referer=https://basketball-video.com/", "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
         return video_urls
     return urlsolver(link)
 
