@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.93'
+versione='1.2.94'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 20.11.2024
+# Last update: 22.11.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1194,7 +1194,8 @@ def amstaffTest(parIn):
     liz.setContentLookup(False)
     liz.setProperty('inputstream', 'inputstream.adaptive')
     liz.setProperty('inputstream.adaptive.file_type', 'mpd')
-    liz.setProperty('inputstream.adaptive.drm_legacy', 'org.w3.clearkey|'+key64)
+    if key64!="0000":
+        liz.setProperty('inputstream.adaptive.drm_legacy', 'org.w3.clearkey|'+key64)
     ua="Mozilla/5.0 (Linux; Android 14.0; Build/AP2A.240905.003) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.0 Safari/537.36 CrKey/1.56.500000 DeviceType/AndroidTV"
     if "dazn" in link:
         ua="Sky"
