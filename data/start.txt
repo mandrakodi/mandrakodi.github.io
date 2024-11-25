@@ -15,7 +15,7 @@
          "thumbnail":"https://static.vecteezy.com/system/resources/thumbnails/021/049/268/small_2x/3d-realistic-coffee-cup-coffee-cup-cartoon-free-png.png",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
          "info":"Buy Me a Coffe",
-         "enabled":1
+         "enabled":0
       },
       {
          "title":"[COLOR lime]SPORT[/COLOR]",
