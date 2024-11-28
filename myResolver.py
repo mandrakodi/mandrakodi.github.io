@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.94'
+versione='1.2.95'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 22.11.2024
+# Last update: 28.11.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -922,6 +922,23 @@ def ffmpeg(link=None):
     
     return liz
 
+def koolto(parIn=None):
+    video_urls = []
+    logga('PAR_KOOL: '+parIn)
+    final_url = "https://www.kool.to/play/"+parIn+"/index.m3u8|Referer=https://www.kool.to/&Origin=https://www.kool.to&Connection=keep-alive&User-Agent=ipad"
+    video_urls.append((final_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
+    
+    final_url = "https://oha.to/play/"+parIn+"/index.m3u8|Referer=https://oha.to/&Origin=https://oha.to&Connection=keep-alive&User-Agent=ipad"
+    video_urls.append((final_url, "[COLOR gold]PLAY STREAM [/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
+    
+    final_url = "https://vavoo.to/play/"+parIn+"/index.m3u8|Referer=https://vavoo.to/&Origin=https://vavoo.to&Connection=keep-alive&User-Agent=ipad"
+    video_urls.append((final_url, "[COLOR blue]PLAY STREAM [/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
+    
+    final_url = "https://huhu.to/play/"+parIn+"/index.m3u8|Referer=https://huhu.to/&Origin=https://huhu.to&Connection=keep-alive&User-Agent=ipad"
+    video_urls.append((final_url, "[COLOR orange]PLAY STREAM [/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
+    
+    return video_urls
+
 def daddy(parIn=None):
     video_urls = []
     logga('PAR_DADDY: '+parIn)
@@ -955,8 +972,8 @@ def daddyCode(codeIn=None):
     randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
     randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
     link="https://xyzdddd.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
-    refe="https://ilovetoplay.xyz/"
-    origin="https://ilovetoplay.xyz"
+    refe="https://cookiewebplay.xyz/"
+    origin="https://cookiewebplay.xyz"
     
     
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
@@ -968,7 +985,8 @@ def daddyCode(codeIn=None):
 def sibNet(parIn=None):
     video_urls = []
     
-    randomUa=getRandomUA()
+    #randomUa=getRandomUA()
+    randomUa="iPad"
     urlP="https://video.sibnet.ru/shell.php?videoid="+parIn
     dataJson = requests.get(urlP,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://video.sibnet.ru'}).content
     if PY3:
@@ -1164,8 +1182,8 @@ def PlayStream(link):
     codeIn=arrL[1].replace(".php", "")
     randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
     link="https://xyzdddd.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
-    refe="https://ilovetoplay.xyz/"
-    origin="https://ilovetoplay.xyz"
+    refe="https://cookiewebplay.xyz/"
+    origin="https://cookiewebplay.xyz"
     
     
     urlV=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
@@ -1243,7 +1261,7 @@ def proData(parIn=None, flat=0):
         return supervideo(parIn)
     video_url = GetLSProData(parIn)
     logga('URL PRODATA: '+video_url)
-    if "sportsonline.si" in parIn:
+    if "sportsonline.ps" in parIn:
         arrTT=video_url.split("|")
         ref=arrTT[1]
         vid=arrTT[0]
@@ -1407,7 +1425,9 @@ def GetLSProData(page_in, refe=None):
     fu = requests.get(src, headers={'user-agent':'iPad','referer':page_in}).text
     try:
         find = re.findall('eval\(function(.+?.+)', fu)[0]
+        logga('EVAL ==> '+find)
         unpack = jsunpack.unpack(find)
+        logga('UNPACK ==> '+unpack)
         c = re.findall('var src="([^"]*)',unpack)[0]
         return c + '|referer=' + src
     except:
@@ -5011,6 +5031,7 @@ def run (action, params=None):
         'hunter':hunterjs,
         'nflinsider':nflinsider,
         'ffmpeg':ffmpeg,
+        'koolto':koolto,
         'sportMenu': createSportMenu
     }
 
