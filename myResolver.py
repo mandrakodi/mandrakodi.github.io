@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.95'
+versione='1.2.96'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 28.11.2024
+# Last update: 30.11.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -988,11 +988,12 @@ def sibNet(parIn=None):
     #randomUa=getRandomUA()
     randomUa="iPad"
     urlP="https://video.sibnet.ru/shell.php?videoid="+parIn
-    dataJson = requests.get(urlP,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://video.sibnet.ru'}).content
+    dataJson = requests.get(urlP,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://video.sibnet.ru/','Origin':'https://video.sibnet.ru'}).content
+    
     if PY3:
         dataJson = dataJson.decode('Latin-1')
     
-    
+    logga('SIBNET_CONTENT: '+dataJson)
     tito = preg_match(dataJson, "title: '(.*?)',")
     if tito != None:
         tito= tito.replace("[B]","").replace("[/B]","").replace("[/COLOR]","")
@@ -1008,7 +1009,7 @@ def sibNet(parIn=None):
     else:
         iframe_url = "https://static.videezy.com/system/resources/previews/000/039/863/original/Movie-countdown-2.mp4"
         tito = "[COLOR red]NO LINK FOUND[/COLOR]"
-    video_urls.append((iframe_url+"|Referer=https://video.sibnet.ru", tito , "PLAY VIDEO ", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
+    video_urls.append((iframe_url+"|Referer=https://video.sibnet.ru/&Origin=https://video.sibnet.ru&User-Agent=iPad", tito , "PLAY VIDEO ", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
     return video_urls
 
 
