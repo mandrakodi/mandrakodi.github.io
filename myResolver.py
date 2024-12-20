@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.98'
+versione='1.2.99'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 19.12.2024
+# Last update: 20.12.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1438,6 +1438,18 @@ def GetLSProData(page_in, refe=None):
     except:
         return page_in
 
+def sportOnline(parIn=None):
+    logga('PAR_SPONL: '+parIn)
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+    s = requests.Session()
+    fu = s.get(parIn, headers=headers)
+    find = re.findall('<iframe src="(.*?)"', fu.text)[0]
+    logga('IFRAME_SPONL: '+find)
+    return wigi(find+"|https://sportsonline.si/")
+
+
 def wigi(parIn=None):
     import jsunpack
     logga('PAR_WIGI: '+parIn)
@@ -1470,7 +1482,7 @@ def wigi(parIn=None):
     fu = s.get(wigiUrl, headers=headers)
     video_url = wigiUrl
     try:
-        find = re.findall('eval\(function(.+?.+)', fu.text)[0]
+        find = re.findall('eval\(function(.+?.+)', fu.text)[1]
         unpack = jsunpack.unpack(find)
         c = re.findall('var src="([^"]*)',unpack)[0]
         video_url = c + '|referer=' + wigiUrl
@@ -2669,7 +2681,8 @@ def sportsonlineMenu():
                     jsonText = jsonText + ','    
                 
                 jsonText = jsonText + '{"title":"[COLOR gold]'+timeMatch+'[/COLOR] [COLOR lime]'+newTit.strip()+'[/COLOR] [COLOR aqua]('+tit+')[/COLOR]",'
-                jsonText = jsonText + '"myresolve":"proData@@'+linkMatch.replace("v2.sportsonline", "sportsonline")+'",'
+                #jsonText = jsonText + '"myresolve":"spon@@'+linkMatch.replace("v2.sportsonline", "sportsonline")+'",'
+                jsonText = jsonText + '"myresolve":"spon@@'+linkMatch+'",'
                 jsonText = jsonText + '"thumbnail":"https://www.avis.it/wp-content/uploads/2018/06/Sport_balls.png",'
                 jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
                 jsonText = jsonText + '"info":"by MandraKodi"}'
@@ -5037,6 +5050,7 @@ def run (action, params=None):
         'nflinsider':nflinsider,
         'ffmpeg':ffmpeg,
         'koolto':koolto,
+        'spon':sportOnline,
         'sportMenu': createSportMenu
     }
 
