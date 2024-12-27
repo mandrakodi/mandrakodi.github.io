@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.99'
+versione='1.2.100'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 20.12.2024
+# Last update: 27.12.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1802,7 +1802,11 @@ def scwsNew(parIn=None):
         logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
         arrJ2 = json.loads(jsonUrl.replace("'", '"'))
         urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
-        urlSc=arrJ2["url"]+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
+        urlTmp=arrJ2["url"]
+        if "?" in urlTmp:
+            urlSc=urlTmp+"&token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
+        else:
+           urlSc=urlTmp+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1" 
         newPar=""
         numPar=0
         for param in arrPar:
