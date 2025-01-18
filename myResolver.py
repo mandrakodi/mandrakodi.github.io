@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.100'
+versione='1.2.101'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 27.12.2024
+# Last update: 18.01.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -374,6 +374,8 @@ def livetv(page_url):
     logga ("HTML_LIVETV: "+page_data_flat)
     src = preg_match(page_data, '<iframe  allowFullScreen="true" scrolling=no frameborder="0 "width="700" height="480" src="([^"]*)')
     if src != "":
+        arrHost=src.split("/")
+        host="https://"+arrHost[2]
         final_url=""
         try:
             logga ("PAGE2_LIVETV: "+src)
@@ -405,7 +407,8 @@ def livetv(page_url):
             pass
         if final_url == "" or final_url == src:
             final_url = GetLSProData(src)
-        video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
+        video_urls.append((final_url+"|Referer="+host+"/&Origin="+host+"&User-Agent=iPad", "[COLOR lime]PLAY STREAM[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
+        video_urls.append((final_url, "[COLOR gold]PLAY STREAM[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
     else:
         video_urls.append((page_url, "[COLOR red]NO LINK FOUND[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
     return video_urls
@@ -1207,16 +1210,34 @@ def amstaffTest(parIn):
     arrT=parametro.split("|")
     link=arrT[0]
     key64=arrT[1]
+    drmType="org.w3.clearkey"
+    
     liz = xbmcgui.ListItem(path=link, offscreen=True)
-    liz.setMimeType('application/dash+xml')
     liz.setContentLookup(False)
     liz.setProperty('inputstream', 'inputstream.adaptive')
-    liz.setProperty('inputstream.adaptive.file_type', 'mpd')
+    if ".mpd" in link:
+        logga ("LINK_MPD: "+link)
+        liz.setMimeType("application/dash+xml")
+        liz.setProperty('inputstream.adaptive.file_type', 'mpd')
+    
+    if ".m3u8" in link:
+        logga ("LINK_M3U8: "+link)
+        liz.setMimeType("application/x-mpegURL")
+        liz.setProperty('inputstream.adaptive.file_type', 'hls')
+        drmType="none"
+    
     if key64!="0000":
-        liz.setProperty('inputstream.adaptive.drm_legacy', 'org.w3.clearkey|'+key64)
-    ua="Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.9.7 Chrome/56.0.2924.122 Safari/537.36 Sky_STB_ST412_2018/1.0.0 (Sky, EM150UK,)"
+        liz.setProperty('inputstream.adaptive.drm_legacy', drmType+'|'+key64)
+    ua="iPad"
     if "dazn" in link:
+        ua="Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.9.7 Chrome/56.0.2924.122 Safari/537.36 Sky_STB_ST412_2018/1.0.0 (Sky, EM150UK,)"
         host="https://www.dazn.com"
+        liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
+        liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
+    elif "discovery" in link:
+        logga ("LINK_DISCOVERY: "+link)
+        ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0"
+        host="https://www.discoveryplus.com"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     else:
@@ -1261,7 +1282,7 @@ def amstaff(parIn):
 def proData(parIn=None, flat=0):
     video_urls = []
     logga('PAR: '+parIn)
-    if "supervideo.tv" in parIn:
+    if "supervideo.tv" in parIn or "supervideo.cc" in parIn:
         logga('CALL SUPERVIDEO')
         return supervideo(parIn)
     video_url = GetLSProData(parIn)
@@ -3031,7 +3052,7 @@ def supervideo(page_url):
     data  = downloadHttpPage(page_url, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':page_url})
     logga("supervideo: " + data)
 
-    code_data = find_single_match(data, """<script type=["']text/javascript["']>(eval.*)""")
+    code_data = find_single_match(data, """<script type=["'].*text/javascript["']>(eval.*)""")
     if code_data:
         code = jsunpack.unpack(code_data)
         logga("unpack: " + code)
@@ -3049,7 +3070,9 @@ def supervideo(page_url):
             quality = source['label'] if 'label' in source else 'auto'
             tit = source['file'].split('.')[-1] 
             src =  source['file']
-            video_urls.append((src+"|referer="+page_url, "[COLOR lime]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
+            arrTmp=src.split(",")
+            newSrc=arrTmp[0]+arrTmp[1]+"/index-v1-a1.m3u8"
+            video_urls.append((newSrc+"|Referer=https://supervideo.tv/&Origin=https://supervideo.tv&User-Agent=iPad", "[COLOR gold]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
     else:
         logga ("NO PACKED")
         matches = find_multiple_matches(data, r'src:\s*"([^"]+)",\s*type:\s*"[^"]+"(?:\s*, res:\s(\d+))?')
