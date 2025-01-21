@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.101'
+versione='1.2.102'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 18.01.2025
+# Last update: 21.12.2024
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -557,14 +557,14 @@ def testDns(parIn=""):
     vUrl = ""
     logga('CALL DADDY 4 DNS TEST '+parIn)
     randomUa=getRandomUA()
-    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'http://dlhd.so/'}
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://thedaddy.to/'}
     page_data = ""
     time.sleep(2)
     ret="[COLOR lime]TEST DNS: OK[/COLOR]"
     thumb="https://upload.wikimedia.org/wikipedia/commons/f/fb/2000px-ok_x_nuvola_green.png"
     try:
         currSess = requests.Session()
-        page_data1 = currSess.get("http://dlhd.so/embed/stream-877.php",headers=head)
+        page_data1 = currSess.get("https://thedaddy.to/embed/stream-877.php",headers=head)
         page_data = page_data1.content
         
         if (page_data1.status_code != 200):
@@ -596,7 +596,7 @@ def testDns(parIn=""):
     ret += "[COLOR yellow] ["+dns1+" - "+dns2+"][/COLOR]"
 
     jsonText='{"SetViewMode":"51","items":['
-    jsonText = jsonText + '{"title":"'+ret+'","myresolve":"daddy@@http://dlhd.so/embed/stream-877.php",'
+    jsonText = jsonText + '{"title":"'+ret+'","myresolve":"daddy@@https://thedaddy.to/embed/stream-877.php",'
     jsonText = jsonText + '"thumbnail":"'+thumb+'",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
     jsonText = jsonText + '"info":"by MandraKodi"}'
