@@ -48,14 +48,16 @@
          "link":"ignoreme",
          "thumbnail":"https://i.postimg.cc/CM7p0MJG/index.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"Disclaimer"
+         "info":"Disclaimer",
+         "enabled":0
       },
       {
          "title":"[COLOR lime]un piccolo [B]omaggio digitale[/B] creato da ElSupremo.[/COLOR]",
          "link":"ignoreme",
          "thumbnail":"https://i.postimg.cc/CM7p0MJG/index.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"Disclaimer"
+         "info":"Disclaimer",
+         "enabled":0
       }
    ]
 }
