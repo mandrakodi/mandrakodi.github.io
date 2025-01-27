@@ -30,7 +30,14 @@
          "info":"Disclaimer"
       },
       {
-         "title":"[COLOR lime]su Telegram e vuoi [B]sostenere[/B] il progetto MandraKodi,[/COLOR]",
+         "title":"[COLOR lime] e vuoi [B]sostenere[/B] il progetto MandraKodi,[/COLOR]",
+         "link":"ignoreme",
+         "thumbnail":"https://i.postimg.cc/CM7p0MJG/index.jpg",
+         "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+         "info":"Disclaimer"
+      },
+      {
+         "title":"[COLOR lime]puoi inviare un buono Amazon alla mail [COLOR gold]mandrakodi4@gmail.com[/COLOR]",
          "link":"ignoreme",
          "thumbnail":"https://i.postimg.cc/CM7p0MJG/index.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
@@ -41,7 +48,8 @@
          "externallink":"https://test34344.herokuapp.com/filter.php?numTest=JOB950",
          "thumbnail":"https://i.postimg.cc/CM7p0MJG/index.jpg",
          "fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
-         "info":"Disclaimer"
+         "info":"Disclaimer",
+         "enabled":0
       },
       {
          "title":"[COLOR lime]Come ringraziamento, i sostenitori riceveranno[/COLOR]",
