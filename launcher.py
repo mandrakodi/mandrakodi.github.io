@@ -1,8 +1,8 @@
-versione='1.2.54'
+versione='1.2.55'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 25.09.2024
+# Last update: 28.01.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -250,6 +250,7 @@ def jsonToItems(strJson):
             is_pvr = False
             is_log = False
             is_copyXml = False
+            is_updateCode = False
             is_delSet = False
             is_personal = False
             is_enabled = True
@@ -300,6 +301,7 @@ def jsonToItems(strJson):
                 is_myresolve = True
                 is_folder = True
                 link = item["myresolve"]
+                logga("MY_RESOLVE_LINK: "+link)
                 if "@@" in link:
                     arrT=link.split("@@")
                     link=arrT[0]
@@ -308,6 +310,8 @@ def jsonToItems(strJson):
                     arrT=link.split(":")
                     link=arrT[0]
                     resolverPar=arrT[1]
+                logga("MY_RES_LINK: "+link)
+                logga("MY_RES_PAR: "+resolverPar)
             if 'regexPage' in item:
                 is_regex = True
                 link = item["regexPage"]
@@ -343,6 +347,10 @@ def jsonToItems(strJson):
                 is_copyXml = True
                 is_folder = True
                 link = item["copyXml"]
+            if 'updateCode' in item:
+                is_updateCode = True
+                is_folder = True
+                link = item["updateCode"]
             if 'delSet' in item:
                 is_delSet = True
                 is_folder = True
@@ -371,6 +379,8 @@ def jsonToItems(strJson):
                 url = get_url(action='personal', url=link)
             elif is_copyXml == True:
                 url = get_url(action='copyXml', url=link)
+            elif is_updateCode == True:
+                url = get_url(action='updateCode', url=link)
             elif is_delSet == True:
                 url = get_url(action='delSet', url=link)
             elif is_yatse == True:
@@ -592,6 +602,30 @@ def callReolver(metodo, parametro):
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
         logga("CALL myResolver.antena for "+parametro)
         list_item = myResolver.antena(parametro)
+        list_item.setLabel(newTit)
+        list_item.setLabel2(newTit)
+        list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url=list_item.getPath()
+        xbmcplugin.setContent(_handle, 'movies')
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+    elif metodo=="huhu":
+        fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
+        newTit="[COLOR lime]PLAY STREAM[/COLOR]"
+        logga("CALL myResolver.huhu for "+parametro)
+        list_item = myResolver.huhu(parametro)
+        list_item.setLabel(newTit)
+        list_item.setLabel2(newTit)
+        list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url=list_item.getPath()
+        xbmcplugin.setContent(_handle, 'movies')
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+    elif metodo=="ffmpeg":
+        fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
+        newTit="[COLOR lime]PLAY STREAM[/COLOR]"
+        logga("CALL myResolver.ffmpeg for "+parametro)
+        list_item = myResolver.ffmpeg(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
         list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
@@ -965,6 +999,87 @@ def uploadLog():
     xbmc.executebuiltin('RunScript(script.kodi.loguploader)')
     return True
 
+def updateCode(parIn):
+    home = ''
+    if PY3:
+        home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
+    else:
+        home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
+    launcher_file = os.path.join(home, 'launcher.py')
+    if os.path.exists(launcher_file)==True:
+        local_vers = "1.0.0"
+        try:
+            resF = open(launcher_file)
+            resolver_content = resF.read()
+            resF.close()
+            local_vers = re.findall("versione='(.*)'",resolver_content)[0]
+        except:
+            msgBox("Non e' stato possibile leggere il file locale:[CR]"+launcher_file)
+        
+        logga('local_vers '+local_vers)
+
+
+        remoteLauncherUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/launcher.py"
+        strSource = makeRequest(remoteLauncherUrl)
+        if strSource is None or strSource == "":
+            logga('We failed to get source from '+remoteLauncherUrl)
+            msgBox("Non e' stato possibile contattare la sorgente.[CR]L'addon potrebbe non essere aggiornato.")
+            remote_vers = local_vers
+        else:
+            remote_vers = re.findall("versione='(.*)'",strSource)[0]
+        logga('remote_vers '+remote_vers)
+        if local_vers != remote_vers:
+            logga('TRY TO UPDATE VERSION')
+            try:
+                f = open(launcher_file, "w")
+                f.write(strSource)
+                f.close()
+                logga('VERSION UPDATE')
+                msgBox("Codice Launcher aggiornato alla versione: "+remote_vers)
+            except:
+                msgBox("Non e' stato possibile aggiornare il file locale:[CR]"+launcher_file)
+        else:
+            msgBox("Il codice Launcher e' gia' aggiornato all'ultima versione: "+remote_vers)
+    else:
+        msgBox("Il file launcher.py non e' stato trovato")
+
+    resolve_file = os.path.join(home, 'myResolver.py')
+    if os.path.exists(resolve_file)==True:
+        local_vers = "1.0.0"
+        try:
+            resF = open(resolve_file)
+            resolver_content = resF.read()
+            resF.close()
+            local_vers = re.findall("versione='(.*)'",resolver_content)[0]
+        except:
+            msgBox("Non e' stato possibile leggere il file locale:[CR]"+resolve_file)
+        logga('local_vers '+local_vers)
+
+
+        remoteLauncherUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/myResolver.py"
+        strSource = makeRequest(remoteLauncherUrl)
+        if strSource is None or strSource == "":
+            logga('We failed to get source from '+remoteLauncherUrl)
+            msgBox("Non e' stato possibile contattare la sorgente.[CR]L'addon potrebbe non essere aggiornato.")
+            remote_vers = local_vers
+        else:
+            remote_vers = re.findall("versione='(.*)'",strSource)[0]
+        logga('remote_vers '+remote_vers)
+        if local_vers != remote_vers:
+            logga('TRY TO UPDATE VERSION')
+            try:
+                f = open(resolve_file, "w")
+                f.write(strSource)
+                f.close()
+                logga('VERSION UPDATE')
+                msgBox("Codice Resolver aggiornato alla versione: "+remote_vers)
+            except:
+                msgBox("Non e' stato possibile aggiornare il file locale:[CR]"+resolve_file)
+        else:
+            msgBox("Il codice Resolver e' gia' aggiornato all'ultima versione: "+remote_vers)
+    else:
+        msgBox("Il file myResolver.py non e' stato trovato")
+
 def copyPlayerCoreFactory(parIn):
     XMLPATH = ''
     if PY3:
@@ -1180,6 +1295,7 @@ def personalList(listtType=''):
     if (fileName=="" or fileName=="blank"):
         msgBox("E' necessario specificare un file nelle impostazioni")
     else:
+        logga('FILE_NAME: '+fileName)
         urlToCall=baseScript+"JOB810&type="+listtType+"&url="+fileName
         if 	(listtType=="MAC"):
             urlToCall=baseScript+"JOB811&url="+fileName
@@ -1394,6 +1510,8 @@ def run():
                 uploadLog()
             elif action == 'copyXml':
                 copyPlayerCoreFactory(url)
+            elif action == 'updateCode':
+                updateCode(url)
             elif action == 'delSet':
                 deleteSettings(url)
             else:
