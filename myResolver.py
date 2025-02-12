@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.103'
+versione='1.2.104'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 02.02.2025
+# Last update: 12.02.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -982,13 +982,22 @@ def daddy(parIn=None):
     return video_urls
 
 def daddyCode(codeIn=None):
-    import re
+    import re, json
     video_urls = []
     randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
     randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
-    link="https://xyzdddd.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
-    refe="https://cookiewebplay.xyz/"
-    origin="https://cookiewebplay.xyz"
+    headers = {
+        'user-agent': randomUa
+    }
+    s = requests.Session()
+    urlSrv=" https://newembedplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    dataJson = s.get(urlSrv, headers=headers)
+    arrJ = json.loads(dataJson.text)
+    server=arrJ["server_key"]
+    logga("DADDY_CODE SERVER "+server)
+    link="https://"+server+"new.iosplayer.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
+    refe="https://newembedplay.xyz/"
+    origin="https://newembedplay.xyz"
     
     
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
@@ -1190,6 +1199,7 @@ def getSourceFrame(parIn):
 
 def PlayStream(link):
     from urllib.parse import quote_plus
+    import json
     logga("PlayStream "+link)
     baseurl='https://dlhd.so/'
     UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
@@ -1197,9 +1207,18 @@ def PlayStream(link):
     arrL=link.split("stream-")
     codeIn=arrL[1].replace(".php", "")
     randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
-    link="https://xyzdddd.mizhls.ru/lb/premium"+codeIn+"/index.m3u8"
-    refe="https://cookiewebplay.xyz/"
-    origin="https://cookiewebplay.xyz"
+    headers = {
+        'user-agent': UA
+    }
+    s = requests.Session()
+    urlSrv=" https://newembedplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    dataJson = s.get(urlSrv, headers=headers)
+    arrJ = json.loads(dataJson.text)
+    server=arrJ["server_key"]
+    logga("DADDY SERVER "+server)
+    link="https://"+server+"new.iosplayer.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
+    refe="https://newembedplay.xyz/"
+    origin="https://newembedplay.xyz"
     
     
     urlV=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
@@ -1236,9 +1255,10 @@ def amstaffTest(parIn):
         logga ("LINK_M3U8: "+link)
         liz.setMimeType("application/x-mpegURL")
         liz.setProperty('inputstream.adaptive.file_type', 'hls')
-        drmType="none"
+        #drmType="none"
     
     if key64!="0000":
+        logga ("DRM: "+drmType)
         liz.setProperty('inputstream.adaptive.drm_legacy', drmType+'|'+key64)
     ua="iPad"
     if "dazn" in link:
