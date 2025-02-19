@@ -1,8 +1,8 @@
-versione='1.2.55'
+versione='1.2.56'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 28.01.2025
+# Last update: 19.02.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -898,8 +898,8 @@ def checkDns():
     responseCode=404
     try:
         currSess = requests.Session()
-        head={'user-agent':'iPad','Content-Type':'application/x-www-form-urlencoded','Referer':'http://dlhd.so/'}
-        page_data1 = currSess.get("http://dlhd.so/embed/stream-877.php",headers=head)
+        head={'user-agent':'iPad','Content-Type':'application/x-www-form-urlencoded','Referer':'http://daddylive.mp/'}
+        page_data1 = currSess.get("https://daddylive.mp/embed/stream-860.php",headers=head)
         responseCode=page_data1.status_code
         dns1 = xbmc.getInfoLabel('Network.DNS1Address')
         dns2 = xbmc.getInfoLabel('Network.DNS2Address')
@@ -1397,7 +1397,7 @@ def run():
                 checkResolver()
                 checkJsunpack()
                 checkPortalPy()
-                checkDns()
+                #checkDns()
                 #checkMandraScript()
             checkSkin()
             getSource()
