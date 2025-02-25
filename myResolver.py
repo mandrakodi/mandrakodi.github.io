@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.104'
+versione='1.2.105'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 12.02.2025
+# Last update: 25.02.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1211,7 +1211,7 @@ def PlayStream(link):
         'user-agent': UA
     }
     s = requests.Session()
-    urlSrv=" https://newembedplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://newembedplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
@@ -1237,7 +1237,11 @@ def PlayStream(link):
     return liz
 def amstaffTest(parIn):
     import base64
-    parametro=base64.b64decode(parIn).decode("utf-8")
+    if parIn[0:4]=="http":
+        parametro=parIn
+    else:
+        parametro=base64.b64decode(parIn).decode("utf-8")
+    
     arrT=parametro.split("|")
     link=arrT[0]
     key64=arrT[1]
@@ -1260,7 +1264,7 @@ def amstaffTest(parIn):
     if key64!="0000":
         logga ("DRM: "+drmType)
         liz.setProperty('inputstream.adaptive.drm_legacy', drmType+'|'+key64)
-    ua="iPad"
+    ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 OPR/116.0.0.0"
     if "dazn" in link:
         ua="Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.9.7 Chrome/56.0.2924.122 Safari/537.36 Sky_STB_ST412_2018/1.0.0 (Sky, EM150UK,)"
         host="https://www.dazn.com"
@@ -1270,6 +1274,12 @@ def amstaffTest(parIn):
         logga ("LINK_DISCOVERY: "+link)
         ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0"
         host="https://www.discoveryplus.com"
+        liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
+        liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
+    elif "vodafone.pt" in link:
+        logga ("LINK_VODAFONE: "+link)
+        ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0"
+        host="http://rr.cdn.vodafone.pt"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
     else:
@@ -1499,6 +1509,8 @@ def sportOnline(parIn=None):
     s = requests.Session()
     fu = s.get(parIn, headers=headers)
     find = re.findall('<iframe src="(.*?)"', fu.text)[0]
+    if (find[0:1]=="/"):
+        find="https:"+find
     logga('IFRAME_SPONL: '+find)
     return wigi(find+"|https://sportsonline.si/")
 
