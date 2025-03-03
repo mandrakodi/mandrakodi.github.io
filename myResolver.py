@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.105'
+versione='1.2.106'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 25.02.2025
+# Last update: 03.03.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -382,7 +382,7 @@ def livetv(page_url):
             arrP2=src.split("play?url=")
             try:
                 m3url=arrP2[1]
-                video_urls.append((myParse.unquote(m3url), "[COLOR lime]PLAY STREAM PL[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
+                video_urls.append((myParse.unquote(m3url), "[COLOR lime]PLAY STREAM PL[/COLOR]", "by @MandraKodi", "https://cdn.livetv821.me/img/minilogo.gif"))
                 return video_urls
             except:
                 pass
@@ -406,11 +406,18 @@ def livetv(page_url):
         except:
             pass
         if final_url == "" or final_url == src:
+            logga ("GetLSProData: "+src)
             final_url = GetLSProData(src)
-        video_urls.append((final_url+"|Referer="+host+"/&Origin="+host+"&User-Agent=iPad", "[COLOR lime]PLAY STREAM[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
-        video_urls.append((final_url, "[COLOR gold]PLAY STREAM[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
+        last_url=""
+        if "|" in final_url:
+            last_url=final_url
+        else:
+            last_url=final_url+"|Referer="+host+"/&Origin="+host+"&User-Agent=iPad"
+        
+        video_urls.append((last_url, "[COLOR lime]PLAY STREAM[/COLOR]", "by @MandraKodi", "https://cdn.livetv821.me/img/minilogo.gif"))
+        video_urls.append((final_url, "[COLOR gold]PLAY STREAM[/COLOR]", "by @MandraKodi", "https://cdn.livetv821.me/img/minilogo.gif"))
     else:
-        video_urls.append((page_url, "[COLOR red]NO LINK FOUND[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
+        video_urls.append((page_url, "[COLOR red]NO LINK FOUND[/COLOR]", "by @MandraKodi", "https://cdn.livetv821.me/img/minilogo.gif"))
     return video_urls
 
 
@@ -1237,7 +1244,8 @@ def PlayStream(link):
     return liz
 def amstaffTest(parIn):
     import base64
-    if parIn[0:4]=="http":
+    if "http" in parIn:
+        logga("NO_BASE64")
         parametro=parIn
     else:
         parametro=base64.b64decode(parIn).decode("utf-8")
@@ -1245,6 +1253,11 @@ def amstaffTest(parIn):
     arrT=parametro.split("|")
     link=arrT[0]
     key64=arrT[1]
+    token=""
+    try:
+      token=arrT[2]
+    except:
+        pass
     drmType="org.w3.clearkey"
     
     liz = xbmcgui.ListItem(path=link, offscreen=True)
@@ -1268,8 +1281,13 @@ def amstaffTest(parIn):
     if "dazn" in link:
         ua="Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.9.7 Chrome/56.0.2924.122 Safari/537.36 Sky_STB_ST412_2018/1.0.0 (Sky, EM150UK,)"
         host="https://www.dazn.com"
-        liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
-        liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
+        heads='User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false'
+        if token != "":
+            ua=myParse.quote_plus("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36")
+            heads=token+'&referer='+host+'/&origin='+host+'&user-agent='+ua
+            logga ("heads: "+heads)
+        liz.setProperty('inputstream.adaptive.stream_headers', heads)
+        liz.setProperty('inputstream.adaptive.manifest_headers', heads)
     elif "discovery" in link:
         logga ("LINK_DISCOVERY: "+link)
         ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0"
@@ -1288,6 +1306,8 @@ def amstaffTest(parIn):
         logga ("HOST_MPD: "+host)
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
+    if token != "":
+        liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false') 
     return liz
 
 
@@ -3204,13 +3224,15 @@ def hunterjs(parIn):
 
 def nflinsider(parIn):
     video_urls = []
-    urlPage="https://basketball-video.com/"+parIn
+    #urlPage="https://basketball-video.com/"+parIn
+    urlPage="https://gamesontvtoday.com/"+parIn
     page_data = requests.get(urlPage,headers={'user-agent':'iPad','accept':'*/*','referer':'https://basketball-video.com/'}).content
 
     if PY3:
         page_data = page_data.decode('utf-8')
     
-    link = preg_match(page_data, '<iframe allowfullscreen="" frameborder="0" height="315" src="(.*?)"')
+    #link = preg_match(page_data, '<iframe allowfullscreen="" frameborder="0" height="315" src="(.*?)"')
+    link = preg_match(page_data, 'frameborder="0" height="315" src="(.*?)"')
     if (link.startswith("//")):
         link="https:"+link
     logga("NFLINSIDER LINK: "+link)
