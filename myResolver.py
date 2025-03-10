@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.106'
+versione='1.2.107'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 03.03.2025
+# Last update: 10.03.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -344,6 +344,7 @@ def rocktalk(parIn=None):
 
 
 def livetv(page_url):
+    import json
     video_urls = []
     randomUa=getRandomUA()
     logga ("PAGE_LIVETV: "+page_url)
@@ -365,7 +366,7 @@ def livetv(page_url):
             logga ("HTML_ALP305: "+page_data_flat)
             src = preg_match(page_data, "pl.init\('([^']*)")
             logga ("SRC ==> "+src)
-            video_urls.append(("https:"+src, "[COLOR lime]PLAY STREAM AL[/COLOR]", "by @MandraKodi", "https://cdn.livetv627.me/img/minilogo.gif"))
+            video_urls.append(("https:"+src, "[COLOR lime]PLAY STREAM AL[/COLOR]", "by @MandraKodi", "https://cdn.livetv822.me/img/minilogo.gif"))
             return video_urls
     except:
         pass
@@ -379,30 +380,45 @@ def livetv(page_url):
         final_url=""
         try:
             logga ("PAGE2_LIVETV: "+src)
-            arrP2=src.split("play?url=")
-            try:
-                m3url=arrP2[1]
-                video_urls.append((myParse.unquote(m3url), "[COLOR lime]PLAY STREAM PL[/COLOR]", "by @MandraKodi", "https://cdn.livetv821.me/img/minilogo.gif"))
-                return video_urls
-            except:
-                pass
-            if (src.startswith("//")):
-                src="https:"+src
-            page_data2 = downloadHttpPage(src)
-            logga ("PAGE2_LIVETV_HTML:\n"+page_data2)
-            final_url=preg_match(page_data2, "source: '(.*?)'")
-            if final_url == "":
-                jsCode=preg_match(page_data2, '<script type="text/javascript" src="(.*?)"')
-                if jsCode != "":
-                    #logga ("JSCODE: "+jsCode)
-                    arrJs=jsCode.split("/")
-                    urlJs="https://"+arrJs[2]+"/player/m/"+arrJs[-1]+"/"+arrJs[-2]
-                    #logga ("JSCODE_A: "+urlJs)
-                    page_data3 = downloadHttpPage(urlJs)
-                    #logga ("PAGE3_LIVETV_HTML:\n"+page_data3)
-                    final_url=preg_match(page_data3, "\"file\": '(.*?)'")+"|connection=keepalive&Referer="+page_url+"&User-Agent="+randomUa
+            if "topembed.pw" in src:
+                extCode=arrHost[-1].replace("ex", "bet")
+                logga("topembed code: "+extCode)
+                urlTopServer="https://topembed.pw/server_lookup.php?channel_id="+extCode
+                serverTop = requests.get(urlTopServer).json()["server_key"]
+                logga("topembed server: "+serverTop)
+                
+                if serverTop=="top1/cdn":
+                    final_url= "https://top1.koskoros.ru/top1/cdn/" + extCode + "/mono.m3u8"
                 else:
-                    final_url = findM3u8(src, page_url)
+                    final_url= "https://" + serverTop + "new.koskoros.ru/" + serverTop + "/" + extCode + "/mono.m3u8"
+            else:
+                arrP2=src.split("play?url=")
+                try:
+                    m3url=arrP2[1]
+                    video_urls.append((myParse.unquote(m3url), "[COLOR lime]PLAY STREAM PL[/COLOR]", "by @MandraKodi", "https://cdn.livetv822.me/img/minilogo.gif"))
+                    return video_urls
+                except Exception as err:
+                    import traceback
+                    errMsg="ERRORE MANDRAKODI: {0}".format(err)
+                    dialog = xbmcgui.Dialog()
+                    dialog.ok("Mandrakodi", errMsg)
+                if (src.startswith("//")):
+                    src="https:"+src
+                page_data2 = downloadHttpPage(src)
+                logga ("PAGE2_LIVETV_HTML:\n"+page_data2)
+                final_url=preg_match(page_data2, "source: '(.*?)'")
+                if final_url == "":
+                    jsCode=preg_match(page_data2, '<script type="text/javascript" src="(.*?)"')
+                    if jsCode != "":
+                        #logga ("JSCODE: "+jsCode)
+                        arrJs=jsCode.split("/")
+                        urlJs="https://"+arrJs[2]+"/player/m/"+arrJs[-1]+"/"+arrJs[-2]
+                        #logga ("JSCODE_A: "+urlJs)
+                        page_data3 = downloadHttpPage(urlJs)
+                        #logga ("PAGE3_LIVETV_HTML:\n"+page_data3)
+                        final_url=preg_match(page_data3, "\"file\": '(.*?)'")+"|connection=keepalive&Referer="+page_url+"&User-Agent="+randomUa
+                    else:
+                        final_url = findM3u8(src, page_url)
         except:
             pass
         if final_url == "" or final_url == src:
