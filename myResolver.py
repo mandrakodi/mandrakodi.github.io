@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.108'
+versione='1.2.109'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 31.03.2025
+# Last update: 02.04.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -388,9 +388,9 @@ def livetv(page_url):
                 logga("topembed server: "+serverTop)
                 
                 if serverTop=="top1/cdn":
-                    final_url= "https://top1.koskoros.ru/top1/cdn/" + extCode + "/mono.m3u8"
+                    final_url= "https://top1.newkso.ru/top1/cdn/" + extCode + "/mono.m3u8"
                 else:
-                    final_url= "https://" + serverTop + "new.koskoros.ru/" + serverTop + "/" + extCode + "/mono.m3u8"
+                    final_url= "https://" + serverTop + "new.newkso.ru/" + serverTop + "/" + extCode + "/mono.m3u8"
             else:
                 arrP2=src.split("play?url=")
                 try:
@@ -1018,7 +1018,7 @@ def daddyCode(codeIn=None):
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY_CODE SERVER "+server)
-    link="https://"+server+"new.koskoros.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
+    link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
     refe="https://webxzplay.cfd/"
     origin="https://webxzplay.cfd"
     
@@ -1239,7 +1239,7 @@ def PlayStream(link):
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY SERVER "+server)
-    link="https://"+server+"new.koskoros.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
+    link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
     refe="https://webxzplay.cfd/"
     origin="https://webxzplay.cfd"
     
