@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.109'
+versione='1.2.110'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 02.04.2025
+# Last update:11.04.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1013,14 +1013,14 @@ def daddyCode(codeIn=None):
         'user-agent': randomUa
     }
     s = requests.Session()
-    urlSrv="https://webxzplay.cfd/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://kisskissplay.cfd/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY_CODE SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    refe="https://webxzplay.cfd/"
-    origin="https://webxzplay.cfd"
+    refe="https://kisskissplay.cfd/"
+    origin="https://kisskissplay.cfd"
     
     
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
@@ -1234,14 +1234,15 @@ def PlayStream(link):
         'user-agent': UA
     }
     s = requests.Session()
-    urlSrv="https://webxzplay.cfd/server_lookup.php?channel_id=premium"+codeIn
+    #urlSrv="https://webxzplay.cfd/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://kisskissplay.cfd/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    refe="https://webxzplay.cfd/"
-    origin="https://webxzplay.cfd"
+    refe="https://kisskissplay.cfd/"
+    origin="https://kisskissplay.cfd"
     
     
     urlV=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
