@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.111'
+versione='1.2.112'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 15.04.2025
+# Last update: 16.04.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -360,10 +360,10 @@ def livetv(page_url):
             return resolveMyUrl(ytp)
         if (arrP1[0]=="t=alieztv"):
             codeAL=arrP1[1].split("c=")[1]
-            alp="https://emb.apl305.me/player/live.php?id="+codeAL+"&w=700&h=480"
+            alp="https://emb.apl375.me/player/live.php?id="+codeAL+"&w=700&h=480"
             page_data = downloadHttpPage(alp)
             page_data_flat=page_data.replace("\n", "").replace("\r", "").replace("\t", "")
-            logga ("HTML_ALP305: "+page_data_flat)
+            logga ("HTML_ALP375: "+page_data_flat)
             src = preg_match(page_data, "pl.init\('([^']*)")
             logga ("SRC ==> "+src)
             video_urls.append(("https:"+src, "[COLOR lime]PLAY STREAM AL[/COLOR]", "by @MandraKodi", "https://cdn.livetv822.me/img/minilogo.gif"))
