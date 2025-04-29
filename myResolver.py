@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.112'
+versione='1.2.113'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 16.04.2025
+# Last update: 29.04.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1013,14 +1013,14 @@ def daddyCode(codeIn=None):
         'user-agent': randomUa
     }
     s = requests.Session()
-    urlSrv="https://xtreaweb.top/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY_CODE SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    refe="https://xtreaweb.top/"
-    origin="https://xtreaweb.top"
+    refe="https://caq21harderv991gpluralplay.xyz/"
+    origin="https://caq21harderv991gpluralplay.xyz"
     
     
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
@@ -1235,14 +1235,14 @@ def PlayStream(link):
     }
     s = requests.Session()
     #urlSrv="https://webxzplay.cfd/server_lookup.php?channel_id=premium"+codeIn
-    urlSrv="https://xtreaweb.top/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    refe="https://xtreaweb.top/"
-    origin="https://xtreaweb.top"
+    refe="https://caq21harderv991gpluralplay.xyz/"
+    origin="https://caq21harderv991gpluralplay.xyz"
     
     
     urlV=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
