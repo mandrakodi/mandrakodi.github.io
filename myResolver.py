@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.113'
+versione='1.2.114'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 29.04.2025
+# Last update: 04.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -905,6 +905,19 @@ def huhu(parIn=None):
     liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     return liz
         
+def sky(parIn=None):
+    link="https://calcionew.newkso.ru/calcio/calcioX2"+parIn+"/mono.m3u8"
+    liz = xbmcgui.ListItem(path=link, offscreen=True)
+    liz.setContentLookup(False)
+    liz.setProperty('inputstream', 'inputstream.adaptive')
+    liz.setMimeType("application/x-mpegURL")
+    liz.setProperty('inputstream.adaptive.file_type', 'hls')
+    ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 OPR/116.0.0.0"
+    host="https://4kwebplay.xyz"
+    liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
+    liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
+    return liz
+        
 
 def antena(parIn=None):
     img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
@@ -945,8 +958,10 @@ def ffmpeg(link=None):
     
     refe=arrT[0]+"//"+arrT[2]+"/"
     origin=arrT[0]+"//"+arrT[2]
-    
-    final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
+    if "|" in link:
+        final_url=link
+    else:    
+        final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=keep-alive&User-Agent="+randomUa
     
     liz = xbmcgui.ListItem('FfMpeg', path=final_url)
     liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
