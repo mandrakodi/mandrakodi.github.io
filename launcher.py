@@ -1,8 +1,8 @@
-versione='1.2.56'
+versione='1.2.57'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 19.02.2025
+# Last update: 04.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -301,7 +301,7 @@ def jsonToItems(strJson):
                 is_myresolve = True
                 is_folder = True
                 link = item["myresolve"]
-                logga("MY_RESOLVE_LINK: "+link)
+                #logga("MY_RESOLVE_LINK: "+link)
                 if "@@" in link:
                     arrT=link.split("@@")
                     link=arrT[0]
@@ -310,8 +310,8 @@ def jsonToItems(strJson):
                     arrT=link.split(":")
                     link=arrT[0]
                     resolverPar=arrT[1]
-                logga("MY_RES_LINK: "+link)
-                logga("MY_RES_PAR: "+resolverPar)
+                #logga("MY_RES_LINK: "+link)
+                #logga("MY_RES_PAR: "+resolverPar)
             if 'regexPage' in item:
                 is_regex = True
                 link = item["regexPage"]
@@ -614,6 +614,18 @@ def callReolver(metodo, parametro):
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
         logga("CALL myResolver.huhu for "+parametro)
         list_item = myResolver.huhu(parametro)
+        list_item.setLabel(newTit)
+        list_item.setLabel2(newTit)
+        list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url=list_item.getPath()
+        xbmcplugin.setContent(_handle, 'movies')
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+    elif metodo=="sky":
+        fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
+        newTit="[COLOR lime]PLAY STREAM[/COLOR]"
+        logga("CALL myResolver.sky for "+parametro)
+        list_item = myResolver.sky(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
         list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
