@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.115'
+versione='1.2.116'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -577,21 +577,30 @@ def testDns(parIn=""):
     dns1 = xbmc.getInfoLabel('Network.DNS1Address')
     dns2 = xbmc.getInfoLabel('Network.DNS2Address')
     video_urls = []
-    vUrl = ""
-    logga('CALL DADDY 4 DNS TEST '+parIn)
+    
+    logga('CALL DNS TEST '+parIn)
     randomUa=getRandomUA()
-    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://thedaddy.to/'}
+    testUrl="https://daddylive.dad/embed/stream-877.php"
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://daddylive.dad/'}
+    resolve="daddyCode@@877"
+    if parIn=="StrCom":
+        sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
+        scUrl=makeRequest(sc_url)
+        testUrl=scUrl.replace("\n", "")+"iframe/4474-febbre-da-cavallo"
+        head={'user-agent':randomUa}
+        resolve="scws2@@4474-febbre-da-cavallo"
     page_data = ""
     time.sleep(2)
     ret="[COLOR lime]TEST DNS: OK[/COLOR]"
     thumb="https://upload.wikimedia.org/wikipedia/commons/f/fb/2000px-ok_x_nuvola_green.png"
     try:
+        logga('URL DNS TEST '+testUrl)
         currSess = requests.Session()
-        page_data1 = currSess.get("https://thedaddy.to/embed/stream-877.php",headers=head)
+        page_data1 = currSess.get(testUrl, headers=head)
         page_data = page_data1.content
         
         if (page_data1.status_code != 200):
-            ret="[COLOR red]ERRORE DNS[/COLOR]"
+            ret="[COLOR red]ERRORE DNS[/COLOR] [COLOR gold]("+str(page_data1.status_code)+")[/COLOR]"
             thumb="https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"
         else:
             if PY3:
@@ -599,8 +608,10 @@ def testDns(parIn=""):
                     page_data = page_data.decode('utf-8')
                 except:
                     page_data = page_data.decode('latin-1')
-            
+           
             iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
+            if parIn=="StrCom":
+                iframe_url = preg_match(page_data, r'src="(.*?)"')
             if (iframe_url==""):
                 ret="[COLOR red]DNS ERRORS[/COLOR]"
                 thumb="https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"
@@ -619,7 +630,7 @@ def testDns(parIn=""):
     ret += "[COLOR yellow] ["+dns1+" - "+dns2+"][/COLOR]"
 
     jsonText='{"SetViewMode":"51","items":['
-    jsonText = jsonText + '{"title":"'+ret+'","myresolve":"daddy@@https://thedaddy.to/embed/stream-877.php",'
+    jsonText = jsonText + '{"title":"'+ret+'","myresolve":"'+ resolve+'",'
     jsonText = jsonText + '"thumbnail":"'+thumb+'",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
     jsonText = jsonText + '"info":"by MandraKodi"}'
@@ -1908,7 +1919,7 @@ def scwsNew(parIn=None):
     pageT3=pageT2.replace("\n", "").replace("\r", "").replace("\t", "")
     logga("pageT2: "+pageT3)
     urlSc="ignore"
-    tito="[COLOR lime]PLAY VIDEO[/COLOR]"
+    tito="[COLOR lime]PLAY VIDEO SC[/COLOR]"
     try:    
         patron = r"window.masterPlaylist\s=\s{\s.*params:\s(.*?)},\s.*url:\s'(.*?)'"
         res = preg_match(pageT3, patron)
