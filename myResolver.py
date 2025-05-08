@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.114'
+versione='1.2.115'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 04.05.2025
+# Last update: 08.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -2297,7 +2297,9 @@ def webcam(parIn):
         express1 = r'<a href="it/webcam/(.*?)" class="col-xs-12 col-sm-6 col-md-4">(.*?)</a>'
         lista = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)
         jsonText='{"SetViewMode":"503","items":['
-        numIt=0
+        
+        listaCam = []
+
         for (link, tit) in lista:
             titolo="Cam"
             express1 = r'<p class="tcam">(.*?)</p>'
@@ -2327,9 +2329,24 @@ def webcam(parIn):
             except:
                 pass
             
+            strCam=titolo+"@@"+img+"@@"+link+"@@"+info+"@@"+infoPlus
+            listaCam.append(strCam)
+
+        listaCam.sort()
+        numIt=0
+        for wCam in listaCam:
+            arrWcam=wCam.split("@@")
+            titolo=arrWcam[0]
+            img=arrWcam[1]
+            link=arrWcam[2]
+            info=arrWcam[3]
+            infoPlus=arrWcam[4]
+            infoP=""
+            if infoPlus!="":
+                infoP=" [COLOR lime]("+infoPlus+")[/COLOR]"
             if (numIt > 0):
                 jsonText = jsonText + ','    
-            jsonText = jsonText + '{"title":"[COLOR gold]'+titolo+'[/COLOR] [COLOR lime]('+infoPlus+')[/COLOR]","myresolve":"webcam@@1_webcam/'+link.replace(".html", '')+'",'
+            jsonText = jsonText + '{"title":"[COLOR gold]'+titolo+'[/COLOR]'+infoP+'","myresolve":"webcam@@1_webcam/'+link.replace(".html", '')+'",'
             jsonText = jsonText + '"thumbnail":"'+img+'",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"info":"'+info+'"}'
@@ -2364,7 +2381,7 @@ def webcam(parIn):
             img = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)[0]
         except:
             pass
-        
+        tube=0
         url1="ignore"
         express1 = r"source:'(.*?)'"
         try:
@@ -2373,9 +2390,25 @@ def webcam(parIn):
         except:
             pass
 
+        if url1=="ignore":
+            express1 = r"videoId:'(.*?)'"
+            try:
+                url = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)[0]
+                url1 = "https://www.youtube.com/watch?v="+url
+                tube=1
+            except:
+                pass
+
+
+
+
+
         jsonText='{"SetViewMode":"503","items":['
         jsonText = jsonText + '{"title":"[COLOR gold]'+titolo+'[/COLOR]",'
-        jsonText = jsonText + '"link":"'+url1+'",'
+        if tube==0:
+            jsonText = jsonText + '"link":"'+url1+'",'
+        else:
+            jsonText = jsonText + '"myresolve":"risolvi@@'+url1+'",'
         jsonText = jsonText + '"thumbnail":"'+img+'",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"'+info+infoPlus+'"}'
