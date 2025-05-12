@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.116'
+versione='1.2.117'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 08.05.2025
+# Last update: 12.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -556,7 +556,10 @@ def wizhdFind(parIn):
     logga('CALL: '+parIn)
     page_data = requests.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'http://wizhdsports.net/'}).content
     if PY3:
-        page_data = page_data.decode('utf-8')
+        try:
+            page_data = page_data.decode('utf-8')
+        except:
+            page_data = page_data.decode('latin1')
 
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
     logga('IFRAME WIZ: '+iframe_url)
@@ -657,7 +660,7 @@ def markky(parIn):
         try:
             page_data = page_data.decode('utf-8')
         except:
-            page_data = page_data.decode('latin-1')
+            page_data = page_data.decode('latin1')
     
     logga("page_soloper "+page_data)
     url = preg_match(page_data, r'source: "(.*?)"')
@@ -687,7 +690,7 @@ def nopay(parIn):
         try:
             page_data = page_data.decode('utf-8')
         except:
-            page_data = page_data.decode('latin-1')
+            page_data = page_data.decode('latin1')
     
     logga("page_soloper "+page_data)
     iframe_url = preg_match(page_data, r"iframe\s*src='([^']+)")
@@ -762,7 +765,10 @@ def nopay(parIn):
         video_urls.append(("ignoreme", "[COLOR red]REQUEST ERROR[/COLOR]", "ERROR", "https://icon-library.com/images/error-icon-transparent/error-icon-transparent-24.jpg"))
         return video_urls
     if PY3:
-        new_page_data = new_page_data.decode('utf-8')
+        try:
+            new_page_data = new_page_data.decode('utf-8')
+        except:
+            new_page_data = new_page_data.decode('latin1')
 
     video_url = preg_match(new_page_data, r'source:\s*"([^"]+)')
     if video_url == "":
@@ -817,7 +823,10 @@ def findM3u8(linkIframe, refPage):
         page_data2 = s.get(linkIframe,headers=headers).content
 
         if PY3:
-            page_data2 = page_data2.decode('utf-8')
+            try:
+                page_data2 = page_data2.decode('utf-8')
+            except:
+                page_data2 = page_data2.decode('latin1')
 
         
         
@@ -841,7 +850,10 @@ def assiaFind(parIn):
     randomUa=getRandomUA()
     page_data = requests.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'http://assia1.tv/'}).content
     if PY3:
-        page_data = page_data.decode('utf-8')
+        try:
+            page_data = page_data.decode('utf-8')
+        except:
+            page_data = page_data.decode('latin1')
     video_url = preg_match(page_data, "source: '(.*?)'")
     
     logga('video_url '+video_url)
@@ -1118,7 +1130,10 @@ def pepper(parIn=None):
     else:
         page_data2 = requests.get("https:"+iframe_url,headers={'user-agent':randomUa,'accept':'*/*','Referer':parIn}).content
         if PY3:
-            page_data2 = page_data2.decode('utf-8')
+            try:
+                page_data2 = page_data2.decode('utf-8')
+            except:
+                page_data2 = page_data2.decode('latin1')
         iframe_url2 = preg_match(page_data2, '<iframe src="(.*?)"')
         logga('URL PEPPER2: https:'+iframe_url2)
         video_url = GetLSProData("https:"+iframe_url2, parIn)
@@ -1487,7 +1502,10 @@ def GetLSProData(page_in, refe=None):
     #page_data = requests.get(page_in,headers={'user-agent':'iPad','accept':'*/*','referer':refe}).content
 
     if PY3:
-        page_data = page_data.decode('utf-8')
+        try:
+            page_data = page_data.decode('utf-8')
+        except:
+            page_data = page_data.decode('latin1')
 
     src = preg_match(page_data, '<iframe src="([^"]*)')
 
@@ -1898,7 +1916,7 @@ def scwsNew(parIn=None):
 
     sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
     scUrl=makeRequest(sc_url)
-    base=scUrl.replace("\n", '')+"iframe/"+parIn
+    base=scUrl.replace("\n", '')+"it/iframe/"+parIn
 
     randomUA=getRandomUA()
 
@@ -1907,6 +1925,8 @@ def scwsNew(parIn=None):
     pageT = requests.get(base,headers=headSCt).content
     if PY3:
         pageT = pageT.decode('utf-8')
+    pageT = pageT.replace("\n", "").replace("\r", "").replace("\t", "")
+    #logga("SC_PAGE: "+pageT)
     patron = r'src="(.*?)"'
     m3u8Url = preg_match(pageT, patron)
     logga("URL_M3U8: "+m3u8Url)
@@ -1990,7 +2010,7 @@ def getScSerie(parIn=None):
     numSea=x[1]
     sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
     scUrl=makeRequest(sc_url)
-    base=scUrl.replace("\n", '')+"titles/"+idSea+"/stagione-"+numSea
+    base=scUrl.replace("\n", '')+"it/titles/"+idSea+"/season-"+numSea
     randomUA=getRandomUA()
 
     headSCt={'user-agent':randomUA}
