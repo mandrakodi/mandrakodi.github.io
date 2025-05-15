@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.118'
+versione='1.2.119'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -871,7 +871,7 @@ def assia(parIn=None):
 
 def daddyFind(parIn):
     video_url = ""
-    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylivehd.sx/'}).content
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylive.dad/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
@@ -880,7 +880,7 @@ def daddyFind(parIn):
         video_url = iframe_url
         return video_url
     if iframe_url.startswith("http"):
-        page_data2 = requests.get(iframe_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':parIn}).content
+        page_data2 = requests.get(iframe_url.replace("caq21harderv991gpluralplay", "forcedtoplay"),headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':parIn}).content
         if PY3:
             page_data2 = page_data2.decode('utf-8')
         
@@ -1052,14 +1052,14 @@ def daddyCode(codeIn=None):
     }
     s = requests.Session()
     #urlSrv="https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium"+codeIn
-    urlSrv="https://pkpakiplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://forcedtoplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY_CODE SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    refe="https://pkpakiplay.xyz/"
-    origin="https://pkpakiplay.xyz"
+    refe="https://forcedtoplay.xyz/"
+    origin="https://forcedtoplay.xyz"
     
     
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
@@ -1277,14 +1277,14 @@ def PlayStream(link):
     }
     s = requests.Session()
     #urlSrv="https://webxzplay.cfd/server_lookup.php?channel_id=premium"+codeIn
-    urlSrv="https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://forcedtoplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    refe="https://caq21harderv991gpluralplay.xyz/"
-    origin="https://caq21harderv991gpluralplay.xyz"
+    refe="https://forcedtoplay.xyz/"
+    origin="https://forcedtoplay.xyz"
     
     
     urlV=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
