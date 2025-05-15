@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.117'
+versione='1.2.118'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 12.05.2025
+# Last update: 15.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1051,14 +1051,15 @@ def daddyCode(codeIn=None):
         'user-agent': randomUa
     }
     s = requests.Session()
-    urlSrv="https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    #urlSrv="https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://pkpakiplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY_CODE SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    refe="https://caq21harderv991gpluralplay.xyz/"
-    origin="https://caq21harderv991gpluralplay.xyz"
+    refe="https://pkpakiplay.xyz/"
+    origin="https://pkpakiplay.xyz"
     
     
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
