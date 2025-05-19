@@ -1,8 +1,8 @@
-versione='1.2.57'
+versione='1.2.58'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 04.05.2025
+# Last update: 19.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -558,6 +558,16 @@ def callReolver(metodo, parametro):
         url=list_item.getPath()
         xbmcplugin.setContent(_handle, 'videos')
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+
+        newTit2="[COLOR orange]OPEN WEB PAGE DADDY[/COLOR]"
+        liz = xbmcgui.ListItem('Daddylive', path=parametro.replace("dlhd.so", "daddylive.dad")+"?playTo=web")
+        liz.setLabel(newTit2)
+        liz.setLabel2(newTit2)
+        liz.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url2=liz.getPath()
+        xbmcplugin.setContent(_handle, 'videos')
+        xbmcplugin.addDirectoryItem(_handle, url2, liz, False)
+
     elif metodo=="amstaff":
         kodi_version=getInstalledVersion()
         arrVer=kodi_version.split("@@")
@@ -602,6 +612,18 @@ def callReolver(metodo, parametro):
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
         logga("CALL myResolver.antena for "+parametro)
         list_item = myResolver.antena(parametro)
+        list_item.setLabel(newTit)
+        list_item.setLabel2(newTit)
+        list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url=list_item.getPath()
+        xbmcplugin.setContent(_handle, 'movies')
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+    elif metodo=="daddyP":
+        fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
+        newTit="[COLOR lime]PLAY DADDY[/COLOR]"
+        logga("CALL myResolver.daddyPremium for "+parametro)
+        list_item = myResolver.daddyPremium(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
         list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
