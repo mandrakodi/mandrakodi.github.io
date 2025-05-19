@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.120'
+versione='1.2.121'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 19.05.2025
+# Last update: 20.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1077,6 +1077,8 @@ def daddyCode(codeIn=None):
         'user-agent': randomUa
     }
     s = requests.Session()
+    urlDaddy="https://daddylive.dad/embed/stream-"+codeIn+".php"
+    
     #urlSrv="https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     urlSrv="https://alldownplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
@@ -1090,10 +1092,36 @@ def daddyCode(codeIn=None):
     
     final_url=link+"|Referer="+refe+"&Origin="+origin
     
+
+    jsonText='{"SetViewMode":"50","items":['
+    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR]","link":"'+final_url+'",'
+    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"},'
+    jsonText = jsonText + '{"title":"[COLOR orange]OPEN DADDY PAGE '+codeIn+'[/COLOR] [COLOR gold](XML)[/COLOR]","link":"'+urlDaddy+'?playTo=web",'
+    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"},'
+    jsonText = jsonText + '{"title":"[COLOR orange]OPEN DADDY PAGE '+codeIn+'[/COLOR] [COLOR gold](FIRE SILK BROWSER)[/COLOR]","link":"'+urlDaddy+'",'
+    jsonText = jsonText + '"apk":"com.amazon.cloud9",'
+    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"},'
+    jsonText = jsonText + '{"title":"[COLOR orange]OPEN DADDY PAGE '+codeIn+'[/COLOR] [COLOR gold](ANDROID CHROME BROWSER)[/COLOR]","link":"'+urlDaddy+'",'
+    jsonText = jsonText + '"apk":"com.android.chrome",'
+    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"}'
     
-    video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    webUrl="https://daddylive.dad/embed/stream-"+codeIn+".php?playTo=web"
-    video_urls.append((webUrl, "[COLOR orange]OPEN DADDY PAGE "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
+    
+    
+    jsonText = jsonText + "]}"
+    logga('JSON-DADDY: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    
+    #video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
+    #webUrl="https://daddylive.dad/embed/stream-"+codeIn+".php?playTo=web"
+    #video_urls.append((webUrl, "[COLOR orange]OPEN DADDY PAGE "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
 
 def sibNet(parIn=None):
