@@ -1,4 +1,4 @@
-versione='1.2.58'
+versione='1.2.59'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -549,8 +549,10 @@ def callReolver(metodo, parametro):
     if metodo=="daddy" and "dlhd.so" in parametro:
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png"
-        newTit="[COLOR lime]PLAY STREAM DADDY[/COLOR]"
         logga("CALL myResolver.PlayStream for "+parametro)
+        arrL=parametro.split("stream-")
+        codeIn=arrL[1].replace(".php", "")
+        newTit="[COLOR lime]PLAY STREAM DADDY "+codeIn+"[/COLOR]"
         list_item = myResolver.PlayStream(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
@@ -559,7 +561,7 @@ def callReolver(metodo, parametro):
         xbmcplugin.setContent(_handle, 'videos')
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
 
-        newTit2="[COLOR orange]OPEN WEB PAGE DADDY[/COLOR]"
+        newTit2="[COLOR orange]OPEN PAGE DADDY "+codeIn+"[/COLOR]"
         liz = xbmcgui.ListItem('Daddylive', path=parametro.replace("dlhd.so", "daddylive.dad")+"?playTo=web")
         liz.setLabel(newTit2)
         liz.setLabel2(newTit2)
