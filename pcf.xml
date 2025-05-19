@@ -74,6 +74,7 @@
 		<rule name="acestream" filename="acestream://.*" player="AceStreamMedia" />
 		<rule name="torrent" filename="magnet:.*" player="Amnis" />
 		<rule name="wise" filename=".*extPL=wise" player="Wiseplay" />
+		<rule name="play_to_web" filename=".*playTo=web" player="WebVideoCaster" />
 		<rule name="other" video="true" player="videodefaultplayer" />
 	</rules>
 		
