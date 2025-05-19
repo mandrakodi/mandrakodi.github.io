@@ -1,4 +1,4 @@
-versione='1.2.59'
+versione='1.2.60'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -561,7 +561,7 @@ def callReolver(metodo, parametro):
         xbmcplugin.setContent(_handle, 'videos')
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
 
-        newTit2="[COLOR orange]OPEN PAGE DADDY "+codeIn+"[/COLOR]"
+        newTit2="[COLOR orange]OPEN PAGE DADDY "+codeIn+"[/COLOR] [COLOR yellow](WebVideoCaster)[/COLOR]"
         liz = xbmcgui.ListItem('Daddylive', path=parametro.replace("dlhd.so", "daddylive.dad")+"?playTo=web")
         liz.setLabel(newTit2)
         liz.setLabel2(newTit2)
@@ -569,6 +569,25 @@ def callReolver(metodo, parametro):
         url2=liz.getPath()
         xbmcplugin.setContent(_handle, 'videos')
         xbmcplugin.addDirectoryItem(_handle, url2, liz, False)
+        
+        newTit2="[COLOR orange]OPEN PAGE DADDY "+codeIn+"[/COLOR] [COLOR yellow](Downloader)[/COLOR]"
+        liz = xbmcgui.ListItem('Daddylive', path=parametro.replace("dlhd.so", "daddylive.dad")+"?playTo=fire")
+        liz.setLabel(newTit2)
+        liz.setLabel2(newTit2)
+        liz.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url2=liz.getPath()
+        xbmcplugin.setContent(_handle, 'videos')
+        xbmcplugin.addDirectoryItem(_handle, url2, liz, False)
+
+        newTit2="[COLOR orange]OPEN PAGE DADDY "+codeIn+"[/COLOR] [COLOR yellow](Chrome)[/COLOR]"
+        liz = xbmcgui.ListItem('Daddylive', path=parametro.replace("dlhd.so", "daddylive.dad")+"?playTo=chrome")
+        liz.setLabel(newTit2)
+        liz.setLabel2(newTit2)
+        liz.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url2=liz.getPath()
+        xbmcplugin.setContent(_handle, 'videos')
+        xbmcplugin.addDirectoryItem(_handle, url2, liz, False)
+        
 
     elif metodo=="amstaff":
         kodi_version=getInstalledVersion()
