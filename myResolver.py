@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.119'
+versione='1.2.120'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 15.05.2025
+# Last update: 19.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -941,6 +941,32 @@ def sky(parIn=None):
     liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     return liz
         
+def daddyPremium(codeIn=None):
+    import re, json
+    video_urls = []
+    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 OPR/118.0.0.0"
+    headers = {
+        'user-agent': randomUa
+    }
+    s = requests.Session()
+    urlSrv="https://alldownplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    dataJson = s.get(urlSrv, headers=headers)
+    arrJ = json.loads(dataJson.text)
+    server=arrJ["server_key"]
+    logga("DADDY_PREMIUM SERVER "+server)
+    link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
+    
+    liz = xbmcgui.ListItem(path=link, offscreen=True)
+    liz.setContentLookup(False)
+    liz.setProperty('inputstream', 'inputstream.adaptive')
+    liz.setMimeType("application/x-mpegURL")
+    liz.setProperty('inputstream.adaptive.file_type', 'hls')
+    ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 OPR/116.0.0.0"
+    host="https://xtreaweb.top"
+    liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
+    liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
+    return liz
+        
 
 def antena(parIn=None):
     img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
@@ -1045,27 +1071,29 @@ def daddy(parIn=None):
 def daddyCode(codeIn=None):
     import re, json
     video_urls = []
-    randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
-    randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 OPR/118.0.0.0"
+    #randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
     headers = {
         'user-agent': randomUa
     }
     s = requests.Session()
     #urlSrv="https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium"+codeIn
-    urlSrv="https://forcedtoplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://alldownplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY_CODE SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    refe="https://forcedtoplay.xyz/"
-    origin="https://forcedtoplay.xyz"
+    refe="https://xtreaweb.top/"
+    origin="https://xtreaweb.top"
     
     
-    final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
+    final_url=link+"|Referer="+refe+"&Origin="+origin
     
     
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
+    webUrl="https://daddylive.dad/embed/stream-"+codeIn+".php?playTo=web"
+    video_urls.append((webUrl, "[COLOR orange]OPEN DADDY PAGE "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
 
 def sibNet(parIn=None):
@@ -1277,17 +1305,17 @@ def PlayStream(link):
     }
     s = requests.Session()
     #urlSrv="https://webxzplay.cfd/server_lookup.php?channel_id=premium"+codeIn
-    urlSrv="https://forcedtoplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://alldownplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    refe="https://forcedtoplay.xyz/"
-    origin="https://forcedtoplay.xyz"
+    refe="https://xtreaweb.top/"
+    origin="https://xtreaweb.top"
     
     
-    urlV=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent="+randomUa
+    urlV=link+"|Referer="+refe+"&Origin="+origin
 
     liz = xbmcgui.ListItem('Daddylive', path=urlV)
     liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
