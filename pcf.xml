@@ -32,14 +32,6 @@
 			<filename>com.amnis</filename>
 			<hidexbmc>true</hidexbmc>
 		</player>
-		<player name="Chrome" type="ExternalPlayer" audio="false" video="true">
-			<filename>com.android.chrome</filename>
-			<hidexbmc>true</hidexbmc>
-		</player>
-		<player name="Downloader" type="ExternalPlayer" audio="false" video="true">
-			<filename>downloader.vitmate.downloaderapp</filename>
-			<hidexbmc>true</hidexbmc>
-		</player>
 		<player name="Firefox" type="ExternalPlayer" audio="false" video="true">
 			<filename>org.mozilla.firefox</filename>
 			<hidexbmc>true</hidexbmc>
@@ -62,6 +54,14 @@
 		</player>
 		<player name="WebVideoCaster" type="ExternalPlayer" audio="false" video="true">
 			<filename>com.instantbits.cast.webvideo</filename>
+			<hidexbmc>true</hidexbmc>
+		</player>
+		<player name="Chrome" type="ExternalPlayer" audio="false" video="true">
+			<filename>com.android.chrome</filename>
+			<hidexbmc>true</hidexbmc>
+		</player>
+		<player name="Downloader" type="ExternalPlayer" audio="false" video="true">
+			<filename>com.esaba.downloader</filename>
 			<hidexbmc>true</hidexbmc>
 		</player>
 		<player name="FFMPEG" type="ExternalPlayer" audio="false" video="true">
