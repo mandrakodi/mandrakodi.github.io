@@ -1,8 +1,8 @@
-versione='1.2.60'
+versione='1.2.61'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 19.05.2025
+# Last update: 20.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -550,6 +550,9 @@ def callReolver(metodo, parametro):
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png"
         logga("CALL myResolver.PlayStream for "+parametro)
+        if checkPluginInstalled("inputstream.ffmpegdirect") == False:
+            msgBox("Installare il plugin [B]inputstream.ffmpegdirect[/B] dalla repository di Kodi > Lettore video InputStream")
+            return
         arrL=parametro.split("stream-")
         codeIn=arrL[1].replace(".php", "")
         newTit="[COLOR lime]PLAY STREAM DADDY "+codeIn+"[/COLOR]"
@@ -560,35 +563,6 @@ def callReolver(metodo, parametro):
         url=list_item.getPath()
         xbmcplugin.setContent(_handle, 'videos')
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
-
-        newTit2="[COLOR orange]OPEN PAGE DADDY "+codeIn+"[/COLOR] [COLOR yellow](WebVideoCaster)[/COLOR]"
-        liz = xbmcgui.ListItem('Daddylive', path=parametro.replace("dlhd.so", "daddylive.dad")+"?playTo=web")
-        liz.setLabel(newTit2)
-        liz.setLabel2(newTit2)
-        liz.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
-        url2=liz.getPath()
-        xbmcplugin.setContent(_handle, 'videos')
-        xbmcplugin.addDirectoryItem(_handle, url2, liz, False)
-        
-        newTit2="[COLOR orange]OPEN PAGE DADDY "+codeIn+"[/COLOR] [COLOR yellow](Downloader)[/COLOR]"
-        liz = xbmcgui.ListItem('Daddylive', path=parametro.replace("dlhd.so", "daddylive.dad")+"?playTo=fire")
-        liz.setLabel(newTit2)
-        liz.setLabel2(newTit2)
-        liz.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
-        url2=liz.getPath()
-        xbmcplugin.setContent(_handle, 'videos')
-        xbmcplugin.addDirectoryItem(_handle, url2, liz, False)
-
-        newTit2="[COLOR orange]OPEN PAGE DADDY "+codeIn+"[/COLOR] [COLOR yellow](Chrome)[/COLOR]"
-        liz = xbmcgui.ListItem('Daddylive', path=parametro.replace("dlhd.so", "daddylive.dad")+"?playTo=chrome")
-        liz.setLabel(newTit2)
-        liz.setLabel2(newTit2)
-        liz.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
-        url2=liz.getPath()
-        xbmcplugin.setContent(_handle, 'videos')
-        xbmcplugin.addDirectoryItem(_handle, url2, liz, False)
-        
-
     elif metodo=="amstaff":
         kodi_version=getInstalledVersion()
         arrVer=kodi_version.split("@@")
@@ -599,7 +573,7 @@ def callReolver(metodo, parametro):
             return
         
         if checkPluginInstalled("inputstream.adaptive") == False:
-            msgBox("Installare l'addon [B]YouTube[/B] dalla repository di Kodi")
+            msgBox("Installare il plugin [B]inputstream.adaptive[/B] dalla repository di Kodi > Lettore video InputStream")
             return
         
         version = xbmcaddon.Addon(id="inputstream.adaptive").getAddonInfo("version")
