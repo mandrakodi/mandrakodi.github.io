@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.122'
+versione='1.2.123'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1077,6 +1077,20 @@ def daddyCode(codeIn=None):
         'user-agent': randomUa
     }
     s = requests.Session()
+    
+    urlAuth="https://alldownplay.xyz/premiumtv/daddylive.php?id="+codeIn
+    fu = s.get(urlAuth, headers=headers)
+    authTs = re.findall('var authTs\s+= "(.*?)";', fu.text)[0]
+    authRnd = re.findall('var authRnd\s+= "(.*?)";', fu.text)[0]
+    authSig = re.findall('var authSig\s+= "(.*?)";', fu.text)[0]
+    
+    
+    urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+codeIn+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
+    dataJ2 = s.get(urlAuth, headers=headers)
+    logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
+    
+    
+    
     urlDaddy="https://daddylive.dad/embed/stream-"+codeIn+".php"
     
     #urlSrv="https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium"+codeIn
@@ -1094,25 +1108,29 @@ def daddyCode(codeIn=None):
     
 
     jsonText='{"SetViewMode":"50","items":['
-    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR]","myresolve":"daddy@@https://dlhd.so/embed/stream-'+codeIn+'.php",'
-    #jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR]","link":"'+final_url+'",'
+    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"'+final_url+'",'
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
     jsonText = jsonText + '"info":"by MandraKodi"},'
-    jsonText = jsonText + '{"title":"[COLOR orange]OPEN DADDY PAGE '+codeIn+'[/COLOR] [COLOR gold](XML)[/COLOR]","link":"'+urlDaddy+'?playTo=web",'
-    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
-    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-    jsonText = jsonText + '"info":"by MandraKodi"},'
-    jsonText = jsonText + '{"title":"[COLOR orange]OPEN DADDY PAGE '+codeIn+'[/COLOR] [COLOR gold](FIRE SILK BROWSER)[/COLOR]","link":"'+urlDaddy+'",'
-    jsonText = jsonText + '"apk":"com.amazon.cloud9",'
-    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
-    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-    jsonText = jsonText + '"info":"by MandraKodi"},'
-    jsonText = jsonText + '{"title":"[COLOR orange]OPEN DADDY PAGE '+codeIn+'[/COLOR] [COLOR gold](ANDROID CHROME BROWSER)[/COLOR]","link":"'+urlDaddy+'",'
-    jsonText = jsonText + '"apk":"com.android.chrome",'
+    jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"daddy@@https://dlhd.so/embed/stream-'+codeIn+'.php",'
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
     jsonText = jsonText + '"info":"by MandraKodi"}'
+    
+    #jsonText = jsonText + '{"title":"[COLOR orange]OPEN DADDY PAGE '+codeIn+'[/COLOR] [COLOR gold](XML)[/COLOR]","link":"'+urlDaddy+'?playTo=web",'
+    #jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    #jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    #jsonText = jsonText + '"info":"by MandraKodi"},'
+    #jsonText = jsonText + '{"title":"[COLOR orange]OPEN DADDY PAGE '+codeIn+'[/COLOR] [COLOR gold](FIRE SILK BROWSER)[/COLOR]","link":"'+urlDaddy+'",'
+    #jsonText = jsonText + '"apk":"com.amazon.cloud9",'
+    #jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    #jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    #jsonText = jsonText + '"info":"by MandraKodi"},'
+    #jsonText = jsonText + '{"title":"[COLOR orange]OPEN DADDY PAGE '+codeIn+'[/COLOR] [COLOR gold](ANDROID CHROME BROWSER)[/COLOR]","link":"'+urlDaddy+'",'
+    #jsonText = jsonText + '"apk":"com.android.chrome",'
+    #jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    #jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    #jsonText = jsonText + '"info":"by MandraKodi"}'
     
     
     
@@ -1333,6 +1351,17 @@ def PlayStream(link):
         'user-agent': UA
     }
     s = requests.Session()
+    
+    urlAuth="https://alldownplay.xyz/premiumtv/daddylive.php?id="+codeIn
+    fu = s.get(urlAuth, headers=headers)
+    authTs = re.findall('var authTs\s+= "(.*?)";', fu.text)[0]
+    authRnd = re.findall('var authRnd\s+= "(.*?)";', fu.text)[0]
+    authSig = re.findall('var authSig\s+= "(.*?)";', fu.text)[0]
+    
+    
+    urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+codeIn+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
+    dataJ2 = s.get(urlAuth, headers=headers)
+    logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
     #urlSrv="https://webxzplay.cfd/server_lookup.php?channel_id=premium"+codeIn
     urlSrv="https://alldownplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
