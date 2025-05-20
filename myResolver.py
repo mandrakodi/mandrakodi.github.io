@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.121'
+versione='1.2.122'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1094,7 +1094,8 @@ def daddyCode(codeIn=None):
     
 
     jsonText='{"SetViewMode":"50","items":['
-    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR]","link":"'+final_url+'",'
+    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR]","myresolve":"daddy@@https://dlhd.so/embed/stream-'+codeIn+'.php",'
+    #jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR]","link":"'+final_url+'",'
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
     jsonText = jsonText + '"info":"by MandraKodi"},'
