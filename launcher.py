@@ -1,8 +1,8 @@
-versione='1.2.61'
+versione='1.2.62'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 20.05.2025
+# Last update: 23.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -595,6 +595,44 @@ def callReolver(metodo, parametro):
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
         #logga("CALL myResolver.amstaff for "+parametro)
         list_item = myResolver.amstaffTest(parametro)
+        list_item.setLabel(newTit)
+        list_item.setLabel2(newTit)
+        list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url=list_item.getPath()
+        xbmcplugin.setContent(_handle, 'movies')
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+    elif metodo=="daznToken":
+        kodi_version=getInstalledVersion()
+        arrVer=kodi_version.split("@@")
+        kodi_vers=int(arrVer[0])
+        kodi_minVers=int(arrVer[1])
+        if kodi_vers<21 or (kodi_vers==21 and kodi_minVers<1):
+            msgBox("Per visualizzare questo link, e' necessaria la versione [B]21.1[/B], o superiore, di Kodi ["+str(kodi_vers)+"."+str(kodi_minVers)+"]")
+            return
+        
+        if checkPluginInstalled("inputstream.adaptive") == False:
+            msgBox("Installare il plugin [B]inputstream.adaptive[/B] dalla repository di Kodi > Lettore video InputStream")
+            return
+        
+        version = xbmcaddon.Addon(id="inputstream.adaptive").getAddonInfo("version")
+       
+        arrVerAd = version.split(".")
+        major = int(arrVerAd[0])
+        medium = int(arrVerAd[1])
+        minor = int(arrVerAd[2])
+
+        if major<21 or (major==21 and medium < 5) or (major==21 and medium == 5 and minor < 4):
+            msgBox("Per visualizzare questo link, e' necessaria la versione [B]21.5.4[/B], o superiore, di [B]inputstream.adaptive[/B] ["+str(major)+"."+str(medium)+"."+str(minor)+"]")
+            return
+
+        pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
+        urlSup="https://test34344.herokuapp.com/testAnonym.php?token="+pwd+"&dns1=AMSTAFF&dns2="+version
+        makeRequestNoUa(urlSup)
+        fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
+        newTit="[COLOR lime]PLAY STREAM[/COLOR]"
+        #logga("CALL myResolver.amstaff for "+parametro)
+        list_item = myResolver.daznToken(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
         list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
