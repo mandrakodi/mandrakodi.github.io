@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.123'
+versione='1.2.124'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 20.05.2025
+# Last update: 23.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -33,6 +33,36 @@ else:
 #=================================================
 # TOOLS VARI
 #=================================================
+
+def calcioga(parIn):
+    ua=getRandomUA
+    pageUrl="https://calcio.codes/live/"+parIn
+    page=bypassCloudscrape(pageUrl)
+    pattern='data-url="(.*?)">Player'
+    lista=find_multiple_matches(page, pattern)
+    video_urls = []
+    
+    for link in lista:
+        if link[:-5]==".m3u8":
+            video_urls.append((link+"|Referer=https://calcio.codes/&Origin=https://calcio.codes&User-Agent="+ua, "[COLOR lime]PLAY STREAM[/COLOR]", "by @mandrakodi"))
+        if "newembedplay.xyz" in link:
+            code=link.split("=")[1]
+            newLink="https://calcionew.newkso.ru/calcio/calcio"+code+"/index.m3u8"
+            video_urls.append((newLink+"|Referer=https://4kwebplay.xyz/&Origin=https://4kwebplay.xyz&User-Agent="+ua, "[COLOR gold]PLAY STREAM[/COLOR]", "by @mandrakodi"))
+
+def bypassCloudscrape(url):
+    from lib import cloudscraper
+    
+    scraper = cloudscraper.create_scraper()
+    response = scraper.get(url)
+    toRet="KO"
+    if response.status_code == 200:
+        logga("Accesso riuscito!")
+        logga(response.text[:1000])  # Mostra i primi 1000 caratteri della pagina
+        toRet=response.text
+    else:
+        logga(f"Errore: status code {response.status_code}")
+    return toRet
 
 def logga(mess):
     if debug == "on":
@@ -1387,6 +1417,30 @@ def PlayStream(link):
         liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
     
     return liz
+
+def daznToken(parIn):
+    logga ("PAR_DAZN: "+parIn)
+    arrT=parIn.split("PORCO_IL_TUO_DIO")
+    link=arrT[0].replace("CAZZI_TUOI", "&")
+    key=arrT[1]
+    token=arrT[2]
+    ua=arrT[3]
+    drmType="org.w3.clearkey"
+    host="https://www.dazn.com"
+    logga ("link_DAZN: "+link)
+
+    liz = xbmcgui.ListItem(path=link, offscreen=True)
+    liz.setContentLookup(False)
+    liz.setProperty('inputstream', 'inputstream.adaptive')
+    liz.setMimeType("application/dash+xml")
+    liz.setProperty('inputstream.adaptive.file_type', 'mpd')
+    liz.setProperty('inputstream.adaptive.drm_legacy', drmType+'|'+key)
+    heads="dazn-token="+token+'&referer='+host+'/&origin='+host+'&user-agent='+ua
+    liz.setProperty('inputstream.adaptive.stream_headers', heads)
+    liz.setProperty('inputstream.adaptive.manifest_headers', heads)
+
+    return liz
+
 def amstaffTest(parIn):
     import base64
     if "http" in parIn:
@@ -5326,6 +5380,7 @@ def run (action, params=None):
         'nflinsider':nflinsider,
         'ffmpeg':ffmpeg,
         'koolto':koolto,
+        'calcioga': calcioga,
         'spon':sportOnline,
         'sportMenu': createSportMenu
     }
