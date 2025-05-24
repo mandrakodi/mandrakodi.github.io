@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.124'
+versione='1.2.125'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.05.2025
+# Last update: 24.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -1420,8 +1420,8 @@ def PlayStream(link):
 
 def daznToken(parIn):
     logga ("PAR_DAZN: "+parIn)
-    arrT=parIn.split("PORCO_IL_TUO_DIO")
-    link=arrT[0].replace("CAZZI_TUOI", "&")
+    arrT=parIn.split("SPLITTA_QUI")
+    link=arrT[0].replace("PARAMETRI_TUOI", "&")
     key=arrT[1]
     token=arrT[2]
     ua=arrT[3]
