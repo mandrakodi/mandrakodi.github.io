@@ -5,6 +5,7 @@ versione='1.2.127'
 # Created on: 10.04.2021
 # Last update: 28.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
+
 import re, requests, sys, logging, uuid
 import os
 import string
