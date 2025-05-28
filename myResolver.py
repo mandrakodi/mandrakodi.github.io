@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.125'
+versione='1.2.126'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 24.05.2025
+# Last update: 28.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 import re, requests, sys, logging, uuid
 import os
@@ -2050,7 +2050,7 @@ def getUrlSc(scws_id, tit=None):
         video_urls.append((url4, "[COLOR lime]"+titolo+"[/COLOR]", "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
     return video_urls
 
-def scwsNew(parIn=None):
+def scwsNew(parIn=None, parInp2=0):
     import json
     logga("SCWS: "+parIn)
     video_urls = []
@@ -2111,8 +2111,21 @@ def scwsNew(parIn=None):
         logga("FINAL URL: "+urlSc)
     except:
         tito="[COLOR red]NO VIDEO FOUND[/COLOR]"
-
-    video_urls.append((urlSc+"|referer="+scUrl.replace("\n", '')+"&user-agent=Mozilla", tito, "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
+    newUrl=urlSc+"|referer="+scUrl.replace("\n", '')+"&user-agent=Mozilla"
+    video_urls.append((newUrl, tito, "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
+    
+    if parInp2==1:
+        liz = xbmcgui.ListItem('MovieUnity', path=newUrl)
+        liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
+        liz.setMimeType('application/x-mpegURL')
+        liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
+        liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
+        timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
+        if timeShift != "no_time_shift":
+            liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
+        
+        return liz
+    
     return video_urls
 
 
@@ -2122,7 +2135,7 @@ def scws(parIn=None):
     
     sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
     scUrl=makeRequest(sc_url)
-    base=scUrl.replace("\n", '')+"titles/"+parIn
+    base=scUrl.replace("\n", '')+"it/titles/"+parIn
     randomUA=getRandomUA()
 
     headSCt={'user-agent':randomUA}
@@ -2162,6 +2175,7 @@ def getScSerie(parIn=None):
     jsonCode = preg_match(pageT, patron)
     scwsId = 0
     titolo="NOT FOUND";
+    logga ("JSON_CODE: "+jsonCode)
     try:
         arrJ2 = json.loads(jsonCode.replace("&quot;", '"'))
         
@@ -2192,14 +2206,15 @@ def getScSerie(parIn=None):
                 imgEp="https://cdn."+scUrl.replace("\n", '').replace("https://", '')+"images/"+episodio["images"][0]["filename"]
             except:
                 imgEp=img
-            titolo=numSea+"x"+numEp+" - "+episodio["name"].replace("&#39;", "'").replace("&amp;", "&")
             
-            newJson = '{"title":"[COLOR lime]'+titolo+'[/COLOR]","myresolve":"scws2@@'+urlIframe+'",'
-            newJson += '"thumbnail":"'+imgEp+'",'
-            newJson += '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-            newJson += '"info":"'+plot.replace('"','\\"')+'"}'
             
             try:
+                titolo=numSea+"x"+numEp+" - "+episodio["name"].replace("&#39;", "'").replace("&amp;", "&")
+            
+                newJson = '{"title":"[COLOR lime]'+titolo+'[/COLOR]","myresolve":"scws2@@'+urlIframe+'",'
+                newJson += '"thumbnail":"'+imgEp+'",'
+                newJson += '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                newJson += '"info":"'+plot.replace('"','\\"')+'"}'
                 json.loads(newJson)
                 if (numIt > 0):
                     jsonText += ','
@@ -2208,7 +2223,15 @@ def getScSerie(parIn=None):
             except:
                 logga("BAD ITEMS: "+newJson)
                 pass
-    except:
+    except Exception as err:
+        import traceback
+        
+        errMsg="ERROR_MK2: {0}".format(err)
+        par=re.split('%3f', sys.argv[2])
+        parErr = par[-1]
+        logging.warning(errMsg+"\nPAR_ERR --> "+parErr)
+        traceback.print_exc()
+
         logga("NO SCWS_ID FROM "+base)
         jsonText = jsonText + '{"title":"[COLOR red]NO PAGE FOUND[/COLOR]","link":"ignore",'
         jsonText = jsonText + '"thumbnail":"https://cdn-icons-png.flaticon.com/512/2748/2748558.png",'
