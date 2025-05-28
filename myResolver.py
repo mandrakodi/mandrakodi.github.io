@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.126'
+versione='1.2.127'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -2207,9 +2207,15 @@ def getScSerie(parIn=None):
             except:
                 imgEp=img
             
+            eps="Episodio "+numEp
+            try:
+                eps=episodio["name"].replace("&#39;", "'").replace("&amp;", "&")
+            except:
+                pass
+
             
             try:
-                titolo=numSea+"x"+numEp+" - "+episodio["name"].replace("&#39;", "'").replace("&amp;", "&")
+                titolo=numSea+"x"+numEp+" - "+eps
             
                 newJson = '{"title":"[COLOR lime]'+titolo+'[/COLOR]","myresolve":"scws2@@'+urlIframe+'",'
                 newJson += '"thumbnail":"'+imgEp+'",'
