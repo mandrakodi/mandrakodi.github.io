@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.127'
+versione='1.2.128'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 28.05.2025
+# Last update: 29.05.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -980,7 +980,7 @@ def daddyPremium(codeIn=None):
         'user-agent': randomUa
     }
     s = requests.Session()
-    urlSrv="https://alldownplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://allupplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
@@ -993,7 +993,7 @@ def daddyPremium(codeIn=None):
     liz.setMimeType("application/x-mpegURL")
     liz.setProperty('inputstream.adaptive.file_type', 'hls')
     ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 OPR/116.0.0.0"
-    host="https://xtreaweb.top"
+    host="https://allupplay.xyz"
     liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     return liz
@@ -1109,7 +1109,7 @@ def daddyCode(codeIn=None):
     }
     s = requests.Session()
     
-    urlAuth="https://alldownplay.xyz/premiumtv/daddylive.php?id="+codeIn
+    urlAuth="https://allupplay.xyz/premiumtv/daddylive.php?id="+codeIn
     fu = s.get(urlAuth, headers=headers)
     authTs = re.findall('var authTs\s+= "(.*?)";', fu.text)[0]
     authRnd = re.findall('var authRnd\s+= "(.*?)";', fu.text)[0]
@@ -1125,14 +1125,14 @@ def daddyCode(codeIn=None):
     urlDaddy="https://daddylive.dad/embed/stream-"+codeIn+".php"
     
     #urlSrv="https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium"+codeIn
-    urlSrv="https://alldownplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://allupplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY_CODE SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    refe="https://xtreaweb.top/"
-    origin="https://xtreaweb.top"
+    refe="https://allupplay.xyz/"
+    origin="https://allupplay.xyz"
     
     
     final_url=link+"|Referer="+refe+"&Origin="+origin
@@ -1383,7 +1383,7 @@ def PlayStream(link):
     }
     s = requests.Session()
     
-    urlAuth="https://alldownplay.xyz/premiumtv/daddylive.php?id="+codeIn
+    urlAuth="https://allupplay.xyz/premiumtv/daddylive.php?id="+codeIn
     fu = s.get(urlAuth, headers=headers)
     authTs = re.findall('var authTs\s+= "(.*?)";', fu.text)[0]
     authRnd = re.findall('var authRnd\s+= "(.*?)";', fu.text)[0]
@@ -1394,14 +1394,14 @@ def PlayStream(link):
     dataJ2 = s.get(urlAuth, headers=headers)
     logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
     #urlSrv="https://webxzplay.cfd/server_lookup.php?channel_id=premium"+codeIn
-    urlSrv="https://alldownplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://allupplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    refe="https://xtreaweb.top/"
-    origin="https://xtreaweb.top"
+    refe="https://allupplay.xyz/"
+    origin="https://allupplay.xyz"
     
     
     urlV=link+"|Referer="+refe+"&Origin="+origin
