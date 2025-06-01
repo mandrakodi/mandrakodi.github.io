@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.128'
+versione='1.2.129'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 29.05.2025
+# Last update: 01.06.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -35,35 +35,6 @@ else:
 # TOOLS VARI
 #=================================================
 
-def calcioga(parIn):
-    ua=getRandomUA
-    pageUrl="https://calcio.codes/live/"+parIn
-    page=bypassCloudscrape(pageUrl)
-    pattern='data-url="(.*?)">Player'
-    lista=find_multiple_matches(page, pattern)
-    video_urls = []
-    
-    for link in lista:
-        if link[:-5]==".m3u8":
-            video_urls.append((link+"|Referer=https://calcio.codes/&Origin=https://calcio.codes&User-Agent="+ua, "[COLOR lime]PLAY STREAM[/COLOR]", "by @mandrakodi"))
-        if "newembedplay.xyz" in link:
-            code=link.split("=")[1]
-            newLink="https://calcionew.newkso.ru/calcio/calcio"+code+"/index.m3u8"
-            video_urls.append((newLink+"|Referer=https://4kwebplay.xyz/&Origin=https://4kwebplay.xyz&User-Agent="+ua, "[COLOR gold]PLAY STREAM[/COLOR]", "by @mandrakodi"))
-
-def bypassCloudscrape(url):
-    from lib import cloudscraper
-    
-    scraper = cloudscraper.create_scraper()
-    response = scraper.get(url)
-    toRet="KO"
-    if response.status_code == 200:
-        logga("Accesso riuscito!")
-        logga(response.text[:1000])  # Mostra i primi 1000 caratteri della pagina
-        toRet=response.text
-    else:
-        logga(f"Errore: status code {response.status_code}")
-    return toRet
 
 def logga(mess):
     if debug == "on":
@@ -898,6 +869,29 @@ def assia(parIn=None):
     if "|" in video_url:
         arrV = video_url.split("|")
         video_urls.append((arrV[0], ""))		
+    return video_urls
+
+def mixdrop(page_url):
+    import jsunpack, ast
+    logga("url=" + page_url)
+    video_urls = []
+    # data = httptools.downloadpage(page_url).data
+    ua='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
+    data  = downloadHttpPage(page_url, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':page_url})
+    logga("mixdrop: " + data)
+    packed = preg_match(data, r'(eval.*?)</script>')
+    unpacked = jsunpack.unpack(packed)
+    list_vars=re.findall(r'MDCore\.\w+\s*=\s*"([^"]+)"', unpacked, re.DOTALL)
+    for var in list_vars:
+        if '.mp4' in var:
+            media_url = var
+            break
+        else:
+            media_url = ''
+    if not media_url.startswith('http'):
+        media_url = 'http:%s' % media_url
+    
+    video_urls.append((media_url+"|Referer=https://mixdrop.my/&Origin=https://mixdrop.my&User-Agent="+ua, "[COLOR lime]PLAY STREAM [/COLOR]", "PLAY: MIXDROP", "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
 
 def daddyFind(parIn):
@@ -3212,24 +3206,26 @@ def taxi(parIn):
 
     s = requests.Session()
     r = s.get(url, headers=headers)
-    logga("FIND HOSTS AT "+url)
+    page=r.text.replace("\n", "").replace("\r", "").replace("\t", "")
+    #logga("FIND HOSTS AT "+url+"\n"+page)
     ret1 = "by @mandrakodi"
     express1 = r'<title>(.*?)</title>'
-    ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)[0]
+    ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(page)[0]
 
-    #express2 = r'<a href=\"#\" allowfullscreen data-link=\"(.*?)\" id=\".*?data-num=\"(.*?)\" data-title=\"Episodio \d+\">\d+</a>'
-    express2 = r'<a href="#" allowfullscreen data-link="(.*?)" id="(.*?)" data-num="(.*?)" data-title="(.*?)">\d+</a>'
-    ret = re.compile(express2, re.MULTILINE | re.DOTALL).findall(r.text)
+    express2 = r'<li>  <a href="#" allowfullscreen data-link="(.*?)" id="(.*?)" data-num="(.*?)" data-title="(.*?)">\d+</a>(.*?)</li>'
+    ret = re.compile(express2, re.MULTILINE | re.DOTALL).findall(page)
     jsonText='{"SetViewMode":"503","items":['
     numIt=0
-    for (link, id, ep, tito) in ret:
-        #logga('LINK-TAXI: '+link+" "+ep)
+    for (link, id, ep, tito, mirror) in ret:
+        express3 = r'<a href="#" class="mr" data-m="dropload" data-link="(.*?)">'
+        ret2 = re.compile(express3, re.MULTILINE | re.DOTALL).findall(mirror)[0]
+        link=ret2
         if (numIt > 0):
             jsonText = jsonText + ','    
         jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"proData@@'+link+'",'
         jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-        jsonText = jsonText + '"info":"'+ret1.replace("streaming SERIE TV - euroStreaming", "")+'"}'
+        jsonText = jsonText + '"info":"'+tito+'"}'
         numIt=numIt+1
 
     if numIt==0:
@@ -5410,8 +5406,8 @@ def run (action, params=None):
         'nflinsider':nflinsider,
         'ffmpeg':ffmpeg,
         'koolto':koolto,
-        'calcioga': calcioga,
         'spon':sportOnline,
+        'mixdrop':mixdrop,
         'sportMenu': createSportMenu
     }
 
