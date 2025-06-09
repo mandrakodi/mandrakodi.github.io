@@ -1,9 +1,10 @@
+
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.129'
+versione='1.2.130'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 01.06.2025
+# Last update: 09.06.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1129,7 +1130,7 @@ def daddyCode(codeIn=None):
     origin="https://allupplay.xyz"
     
     
-    final_url=link+"|Referer="+refe+"&Origin="+origin
+    final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 OPR/116.0.0.0"
     
 
     jsonText='{"SetViewMode":"50","items":['
