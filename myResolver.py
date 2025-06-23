@@ -1,10 +1,10 @@
 
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.132'
+versione='1.2.133'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 17.06.2025
+# Last update: 23.06.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1095,22 +1095,33 @@ def daddy(parIn=None):
     return video_urls
 
 def daddyCode(codeIn=None):
-    import re, json
+    import re, json, base64
     video_urls = []
     randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 OPR/118.0.0.0"
     #randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
     headers = {
-        'user-agent': randomUa
+        'user-agent': randomUa,
+        'referer': "https://thedaddy.click"
     }
     s = requests.Session()
     
     urlAuth="https://lefttoplay.xyz/premiumtv/daddylive.php?id="+codeIn
     fu = s.get(urlAuth, headers=headers)
-    authTs = re.findall('var authTs\s+= "(.*?)";', fu.text)[0]
-    authRnd = re.findall('var authRnd\s+= "(.*?)";', fu.text)[0]
-    authSig = re.findall('var authSig\s+= "(.*?)";', fu.text)[0]
+    logga ("AUTH_PAGE: "+fu.text)
+
+    #authTs = re.findall('var authTs\s+= "(.*?)";', fu.text)[0]
+    #authRnd = re.findall('var authRnd\s+= "(.*?)";', fu.text)[0]
+    #authSig = re.findall('var authSig\s+= "(.*?)";', fu.text)[0]
+
+    authTs64 = re.findall('c = atob\("(.*?)"\);', fu.text)[0]
+    authRnd64 = re.findall('d = atob\("(.*?)"\);', fu.text)[0]
+    authSig64 = re.findall('e = atob\("(.*?)"\);', fu.text)[0]
+    authTs = base64.b64decode(authTs64).decode("utf-8")
+    authRnd = base64.b64decode(authRnd64).decode("utf-8")
+    authSig = base64.b64decode(authSig64).decode("utf-8")
     
-    
+
+
     urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+codeIn+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
     dataJ2 = s.get(urlAuth, headers=headers)
     logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
