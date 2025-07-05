@@ -1,10 +1,10 @@
 
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.134'
+versione='1.2.135'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 04.07.2025
+# Last update: 23.06.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -3523,41 +3523,15 @@ def nflinsider(parIn):
     return urlsolver(link)
 
 
-def getAuthSignature(parIn='vavoo.to'):
-    headers = {
-        "user-agent": "okhttp/4.11.0",
-        "accept": "application/json",
-        "content-type": "application/json; charset=utf-8",
-        "content-length": "1106",
-        "accept-encoding": "gzip"
-    }
-    data = {
-        "token": "tosFwQCJMS8qrW_AjLoHPQ41646J5dRNha6ZWHnijoYQQQoADQoXYSo7ki7O5-CsgN4CH0uRk6EEoJ0728ar9scCRQW3ZkbfrPfeCXW2VgopSW2FWDqPOoVYIuVPAOnXCZ5g",
-        "reason": "app-blur",
-        "locale": "de",
-        "theme": "dark",
-        "metadata": {
-            "device": {
-                "type": "Handset",
-                "os": "Android",
-                "osVersion": "10",
-                "model": "Pixel 4",
-                "brand": "Google"
-            }
-        }
-    }
-    urlSign="https://"+parIn+"/mediahubmx-signature.json"
-    # logga("URL SIGN: "+urlSign)
-    resp = requests.post(urlSign, json=data, headers=headers, timeout=10)
-    return resp.json().get("signature")
-
 def vavoo_groups():
     # Puoi aggiungere altri gruppi per più canali
     #return ["Italy","Albania","Arabia","Balkans","Bulgaria","France","Germany","Netherlands","Poland","Portugal","Romania","Russia","Spain","Turkey","United Kingdom"]
     return ["Italy","France","Germany","Spain","United Kingdom"]
 
 def get_channels(parIn='vavoo.to'):
-    signature = getAuthSignature(parIn)
+    resolver = VavooResolver()
+    
+    signature = resolver.getAuthSignature()
     headers = {
         "user-agent": "okhttp/4.11.0",
         "accept": "application/json",
