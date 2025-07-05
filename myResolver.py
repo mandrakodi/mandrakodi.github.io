@@ -1,10 +1,10 @@
 
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.135'
+versione='1.2.136'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.06.2025
+# Last update: 05.07.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -3794,28 +3794,16 @@ class VavooResolver:
         except:
             return False
 
-    def resolve_with_fallback(self, link, verbose=True):
+    def resolve_with_fallback(self, link, verbose=False):
         """Risolve un link provando prima il metodo principale e poi il fallback"""
-        if verbose:
-            print(f"Risoluzione link: {link}")
-            print("Provo il metodo principale (streammode=1)...")
-
         resolved = self.resolve_link(link, streammode=1, verbose=verbose)
         if resolved:
-            if verbose:
-                print("✅ Metodo principale riuscito")
             return resolved, "principale"
 
-        if verbose:
-            print("❌ Metodo principale fallito, provo il fallback...")
         resolved = self.resolve_link(link, streammode=0, verbose=verbose)
         if resolved:
-            if verbose:
-                print("✅ Metodo fallback riuscito")
             return resolved, "fallback"
 
-        if verbose:
-            print("❌ Entrambi i metodi sono falliti")
         return None, None
 
 def vavooChPlay(parIn):
