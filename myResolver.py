@@ -1,5 +1,6 @@
+
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.137'
+versione='1.2.138'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -3526,7 +3527,7 @@ def vavoo_groups():
     #return ["Italy","Albania","Arabia","Balkans","Bulgaria","France","Germany","Netherlands","Poland","Portugal","Romania","Russia","Spain","Turkey","United Kingdom"]
     return ["Italy","France","Germany","Spain","United Kingdom"]
 
-def get_channels(parIn='vavoo.to'):
+def get_channels(parIn='Italy'):
     resolver = VavooResolver()
     
     signature = resolver.getAuthSignature()
@@ -3538,57 +3539,46 @@ def get_channels(parIn='vavoo.to'):
         "mediahubmx-signature": signature
     }
     all_channels = []
-    for group in vavoo_groups():
-        cursor = 0
-        while True:
-            data = {
-                "language": "de",
-                "region": "AT",
-                "catalogId": "iptv",
-                "id": "iptv",
-                "adult": True,
-                "search": "",
-                "sort": "name",
-                "filter": {"group": group},
-                "cursor": cursor,
-                "clientVersion": "3.0.2"
-            }
-            urlChList="https://"+parIn+"/mediahubmx-catalog.json"
-            # logga("URL CH_LIST: "+urlChList)
-            resp = requests.post(urlChList, json=data, headers=headers, timeout=10)
-            r = resp.json()
-            logga ("VAVOO_CH_JSON: "+resp.text)
-            items = r.get("items", [])
-            all_channels.extend(items)
-            cursor = r.get("nextCursor")
-            if not cursor:
-                break
+    #for group in vavoo_groups():
+    cursor = 0
+    while True:
+        data = {
+            "language": "de",
+            "region": "AT",
+            "catalogId": "iptv",
+            "id": "iptv",
+            "adult": True,
+            "search": "",
+            "sort": "name",
+            "filter": {"group": parIn},
+            "cursor": cursor,
+            "clientVersion": "3.0.2"
+        }
+        urlChList="https://vavoo.to/mediahubmx-catalog.json"
+        # logga("URL CH_LIST: "+urlChList)
+        resp = requests.post(urlChList, json=data, headers=headers, timeout=10)
+        r = resp.json()
+        logga ("VAVOO_CH_JSON: "+resp.text)
+        items = r.get("items", [])
+        all_channels.extend(items)
+        cursor = r.get("nextCursor")
+        if not cursor:
+            break
     return all_channels
 
 
-def vavooChList(parIn='vavoo.to'):
+def vavooChList(parIn='Italy'):
     # logga (parIn+" SEARCH CHANNELS")
+    if parIn == "UK":
+        parIn = "United Kingdom"
     all_channels = get_channels(parIn)
-    jsonText='{"SetViewMode":"51","channels":['
+    jsonText='{"SetViewMode":"51","items":['
     numIt=0
-    numCh=0
-    oldGroup=""
     for ch in all_channels:
         name = ch.get("name", "SenzaNome")
         url = ch.get("url", "")
         group = ch.get("group", "")
         if url:
-            if group!=oldGroup:
-                if (numCh > 0):
-                    jsonText = jsonText + ']},'    
-                jsonText = jsonText + '{"name":"[COLOR gold]'+group+'[/COLOR] ",'
-                jsonText = jsonText + '"thumbnail":"https://lh3.googleusercontent.com/8ipMPaLb6545V3lrEUPozHUuBu09SLJaCTEG1OxawiJ8a_c79SEDCSlhFRr32VDMHw=h300",'
-                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-                jsonText = jsonText + '"SetViewMode":"51","items":['
-                numIt=0
-                numCh=numCh+1
-                oldGroup=group
-            
             if (numIt > 0):
                 jsonText = jsonText + ','    
             jsonText = jsonText + '{"title":"[COLOR lime]'+name+'[/COLOR]","myresolve":"vavooPlay@@'+url+'",'
@@ -3596,9 +3586,7 @@ def vavooChList(parIn='vavoo.to'):
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"info":"'+name+'"}'
             numIt=numIt+1    
-    if (numIt > 0):
-        jsonText = jsonText + ']}' 
-
+    
     if numIt==0:
         jsonText = '{"SetViewMode":"503","items":[{"title":"[COLOR red]NO CHANNEL FOUND[/COLOR]","link":"ignore",'
         jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
