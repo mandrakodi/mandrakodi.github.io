@@ -1,10 +1,9 @@
-
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.138'
+versione='1.2.139'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 05.07.2025
+# Last update: 15.07.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -3208,7 +3207,7 @@ def taxi(parIn):
 
     sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/taxi_url.txt"
     scUrl=makeRequest(sc_url)
-    url=scUrl.replace("\n", '')+"stream/"+parIn+".html"
+    url=scUrl.replace("\n", '')+"stream/"+parIn
 
     #url="https://guardaserie.events/serietv/"+parIn+".html"
     
@@ -3243,7 +3242,7 @@ def taxi(parIn):
         jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"proData@@'+link+'",'
         jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-        jsonText = jsonText + '"info":"'+tito+'"}'
+        jsonText = jsonText + '"info":"'+tito.replace('"', '')+'"}'
         numIt=numIt+1
 
     if numIt==0:
