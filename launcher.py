@@ -1,8 +1,8 @@
-versione='1.2.62'
+versione='1.2.63'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 23.05.2025
+# Last update: 20.07.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -545,7 +545,6 @@ def callReolver(metodo, parametro):
     thumb="https://icons.iconarchive.com/icons/double-j-design/ravenna-3d/256/Play-icon.png"
     fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         
-    logga("METODO_RESOLVE: "+metodo+" - PAR: "+parametro)	
     if metodo=="daddy" and "dlhd.so" in parametro:
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png"
@@ -562,6 +561,17 @@ def callReolver(metodo, parametro):
         list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
         url=list_item.getPath()
         xbmcplugin.setContent(_handle, 'videos')
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+    elif metodo=="scws3":
+        fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
+        newTit="[COLOR lime]PLAY SC MOVIE[/COLOR]"
+        list_item = myResolver.scwsNew(parametro, 1)
+        list_item.setLabel(newTit)
+        list_item.setLabel2(newTit)
+        list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url=list_item.getPath()
+        xbmcplugin.setContent(_handle, 'movies')
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     elif metodo=="amstaff":
         kodi_version=getInstalledVersion()
@@ -593,7 +603,7 @@ def callReolver(metodo, parametro):
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
-        #logga("CALL myResolver.amstaff for "+parametro)
+        
         list_item = myResolver.amstaffTest(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
@@ -1472,8 +1482,7 @@ def run():
             params = parameters_string_to_dict(sys.argv[2])
             action =  params['action']
             url =  params['url']
-            logga("ACTION ==> "+action)
-            logga("URL ==> "+url)
+            
             if action == 'getExtData':
                 getExternalJson(url)
             elif action == 'getExtData2':
