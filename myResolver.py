@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.139'
+versione='1.2.140'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 15.07.2025
+# Last update: 20.07.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1469,19 +1469,17 @@ def amstaffTest(parIn):
     liz.setContentLookup(False)
     liz.setProperty('inputstream', 'inputstream.adaptive')
     if ".mpd" in link:
-        logga ("LINK_MPD: "+link)
         liz.setMimeType("application/dash+xml")
         liz.setProperty('inputstream.adaptive.file_type', 'mpd')
     
     if ".m3u8" in link:
-        logga ("LINK_M3U8: "+link)
         liz.setMimeType("application/x-mpegURL")
         liz.setProperty('inputstream.adaptive.file_type', 'hls')
         #drmType="none"
     
     if key64!="0000":
-        logga ("DRM: "+drmType)
         liz.setProperty('inputstream.adaptive.drm_legacy', drmType+'|'+key64)
+    
     ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 OPR/116.0.0.0"
     if "dazn" in link:
         ua="Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.9.7 Chrome/56.0.2924.122 Safari/537.36 Sky_STB_ST412_2018/1.0.0 (Sky, EM150UK,)"
@@ -1490,23 +1488,19 @@ def amstaffTest(parIn):
         if token != "":
             ua=myParse.quote_plus("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36")
             heads=token+'&referer='+host+'/&origin='+host+'&user-agent='+ua
-            logga ("heads: "+heads)
         liz.setProperty('inputstream.adaptive.stream_headers', heads)
         liz.setProperty('inputstream.adaptive.manifest_headers', heads)
     elif "discovery" in link:
-        logga ("LINK_DISCOVERY: "+link)
         ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0"
         host="https://www.discoveryplus.com"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
     elif "nowitlin" in link:
-        logga ("LINK_NOWTV: "+link)
         ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
         host="https://www.nowtv.it"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
     elif "vodafone.pt" in link:
-        logga ("LINK_VODAFONE: "+link)
         ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0"
         host="http://rr.cdn.vodafone.pt"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
@@ -1514,7 +1508,6 @@ def amstaffTest(parIn):
     else:
         arrF=link.split("/")
         host="https://"+arrF[2]
-        logga ("HOST_MPD: "+host)
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
     if token != "":
@@ -2707,7 +2700,7 @@ def imdb(parIn):
                 #logga('LINK-IMDB: '+link+" "+ep)
                 if (numIt > 0):
                     jsonText = jsonText + ','    
-                jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"risolvi@@'+link+'",'
+                jsonText = jsonText + '{"title":"[COLOR lime]'+ep.strip()+'[/COLOR]","myresolve":"risolvi@@'+link+'",'
                 jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
                 jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
                 jsonText = jsonText + '"info":"'+title+'"}'
