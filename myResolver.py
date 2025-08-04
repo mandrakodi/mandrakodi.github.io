@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.140'
+versione='1.2.141'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 20.07.2025
+# Last update: 04.08.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1100,7 +1100,7 @@ def daddyCode(codeIn=None):
     #randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
     headers = {
         'user-agent': randomUa,
-        'referer': "https://thedaddy.click"
+        'referer': "https://dlhd.click"
     }
     s = requests.Session()
     
@@ -1278,9 +1278,12 @@ def daily(parIn=None):
     logga('JSON DAILY: '+data)
     dataJ = json.loads(data)
     name=dataJ["title"]
-    img=dataJ["posters"]["720"]
     url=dataJ["qualities"]["auto"][0]["url"]
-     
+    img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
+    try:
+        img=dataJ["posters"]["720"]
+    except:
+        pass
     video_urls.append((url, "[COLOR lime]"+name+"[/COLOR]", "by MandraKodi", img))
     return video_urls
 
@@ -1375,7 +1378,7 @@ def getSourceFrame(parIn):
 
 def PlayStream(link):
     from urllib.parse import quote_plus
-    import json
+    import re, json, base64
     logga("PlayStream "+link)
     baseurl='https://dlhd.so/'
     UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
@@ -1390,28 +1393,35 @@ def PlayStream(link):
     
     urlAuth="https://lefttoplay.xyz/premiumtv/daddylive.php?id="+codeIn
     fu = s.get(urlAuth, headers=headers)
-    authTs = re.findall('var authTs\s+= "(.*?)";', fu.text)[0]
-    authRnd = re.findall('var authRnd\s+= "(.*?)";', fu.text)[0]
-    authSig = re.findall('var authSig\s+= "(.*?)";', fu.text)[0]
+    authTs64 = re.findall('c = atob\("(.*?)"\);', fu.text)[0]
+    authRnd64 = re.findall('d = atob\("(.*?)"\);', fu.text)[0]
+    authSig64 = re.findall('e = atob\("(.*?)"\);', fu.text)[0]
+    authTs = base64.b64decode(authTs64).decode("utf-8")
+    authRnd = base64.b64decode(authRnd64).decode("utf-8")
+    authSig = base64.b64decode(authSig64).decode("utf-8")
     
-    
+
+
     urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+codeIn+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
     dataJ2 = s.get(urlAuth, headers=headers)
     logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
-    #urlSrv="https://webxzplay.cfd/server_lookup.php?channel_id=premium"+codeIn
+    
+    
+    
     urlSrv="https://lefttoplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
-    logga("DADDY SERVER "+server)
+    logga("DADDY_CODE SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
     refe="https://lefttoplay.xyz/"
     origin="https://lefttoplay.xyz"
     
     
-    urlV=link+"|Referer="+refe+"&Origin="+origin
+    final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 OPR/116.0.0.0"
+    
 
-    liz = xbmcgui.ListItem('Daddylive', path=urlV)
+    liz = xbmcgui.ListItem('Daddylive', path=final_url)
     liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
     liz.setMimeType('application/x-mpegURL')
     liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
