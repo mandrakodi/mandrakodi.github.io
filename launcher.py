@@ -1,8 +1,8 @@
-versione='1.2.63'
+versione='1.2.64'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 20.07.2025
+# Last update: 07.08.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -599,7 +599,7 @@ def callReolver(metodo, parametro):
 
         pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
         urlSup="https://test34344.herokuapp.com/testAnonym.php?token="+pwd+"&dns1=AMSTAFF&dns2="+version
-        makeRequestNoUa(urlSup)
+        #makeRequestNoUa(urlSup)
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
@@ -637,7 +637,7 @@ def callReolver(metodo, parametro):
 
         pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
         urlSup="https://test34344.herokuapp.com/testAnonym.php?token="+pwd+"&dns1=AMSTAFF&dns2="+version
-        makeRequestNoUa(urlSup)
+        #makeRequestNoUa(urlSup)
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
