@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.143'
+versione='1.2.144'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1214,7 +1214,7 @@ def get_tmdb_episode_video(tmdb_id="1416_1_1"):
     serieId=arrV[0]
     season=arrV[1]
     episode=arrV[2]
-    url = f"https://vixsrc.to/tv/{serieId}/{season}/{episode}/?lang=it"
+    url = f"https://vixsrc.to/tv/{serieId}/{season}/{episode}?lang=it"
     
     try:
         response = requests.get(url)
@@ -1229,7 +1229,7 @@ def get_tmdb_episode_video(tmdb_id="1416_1_1"):
             ff = ff.replace("params", '"params"')
             ff = re.sub(r',\s*}', '}', ff)
             
-            arr_t = json.loads(ff)
+            arr_t = json.loads(ff)0
             token = arr_t["params"]["token"]
             expires = arr_t["params"]["expires"]
             url_v = arr_t["url"]
@@ -1243,7 +1243,7 @@ def get_tmdb_episode_video(tmdb_id="1416_1_1"):
     jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM[/COLOR]","link":"'+to_ret+'",'
     jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-    jsonText = jsonText + '"info":"by MandraKodi"}'
+    jsonText = jsonText + '"info":"URL: '+to_ret+'"}'
     
     
     jsonText = jsonText + "]}"
