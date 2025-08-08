@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.142'
+versione='1.2.143'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 06.08.2025
+# Last update: 08.08.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1170,6 +1170,51 @@ def get_tmdb_video(tmdb_id="926899"):
     import json
     to_ret = "ignoreMe"
     url = f"https://vixsrc.to/movie/{tmdb_id}/?lang=it"
+    
+    try:
+        response = requests.get(url)
+        page = response.text.replace("\n", "").replace("\r", "").replace("\t", "")
+        
+        match = re.search(r'window\.masterPlaylist\s*=\s*(.*?)\s*window\.canPlayFHD', page, re.IGNORECASE)
+        if match:
+            jj = match.group(1).strip()
+            ff = jj[:-3] + "}"
+            ff = ff.replace("'", '"')
+            ff = ff.replace("url", '"url"')
+            ff = ff.replace("params", '"params"')
+            ff = re.sub(r',\s*}', '}', ff)
+            
+            arr_t = json.loads(ff)
+            token = arr_t["params"]["token"]
+            expires = arr_t["params"]["expires"]
+            url_v = arr_t["url"]
+            
+            to_ret = f"{url_v}?token={token}&expires={expires}&h=1&lang=it"
+    except Exception as e:
+        print(f"Error: {e}")
+    
+    video_urls = []
+    jsonText='{"SetViewMode":"50","items":['
+    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM[/COLOR]","link":"'+to_ret+'",'
+    jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"}'
+    
+    
+    jsonText = jsonText + "]}"
+    logga('JSON-TMDB: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    
+    return video_urls
+
+def get_tmdb_episode_video(tmdb_id="1416_1_1"):
+    import json
+    to_ret = "ignoreMe"
+    arrV=tmdb_id.split("_")
+    serieId=arrV[0]
+    season=arrV[1]
+    episode=arrV[2]
+    url = f"https://vixsrc.to/tv/{serieId}/{season}/{episode}/?lang=it"
     
     try:
         response = requests.get(url)
@@ -5715,7 +5760,8 @@ def run (action, params=None):
         'sportMenu': createSportMenu,
         'vavooCh':vavooChList,
         'vavooPlay':vavooChPlay,
-        'tmdb':get_tmdb_video
+        'tmdb':get_tmdb_video,
+        'tmdbs':get_tmdb_episode_video
     }
 
     if action in commands:
