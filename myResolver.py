@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.144'
+versione='1.2.145'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1229,7 +1229,7 @@ def get_tmdb_episode_video(tmdb_id="1416_1_1"):
             ff = ff.replace("params", '"params"')
             ff = re.sub(r',\s*}', '}', ff)
             
-            arr_t = json.loads(ff)0
+            arr_t = json.loads(ff)
             token = arr_t["params"]["token"]
             expires = arr_t["params"]["expires"]
             url_v = arr_t["url"]
