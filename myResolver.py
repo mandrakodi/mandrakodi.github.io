@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.146'
+versione='1.2.147'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 11.08.2025
+# Last update: 14.08.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1173,7 +1173,7 @@ def daddyCode(codeIn=None):
 def get_tmdb_video(tmdb_id="926899"):
     import json
     to_ret = "ignoreMe"
-    url = f"https://vixsrc.to/movie/{tmdb_id}/?lang=it"
+    url = "https://vixsrc.to/movie/{tmdb_id}/?lang=it"
     
     try:
         response = requests.get(url)
@@ -1218,7 +1218,7 @@ def get_tmdb_episode_video(tmdb_id="1416_1_1"):
     serieId=arrV[0]
     season=arrV[1]
     episode=arrV[2]
-    url = f"https://vixsrc.to/tv/{serieId}/{season}/{episode}?lang=it"
+    url = "https://vixsrc.to/tv/{serieId}/{season}/{episode}?lang=it"
     
     try:
         response = requests.get(url)
@@ -3586,7 +3586,7 @@ def hunterjs(parIn):
 def nflinsider(parIn):
     video_urls = []
     #urlPage="https://basketball-video.com/"+parIn
-    urlPage="https://gamesontvtoday.com/"+parIn
+    urlPage="https://nbaontv.com/"+parIn
     page_data = requests.get(urlPage,headers={'user-agent':'iPad','accept':'*/*','referer':'https://basketball-video.com/'}).content
 
     if PY3:
@@ -3855,6 +3855,15 @@ def vavooChPlay(parIn):
         video_urls.append(("ignore", "[COLOR red]NO LINK FOUND[/COLOR]", "PLAY VIDEO"))
     
     return video_urls
+
+def filemoon(parIn):
+    headers = {
+        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+    }
+    s = requests.Session()
+    page = s.get(parIn, headers=headers)
+    link = re.findall('<iframe src="(.*?)" frameborder="0"',page.text)[0]
+    return urlsolver(link)
 
 
 def getRandomUA():
@@ -5761,6 +5770,7 @@ def run (action, params=None):
         'koolto':koolto,
         'spon':sportOnline,
         'mixdrop':mixdrop,
+        'filemoon':filemoon,
         'sportMenu': createSportMenu,
         'vavooCh':vavooChList,
         'vavooPlay':vavooChPlay,
