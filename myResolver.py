@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.149'
+versione='1.2.150'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.08.2025
+# Last update: 26.08.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1108,10 +1108,7 @@ def daddyCode(codeIn=None):
     fu = s.get(urlAuth, headers=headers)
     logga ("AUTH_PAGE: "+fu.text)
 
-    #authTs = re.findall('var authTs\s+= "(.*?)";', fu.text)[0]
-    #authRnd = re.findall('var authRnd\s+= "(.*?)";', fu.text)[0]
-    #authSig = re.findall('var authSig\s+= "(.*?)";', fu.text)[0]
-    bundle64 = re.findall('const BUNDLE = "(.*?)"', fu.text)[0]
+    bundle64 = re.findall('const XJZ="(.*?)"', fu.text)[0]
     logga("BUNDLE_DADDY: "+bundle64)
     bundle=base64.b64decode(bundle64).decode("utf-8")
     arrAuth=json.loads(bundle)
@@ -1119,9 +1116,6 @@ def daddyCode(codeIn=None):
     authRnd64 = arrAuth["b_rnd"]
     authSig64 = arrAuth["b_sig"]
 
-    #authTs64 = re.findall('c = atob\("(.*?)"\);', fu.text)[0]
-    #authRnd64 = re.findall('d = atob\("(.*?)"\);', fu.text)[0]
-    #authSig64 = re.findall('e = atob\("(.*?)"\);', fu.text)[0]
     authTs = base64.b64decode(authTs64).decode("utf-8")
     authRnd = base64.b64decode(authRnd64).decode("utf-8")
     authSig = base64.b64decode(authSig64).decode("utf-8")
