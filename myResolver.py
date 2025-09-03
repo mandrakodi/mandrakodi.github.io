@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.150'
+versione='1.2.151'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 26.08.2025
+# Last update: 03.09.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1456,43 +1456,51 @@ def getSourceFrame(parIn):
 
 
 def PlayStream(link):
-    from urllib.parse import quote_plus
     import re, json, base64
-    logga("PlayStream "+link)
-    baseurl='https://dlhd.so/'
-    UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
-    logga("TRY TO GET STREAM FROM "+link)
-    arrL=link.split("stream-")
-    codeIn=arrL[1].replace(".php", "")
-    randomUa="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36"
+    logga("CH_DADDY: "+link)
+    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
+    
     headers = {
-        'user-agent': UA
+        'user-agent': randomUa,
+        'referer': "https://thedaddy.top/"
     }
     s = requests.Session()
     
-    urlAuth="https://fnjplay.xyz/premiumtv/daddylive.php?id="+codeIn
+    urlAuth="https://fnjplay.xyz/premiumtv/daddylive.php?id="+link
     fu = s.get(urlAuth, headers=headers)
-    authTs64 = re.findall('c = atob\("(.*?)"\);', fu.text)[0]
-    authRnd64 = re.findall('d = atob\("(.*?)"\);', fu.text)[0]
-    authSig64 = re.findall('e = atob\("(.*?)"\);', fu.text)[0]
+    logga ("AUTH_PAGE: "+fu.text)
+
+    bundle64 = re.findall('const XJZ="(.*?)"', fu.text)[0]
+    logga("BUNDLE_DADDY: "+bundle64)
+    bundle=base64.b64decode(bundle64).decode("utf-8")
+    arrAuth=json.loads(bundle)
+    authTs64 = arrAuth["b_ts"]
+    authRnd64 = arrAuth["b_rnd"]
+    authSig64 = arrAuth["b_sig"]
+
     authTs = base64.b64decode(authTs64).decode("utf-8")
     authRnd = base64.b64decode(authRnd64).decode("utf-8")
     authSig = base64.b64decode(authSig64).decode("utf-8")
     
 
 
-    urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+codeIn+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
+    headers = {
+        'user-agent': randomUa,
+        'referer': "https://fnjplay.xyz/",
+        'origin': "https://fnjplay.xyz"
+    }
+    urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+link+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
     dataJ2 = s.get(urlAuth, headers=headers)
     logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
     
     
     
-    urlSrv="https://fnjplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    
+    urlSrv="https://fnjplay.xyz/server_lookup.php?channel_id=premium"+link
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
-    logga("DADDY_CODE SERVER "+server)
-    link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
+    link="https://"+server+"new.newkso.ru/"+server+"/premium"+link+"/mono.m3u8"
     refe="https://fnjplay.xyz/"
     origin="https://fnjplay.xyz"
     
