@@ -1,8 +1,8 @@
-versione='1.2.64'
+versione='1.2.65'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 07.08.2025
+# Last update: 03.09.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -555,7 +555,7 @@ def callReolver(metodo, parametro):
         arrL=parametro.split("stream-")
         codeIn=arrL[1].replace(".php", "")
         newTit="[COLOR lime]PLAY STREAM DADDY "+codeIn+"[/COLOR]"
-        list_item = myResolver.PlayStream(parametro)
+        list_item = myResolver.PlayStream(codeIn)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
         list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
