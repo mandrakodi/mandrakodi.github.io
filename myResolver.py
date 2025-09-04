@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.152'
+versione='1.2.153'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 03.09.2025
+# Last update: 04.09.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -591,7 +591,7 @@ def testDns(parIn=""):
     if parIn=="StrCom":
         sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
         scUrl=makeRequest(sc_url)
-        testUrl=scUrl.replace("\n", "")+"iframe/4474-febbre-da-cavallo"
+        testUrl=scUrl.replace("\n", "")+"it/iframe/4474-febbre-da-cavallo"
         head={'user-agent':randomUa}
         resolve="scws2@@4474-febbre-da-cavallo"
     page_data = ""
