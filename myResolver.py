@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.153'
+versione='1.2.154'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 04.09.2025
+# Last update: 05.09.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1173,12 +1173,12 @@ def daddyCode(codeIn=None):
 def get_tmdb_video(tmdb_id="926899"):
     import json
     to_ret = "ignoreMe"
-    url = "https://vixsrc.to/movie/{tmdb_id}/?lang=it"
+    url = "https://vixsrc.to/movie/"+tmdb_id+"/?lang=it"
     
     try:
         response = requests.get(url)
         page = response.text.replace("\n", "").replace("\r", "").replace("\t", "")
-        
+        logga ("TMDB_PAGE: "+page)
         match = re.search(r'window\.masterPlaylist\s*=\s*(.*?)\s*window\.canPlayFHD', page, re.IGNORECASE)
         if match:
             jj = match.group(1).strip()
@@ -1187,15 +1187,17 @@ def get_tmdb_video(tmdb_id="926899"):
             ff = ff.replace("url", '"url"')
             ff = ff.replace("params", '"params"')
             ff = re.sub(r',\s*}', '}', ff)
-            
+            logga("TMDB_FF: "+ff)
             arr_t = json.loads(ff)
             token = arr_t["params"]["token"]
             expires = arr_t["params"]["expires"]
             url_v = arr_t["url"]
             
             to_ret = f"{url_v}?token={token}&expires={expires}&h=1&lang=it"
+        else:
+            logga("NO TMDB_JSON")
     except Exception as e:
-        print(f"Error: {e}")
+        logga(f"Error: {e}")
     
     video_urls = []
     jsonText='{"SetViewMode":"50","items":['
