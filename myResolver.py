@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.154'
+versione='1.2.155'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 05.09.2025
+# Last update: 06.09.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -585,8 +585,8 @@ def testDns(parIn=""):
     
     logga('CALL DNS TEST '+parIn)
     randomUa=getRandomUA()
-    testUrl="https://thedaddy.top/embed/stream-877.php"
-    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://thedaddy.top/'}
+    testUrl="https://daddylivestream.com/embed/stream-877.php"
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://daddylivestream.com/'}
     resolve="daddyCode@@877"
     if parIn=="StrCom":
         sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
@@ -896,7 +896,7 @@ def mixdrop(page_url):
 
 def daddyFind(parIn):
     video_url = ""
-    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://thedaddy.top/'}).content
+    page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://daddylivestream.com/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
@@ -1096,15 +1096,14 @@ def daddy(parIn=None):
 def daddyCode(codeIn=None):
     import re, json, base64
     video_urls = []
-    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
-    #randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+    #randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
+    randomUa=getRandomUA()
     headers = {
         'user-agent': randomUa,
-        'referer': "https://thedaddy.top/"
+        'referer': "https://daddylivestream.com/"
     }
     s = requests.Session()
     
-    #urlAuth="https://fnjplay.xyz/premiumtv/daddylive.php?id="+codeIn
     urlAuth="https://jxoxkplay.xyz/premiumtv/daddylive.php?id="+codeIn
     fu = s.get(urlAuth, headers=headers)
     logga ("AUTH_PAGE: "+fu.text)
@@ -1132,7 +1131,6 @@ def daddyCode(codeIn=None):
     dataJ2 = s.get(urlAuth, headers=headers)
     logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
     
-    #urlSrv="https://fnjplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     urlSrv="https://jxoxkplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     logga("DADDY JSON "+dataJson.text)
@@ -1164,7 +1162,7 @@ def daddyCode(codeIn=None):
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     
     #video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    #webUrl="https://thedaddy.top/embed/stream-"+codeIn+".php?playTo=web"
+    #webUrl="https://daddylivestream.com/embed/stream-"+codeIn+".php?playTo=web"
     #video_urls.append((webUrl, "[COLOR orange]OPEN DADDY PAGE "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
 
@@ -1463,7 +1461,7 @@ def PlayStream(link):
     
     headers = {
         'user-agent': randomUa,
-        'referer': "https://thedaddy.top/"
+        'referer': "https://daddylivestream.com/"
     }
     s = requests.Session()
     
