@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.155'
+versione='1.2.156'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 06.09.2025
+# Last update: 13.09.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1096,8 +1096,8 @@ def daddy(parIn=None):
 def daddyCode(codeIn=None):
     import re, json, base64
     video_urls = []
-    #randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
-    randomUa=getRandomUA()
+    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
+    #randomUa=getRandomUA()
     headers = {
         'user-agent': randomUa,
         'referer': "https://daddylivestream.com/"
@@ -1145,7 +1145,7 @@ def daddyCode(codeIn=None):
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
     
 
-    jsonText='{"SetViewMode":"50","items":['
+    jsonText='{"SetViewMode":"50","server":"'+server+'","items":['
     jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"'+final_url+'",'
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
@@ -1161,11 +1161,41 @@ def daddyCode(codeIn=None):
     logga('JSON-DADDY: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     
-    #video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
-    #webUrl="https://daddylivestream.com/embed/stream-"+codeIn+".php?playTo=web"
-    #video_urls.append((webUrl, "[COLOR orange]OPEN DADDY PAGE "+codeIn+"[/COLOR]", "PLAY: "+codeIn, "https://www.businessmagazine.org/wp-content/uploads/2023/05/Daddylive-Alternative-2022.png"))
     return video_urls
 
+def gdplayer(parIn):
+    import json
+    video_urls = []
+    url="https://en.gdplayer.tv/live-tv/"+parIn
+    response = requests.get(url)
+    #logga ("GDPLAYER_PAGE: "+url+"\n"+response.text)
+    page = response.text.replace("\n", "").replace("\r", "").replace("\t", "")
+    match = re.search(r'data-src="https:\/\/ava\.karmakurama\.com\/\?id=(.*?)"', page, re.IGNORECASE)
+    daddyC="000"
+    try:
+        daddyC=match.group(1).strip()
+    except:
+        match1 = re.search(r'"drm":{"clearkey":{"(.*?)":', page, re.IGNORECASE)
+        try:
+            parIn=parIn+"-"+match1.group(1).strip()
+        except:
+            pass
+        pass    
+    #logga ("GDPLAYER_CODE: "+daddyC)
+    if daddyC=="000":
+        video_urls.append(("ignoreMe", "[COLOR orange]No Link Found for "+parIn+"[/COLOR]" , "NO LINK ", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
+        return video_urls
+    jj=daddyCode(daddyC)
+    for linkTmp in jj:
+        newList=list(linkTmp)
+        newLink=newList[0]
+        #logga("JJSON: "+newLink)
+        arr_t = json.loads(newLink)
+        server=arr_t["server"]
+        refe="https://enz.gdplayertv.to"
+        link="https://ava.karmakurama.com/"+server+"/premium"+daddyC+"/mono.m3u8|Referer="+refe+"/&Origin="+refe+"&User-Agent=iPad"
+        video_urls.append((link, "[COLOR lime]Play Stream "+daddyC+"[/COLOR]" , "PLAY VIDEO ", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
+        return video_urls
 
 
 def get_tmdb_video(tmdb_id="926899"):
@@ -5783,7 +5813,8 @@ def run (action, params=None):
         'vavooCh':vavooChList,
         'vavooPlay':vavooChPlay,
         'tmdb':get_tmdb_video,
-        'tmdbs':get_tmdb_episode_video
+        'tmdbs':get_tmdb_episode_video,
+        'gdplayer':gdplayer
     }
 
     if action in commands:
