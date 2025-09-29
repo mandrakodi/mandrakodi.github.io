@@ -1,8 +1,8 @@
-versione='1.2.65'
+versione='1.2.66'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 03.09.2025
+# Last update: 29.09.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -703,6 +703,18 @@ def callReolver(metodo, parametro):
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
         logga("CALL myResolver.ffmpeg for "+parametro)
         list_item = myResolver.ffmpeg(parametro)
+        list_item.setLabel(newTit)
+        list_item.setLabel2(newTit)
+        list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
+        url=list_item.getPath()
+        xbmcplugin.setContent(_handle, 'movies')
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
+    elif metodo=="ffmpeg_noRef":
+        fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
+        newTit="[COLOR lime]PLAY STREAM[/COLOR]"
+        logga("CALL myResolver.ffmpeg_noRef for "+parametro)
+        list_item = myResolver.ffmpeg_noRef(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
         list_item.setArt({'thumb': img, 'icon': img, 'poster': img, 'landscape': fanart, 'fanart': fanart})
