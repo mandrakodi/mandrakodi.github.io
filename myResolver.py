@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.156'
+versione='1.2.157'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 13.09.2025
+# Last update: 29.09.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1049,6 +1049,19 @@ def ffmpeg(link=None):
     
     return liz
 
+def ffmpeg_noRef(link=None):
+    liz = xbmcgui.ListItem('FfMpeg', path=link)
+    liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
+    liz.setMimeType('application/x-mpegURL')
+    liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
+    liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
+    timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
+    if timeShift != "no_time_shift":
+        liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
+    
+    
+    return liz
+
 def koolto(parIn=None):
     video_urls = []
     logga('PAR_KOOL: '+parIn)
@@ -1168,7 +1181,7 @@ def gdplayer(parIn):
     video_urls = []
     url="https://en.gdplayer.tv/live-tv/"+parIn
     response = requests.get(url)
-    #logga ("GDPLAYER_PAGE: "+url+"\n"+response.text)
+    logga ("GDPLAYER_PAGE: "+url+"\n"+response.text)
     page = response.text.replace("\n", "").replace("\r", "").replace("\t", "")
     match = re.search(r'data-src="https:\/\/ava\.karmakurama\.com\/\?id=(.*?)"', page, re.IGNORECASE)
     daddyC="000"
@@ -1181,7 +1194,7 @@ def gdplayer(parIn):
         except:
             pass
         pass    
-    #logga ("GDPLAYER_CODE: "+daddyC)
+    logga ("GDPLAYER_CODE: "+daddyC)
     if daddyC=="000":
         video_urls.append(("ignoreMe", "[COLOR orange]No Link Found for "+parIn+"[/COLOR]" , "NO LINK ", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
         return video_urls
@@ -1317,7 +1330,43 @@ def sibNet(parIn=None):
     video_urls.append((iframe_url+"|Referer=https://video.sibnet.ru/&Origin=https://video.sibnet.ru&User-Agent=iPad", tito , "PLAY VIDEO ", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
     return video_urls
 
-
+def freeshot(codeIn=None):
+    video_urls = []
+    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
+    #randomUa=getRandomUA()
+    headers = {
+        'user-agent': randomUa,
+        'referer': "https://freeshot.live/embed/"+codeIn+".php"
+    }
+    s = requests.Session()
+    urlAuth="https://popcdn.day/go.php?stream="+codeIn
+    fu = s.get(urlAuth, headers=headers)
+    frameUrl = preg_match(fu.text, 'frameborder="0" src="(.*?)"')
+    arrTk=frameUrl.split("token=")
+    tk1=arrTk[1]
+    arrTk2=tk1.split("&")
+    token=arrTk2[0]
+    #logga ("TOKEN: "+token)
+    
+    link_ch="https://beautifulpeople.lovecdn.ru/"+codeIn+"/index.fmp4.m3u8?token="+token
+    jsonText='{"SetViewMode":"50","items":['
+    jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM [/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+link_ch+'",'
+    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"},'
+    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM [/COLOR] [COLOR gold](PLAYER EST.)[/COLOR]","link":"'+link_ch+'",'
+    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"}'
+    
+    
+   
+    
+    jsonText = jsonText + "]}"
+    logga('JSON-FREE: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    
+    return video_urls
 
 def enigma4k(parIn=None):
     import json
@@ -1606,9 +1655,10 @@ def amstaffTest(parIn):
     if key64!="0000":
         liz.setProperty('inputstream.adaptive.drm_legacy', drmType+'|'+key64)
     
-    ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 OPR/116.0.0.0"
-    if "dazn" in link:
-        ua="Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.9.7 Chrome/56.0.2924.122 Safari/537.36 Sky_STB_ST412_2018/1.0.0 (Sky, EM150UK,)"
+    ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
+    if "dazn" in link or "dai.google.com" in link:
+        #ua="Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.9.7 Chrome/56.0.2924.122 Safari/537.36 Sky_STB_ST412_2018/1.0.0 (Sky, EM150UK,)"
+        ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
         host="https://www.dazn.com"
         heads='User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false'
         if token != "":
@@ -1631,6 +1681,9 @@ def amstaffTest(parIn):
         host="http://rr.cdn.vodafone.pt"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
+    elif "starzplayarabia" in link:
+        liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&verifypeer=false')
+        liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&verifypeer=false')
     else:
         arrF=link.split("/")
         host="https://"+arrF[2]
@@ -1703,11 +1756,21 @@ def decodeProtected(linkIn):
     logga("TROVATO: "+redir+" FROM "+page.url)
     return redir
 
-def checkUnpacked(page_in):
+def gaga(linkIn):
+    video_urls = []
+    url=checkUnpacked(linkIn, "https://calcio.events")
+    logga ("URL_GAGA: "+url)
+    video_urls.append((url, "[COLOR lime]PLAY STREAM GAGA[/COLOR]", "by @MandraKodi"))
+    return video_urls
+
+def checkUnpacked(page_in, refe=""):
     import jsunpack
     toRet=""
+    myRefe=page_in
+    if refe != "":
+        myRefe=refe
     logga("checkUnpacked: "+page_in)
-    fu = downloadHttpPage(page_in, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':page_in})
+    fu = downloadHttpPage(page_in, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':myRefe})
     if fu != "":
         #logga("RESULT: "+fu)
         find = ""
@@ -5805,6 +5868,7 @@ def run (action, params=None):
         'hunter':hunterjs,
         'nflinsider':nflinsider,
         'ffmpeg':ffmpeg,
+        'ffmpeg_noRef':ffmpeg_noRef,
         'koolto':koolto,
         'spon':sportOnline,
         'mixdrop':mixdrop,
@@ -5814,7 +5878,9 @@ def run (action, params=None):
         'vavooPlay':vavooChPlay,
         'tmdb':get_tmdb_video,
         'tmdbs':get_tmdb_episode_video,
-        'gdplayer':gdplayer
+        'gdplayer':gdplayer,
+        'freeshot':freeshot,
+        'gaga':gaga
     }
 
     if action in commands:
