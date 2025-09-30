@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.157'
+versione='1.2.158'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 29.09.2025
+# Last update: 30.09.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1121,7 +1121,7 @@ def daddyCode(codeIn=None):
     fu = s.get(urlAuth, headers=headers)
     logga ("AUTH_PAGE: "+fu.text)
 
-    bundle64 = re.findall('const XJZ="(.*?)"', fu.text)[0]
+    bundle64 = re.findall('const XKZK="(.*?)"', fu.text)[0]
     logga("BUNDLE_DADDY: "+bundle64)
     bundle=base64.b64decode(bundle64).decode("utf-8")
     arrAuth=json.loads(bundle)
