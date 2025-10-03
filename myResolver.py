@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.158'
+versione='1.2.159'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 30.09.2025
+# Last update: 03.10.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1179,7 +1179,7 @@ def daddyCode(codeIn=None):
 def gdplayer(parIn):
     import json
     video_urls = []
-    url="https://en.gdplayer.tv/live-tv/"+parIn
+    url="https://eng.gdplayertv.to/live-tv/"+parIn
     response = requests.get(url)
     logga ("GDPLAYER_PAGE: "+url+"\n"+response.text)
     page = response.text.replace("\n", "").replace("\r", "").replace("\t", "")
@@ -1205,7 +1205,7 @@ def gdplayer(parIn):
         #logga("JJSON: "+newLink)
         arr_t = json.loads(newLink)
         server=arr_t["server"]
-        refe="https://enz.gdplayertv.to"
+        refe="https://eng.gdplayertv.to"
         link="https://ava.karmakurama.com/"+server+"/premium"+daddyC+"/mono.m3u8|Referer="+refe+"/&Origin="+refe+"&User-Agent=iPad"
         video_urls.append((link, "[COLOR lime]Play Stream "+daddyC+"[/COLOR]" , "PLAY VIDEO ", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
         return video_urls
@@ -5887,3 +5887,4 @@ def run (action, params=None):
         return commands[action](params)
     else:
         raise ValueError('Invalid command: {0}!'.action)
+
