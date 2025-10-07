@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.160'
+versione='1.2.161'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 03.10.2025
+# Last update: 07.10.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -974,7 +974,7 @@ def daddyPremium(codeIn=None):
         'user-agent': randomUa
     }
     s = requests.Session()
-    urlSrv="https://jxoxkplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://jxoplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
@@ -987,7 +987,7 @@ def daddyPremium(codeIn=None):
     liz.setMimeType("application/x-mpegURL")
     liz.setProperty('inputstream.adaptive.file_type', 'hls')
     ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
-    host="https://jxoxkplay.xyz"
+    host="https://jxoplay.xyz"
     liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     return liz
@@ -1113,11 +1113,12 @@ def daddyCode(codeIn=None):
     #randomUa=getRandomUA()
     headers = {
         'user-agent': randomUa,
-        'referer': "https://daddylivestream.com/"
+        'referer': "https://dlhd.dad/"
     }
     s = requests.Session()
     
-    urlAuth="https://jxoxkplay.xyz/premiumtv/daddylive.php?id="+codeIn
+    urlAuth="https://jxoplay.xyz/premiumtv/daddylive.php?id="+codeIn
+    
     fu = s.get(urlAuth, headers=headers)
     logga ("AUTH_PAGE: "+fu.text)
 
@@ -1137,22 +1138,26 @@ def daddyCode(codeIn=None):
 
     headers = {
         'user-agent': randomUa,
-        'referer': "https://jxoxkplay.xyz/",
-        'origin': "https://jxoxkplay.xyz"
+        'referer': "https://jxoplay.xyz/",
+        'origin': "https://jxoplay.xyz"
     }
     urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+codeIn+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
+    
+    
     dataJ2 = s.get(urlAuth, headers=headers)
     logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
     
-    urlSrv="https://jxoxkplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://jxoplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+
     dataJson = s.get(urlSrv, headers=headers)
     logga("DADDY JSON "+dataJson.text)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY_CODE SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    refe="https://jxoxkplay.xyz/"
-    origin="https://jxoxkplay.xyz"
+    
+    refe="https://jxoplay.xyz/"
+    origin="https://jxoplay.xyz"
     
     
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=Keep-Alive&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
@@ -1180,7 +1185,7 @@ def daddyCode(codeIn=None):
 def gdplayer(parIn):
     import json
     video_urls = []
-    url="https://eng.gdplayertv.to/live-tv/"+parIn
+    url="https://en.freewatchtv.top/live-tv/"+parIn
     response = requests.get(url)
     logga ("GDPLAYER_PAGE: "+url+"\n"+response.text)
     page = response.text.replace("\n", "").replace("\r", "").replace("\t", "")
@@ -1206,7 +1211,7 @@ def gdplayer(parIn):
         #logga("JJSON: "+newLink)
         arr_t = json.loads(newLink)
         server=arr_t["server"]
-        refe="https://eng.gdplayertv.to"
+        refe="https://en.freewatchtv.top"
         link="https://ava.karmakurama.com/"+server+"/premium"+daddyC+"/mono.m3u8|Referer="+refe+"/&Origin="+refe+"&User-Agent=iPad"
         video_urls.append((link, "[COLOR lime]Play Stream "+daddyC+"[/COLOR]" , "PLAY VIDEO ", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
         return video_urls
@@ -1545,7 +1550,7 @@ def PlayStream(link):
     }
     s = requests.Session()
     
-    urlAuth="https://jxoxkplay.xyz/premiumtv/daddylive.php?id="+link
+    urlAuth="https://jxoplay.xyz/premiumtv/daddylive.php?id="+link
     fu = s.get(urlAuth, headers=headers)
     logga ("AUTH_PAGE: "+fu.text)
 
@@ -1565,8 +1570,8 @@ def PlayStream(link):
 
     headers = {
         'user-agent': randomUa,
-        'referer': "https://jxoxkplay.xyz/",
-        'origin': "https://jxoxkplay.xyz"
+        'referer': "https://jxoplay.xyz/",
+        'origin': "https://jxoplay.xyz"
     }
     urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+link+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
     dataJ2 = s.get(urlAuth, headers=headers)
@@ -1575,13 +1580,13 @@ def PlayStream(link):
     
     
     
-    urlSrv="https://jxoxkplay.xyz/server_lookup.php?channel_id=premium"+link
+    urlSrv="https://jxoplay.xyz/server_lookup.php?channel_id=premium"+link
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+link+"/mono.m3u8"
-    refe="https://jxoxkplay.xyz/"
-    origin="https://jxoxkplay.xyz"
+    refe="https://jxoplay.xyz/"
+    origin="https://jxoplay.xyz"
     
     
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
