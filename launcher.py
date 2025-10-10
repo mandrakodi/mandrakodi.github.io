@@ -1,8 +1,8 @@
-versione='1.2.67'
+versione='1.2.68'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 02.10.2025
+# Last update: 10.10.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -1184,6 +1184,8 @@ def copyPlayerCoreFactory(parIn):
             remoteXmlUrl = "https://mandrakodi.github.io/pcf_tv.xml"
         if parIn == "ACELIVE":
             remoteXmlUrl = "https://mandrakodi.github.io/pcf_live.xml"
+        if parIn == "ACEWEB":
+            remoteXmlUrl = "https://mandrakodi.github.io/pcf_web.xml"
         strSource = makeRequest(remoteXmlUrl)
         if strSource is None or strSource == "":
             mess = "Impossibile recuperare il file"
