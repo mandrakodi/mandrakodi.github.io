@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.164'
+versione='1.2.165'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -3427,7 +3427,8 @@ def taxi(parIn):
     jsonText='{"SetViewMode":"503","items":['
     numIt=0
     for (link, id, ep, tito, mirror) in ret:
-        express3 = r'<a href="#" class="mr" data-m="dropload" data-link="(.*?)">'
+        #express3 = r'<a href="#" class="mr" data-m="dropload" data-link="(.*?)">'
+        express3 = r'<a href="#" class="mr" data-m="supervideo" data-link="(.*?)">'
         ret2 = re.compile(express3, re.MULTILINE | re.DOTALL).findall(mirror)[0]
         link=ret2
         if (numIt > 0):
