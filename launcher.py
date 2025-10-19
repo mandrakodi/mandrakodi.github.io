@@ -1,4 +1,4 @@
-versione='1.2.70'
+versione='1.2.71'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -1591,9 +1591,12 @@ def run():
                         url=baseAce+"/ace/getstream?id="+uArr[-1]
                         logga("URL_ACE: "+url)
                     elif (resp==1):
-                        apkAce=xbmcaddon.Addon(id=addon_id).getSetting("urlAppo3")
-                        if (apkAce[0:4]=="org."):
-                            runApk(apkAce, url)
+                        if (xbmc.getCondVisibility("system.platform.android")):
+                            options2 = ["PlayerCoreFactory", "org.acestream.media", "org.acestream.media.atv", "org.acestream.core", "org.acestream.core.atv", "org.acestream.node", "org.acestream.web"]
+                            resp2 = dialog.select("Seleziona nome APK", options2)
+                            if (resp2 > 0):
+                                apkAce=options2(resp2)
+                                runApk(apkAce, url)
                     elif (resp==2):
                         uArr = url.split("/")
                         url="plugin://script.module.horus?action=play&title=by%20MandraKodi&id="+uArr[-1]
