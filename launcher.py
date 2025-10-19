@@ -1,4 +1,4 @@
-versione='1.2.71'
+versione='1.2.72'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -1595,7 +1595,7 @@ def run():
                             options2 = ["PlayerCoreFactory", "org.acestream.media", "org.acestream.media.atv", "org.acestream.core", "org.acestream.core.atv", "org.acestream.node", "org.acestream.web"]
                             resp2 = dialog.select("Seleziona nome APK", options2)
                             if (resp2 > 0):
-                                apkAce=options2(resp2)
+                                apkAce=options2[resp2]
                                 runApk(apkAce, url)
                     elif (resp==2):
                         uArr = url.split("/")
