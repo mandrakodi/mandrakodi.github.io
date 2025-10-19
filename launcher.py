@@ -1,8 +1,8 @@
-versione='1.2.68'
+versione='1.2.69'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 10.10.2025
+# Last update: 19.10.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -1588,6 +1588,10 @@ def run():
                         uArr = url.split("/")
                         url=baseAce+"/ace/getstream?id="+uArr[-1]
                         logga("URL_ACE: "+url)
+                    elif (resp==1):
+                        apkAce=xbmcaddon.Addon(id=addon_id).getSetting("urlAppo3")
+                        if (apkAce[0:4]=="org."):
+                            runApk(apkAce, url)
                     elif (resp==2):
                         uArr = url.split("/")
                         url="plugin://script.module.horus?action=play&title=by%20MandraKodi&id="+uArr[-1]
