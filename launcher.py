@@ -1,4 +1,4 @@
-versione='1.2.73'
+versione='1.2.74'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -1188,6 +1188,8 @@ def copyPlayerCoreFactory(parIn):
             remoteXmlUrl = "https://mandrakodi.github.io/pcf_web.xml"
         if parIn == "ACEATV":
             remoteXmlUrl = "https://mandrakodi.github.io/pcf_atv.xml"
+        if parIn == "ACEFREE":
+            remoteXmlUrl = "https://mandrakodi.github.io/pcf_free.xml"
         strSource = makeRequest(remoteXmlUrl)
         if strSource is None or strSource == "":
             mess = "Impossibile recuperare il file"
