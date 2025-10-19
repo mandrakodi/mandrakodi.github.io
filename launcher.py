@@ -1,4 +1,4 @@
-versione='1.2.72'
+versione='1.2.73'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -1592,7 +1592,7 @@ def run():
                         logga("URL_ACE: "+url)
                     elif (resp==1):
                         if (xbmc.getCondVisibility("system.platform.android")):
-                            options2 = ["PlayerCoreFactory", "org.acestream.media", "org.acestream.media.atv", "org.acestream.core", "org.acestream.core.atv", "org.acestream.node", "org.acestream.web"]
+                            options2 = ["PlayerCoreFactory", "org.acestream.media", "org.acestream.media.atv", "org.acestream.core", "org.acestream.core.atv", "org.acestream.node", "org.acestream.web", "org.free.aceserve"]
                             resp2 = dialog.select("Seleziona nome APK", options2)
                             if (resp2 > 0):
                                 apkAce=options2[resp2]
