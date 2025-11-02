@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.168'
+versione='1.2.169'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 28.10.2025
+# Last update: 02.11.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1122,7 +1122,7 @@ def daddyCode(codeIn=None):
     fu = s.get(urlAuth, headers=headers)
     logga ("AUTH_PAGE: "+fu.text)
 
-    bundle64 = re.findall('const IJXX="(.*?)"', fu.text)[0]
+    bundle64 = re.findall('const BUNDLE = "(.*?)"', fu.text)[0]
     logga("BUNDLE_DADDY: "+bundle64)
     bundle=base64.b64decode(bundle64).decode("utf-8")
     arrAuth=json.loads(bundle)
@@ -1354,7 +1354,7 @@ def freeshot(codeIn=None):
     token=arrTk2[0]
     #logga ("TOKEN: "+token)
     
-    link_ch="https://beautifulpeople.lovecdn.ru/"+codeIn+"/index.fmp4.m3u8?token="+token
+    link_ch="https://planetary.lovecdn.ru/"+codeIn+"/index.fmp4.m3u8?token="+token
     jsonText='{"SetViewMode":"50","items":['
     jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM [/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+link_ch+'",'
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
@@ -5899,5 +5899,4 @@ def run (action, params=None):
         return commands[action](params)
     else:
         raise ValueError('Invalid command: {0}!'.action)
-
 
