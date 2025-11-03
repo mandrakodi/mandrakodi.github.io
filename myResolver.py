@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.169'
+versione='1.2.170'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 02.11.2025
+# Last update: 03.11.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -974,7 +974,7 @@ def daddyPremium(codeIn=None):
         'user-agent': randomUa
     }
     s = requests.Session()
-    urlSrv="https://newzar.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://dokoplay.xyz/server_lookup.php?channel_id=premium"+codeIn
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
@@ -987,7 +987,7 @@ def daddyPremium(codeIn=None):
     liz.setMimeType("application/x-mpegURL")
     liz.setProperty('inputstream.adaptive.file_type', 'hls')
     ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
-    host="https://newzar.xyz"
+    host="https://dokoplay.xyz"
     liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     return liz
@@ -1117,7 +1117,7 @@ def daddyCode(codeIn=None):
     }
     s = requests.Session()
     
-    urlAuth="https://newzar.xyz/premiumtv/daddyhd.php?id="+codeIn
+    urlAuth="https://dokoplay.xyz/premiumtv/daddyhd.php?id="+codeIn
     
     fu = s.get(urlAuth, headers=headers)
     logga ("AUTH_PAGE: "+fu.text)
@@ -1138,8 +1138,8 @@ def daddyCode(codeIn=None):
 
     headers = {
         'user-agent': randomUa,
-        'referer': "https://newzar.xyz/",
-        'origin': "https://newzar.xyz"
+        'referer': "https://dokoplay.xyz/",
+        'origin': "https://dokoplay.xyz"
     }
     urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+codeIn+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
     
@@ -1147,7 +1147,7 @@ def daddyCode(codeIn=None):
     dataJ2 = s.get(urlAuth, headers=headers)
     logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
     
-    urlSrv="https://newzar.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://dokoplay.xyz/server_lookup.php?channel_id=premium"+codeIn
 
     dataJson = s.get(urlSrv, headers=headers)
     logga("DADDY JSON "+dataJson.text)
@@ -1156,8 +1156,8 @@ def daddyCode(codeIn=None):
     logga("DADDY_CODE SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
     
-    refe="https://newzar.xyz/"
-    origin="https://newzar.xyz"
+    refe="https://dokoplay.xyz/"
+    origin="https://dokoplay.xyz"
     
     
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=Keep-Alive&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
@@ -1550,7 +1550,7 @@ def PlayStream(link):
     }
     s = requests.Session()
     
-    urlAuth="https://newzar.xyz/premiumtv/daddylive.php?id="+link
+    urlAuth="https://dokoplay.xyz/premiumtv/daddylive.php?id="+link
     fu = s.get(urlAuth, headers=headers)
     logga ("AUTH_PAGE: "+fu.text)
 
@@ -1570,8 +1570,8 @@ def PlayStream(link):
 
     headers = {
         'user-agent': randomUa,
-        'referer': "https://newzar.xyz/",
-        'origin': "https://newzar.xyz"
+        'referer': "https://dokoplay.xyz/",
+        'origin': "https://dokoplay.xyz"
     }
     urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+link+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
     dataJ2 = s.get(urlAuth, headers=headers)
@@ -1580,13 +1580,13 @@ def PlayStream(link):
     
     
     
-    urlSrv="https://newzar.xyz/server_lookup.php?channel_id=premium"+link
+    urlSrv="https://dokoplay.xyz/server_lookup.php?channel_id=premium"+link
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+link+"/mono.m3u8"
-    refe="https://newzar.xyz/"
-    origin="https://newzar.xyz"
+    refe="https://dokoplay.xyz/"
+    origin="https://dokoplay.xyz"
     
     
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
