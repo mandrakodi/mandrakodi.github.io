@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.172'
+versione='1.2.173'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1117,12 +1117,13 @@ def daddyCode(codeIn=None):
     }
     s = requests.Session()
     
-    urlSrv="https://dlhd.dad/stream/stream-"+codeIn+".php"
-    fuSrv = s.get(urlSrv, headers=headers)
-    urlAuth = re.findall('<iframe src="(.*?)"', fuSrv.text)[0]
-    logga("SERVER_AUTH_DADDY: "+urlAuth)
-    arrAuth=urlAuth.split("/")
-    hostAuth=arrAuth[2]
+    #urlSrv="https://dlhd.dad/stream/stream-"+codeIn+".php"
+    #fuSrv = s.get(urlSrv, headers=headers, verify=False)
+    #urlAuth = re.findall('<iframe src="(.*?)"', fuSrv.text)[0]
+    #logga("SERVER_AUTH_DADDY: "+urlAuth)
+    #arrAuth=urlAuth.split("/")
+    #hostAuth=arrAuth[2]
+    hostAuth="epicplayplay.cfd"
     urlAuth="https://"+hostAuth+"/premiumtv/daddyhd.php?id="+codeIn
     
     fu = s.get(urlAuth, headers=headers)
