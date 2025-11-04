@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.171'
+versione='1.2.172'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1121,7 +1121,9 @@ def daddyCode(codeIn=None):
     fuSrv = s.get(urlSrv, headers=headers)
     urlAuth = re.findall('<iframe src="(.*?)"', fuSrv.text)[0]
     logga("SERVER_AUTH_DADDY: "+urlAuth)
-    #urlAuth="https://dokoplay.xyz/premiumtv/daddyhd.php?id="+codeIn
+    arrAuth=urlAuth.split("/")
+    hostAuth=arrAuth[2]
+    urlAuth="https://"+hostAuth+"/premiumtv/daddyhd.php?id="+codeIn
     
     fu = s.get(urlAuth, headers=headers)
     logga ("AUTH_PAGE: "+fu.text)
@@ -1142,8 +1144,8 @@ def daddyCode(codeIn=None):
 
     headers = {
         'user-agent': randomUa,
-        'referer': "https://dokoplay.xyz/",
-        'origin': "https://dokoplay.xyz"
+        'referer': "https://"+hostAuth+"/",
+        'origin': "https://"+hostAuth
     }
     urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+codeIn+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
     
@@ -1151,7 +1153,7 @@ def daddyCode(codeIn=None):
     dataJ2 = s.get(urlAuth, headers=headers)
     logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
     
-    urlSrv="https://dokoplay.xyz/server_lookup.php?channel_id=premium"+codeIn
+    urlSrv="https://"+hostAuth+"/server_lookup.php?channel_id=premium"+codeIn
 
     dataJson = s.get(urlSrv, headers=headers)
     logga("DADDY JSON "+dataJson.text)
@@ -1160,8 +1162,8 @@ def daddyCode(codeIn=None):
     logga("DADDY_CODE SERVER "+server)
     link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
     
-    refe="https://dokoplay.xyz/"
-    origin="https://dokoplay.xyz"
+    refe="https://"+hostAuth+"/"
+    origin="https://"+hostAuth
     
     
     final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=Keep-Alive&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
