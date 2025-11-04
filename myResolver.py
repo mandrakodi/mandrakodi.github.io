@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.170'
+versione='1.2.171'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 03.11.2025
+# Last update: 04.11.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1117,12 +1117,16 @@ def daddyCode(codeIn=None):
     }
     s = requests.Session()
     
-    urlAuth="https://dokoplay.xyz/premiumtv/daddyhd.php?id="+codeIn
+    urlSrv="https://dlhd.dad/stream/stream-"+codeIn+".php"
+    fuSrv = s.get(urlSrv, headers=headers)
+    urlAuth = re.findall('<iframe src="(.*?)"', fuSrv.text)[0]
+    logga("SERVER_AUTH_DADDY: "+urlAuth)
+    #urlAuth="https://dokoplay.xyz/premiumtv/daddyhd.php?id="+codeIn
     
     fu = s.get(urlAuth, headers=headers)
     logga ("AUTH_PAGE: "+fu.text)
 
-    bundle64 = re.findall('const BUNDLE = "(.*?)"', fu.text)[0]
+    bundle64 = re.findall('const IJXX="(.*?)"', fu.text)[0]
     logga("BUNDLE_DADDY: "+bundle64)
     bundle=base64.b64decode(bundle64).decode("utf-8")
     arrAuth=json.loads(bundle)
