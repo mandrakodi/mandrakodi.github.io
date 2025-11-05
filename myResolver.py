@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.173'
+versione='1.2.174'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -3429,17 +3429,21 @@ def taxi(parIn):
     express1 = r'<title>(.*?)</title>'
     ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(page)[0]
 
-    express2 = r'<li>  <a href="#" allowfullscreen data-link="(.*?)" id="(.*?)" data-num="(.*?)" data-title="(.*?)">\d+</a>(.*?)</li>'
+    express2 = r'<a href="#" allowfullscreen data-link="(.*?)" id="(.*?)" data-num="(.*?)" data-title="(.*?)">\d+</a>(.*?)</li>'
     ret = re.compile(express2, re.MULTILINE | re.DOTALL).findall(page)
     jsonText='{"SetViewMode":"503","items":['
     numIt=0
     for (link, id, ep, tito, mirror) in ret:
         #express3 = r'<a href="#" class="mr" data-m="dropload" data-link="(.*?)">'
-        express3 = r'<a href="#" class="mr" data-m="supervideo" data-link="(.*?)">'
+        #express3 = r'<a href="#" class="mr" data-m="supervideo" data-link="(.*?)">'
+        express3 = r'<a href="#" class="mr" data-link="(.*?)">'
         ret2 = re.compile(express3, re.MULTILINE | re.DOTALL).findall(mirror)[0]
+        if "supervideo" in ret2: 
+            ret2 = re.compile(express3, re.MULTILINE | re.DOTALL).findall(mirror)[1]
         link=ret2
         if (numIt > 0):
-            jsonText = jsonText + ','    
+            jsonText = jsonText + ','  
+        
         jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"proData@@'+link+'",'
         jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
