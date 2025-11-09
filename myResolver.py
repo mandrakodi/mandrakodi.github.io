@@ -1,15 +1,18 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.174'
+versione='1.2.175'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 04.11.2025
+# Last update: 09.11.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
 import os
 import string
 import random
+
+from urllib.parse import quote_plus, urlparse, parse_qsl
+from requests import Response
 
 import xbmcgui
 import xbmc
@@ -1052,9 +1055,12 @@ def ffmpeg(link=None):
 def ffmpeg_noRef(link=None):
     liz = xbmcgui.ListItem('FfMpeg', path=link)
     liz.setProperty('inputstream', 'inputstream.ffmpegdirect')
-    liz.setMimeType('application/x-mpegURL')
-    liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
     liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
+    if "|" in link:
+        arrL=link.split("|")
+        ref=arrL[1]
+        liz.setProperty('inputstream.ffmpegdirect.stream_headers', ref)
+    
     timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
     if timeShift != "no_time_shift":
         liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
@@ -1109,6 +1115,30 @@ def daddy(parIn=None):
 def daddyCode(codeIn=None):
     import re, json, base64
     video_urls = []
+
+    dadUrl="https://dlhd.dad/watch/stream-"+codeIn+".php"
+    m3u8=resolve_link(dadUrl)
+
+    jsonText='{"SetViewMode":"50","items":['
+    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"'+m3u8+'",'
+    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"},'
+    jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+m3u8+'",'
+    #jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"daddy@@https://dlhd.so/embed/stream-'+codeIn+'.php",'
+    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"}'
+    
+   
+    
+    jsonText = jsonText + "]}"
+    logga('JSON-DADDY: '+jsonText)
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    
+    return video_urls
+
+
     randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
     #randomUa=getRandomUA()
     headers = {
@@ -1141,7 +1171,10 @@ def daddyCode(codeIn=None):
     authRnd = base64.b64decode(authRnd64).decode("utf-8")
     authSig = base64.b64decode(authSig64).decode("utf-8")
     
-
+    sigHt=re.findall('src="https://security.newkso.ru/secure.php(.*?)"', fu.text)[0]
+    logga("DADDY NEW_URL "+sigHt)
+    arrSig=sigHt.split("&sig=")
+    authSig=arrSig[1]
 
     headers = {
         'user-agent': randomUa,
@@ -1149,7 +1182,7 @@ def daddyCode(codeIn=None):
         'origin': "https://"+hostAuth
     }
     urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+codeIn+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
-    
+    urlAuth="https://security.newkso.ru/secure.php"+sigHt
     
     dataJ2 = s.get(urlAuth, headers=headers)
     logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
@@ -1380,6 +1413,30 @@ def freeshot(codeIn=None):
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     
     return video_urls
+
+def tvapp(parIn=None):
+    import json
+    video_urls = []
+    randomUa="Mozilla/5.0"
+    #randomUa=getRandomUA()
+    headers = {
+        'user-agent': randomUa,
+        'referer': "https://thetvapp.to/"
+    }
+    s = requests.Session()
+    urlAuth="https://thetvapp.to/tv/"+parIn
+    fu = s.get(urlAuth, headers=headers)
+    divUrl = preg_match(fu.text, '<div id="stream_name" name="(.*?)">')
+    urlJsonLink="https://thetvapp.to/token/"+divUrl
+    fuJson = s.get(urlJsonLink, headers=headers).text
+    logga("JSON TVAPP: "+fuJson)
+    arrJ = json.loads(fuJson)
+    videoLink=arrJ["url"]
+    logga("LINK TVAPP: "+videoLink)
+    
+    video_urls.append((videoLink, "[COLOR lime]PLAY STREAM (PLAYER EST.)[/COLOR]", "PLAY STREAM", "https://www.pepperlive.info/Live1.jpg"))
+    return video_urls
+
 
 def enigma4k(parIn=None):
     import json
@@ -5833,7 +5890,108 @@ def infoCode(parIn=''):
     mess="L_V: "+launcher_vers+" - R_V: "+versione
     msgBox(mess)
     return None
+
+
+def resolve_link(url):
+    import json, base64
+    user_agent = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36'
+    m3u8 = None
+    logga ("URL IN ==> "+url)
+    try:
         
+        #response = get(url)
+        headers = {
+            'user-agent': user_agent,
+            'referer': "https://dlhd.dad/"
+        }
+        s = requests.Session()
+        
+        #urlSrv="https://dlhd.dad/stream/stream-"+codeIn+".php"
+        response = s.get(url, headers=headers, verify=False)
+        url2 = re.findall('<iframe src="(.*?)"', response.text)[0]
+        
+        logga ("URL2 ==> "+url2)
+        if 'wikisport' in url2 or 'lovecdn' in url2:
+            headers['Referer'] = headers['Origin'] = url
+            response = s.get(url2, headers=headers, verify=False)
+            url2 = re.findall('<iframe src="(.*?)"', response.text)[0]
+        
+        if 'lovecdn' in url2:
+            m3u8 = url2.replace('embed.html', 'index.fmp4.m3u8')
+            referer = f'https://{urlparse(url2).netloc}'
+            m3u8 = f'{m3u8}|Referer={url2}&Connection=Keep-Alive&User-Agent={user_agent}'
+            return m3u8
+        
+        response = s.get(url2, headers=headers, verify=False)
+        
+        if channel_key := re.search(r'const\s+CHANNEL_KEY\s*=\s*"([^"]+)"', response.text):
+            channel_key = channel_key.group(1)
+            
+            bundle = re.search(r'const\s+[A-Z]+\s*=\s*"([^"]+)"', response.text).group(1)
+            parts = json.loads(base64.b64decode(bundle).decode("utf-8"))
+            for k, v in parts.items():
+                parts[k] = base64.b64decode(v).decode("utf-8")
+            bx = [40, 60, 61, 33, 103, 57, 33, 57]
+            sc = ''.join(chr(b ^ 73) for b in bx)
+            host = "https://top2new.newkso.ru/"
+            auth_url = (
+                f'{host}{sc}'
+                f'?channel_id={quote_plus(channel_key)}&'
+                f'ts={quote_plus(parts["b_ts"])}&'
+                f'rnd={quote_plus(parts["b_rnd"])}&'
+                f'sig={quote_plus(parts["b_sig"])}'
+            )
+            #get(auth_url, referer=url2)
+            headers['Referer'] = headers['Origin'] = url2
+            s.get(auth_url, headers=headers, verify=False)
+                
+            server_lookup_url = f"https://{urlparse(url2).netloc}/server_lookup.php?channel_id={channel_key}"
+            #response = get(server_lookup_url, referer=url2).json()
+            response = s.get(server_lookup_url, headers=headers, verify=False).json()
+            server_key = response['server_key']
+            if server_key == "top1/cdn":
+                m3u8 = f"https://top1.newkso.ru/top1/cdn/{channel_key}/mono.m3u8"
+            else:
+                m3u8 = f"https://{server_key}new.newkso.ru/{server_key}/{channel_key}/mono.m3u8"
+            
+            referer = f'https://{urlparse(url2).netloc}'
+            m3u8 = f'{m3u8}|Referer={referer}/&Origin={referer}&Connection=Keep-Alive&User-Agent={user_agent}'
+        
+        elif match := re.search(r"atob\('([^']+)'\)", response.text):
+            b64_str = match.group(1)
+            decoded = base64.b64decode(b64_str).decode('utf-8', errors='ignore')
+            init_url = re.search(r'initUrl\s*=\s*"([^"]+)"', decoded)
+            if init_url:
+                m3u8 = init_url.group(1)
+                #r_m3u8 = get(m3u8)
+                r_m3u8 = s.get(m3u8, headers=headers, verify=False)
+                m3u8 = base64.b64decode(r_m3u8.text).decode("utf-8")
+                referer = f'https://{urlparse(url2).netloc}'
+                m3u8 = f'{m3u8}|Referer={url2}&Connection=Keep-Alive&User-Agent={user_agent}'
+        
+        
+        elif 'blogspot.com' in url2:
+            channel_id = dict(parse_qsl(urlparse(url2).query)).get('id')
+            pattern = rf'"{re.escape(channel_id)}"\s*:\s*\{{[^}}]*?url:\s*"([^"]+)"'
+            match = re.search(pattern, response.text, re.DOTALL)
+            if match:
+                m3u8 = match.group(1)
+                referer = f'https://{urlparse(url2).netloc}'
+                m3u8 = f'{m3u8}|Referer={referer}/&Origin={referer}&Connection=Keep-Alive&User-Agent={user_agent}'
+        
+        elif match := re.search(r"var\s+PlayS\s*=\s*'([^']+)'", response.text):
+            m3u8 = match.group(1)
+            referer = f'https://{urlparse(url2).netloc}'
+            m3u8 = f'{m3u8}|Referer={referer}/&Origin={referer}&Connection=Keep-Alive&User-Agent={user_agent}'
+            
+    except Exception as err:
+        import traceback
+        
+        errMsg="ERROR_MK2: {0}".format(err)
+        msgBox(errMsg)
+        traceback.print_exc()
+    
+    return m3u8
 
 def run (action, params=None):
     logga('Run version '+versione)
@@ -5903,6 +6061,7 @@ def run (action, params=None):
         'tmdbs':get_tmdb_episode_video,
         'gdplayer':gdplayer,
         'freeshot':freeshot,
+        'tvapp':tvapp,
         'gaga':gaga
     }
 
