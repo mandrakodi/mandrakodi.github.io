@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.175'
+versione='1.2.176'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 09.11.2025
+# Last update: 16.11.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1382,7 +1382,7 @@ def freeshot(codeIn=None):
     #randomUa=getRandomUA()
     headers = {
         'user-agent': randomUa,
-        'referer': "https://freeshot.live/embed/"+codeIn+".php"
+        'referer': "https://thisnot.business/"
     }
     s = requests.Session()
     urlAuth="https://popcdn.day/go.php?stream="+codeIn
@@ -1395,6 +1395,7 @@ def freeshot(codeIn=None):
     #logga ("TOKEN: "+token)
     
     link_ch="https://planetary.lovecdn.ru/"+codeIn+"/index.fmp4.m3u8?token="+token
+    link_ch=frameUrl.replace("embed.html", "index.fmp4.m3u8")
     jsonText='{"SetViewMode":"50","items":['
     jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM [/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+link_ch+'",'
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
@@ -5907,13 +5908,13 @@ def resolve_link(url):
         s = requests.Session()
         
         #urlSrv="https://dlhd.dad/stream/stream-"+codeIn+".php"
-        response = s.get(url, headers=headers, verify=False)
+        response = s.get(url, headers=headers)
         url2 = re.findall('<iframe src="(.*?)"', response.text)[0]
         
         logga ("URL2 ==> "+url2)
         if 'wikisport' in url2 or 'lovecdn' in url2:
             headers['Referer'] = headers['Origin'] = url
-            response = s.get(url2, headers=headers, verify=False)
+            response = s.get(url2, headers=headers)
             url2 = re.findall('<iframe src="(.*?)"', response.text)[0]
         
         if 'lovecdn' in url2:
@@ -5922,13 +5923,15 @@ def resolve_link(url):
             m3u8 = f'{m3u8}|Referer={url2}&Connection=Keep-Alive&User-Agent={user_agent}'
             return m3u8
         
-        response = s.get(url2, headers=headers, verify=False)
-        
+        response = s.get(url2, headers=headers)
+        #logga ("SOURCE2 ==> "+response.text)
         if channel_key := re.search(r'const\s+CHANNEL_KEY\s*=\s*"([^"]+)"', response.text):
             channel_key = channel_key.group(1)
             
             bundle = re.search(r'const\s+[A-Z]+\s*=\s*"([^"]+)"', response.text).group(1)
-            parts = json.loads(base64.b64decode(bundle).decode("utf-8"))
+            jj=base64.b64decode(bundle).decode("utf-8")
+            #logga("JJ ==> "+jj)
+            parts = json.loads(jj)
             for k, v in parts.items():
                 parts[k] = base64.b64decode(v).decode("utf-8")
             bx = [40, 60, 61, 33, 103, 57, 33, 57]
@@ -5943,12 +5946,19 @@ def resolve_link(url):
             )
             #get(auth_url, referer=url2)
             headers['Referer'] = headers['Origin'] = url2
-            s.get(auth_url, headers=headers, verify=False)
-                
+            rps=s.get(auth_url, headers=headers)
+            logga("AUTH ==> "+auth_url)    
+            logga("RESP_AUTH ==> "+rps.text)    
             server_lookup_url = f"https://{urlparse(url2).netloc}/server_lookup.php?channel_id={channel_key}"
-            #response = get(server_lookup_url, referer=url2).json()
-            response = s.get(server_lookup_url, headers=headers, verify=False).json()
-            server_key = response['server_key']
+            logga("LOOK_UP ==> "+server_lookup_url)    
+            response = s.get(server_lookup_url, headers=headers)
+            logga("RESP_LOOK_UP ==> "+response.text)
+            if "Not Found" in response.text:
+                m3u8="ignoreMe"
+                msgBox ("No Link Found")
+                return m3u8
+            jj2=response.json()
+            server_key = jj2['server_key']
             if server_key == "top1/cdn":
                 m3u8 = f"https://top1.newkso.ru/top1/cdn/{channel_key}/mono.m3u8"
             else:
@@ -5964,7 +5974,7 @@ def resolve_link(url):
             if init_url:
                 m3u8 = init_url.group(1)
                 #r_m3u8 = get(m3u8)
-                r_m3u8 = s.get(m3u8, headers=headers, verify=False)
+                r_m3u8 = s.get(m3u8, headers=headers)
                 m3u8 = base64.b64decode(r_m3u8.text).decode("utf-8")
                 referer = f'https://{urlparse(url2).netloc}'
                 m3u8 = f'{m3u8}|Referer={url2}&Connection=Keep-Alive&User-Agent={user_agent}'
