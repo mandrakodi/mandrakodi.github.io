@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.176'
+versione='1.2.177'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 16.11.2025
+# Last update: 17.11.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -3252,7 +3252,7 @@ def sportsonlineMenu():
     video_urls = []
 
     arrWeek={"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"}
-    url="https://sportsonline.gl/prog.txt"
+    url="https://sportsonline.sn/prog.txt"
     headers = {
         'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
     }
@@ -3638,10 +3638,10 @@ def voe(parIn):
     import base64
     logga('VOE PAGE: '+parIn)
     page_data = requests.get(parIn,headers={'user-agent':'iPad','accept':'*/*','referer':parIn}).content
-
     if PY3:
         page_data = page_data.decode('utf-8')
 
+    logga ("VOE ==> "+page_data)
     tit = preg_match(page_data, '<h1 class="mt-1">(.*?)<span')
     src = preg_match(page_data, "'hls': '(.*?)'")
     src1 = preg_match(page_data, "'mp4': '(.*?)'")
@@ -6079,4 +6079,3 @@ def run (action, params=None):
         return commands[action](params)
     else:
         raise ValueError('Invalid command: {0}!'.action)
-
