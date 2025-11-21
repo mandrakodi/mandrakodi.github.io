@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.177'
+versione='1.2.178'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 17.11.2025
+# Last update: 21.11.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1111,6 +1111,8 @@ def daddy(parIn=None):
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM "+tito+"[/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
     
     return video_urls
+
+
 
 def daddyCode(codeIn=None):
     import re, json, base64
@@ -5909,91 +5911,76 @@ def resolve_link(url):
         
         #urlSrv="https://dlhd.dad/stream/stream-"+codeIn+".php"
         response = s.get(url, headers=headers)
-        url2 = re.findall('<iframe src="(.*?)"', response.text)[0]
+        iframe_url = re.findall('<iframe src="(.*?)"', response.text)[0]
         
-        logga ("URL2 ==> "+url2)
-        if 'wikisport' in url2 or 'lovecdn' in url2:
+        logga ("URL2 ==> "+iframe_url)
+        if 'wikisport' in iframe_url or 'lovecdn' in iframe_url:
             headers['Referer'] = headers['Origin'] = url
-            response = s.get(url2, headers=headers)
-            url2 = re.findall('<iframe src="(.*?)"', response.text)[0]
+            response = s.get(iframe_url, headers=headers)
+            iframe_url = re.findall('<iframe src="(.*?)"', response.text)[0]
         
-        if 'lovecdn' in url2:
-            m3u8 = url2.replace('embed.html', 'index.fmp4.m3u8')
-            referer = f'https://{urlparse(url2).netloc}'
-            m3u8 = f'{m3u8}|Referer={url2}&Connection=Keep-Alive&User-Agent={user_agent}'
+        if 'lovecdn' in iframe_url:
+            m3u8 = iframe_url.replace('embed.html', 'index.fmp4.m3u8')
+            referer = f'https://{urlparse(iframe_url).netloc}'
+            m3u8 = f'{m3u8}|Referer={iframe_url}&Connection=Keep-Alive&User-Agent={user_agent}'
             return m3u8
         
-        response = s.get(url2, headers=headers)
-        #logga ("SOURCE2 ==> "+response.text)
-        if channel_key := re.search(r'const\s+CHANNEL_KEY\s*=\s*"([^"]+)"', response.text):
-            channel_key = channel_key.group(1)
-            
-            bundle = re.search(r'const\s+[A-Z]+\s*=\s*"([^"]+)"', response.text).group(1)
-            jj=base64.b64decode(bundle).decode("utf-8")
-            #logga("JJ ==> "+jj)
-            parts = json.loads(jj)
-            for k, v in parts.items():
-                parts[k] = base64.b64decode(v).decode("utf-8")
-            bx = [40, 60, 61, 33, 103, 57, 33, 57]
-            sc = ''.join(chr(b ^ 73) for b in bx)
-            host = "https://top2new.newkso.ru/"
-            auth_url = (
-                f'{host}{sc}'
-                f'?channel_id={quote_plus(channel_key)}&'
-                f'ts={quote_plus(parts["b_ts"])}&'
-                f'rnd={quote_plus(parts["b_rnd"])}&'
-                f'sig={quote_plus(parts["b_sig"])}'
-            )
-            #get(auth_url, referer=url2)
-            headers['Referer'] = headers['Origin'] = url2
-            rps=s.get(auth_url, headers=headers)
-            logga("AUTH ==> "+auth_url)    
-            logga("RESP_AUTH ==> "+rps.text)    
-            server_lookup_url = f"https://{urlparse(url2).netloc}/server_lookup.php?channel_id={channel_key}"
-            logga("LOOK_UP ==> "+server_lookup_url)    
-            response = s.get(server_lookup_url, headers=headers)
-            logga("RESP_LOOK_UP ==> "+response.text)
-            if "Not Found" in response.text:
-                m3u8="ignoreMe"
-                msgBox ("No Link Found")
-                return m3u8
-            jj2=response.json()
-            server_key = jj2['server_key']
-            if server_key == "top1/cdn":
-                m3u8 = f"https://top1.newkso.ru/top1/cdn/{channel_key}/mono.m3u8"
+        response = s.get(iframe_url, headers=headers)
+        js = response.text
+        #logga ("SOURCE2 ==> "+js)
+        params = {}
+        patterns = {
+            "channel_key": r'(?:const|var|let)\s+(?:CHANNEL_KEY|channelKey)\s*=\s*["\']([^"\']+)["\']',
+            "auth_token": r'(?:const|var|let)\s+AUTH_TOKEN\s*=\s*["\']([^"\']+)["\']',
+            "auth_country": r'(?:const|var|let)\s+AUTH_COUNTRY\s*=\s*["\']([^"\']+)["\']',
+            "auth_ts": r'(?:const|var|let)\s+AUTH_TS\s*=\s*["\']([^"\']+)["\']',
+            "auth_expiry": r'(?:const|var|let)\s+AUTH_EXPIRY\s*=\s*["\']([^"\']+)["\']',
+        }
+        for key, pattern in patterns.items():
+            match = re.search(pattern, js)
+            params[key] = match.group(1) if match else None
+
+        logga("channel_key ==> "+params["channel_key"])
+        logga("auth_token ==> "+params["auth_token"])
+        logga("auth_country ==> "+params["auth_country"])
+        logga("auth_ts ==> "+params["auth_ts"])
+        logga("auth_expiry ==> "+params["auth_expiry"])
+
+        auth_url = 'https://security.newkso.ru/auth2.php'
+        form_data = {
+            'channelKey': params["channel_key"],
+            'country': params["auth_country"],
+            'timestamp': params["auth_ts"],
+            'expiry': params["auth_expiry"],
+            'token': params["auth_token"],
+        }
+
+        iframe_origin = f"https://{urlparse(iframe_url).netloc}"
+        auth_headers = headers.copy()
+        auth_headers.update({
+            'Referer': iframe_url,
+            'Origin': iframe_origin,
+        })
+        auth_resp = s.post(auth_url, data=form_data, headers=auth_headers, timeout=12)
+        auth_data = auth_resp.json()
+        logga("auth_data ==> "+str(auth_data.get("valid")))
+        if auth_data.get("valid"):
+            server_lookup_url = f"https://{urlparse(iframe_url).netloc}/server_lookup.js?channel_id={params['channel_key']}"
+            lookup_resp = s.get(server_lookup_url, headers=headers, timeout=10)
+            server_data = lookup_resp.json()
+            server_key = server_data.get('server_key')
+            channel_key = params['channel_key']
+            auth_token = params['auth_token']
+            # The JS logic uses .css, not .m3u8
+            if server_key == 'top1/cdn':
+                stream_url = f'https://top1.newkso.ru/top1/cdn/{channel_key}/mono.css'
             else:
-                m3u8 = f"https://{server_key}new.newkso.ru/{server_key}/{channel_key}/mono.m3u8"
-            
-            referer = f'https://{urlparse(url2).netloc}'
-            m3u8 = f'{m3u8}|Referer={referer}/&Origin={referer}&Connection=Keep-Alive&User-Agent={user_agent}'
-        
-        elif match := re.search(r"atob\('([^']+)'\)", response.text):
-            b64_str = match.group(1)
-            decoded = base64.b64decode(b64_str).decode('utf-8', errors='ignore')
-            init_url = re.search(r'initUrl\s*=\s*"([^"]+)"', decoded)
-            if init_url:
-                m3u8 = init_url.group(1)
-                #r_m3u8 = get(m3u8)
-                r_m3u8 = s.get(m3u8, headers=headers)
-                m3u8 = base64.b64decode(r_m3u8.text).decode("utf-8")
-                referer = f'https://{urlparse(url2).netloc}'
-                m3u8 = f'{m3u8}|Referer={url2}&Connection=Keep-Alive&User-Agent={user_agent}'
-        
-        
-        elif 'blogspot.com' in url2:
-            channel_id = dict(parse_qsl(urlparse(url2).query)).get('id')
-            pattern = rf'"{re.escape(channel_id)}"\s*:\s*\{{[^}}]*?url:\s*"([^"]+)"'
-            match = re.search(pattern, response.text, re.DOTALL)
-            if match:
-                m3u8 = match.group(1)
-                referer = f'https://{urlparse(url2).netloc}'
-                m3u8 = f'{m3u8}|Referer={referer}/&Origin={referer}&Connection=Keep-Alive&User-Agent={user_agent}'
-        
-        elif match := re.search(r"var\s+PlayS\s*=\s*'([^']+)'", response.text):
-            m3u8 = match.group(1)
-            referer = f'https://{urlparse(url2).netloc}'
-            m3u8 = f'{m3u8}|Referer={referer}/&Origin={referer}&Connection=Keep-Alive&User-Agent={user_agent}'
-            
+                stream_url = f'https://{server_key}new.newkso.ru/{server_key}/{channel_key}/mono.css'
+
+            m3u8 = stream_url+"|Referer="+iframe_url+"&Origin="+iframe_origin+"&Authorization=Bearer "+auth_token+"&X-Channel-Key="+channel_key+"&User-Agent="+headers["user-agent"]
+        else:
+           msgBox("NO VALIDATE") 
+           return "ignore_me"
     except Exception as err:
         import traceback
         
