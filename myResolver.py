@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.178'
+versione='1.2.179'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 21.11.2025
+# Last update: 22.11.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1672,7 +1672,7 @@ def PlayStream(link):
     
     return liz
 
-def daznToken(parIn):
+def daznTokenOld(parIn):
     logga ("PAR_DAZN: "+parIn)
     arrT=parIn.split("SPLITTA_QUI")
     link=arrT[0].replace("PARAMETRI_TUOI", "&")
@@ -1770,6 +1770,25 @@ def amstaffTest(parIn):
     if token != "":
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false') 
     return liz
+
+def daznToken(parIn):
+    import base64
+    drmType="org.w3.clearkey"
+    parametro=base64.b64decode(parIn).decode("utf-8")
+    arrTmp=parametro.split("|")
+    link=arrTmp[0]
+    key=arrTmp[1]
+    token=arrTmp[2]
+    ua=myParse.quote_plus("Mozilla/5.0 (X11; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0")
+    liz = xbmcgui.ListItem(path=link, offscreen=True)
+    liz.setContentLookup(False)
+    liz.setProperty('inputstream', 'inputstream.adaptive')
+    liz.setProperty('inputstream.adaptive.drm_legacy', drmType+'|'+key)
+    liz.setProperty('inputstream.adaptive.stream_headers', "dazn-token="+token+"&User-Agent="+ua)
+    liz.setProperty('inputstream.adaptive.manifest_headers', "dazn-token="+token+"&User-Agent="+ua)
+    
+    return liz
+
 
 
 def amstaff(parIn):
