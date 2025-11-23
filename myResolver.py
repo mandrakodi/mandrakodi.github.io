@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.179'
+versione='1.2.180'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 22.11.2025
+# Last update: 23.11.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1119,7 +1119,7 @@ def daddyCode(codeIn=None):
     video_urls = []
 
     dadUrl="https://dlhd.dad/watch/stream-"+codeIn+".php"
-    m3u8=resolve_link(dadUrl)
+    m3u8=resolve_link(codeIn)
 
     jsonText='{"SetViewMode":"50","items":['
     jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"'+m3u8+'",'
@@ -1282,7 +1282,7 @@ def get_tmdb_video(tmdb_id="926899"):
             expires = arr_t["params"]["expires"]
             url_v = arr_t["url"]
             
-            to_ret = f"{url_v}?token={token}&expires={expires}&h=1&lang=it"
+            to_ret = f"{url_v}?token={token}&expires={expires}&h=1"
         else:
             logga("NO TMDB_JSON")
     except Exception as e:
@@ -1290,7 +1290,11 @@ def get_tmdb_video(tmdb_id="926899"):
     
     video_urls = []
     jsonText='{"SetViewMode":"50","items":['
-    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM[/COLOR]","link":"'+to_ret+'",'
+    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (IT)[/COLOR]","link":"'+to_ret+'&lang=it",'
+    jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"},'
+    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (EN)[/COLOR]","link":"'+to_ret+'&lang=en",'
     jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
     jsonText = jsonText + '"info":"by MandraKodi"}'
@@ -5913,14 +5917,30 @@ def infoCode(parIn=''):
     msgBox(mess)
     return None
 
-
+def oldCode():
+    #urlSrv="https://dlhd.dad/stream/stream-"+codeIn+".php"
+    response = s.get(url, headers=headers)
+    iframe_url = re.findall('<iframe src="(.*?)"', response.text)[0]
+    
+    logga ("URL2 ==> "+iframe_url)
+    if 'wikisport' in iframe_url or 'lovecdn' in iframe_url:
+        headers['Referer'] = headers['Origin'] = dadUrl
+        response = s.get(iframe_url, headers=headers)
+        iframe_url = re.findall('<iframe src="(.*?)"', response.text)[0]
+    
+    if 'lovecdn' in iframe_url:
+        m3u8 = iframe_url.replace('embed.html', 'index.fmp4.m3u8')
+        referer = f'https://{urlparse(iframe_url).netloc}'
+        m3u8 = f'{m3u8}|Referer={iframe_url}&Connection=Keep-Alive&User-Agent={user_agent}'
+        return m3u8
+    
 def resolve_link(url):
     import json, base64
     user_agent = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36'
     m3u8 = None
     logga ("URL IN ==> "+url)
     try:
-        
+        dadUrl="https://dlhd.dad/watch/stream-"+url+".php"
         #response = get(url)
         headers = {
             'user-agent': user_agent,
@@ -5928,22 +5948,8 @@ def resolve_link(url):
         }
         s = requests.Session()
         
-        #urlSrv="https://dlhd.dad/stream/stream-"+codeIn+".php"
-        response = s.get(url, headers=headers)
-        iframe_url = re.findall('<iframe src="(.*?)"', response.text)[0]
         
-        logga ("URL2 ==> "+iframe_url)
-        if 'wikisport' in iframe_url or 'lovecdn' in iframe_url:
-            headers['Referer'] = headers['Origin'] = url
-            response = s.get(iframe_url, headers=headers)
-            iframe_url = re.findall('<iframe src="(.*?)"', response.text)[0]
-        
-        if 'lovecdn' in iframe_url:
-            m3u8 = iframe_url.replace('embed.html', 'index.fmp4.m3u8')
-            referer = f'https://{urlparse(iframe_url).netloc}'
-            m3u8 = f'{m3u8}|Referer={iframe_url}&Connection=Keep-Alive&User-Agent={user_agent}'
-            return m3u8
-        
+        iframe_url = "https://epicplayplay.cfd/premiumtv/daddyhd.php?id="+url
         response = s.get(iframe_url, headers=headers)
         js = response.text
         #logga ("SOURCE2 ==> "+js)
@@ -5977,13 +5983,20 @@ def resolve_link(url):
         iframe_origin = f"https://{urlparse(iframe_url).netloc}"
         auth_headers = headers.copy()
         auth_headers.update({
-            'Referer': iframe_url,
+            'Accept': '*/*',
+            'Accept-Language': 'en-US,en;q=0.9',
             'Origin': iframe_origin,
+            'Referer': iframe_url,
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'cross-site',
+            'Priority': 'u=1, i',
         })
         auth_resp = s.post(auth_url, data=form_data, headers=auth_headers, timeout=12)
+        logga("auth_resp ==> "+auth_resp.text)
         auth_data = auth_resp.json()
-        logga("auth_data ==> "+str(auth_data.get("valid")))
-        if auth_data.get("valid"):
+        logga("auth_data ==> "+str(auth_data.get("success")))
+        if auth_data.get("success"):
             server_lookup_url = f"https://{urlparse(iframe_url).netloc}/server_lookup.js?channel_id={params['channel_key']}"
             lookup_resp = s.get(server_lookup_url, headers=headers, timeout=10)
             server_data = lookup_resp.json()
