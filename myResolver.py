@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.181'
+versione='1.2.182'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -3033,6 +3033,8 @@ def ppvMenu():
     # Prima parte: costruzione dell'array ordinabile
     for event in arrJ["streams"]:
         sport = event["category"]
+        if sport == "Football":
+            sport =" Calcio"
         for gara in event["streams"]:
             comp = gara["tag"]
             match = gara["name"]
@@ -3060,7 +3062,8 @@ def ppvMenu():
 
         if sport == "24/7 Streams":
             continue
-
+        
+        
         # Nuovo gruppo di sport
         if oldSport != sport:
             numGroup += 1
@@ -3070,6 +3073,7 @@ def ppvMenu():
                 "name": f"[COLOR gold]{sport}[/COLOR]",
                 "thumbnail": "https://thumbs.dreamstime.com/b/logos-d-annata-misto-di-sport-di-vettore-73688323.jpg",
                 "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+                "SetViewMode": "50",
                 "items": []
             })
             numIt = 0
