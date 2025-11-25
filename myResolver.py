@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.180'
+versione='1.2.181'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.11.2025
+# Last update: 25.11.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -3016,6 +3016,84 @@ def createSportMenu(parIn=""):
         return daddyLiveMenu()
     if parIn=="platin":
         return platinumMenu()
+    if parIn=="ppv":
+        return ppvMenu()
+
+def ppvMenu():
+    import json
+    from datetime import datetime
+    video_urls = []
+
+    # Scarica la pagina
+    page = requests.get("https://ppv.to/api/streams").text
+    arrJ = json.loads(page)
+
+    arrEv = []
+
+    # Prima parte: costruzione dell'array ordinabile
+    for event in arrJ["streams"]:
+        sport = event["category"]
+        for gara in event["streams"]:
+            comp = gara["tag"]
+            match = gara["name"]
+            poster = gara["poster"]
+            url = gara["iframe"]
+            date = gara["starts_at"]
+
+            arrEv.append(f"{sport}@@{date}@@{comp}@@{match}@@{poster}@@{url}")
+
+    # Ordina come in PHP
+    arrEv.sort()
+
+    # Seconda parte: costruzione struttura finale
+    toRet = {"SetViewMode": "50", "channels": []}
+
+    numGroup = -1
+    oldSport = ""
+    numIt = 0
+
+    for row in arrEv:
+        sport, date, comp, match, poster, url = row.split("@@")
+
+        # PHP: $quando = date("Y-m-d H:i", intval($date)+3600)
+        quando = datetime.utcfromtimestamp(int(date) + 3600).strftime("%Y-%m-%d %H:%M")
+
+        if sport == "24/7 Streams":
+            continue
+
+        # Nuovo gruppo di sport
+        if oldSport != sport:
+            numGroup += 1
+            oldSport = sport
+
+            toRet["channels"].append({
+                "name": f"[COLOR gold]{sport}[/COLOR]",
+                "thumbnail": "https://thumbs.dreamstime.com/b/logos-d-annata-misto-di-sport-di-vettore-73688323.jpg",
+                "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+                "items": []
+            })
+            numIt = 0
+
+        # Aggiunge item evento
+        toRet["channels"][numGroup]["items"].append({
+            "title": f"[COLOR gold]{quando}[/COLOR] [COLOR aqua]{comp}[/COLOR] [COLOR lime]{match}[/COLOR]",
+            "myresolve": f"ppv@@{url}",
+            "thumbnail": poster,
+            "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+            "info": match
+        })
+
+        numIt += 1
+
+    # Output finale JSON formattato
+    jsonText=json.dumps(
+        toRet,
+        ensure_ascii=False,
+        indent=4
+    )
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
+
 
 def platinumMenu():
     video_urls = []
@@ -5933,7 +6011,42 @@ def oldCode():
         referer = f'https://{urlparse(iframe_url).netloc}'
         m3u8 = f'{m3u8}|Referer={iframe_url}&Connection=Keep-Alive&User-Agent={user_agent}'
         return m3u8
+
+def ppv_to(parIn):
+    import base64
+    video_urls = []
+    user_agent = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36'
+    headers = {
+        'user-agent': user_agent,
+        'referer': "https://ppv.to/"
+    }
+    s = requests.Session()
+        
+    response = s.get(parIn, headers=headers)
+    #logga ("PPV_PAGE ==> "+response.text)
+    stream_url = re.findall('const src = atob\("(.*?)"\)', response.text)[0]
+    stream_url = base64.b64decode(stream_url).decode("utf-8")
+    #logga ("URL IN ==> "+stream_url)
+    link=stream_url.replace("index.m3u8", "mono.ts.m3u8|Referer=https://ppv.to/&Connection=Keep-Alive&Origin=https://ppv.to&User-Agent="+user_agent)
     
+    jsonText='{"SetViewMode":"50","items":['
+    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM [/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"'+link+'",'
+    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"},'
+    jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM [/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+link+'",'
+    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"}'
+    
+    jsonText = jsonText + "]}"
+    
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    
+    return video_urls
+
+
+
 def resolve_link(url):
     import json, base64
     user_agent = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36'
@@ -6091,6 +6204,7 @@ def run (action, params=None):
         'gdplayer':gdplayer,
         'freeshot':freeshot,
         'tvapp':tvapp,
+        'ppv':ppv_to,
         'gaga':gaga
     }
 
