@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.182'
+versione='1.2.183'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 25.11.2025
+# Last update: 30.11.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -167,6 +167,22 @@ def girc(page_data, url, co, size='invisible'):
 
     return ''
 
+def fix_base64_padding(s):
+    # Rimuove spazi o newline eventuali
+    s = s.strip()
+
+    # Calcola quante '=' servono
+    missing = len(s) % 4
+
+    if missing == 2:
+        s += "=="
+    elif missing == 3:
+        s += "="
+    elif missing == 1:
+        # Caso raro: stringa malformata
+        raise ValueError("Base64 non valido: padding impossibile.")
+    
+    return s
 
 def skyTV(parIn=None):
     links = []
@@ -1705,7 +1721,7 @@ def amstaffTest(parIn):
         logga("NO_BASE64")
         parametro=parIn
     else:
-        parametro=base64.b64decode(parIn).decode("utf-8")
+        parametro=base64.b64decode(fix_base64_padding(parIn)).decode("utf-8")
     
     arrT=parametro.split("|")
     link=arrT[0]
@@ -1763,6 +1779,11 @@ def amstaffTest(parIn):
         host="http://rr.cdn.vodafone.pt"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
+    elif "clarovideo.com" in link:
+        ua=myParse.quote_plus("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0")
+        host="https://clarovideo.com"
+        liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
+        liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
     elif "starzplayarabia" in link:
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&verifypeer=false')
@@ -1778,7 +1799,7 @@ def amstaffTest(parIn):
 def daznToken(parIn):
     import base64
     drmType="org.w3.clearkey"
-    parametro=base64.b64decode(parIn).decode("utf-8")
+    parametro=base64.b64decode(fix_base64_padding(parIn)).decode("utf-8")
     arrTmp=parametro.split("|")
     link=arrTmp[0]
     key=arrTmp[1]
