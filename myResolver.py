@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.184'
+versione='1.2.185'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -2624,7 +2624,7 @@ def m3uPlus(parIn=None):
             numIt += 1
             
             jsonText = jsonText + '{"title":"[COLOR orange]=*= '+name+' =*=[/COLOR]","myresolve":"m3uPlus@@1_@|@_'+name+'_@|@_'+catId+'",'
-            jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+            jsonText = jsonText + '"thumbnail":"https://static.vecteezy.com/system/resources/thumbnails/065/914/783/small/stylized-3d-rendering-of-a-file-folder-icon-for-data-management-free-png.png",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"info":"by MandraKodi"}'
             
