@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.183'
+versione='1.2.184'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 30.11.2025
+# Last update: 03.12.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -409,9 +409,9 @@ def livetv(page_url):
                 logga("topembed server: "+serverTop)
                 
                 if serverTop=="top1/cdn":
-                    final_url= "https://top1.newkso.ru/top1/cdn/" + extCode + "/mono.m3u8"
+                    final_url= "https://top1.giokko.ru/top1/cdn/" + extCode + "/mono.m3u8"
                 else:
-                    final_url= "https://" + serverTop + "new.newkso.ru/" + serverTop + "/" + extCode + "/mono.m3u8"
+                    final_url= "https://" + serverTop + "new.giokko.ru/" + serverTop + "/" + extCode + "/mono.m3u8"
             else:
                 arrP2=src.split("play?url=")
                 try:
@@ -973,7 +973,7 @@ def huhu(parIn=None):
     return liz
         
 def sky(parIn=None):
-    link="https://calcionew.newkso.ru/calcio/calcioX2"+parIn+"/mono.m3u8"
+    link="https://calcionew.giokko.ru/calcio/calcioX2"+parIn+"/mono.m3u8"
     liz = xbmcgui.ListItem(path=link, offscreen=True)
     liz.setContentLookup(False)
     liz.setProperty('inputstream', 'inputstream.adaptive')
@@ -998,7 +998,7 @@ def daddyPremium(codeIn=None):
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY_PREMIUM SERVER "+server)
-    link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
+    link="https://"+server+"new.giokko.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
     
     liz = xbmcgui.ListItem(path=link, offscreen=True)
     liz.setContentLookup(False)
@@ -1189,7 +1189,7 @@ def daddyCode(codeIn=None):
     authRnd = base64.b64decode(authRnd64).decode("utf-8")
     authSig = base64.b64decode(authSig64).decode("utf-8")
     
-    sigHt=re.findall('src="https://security.newkso.ru/secure.php(.*?)"', fu.text)[0]
+    sigHt=re.findall('src="https://security.giokko.ru/secure.php(.*?)"', fu.text)[0]
     logga("DADDY NEW_URL "+sigHt)
     arrSig=sigHt.split("&sig=")
     authSig=arrSig[1]
@@ -1199,8 +1199,8 @@ def daddyCode(codeIn=None):
         'referer': "https://"+hostAuth+"/",
         'origin': "https://"+hostAuth
     }
-    urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+codeIn+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
-    urlAuth="https://security.newkso.ru/secure.php"+sigHt
+    urlAuth="https://top2new.giokko.ru/auth.php?channel_id=premium"+codeIn+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
+    urlAuth="https://security.giokko.ru/secure.php"+sigHt
     
     dataJ2 = s.get(urlAuth, headers=headers)
     logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
@@ -1212,7 +1212,7 @@ def daddyCode(codeIn=None):
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY_CODE SERVER "+server)
-    link="https://"+server+"new.newkso.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
+    link="https://"+server+"new.giokko.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
     
     refe="https://"+hostAuth+"/"
     origin="https://"+hostAuth
@@ -1660,7 +1660,7 @@ def PlayStream(link):
         'referer': "https://dokoplay.xyz/",
         'origin': "https://dokoplay.xyz"
     }
-    urlAuth="https://top2new.newkso.ru/auth.php?channel_id=premium"+link+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
+    urlAuth="https://top2new.giokko.ru/auth.php?channel_id=premium"+link+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
     dataJ2 = s.get(urlAuth, headers=headers)
     logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
     
@@ -1671,7 +1671,7 @@ def PlayStream(link):
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
-    link="https://"+server+"new.newkso.ru/"+server+"/premium"+link+"/mono.m3u8"
+    link="https://"+server+"new.giokko.ru/"+server+"/premium"+link+"/mono.m3u8"
     refe="https://dokoplay.xyz/"
     origin="https://dokoplay.xyz"
     
@@ -1723,6 +1723,9 @@ def amstaffTest(parIn):
     else:
         parametro=base64.b64decode(fix_base64_padding(parIn)).decode("utf-8")
     
+    win = xbmcgui.Window(10000)
+    sessionVar1 = win.getProperty("sessionVar1")
+    logga('sessionVar1: '+sessionVar1)
     arrT=parametro.split("|")
     link=arrT[0]
     key64=arrT[1]
@@ -1805,6 +1808,11 @@ def daznToken(parIn):
     key=arrTmp[1]
     token=arrTmp[2]
     ua=myParse.quote_plus("Mozilla/5.0 (X11; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0")
+    try:
+        ua=arrTmp[3]
+    except:
+        pass
+    
     liz = xbmcgui.ListItem(path=link, offscreen=True)
     liz.setContentLookup(False)
     liz.setProperty('inputstream', 'inputstream.adaptive')
@@ -2580,6 +2588,85 @@ def pulive(parIn=None):
     video_urls = []
     video_urls.append((txt2+"|verifypeer=false", "[COLOR lime]PLAY STREAM[/COLOR]", "by @mandrakodi"))
     return video_urls
+
+def m3uPlus(parIn=None):
+    import json
+    
+    headers = {
+        'user-agent':"ipad"
+    }
+    s = requests.Session()
+        
+    win = xbmcgui.Window(10000)
+    
+    arrIn=parIn.split("_@|@_")
+    mode=arrIn[0]
+    logga("M3UPLUS_MODE: "+mode)
+    jsonText = ""
+    if mode=="0":
+        win.setProperty("sessionVar1", parIn)
+        host=arrIn[1]
+        usr=arrIn[2]
+        pwd=arrIn[3]
+        apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_live_categories"
+        response = s.get(apiUrl, headers=headers)
+        #logga("M3UPLUS_JSON: "+response.text)
+        
+        jsonText='{"SetViewMode":"503","items":['
+        
+        numIt=0
+        lista = response.json()
+        for item in lista:
+            catId = item.get("category_id")
+            name = item.get("category_name")
+            if (numIt > 0):
+                jsonText += ','
+            numIt += 1
+            
+            jsonText = jsonText + '{"title":"[COLOR orange]=*= '+name+' =*=[/COLOR]","myresolve":"m3uPlus@@1_@|@_'+name+'_@|@_'+catId+'",'
+            jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"by MandraKodi"}'
+            
+        jsonText = jsonText + "]}"
+
+    if mode=="1":
+        parSess=win.getProperty("sessionVar1")
+        catId=arrIn[2]
+        arrSess=parSess.split("_@|@_")
+        host=arrSess[1]
+        usr=arrSess[2]
+        pwd=arrSess[3]
+        apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_live_streams&category_id="+catId
+        response = s.get(apiUrl, headers=headers)
+
+        jsonText='{"SetViewMode":"503","items":['
+        
+        numIt=0
+        lista = response.json()
+        for item in lista:
+            stream_id = item.get("stream_id")
+            linkUrl="http://"+host+"/live/"+usr+"/"+pwd+"/"+str(stream_id)+".ts"
+            name = item.get("name")
+            stream_icon = item.get("stream_icon")
+            if (numIt > 0):
+                jsonText += ','
+            numIt += 1
+            
+            jsonText = jsonText + '{"title":"[COLOR lime]'+name+'[/COLOR]","link":"'+linkUrl+'|!User-Agent=VLC/3.0.9 LibVLC/3.0.9",'
+            jsonText = jsonText + '"thumbnail":"'+stream_icon+'",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"by MandraKodi"}'
+            
+        jsonText = jsonText + "]}"
+
+
+    video_urls = []
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
+
+
+
 
 
 def macLink(parIn=None):
@@ -6109,7 +6196,7 @@ def resolve_link(url):
         logga("auth_ts ==> "+params["auth_ts"])
         logga("auth_expiry ==> "+params["auth_expiry"])
 
-        auth_url = 'https://security.newkso.ru/auth2.php'
+        auth_url = 'https://security.giokko.ru/auth2.php'
         form_data = {
             'channelKey': params["channel_key"],
             'country': params["auth_country"],
@@ -6143,9 +6230,9 @@ def resolve_link(url):
             auth_token = params['auth_token']
             # The JS logic uses .css, not .m3u8
             if server_key == 'top1/cdn':
-                stream_url = f'https://top1.newkso.ru/top1/cdn/{channel_key}/mono.css'
+                stream_url = f'https://top1.giokko.ru/top1/cdn/{channel_key}/mono.css'
             else:
-                stream_url = f'https://{server_key}new.newkso.ru/{server_key}/{channel_key}/mono.css'
+                stream_url = f'https://{server_key}new.giokko.ru/{server_key}/{channel_key}/mono.css'
 
             m3u8 = stream_url+"|Referer="+iframe_url+"&Origin="+iframe_origin+"&Authorization=Bearer "+auth_token+"&X-Channel-Key="+channel_key+"&User-Agent="+headers["user-agent"]
         else:
@@ -6230,6 +6317,7 @@ def run (action, params=None):
         'freeshot':freeshot,
         'tvapp':tvapp,
         'ppv':ppv_to,
+        'm3uPlus':m3uPlus,
         'gaga':gaga
     }
 
