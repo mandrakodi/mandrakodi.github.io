@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.185'
+versione='1.2.186'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 03.12.2025
+# Last update: 06.12.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -3133,7 +3133,7 @@ def ppvMenu():
     video_urls = []
 
     # Scarica la pagina
-    page = requests.get("https://ppv.to/api/streams").text
+    page = requests.get("https://ppvs.su/api/streams").text
     arrJ = json.loads(page)
 
     arrEv = []
@@ -3467,7 +3467,7 @@ def sportsonlineMenu():
     video_urls = []
 
     arrWeek={"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"}
-    url="https://sportsonline.sn/prog.txt"
+    url="https://sportsonline.cx/prog.txt"
     headers = {
         'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
     }
@@ -6130,16 +6130,16 @@ def ppv_to(parIn):
     user_agent = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36'
     headers = {
         'user-agent': user_agent,
-        'referer': "https://ppv.to/"
+        'referer': "https://ppvs.su/"
     }
     s = requests.Session()
         
     response = s.get(parIn, headers=headers)
-    #logga ("PPV_PAGE ==> "+response.text)
+    logga ("PPV_PAGE ==> "+response.text)
     stream_url = re.findall('const src = atob\("(.*?)"\)', response.text)[0]
     stream_url = base64.b64decode(stream_url).decode("utf-8")
-    #logga ("URL IN ==> "+stream_url)
-    link=stream_url.replace("index.m3u8", "mono.ts.m3u8|Referer=https://ppv.to/&Connection=Keep-Alive&Origin=https://ppv.to&User-Agent="+user_agent)
+    logga ("URL IN ==> "+parIn)
+    link=stream_url.replace("index.m3u8", "tracks-v1a1/mono.ts.m3u8|Referer=https://ppvs.su/&Connection=Keep-Alive&Origin=https://ppvs.su&User-Agent="+user_agent)
     
     jsonText='{"SetViewMode":"50","items":['
     jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM [/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"'+link+'",'
