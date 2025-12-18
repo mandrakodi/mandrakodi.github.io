@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.186'
+versione='1.2.187'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 06.12.2025
+# Last update: 18.12.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -409,9 +409,9 @@ def livetv(page_url):
                 logga("topembed server: "+serverTop)
                 
                 if serverTop=="top1/cdn":
-                    final_url= "https://top1.giokko.ru/top1/cdn/" + extCode + "/mono.m3u8"
+                    final_url= "https://top1.kiko2.ru/top1/cdn/" + extCode + "/mono.m3u8"
                 else:
-                    final_url= "https://" + serverTop + "new.giokko.ru/" + serverTop + "/" + extCode + "/mono.m3u8"
+                    final_url= "https://" + serverTop + "new.kiko2.ru/" + serverTop + "/" + extCode + "/mono.m3u8"
             else:
                 arrP2=src.split("play?url=")
                 try:
@@ -973,7 +973,7 @@ def huhu(parIn=None):
     return liz
         
 def sky(parIn=None):
-    link="https://calcionew.giokko.ru/calcio/calcioX2"+parIn+"/mono.m3u8"
+    link="https://calcionew.kiko2.ru/calcio/calcioX2"+parIn+"/mono.m3u8"
     liz = xbmcgui.ListItem(path=link, offscreen=True)
     liz.setContentLookup(False)
     liz.setProperty('inputstream', 'inputstream.adaptive')
@@ -998,7 +998,7 @@ def daddyPremium(codeIn=None):
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
     logga("DADDY_PREMIUM SERVER "+server)
-    link="https://"+server+"new.giokko.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
+    link="https://"+server+"new.kiko2.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
     
     liz = xbmcgui.ListItem(path=link, offscreen=True)
     liz.setContentLookup(False)
@@ -1660,7 +1660,7 @@ def PlayStream(link):
         'referer': "https://dokoplay.xyz/",
         'origin': "https://dokoplay.xyz"
     }
-    urlAuth="https://top2new.giokko.ru/auth.php?channel_id=premium"+link+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
+    urlAuth="https://top2new.kiko2.ru/auth.php?channel_id=premium"+link+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
     dataJ2 = s.get(urlAuth, headers=headers)
     logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
     
@@ -1671,7 +1671,7 @@ def PlayStream(link):
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
-    link="https://"+server+"new.giokko.ru/"+server+"/premium"+link+"/mono.m3u8"
+    link="https://"+server+"new.kiko2.ru/"+server+"/premium"+link+"/mono.m3u8"
     refe="https://dokoplay.xyz/"
     origin="https://dokoplay.xyz"
     
@@ -3467,7 +3467,7 @@ def sportsonlineMenu():
     video_urls = []
 
     arrWeek={"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"}
-    url="https://sportsonline.cx/prog.txt"
+    url="https://sportsonline.st/prog.txt"
     headers = {
         'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
     }
@@ -6107,30 +6107,14 @@ def infoCode(parIn=''):
     msgBox(mess)
     return None
 
-def oldCode():
-    #urlSrv="https://dlhd.dad/stream/stream-"+codeIn+".php"
-    response = s.get(url, headers=headers)
-    iframe_url = re.findall('<iframe src="(.*?)"', response.text)[0]
-    
-    logga ("URL2 ==> "+iframe_url)
-    if 'wikisport' in iframe_url or 'lovecdn' in iframe_url:
-        headers['Referer'] = headers['Origin'] = dadUrl
-        response = s.get(iframe_url, headers=headers)
-        iframe_url = re.findall('<iframe src="(.*?)"', response.text)[0]
-    
-    if 'lovecdn' in iframe_url:
-        m3u8 = iframe_url.replace('embed.html', 'index.fmp4.m3u8')
-        referer = f'https://{urlparse(iframe_url).netloc}'
-        m3u8 = f'{m3u8}|Referer={iframe_url}&Connection=Keep-Alive&User-Agent={user_agent}'
-        return m3u8
 
 def ppv_to(parIn):
     import base64
     video_urls = []
-    user_agent = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36'
+    user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0'
     headers = {
         'user-agent': user_agent,
-        'referer': "https://ppvs.su/"
+        'referer': "https://ppvs.to/"
     }
     s = requests.Session()
         
@@ -6139,7 +6123,7 @@ def ppv_to(parIn):
     stream_url = re.findall('const src = atob\("(.*?)"\)', response.text)[0]
     stream_url = base64.b64decode(stream_url).decode("utf-8")
     logga ("URL IN ==> "+parIn)
-    link=stream_url.replace("index.m3u8", "tracks-v1a1/mono.ts.m3u8|Referer=https://ppvs.su/&Connection=Keep-Alive&Origin=https://ppvs.su&User-Agent="+user_agent)
+    link=stream_url.replace("index.m3u8", "tracks-v1a1/mono.ts.m3u8|Referer=https://playembed.top/&Origin=https://playembed.top&User-Agent="+user_agent)
     
     jsonText='{"SetViewMode":"50","items":['
     jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM [/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"'+link+'",'
@@ -6161,15 +6145,16 @@ def ppv_to(parIn):
 
 def resolve_link(url):
     import json, base64
-    user_agent = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36'
+    
+    user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0'
     m3u8 = None
     logga ("URL IN ==> "+url)
     try:
-        dadUrl="https://dlhd.dad/watch/stream-"+url+".php"
+        dadUrl="https://daddyhd.com/watch/stream-"+url+".php"
         #response = get(url)
         headers = {
             'user-agent': user_agent,
-            'referer': "https://dlhd.dad/"
+            'referer': "https://daddyhd.com/"
         }
         s = requests.Session()
         
@@ -6196,7 +6181,7 @@ def resolve_link(url):
         logga("auth_ts ==> "+params["auth_ts"])
         logga("auth_expiry ==> "+params["auth_expiry"])
 
-        auth_url = 'https://security.giokko.ru/auth2.php'
+        auth_url = 'https://security.kiko2.ru/auth2.php'
         form_data = {
             'channelKey': params["channel_key"],
             'country': params["auth_country"],
@@ -6218,23 +6203,56 @@ def resolve_link(url):
             'Priority': 'u=1, i',
         })
         auth_resp = s.post(auth_url, data=form_data, headers=auth_headers, timeout=12)
-        logga("auth_resp ==> "+auth_resp.text)
+        #logga("auth_resp ==> "+auth_resp.text)
         auth_data = auth_resp.json()
-        logga("auth_data ==> "+str(auth_data.get("success")))
+        #logga("auth_data ==> "+str(auth_data.get("success")))
+
+
+
+
         if auth_data.get("success"):
-            server_lookup_url = f"https://{urlparse(iframe_url).netloc}/server_lookup.js?channel_id={params['channel_key']}"
+            
+            server_lookup_url = f"https://chevy.giokko.ru/server_lookup?channel_id={params['channel_key']}"
             lookup_resp = s.get(server_lookup_url, headers=headers, timeout=10)
+            #logga("lookup_resp ==> "+lookup_resp.text)
             server_data = lookup_resp.json()
             server_key = server_data.get('server_key')
             channel_key = params['channel_key']
             auth_token = params['auth_token']
+
+            auth_ts = params.get('auth_ts', '')
+            auth_country = params.get('auth_country', 'IT')
+            screen_res = "1920x1080"  # Simula risoluzione comune
+            timezone = "Europe/Rome"
+            lang = "it-IT"
+            fingerprint = f"{user_agent}|{screen_res}|{timezone}|{lang}"
+            sign_data = f"{channel_key}|{auth_country}|{auth_ts}|{user_agent}|{fingerprint}"
+            client_token = base64.b64encode(sign_data.encode('utf-8')).decode('utf-8')
+            #logga("client_token ==> "+client_token)
+
+            heartbeat= "https://chevy.kiko2.ru/heartbeat"
+            heartbeat_headers = {
+                'User-Agent': user_agent,
+                'Authorization': 'Bearer '+auth_token,
+                'X-Channel-Key': channel_key,
+                'Referer': iframe_url,
+                'Origin': iframe_origin,
+                'X-Client-Token': client_token,
+                'X-User-Agent': user_agent
+            }
+
+            heart_resp = s.get(heartbeat, headers=heartbeat_headers, timeout=10)
+            logga("heart_resp ==> "+heart_resp.text+" ("+str(heart_resp.status_code)+")")
             # The JS logic uses .css, not .m3u8
             if server_key == 'top1/cdn':
-                stream_url = f'https://top1.giokko.ru/top1/cdn/{channel_key}/mono.css'
+                stream_url = f'https://top1.kiko2.ru/top1/cdn/{channel_key}/mono.css'
             else:
-                stream_url = f'https://{server_key}new.giokko.ru/{server_key}/{channel_key}/mono.css'
-
-            m3u8 = stream_url+"|Referer="+iframe_url+"&Origin="+iframe_origin+"&Authorization=Bearer "+auth_token+"&X-Channel-Key="+channel_key+"&User-Agent="+headers["user-agent"]
+                stream_url = f'https://{server_key}new.kiko2.ru/{server_key}/{channel_key}/mono.css'
+            
+            
+            streamHead="Referer=https://epicplayplay.cfd/&Origin=https://epicplayplay.cfd&Authorization=Bearer "+auth_token+"&X-Channel-Key="+channel_key+"&X-Client-Token="+client_token+"&Heartbeat-Url="+heartbeat+"&User-Agent="+user_agent+"&X-User-Agent="+user_agent
+            m3u8 = stream_url+"|"+myParse.unquote(streamHead)
+            #m3u8 = stream_url+"|Referer=https://epicplayplay.cfd/&Origin=https://epicplayplay.cfd&Authorization=Bearer "+auth_token+"&X-Channel-Key="+channel_key+"&X-Client-Token="+client_token+"&Heartbeat-Url="+heartbeat+"&User-Agent="+uas
         else:
            msgBox("NO VALIDATE") 
            return "ignore_me"
