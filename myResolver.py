@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.187'
+versione='1.2.188'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 18.12.2025
+# Last update: 19.12.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1407,17 +1407,23 @@ def freeshot(codeIn=None):
         'referer': "https://thisnot.business/"
     }
     s = requests.Session()
-    urlAuth="https://popcdn.day/go.php?stream="+codeIn
+    #urlAuth="https://popcdn.day/go.php?stream="+codeIn
+    urlAuth="https://popcdn.day/player/"+codeIn
     fu = s.get(urlAuth, headers=headers)
+    #logga("FREE_PAGE: "+fu.text)
+    
+    '''
     frameUrl = preg_match(fu.text, 'frameborder="0" src="(.*?)"')
     arrTk=frameUrl.split("token=")
     tk1=arrTk[1]
     arrTk2=tk1.split("&")
     token=arrTk2[0]
+    '''
+    token = preg_match(fu.text, 'currentToken: "(.*?)"')
     #logga ("TOKEN: "+token)
     
-    link_ch="https://planetary.lovecdn.ru/"+codeIn+"/index.fmp4.m3u8?token="+token
-    link_ch=frameUrl.replace("embed.html", "index.fmp4.m3u8")
+    link_ch="https://planetary.lovecdn.ru/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token
+    #link_ch=frameUrl.replace("embed.html", "index.fmp4.m3u8")
     jsonText='{"SetViewMode":"50","items":['
     jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM [/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+link_ch+'",'
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
@@ -6147,7 +6153,7 @@ def resolve_link(url):
     import json, base64
     
     user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0'
-    m3u8 = None
+    m3u8 = "IgnoreMe"
     logga ("URL IN ==> "+url)
     try:
         dadUrl="https://daddyhd.com/watch/stream-"+url+".php"
@@ -6203,7 +6209,7 @@ def resolve_link(url):
             'Priority': 'u=1, i',
         })
         auth_resp = s.post(auth_url, data=form_data, headers=auth_headers, timeout=12)
-        #logga("auth_resp ==> "+auth_resp.text)
+        logga("auth_resp ==> "+auth_resp.text)
         auth_data = auth_resp.json()
         #logga("auth_data ==> "+str(auth_data.get("success")))
 
@@ -6211,12 +6217,30 @@ def resolve_link(url):
 
 
         if auth_data.get("success"):
-            
+            lookup_headers = headers.copy()
+            lookup_headers.update({
+                'Accept': '*/*',
+                'accept-encoding': 'gzip, deflate, zstd',
+                'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7,es;q=0.6,lt;q=0.5,de;q=0.4,fr;q=0.3,hu;q=0.2,ru;q=0.1,sv;q=0.1,da;q=0.1,ro;q=0.1,pl;q=0.1,hr;q=0.1',
+                'Origin': iframe_origin,
+                'Referer': iframe_url,
+                'sec-ch-ua': '"Chromium";v="140", "Not=A?Brand";v="24", "Opera";v="124"',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'cross-site',
+                'Priority': 'u=1, i',
+            })
             server_lookup_url = f"https://chevy.giokko.ru/server_lookup?channel_id={params['channel_key']}"
-            lookup_resp = s.get(server_lookup_url, headers=headers, timeout=10)
-            #logga("lookup_resp ==> "+lookup_resp.text)
-            server_data = lookup_resp.json()
-            server_key = server_data.get('server_key')
+            lookup_resp = s.get(server_lookup_url, headers=lookup_headers, timeout=6)
+            content_encoding = lookup_resp.headers.get('Content-Encoding')
+            logga("lookup_resp ==> "+lookup_resp.text+" ("+content_encoding+")")
+            server_key = find_single_match(lookup_resp.text, '{"server_key":"(.*?)"}')
+            try:
+                server_data = lookup_resp.json()
+                server_key = server_data.get('server_key')
+            except Exception:
+                pass
+            logga("server_key ==> "+server_key)
             channel_key = params['channel_key']
             auth_token = params['auth_token']
 
