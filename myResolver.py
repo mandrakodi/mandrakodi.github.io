@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.188'
+versione='1.2.189'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 19.12.2025
+# Last update: 23.12.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1411,7 +1411,7 @@ def freeshot(codeIn=None):
     urlAuth="https://popcdn.day/player/"+codeIn
     fu = s.get(urlAuth, headers=headers)
     #logga("FREE_PAGE: "+fu.text)
-    
+
     '''
     frameUrl = preg_match(fu.text, 'frameborder="0" src="(.*?)"')
     arrTk=frameUrl.split("token=")
@@ -6150,9 +6150,10 @@ def ppv_to(parIn):
 
 
 def resolve_link(url):
-    import json, base64
+    import json, base64, time
+    from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
     
-    user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0'
+    user_agent = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36'
     m3u8 = "IgnoreMe"
     logga ("URL IN ==> "+url)
     try:
@@ -6180,106 +6181,74 @@ def resolve_link(url):
         for key, pattern in patterns.items():
             match = re.search(pattern, js)
             params[key] = match.group(1) if match else None
-
+        '''
         logga("channel_key ==> "+params["channel_key"])
         logga("auth_token ==> "+params["auth_token"])
         logga("auth_country ==> "+params["auth_country"])
         logga("auth_ts ==> "+params["auth_ts"])
         logga("auth_expiry ==> "+params["auth_expiry"])
+        '''
+        
+        channel_key   = params["channel_key"]
+        auth_token = params["auth_token"]
+        session_token = auth_token
+        auth_country = params["auth_country"]
+        time_stamp = params["auth_ts"]
+        lang = 'en'
+        screen = '1920x1080'
+        time_zone = time.tzname[0]
+        fingerprint = f"{user_agent}|{screen}|{time_zone}|{lang}"
+        sign_data = f"{channel_key}|{auth_country}|{time_stamp}|{user_agent}|{fingerprint}"
+        #logga("SIGN_DATA: "+sign_data)
+        client_token = base64.b64encode(sign_data.encode("utf-8")).decode("ascii")
 
-        auth_url = 'https://security.kiko2.ru/auth2.php'
-        form_data = {
-            'channelKey': params["channel_key"],
-            'country': params["auth_country"],
-            'timestamp': params["auth_ts"],
-            'expiry': params["auth_expiry"],
-            'token': params["auth_token"],
+        heartbeat= "https://chevy.kiko2.ru/heartbeat"
+        
+        referer="https://epicplayplay.cfd"
+        heartbeat_headers = {
+            "X-User-Agent": user_agent,
+            "Referer": referer,
+            "Origin": referer,
+            "Connection": "Keep-Alive",
+            "Authorization": f"Bearer {session_token}",
+            "X-Channel-Key": channel_key,
+            "X-Client-Token": client_token
         }
 
-        iframe_origin = f"https://{urlparse(iframe_url).netloc}"
-        auth_headers = headers.copy()
-        auth_headers.update({
+        heart_resp = s.get(heartbeat, headers=heartbeat_headers, timeout=10)
+        #logga("heart_resp ==> "+heart_resp.text+" ("+str(heart_resp.status_code)+")")
+
+        server_lookup_url = f"https://chevy.giokko.ru/server_lookup?channel_id={channel_key}"
+        lookup_headers = headers.copy()
+        lookup_headers.update({
             'Accept': '*/*',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Origin': iframe_origin,
-            'Referer': iframe_url,
+            'accept-encoding': 'gzip, deflate, zstd',
+            'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7,es;q=0.6,lt;q=0.5,de;q=0.4,fr;q=0.3,hu;q=0.2,ru;q=0.1,sv;q=0.1,da;q=0.1,ro;q=0.1,pl;q=0.1,hr;q=0.1',
+            'Origin': referer,
+            'Referer': referer,
+            'sec-ch-ua': '"Chromium";v="140", "Not=A?Brand";v="24", "Opera";v="124"',
             'Sec-Fetch-Dest': 'empty',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'cross-site',
             'Priority': 'u=1, i',
         })
-        auth_resp = s.post(auth_url, data=form_data, headers=auth_headers, timeout=12)
-        logga("auth_resp ==> "+auth_resp.text)
-        auth_data = auth_resp.json()
-        #logga("auth_data ==> "+str(auth_data.get("success")))
-
-
-
-
-        if auth_data.get("success"):
-            lookup_headers = headers.copy()
-            lookup_headers.update({
-                'Accept': '*/*',
-                'accept-encoding': 'gzip, deflate, zstd',
-                'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7,es;q=0.6,lt;q=0.5,de;q=0.4,fr;q=0.3,hu;q=0.2,ru;q=0.1,sv;q=0.1,da;q=0.1,ro;q=0.1,pl;q=0.1,hr;q=0.1',
-                'Origin': iframe_origin,
-                'Referer': iframe_url,
-                'sec-ch-ua': '"Chromium";v="140", "Not=A?Brand";v="24", "Opera";v="124"',
-                'Sec-Fetch-Dest': 'empty',
-                'Sec-Fetch-Mode': 'cors',
-                'Sec-Fetch-Site': 'cross-site',
-                'Priority': 'u=1, i',
-            })
-            server_lookup_url = f"https://chevy.giokko.ru/server_lookup?channel_id={params['channel_key']}"
-            lookup_resp = s.get(server_lookup_url, headers=lookup_headers, timeout=6)
-            content_encoding = lookup_resp.headers.get('Content-Encoding')
-            logga("lookup_resp ==> "+lookup_resp.text+" ("+content_encoding+")")
-            server_key = find_single_match(lookup_resp.text, '{"server_key":"(.*?)"}')
-            try:
-                server_data = lookup_resp.json()
-                server_key = server_data.get('server_key')
-            except Exception:
-                pass
-            logga("server_key ==> "+server_key)
-            channel_key = params['channel_key']
-            auth_token = params['auth_token']
-
-            auth_ts = params.get('auth_ts', '')
-            auth_country = params.get('auth_country', 'IT')
-            screen_res = "1920x1080"  # Simula risoluzione comune
-            timezone = "Europe/Rome"
-            lang = "it-IT"
-            fingerprint = f"{user_agent}|{screen_res}|{timezone}|{lang}"
-            sign_data = f"{channel_key}|{auth_country}|{auth_ts}|{user_agent}|{fingerprint}"
-            client_token = base64.b64encode(sign_data.encode('utf-8')).decode('utf-8')
-            #logga("client_token ==> "+client_token)
-
-            heartbeat= "https://chevy.kiko2.ru/heartbeat"
-            heartbeat_headers = {
-                'User-Agent': user_agent,
-                'Authorization': 'Bearer '+auth_token,
-                'X-Channel-Key': channel_key,
-                'Referer': iframe_url,
-                'Origin': iframe_origin,
-                'X-Client-Token': client_token,
-                'X-User-Agent': user_agent
-            }
-
-            heart_resp = s.get(heartbeat, headers=heartbeat_headers, timeout=10)
-            logga("heart_resp ==> "+heart_resp.text+" ("+str(heart_resp.status_code)+")")
-            # The JS logic uses .css, not .m3u8
-            if server_key == 'top1/cdn':
-                stream_url = f'https://top1.kiko2.ru/top1/cdn/{channel_key}/mono.css'
-            else:
-                stream_url = f'https://{server_key}new.kiko2.ru/{server_key}/{channel_key}/mono.css'
-            
-            
-            streamHead="Referer=https://epicplayplay.cfd/&Origin=https://epicplayplay.cfd&Authorization=Bearer "+auth_token+"&X-Channel-Key="+channel_key+"&X-Client-Token="+client_token+"&Heartbeat-Url="+heartbeat+"&User-Agent="+user_agent+"&X-User-Agent="+user_agent
-            m3u8 = stream_url+"|"+myParse.unquote(streamHead)
-            #m3u8 = stream_url+"|Referer=https://epicplayplay.cfd/&Origin=https://epicplayplay.cfd&Authorization=Bearer "+auth_token+"&X-Channel-Key="+channel_key+"&X-Client-Token="+client_token+"&Heartbeat-Url="+heartbeat+"&User-Agent="+uas
+        lookup_resp = s.get(server_lookup_url, headers=lookup_headers, timeout=6)
+        content_encoding = lookup_resp.headers.get('Content-Encoding')
+        #logga("lookup_resp ==> "+lookup_resp.text+" ("+content_encoding+")")
+        server_key = find_single_match(lookup_resp.text, '{"server_key":"(.*?)"}')
+        try:
+            server_data = lookup_resp.json()
+            server_key = server_data.get('server_key')
+        except Exception:
+            pass
+        #logga("server_key ==> "+server_key)
+        if server_key == 'top1/cdn':
+            stream_url = f'https://top1.kiko2.ru/top1/cdn/{channel_key}/mono.m3u8'
         else:
-           msgBox("NO VALIDATE") 
-           return "ignore_me"
+            stream_url = f'https://{server_key}new.kiko2.ru/{server_key}/{channel_key}/mono.m3u8'
+        
+        m3u8 = f'{stream_url}|Referer={referer}/&Origin={referer}&Connection=Keep-Alive&User-Agent={user_agent}'
+        m3u8 = f'{m3u8}|{urlencode(heartbeat_headers)}'
     except Exception as err:
         import traceback
         
