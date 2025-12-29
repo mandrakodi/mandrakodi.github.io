@@ -1,8 +1,8 @@
-versione='1.2.74'
+versione='1.2.75'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 19.10.2025
+# Last update: 29.12.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -230,7 +230,7 @@ def jsonToItems(strJson):
             strLog=json.dumps(item)
             titolo = "NO TIT"
             thumb = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
-            fanart = "https://www.andreisfina.it/wp-content/uploads/2018/12/no_image.jpg"
+            fanart = "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
             genre = "generic"
             info = ""
             regExp = ""
