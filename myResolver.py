@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.190'
+versione='1.2.191'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -6296,7 +6296,7 @@ def epgInfo(parIn, timeout=10):
         
         if (numIt > 0):
             jsonText = jsonText + ','    
-        jsonText = jsonText + '{"title":"[COLOR blue]'+orario+'[/COLOR] [COLOR gold]'+titolo+'[/COLOR] [COLOR lime]('+durata+')[/COLOR]",'
+        jsonText = jsonText + '{"title":"[COLOR blue]'+orario+'[/COLOR] [COLOR gold]'+titolo.replace('"',"")+'[/COLOR] [COLOR lime]('+durata+')[/COLOR]",'
         jsonText = jsonText + '"myresolve":"showMsg@@Il link va cercato nelle liste disponibili",'
         jsonText = jsonText + '"thumbnail":"'+img+'",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
