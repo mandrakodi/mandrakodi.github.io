@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.189'
+versione='1.2.190'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.12.2025
+# Last update: 29.12.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -11,13 +11,17 @@ import os
 import string
 import random
 
-from urllib.parse import quote_plus, urlparse, parse_qsl
+from urllib.parse import quote_plus, urlparse, parse_qsl, unquote
 from requests import Response
 
 import xbmcgui
 import xbmc
 import xbmcaddon
 import xbmcplugin
+
+from html.parser import HTMLParser
+from urllib.request import Request, urlopen
+
 
 
 addon_id = 'plugin.video.mandrakodi'
@@ -6188,7 +6192,7 @@ def resolve_link(url):
         logga("auth_ts ==> "+params["auth_ts"])
         logga("auth_expiry ==> "+params["auth_expiry"])
         '''
-        
+
         channel_key   = params["channel_key"]
         auth_token = params["auth_token"]
         session_token = auth_token
@@ -6257,6 +6261,278 @@ def resolve_link(url):
         traceback.print_exc()
     
     return m3u8
+
+def epgInfo(parIn, timeout=10):
+    import json
+    url="https://guidatv.org/canali/"+parIn
+    req = Request(
+        url,
+        headers={
+            "User-Agent": "Kodi/EPG-Addon",
+            "Accept-Language": "it-IT,it;q=0.9"
+        }
+    )
+
+    with urlopen(req, timeout=timeout) as r:
+        html = r.read().decode("utf-8", errors="ignore")
+    
+    parser = EPGParser()
+    parser.feed(html)
+
+    epg = parser.data
+    #logga("EPG: "+json.dumps(epg, indent=2, ensure_ascii=False))
+    links = []
+    jsonText='{"SetViewMode":"503","items":['
+    numIt=0
+    for p in epg["programmazione"]:
+        orario = p["orario"]
+        titolo = p["titolo"]
+        desc = p["descrizione"]
+        durata = p["durata"]
+        img="https://img.pikbest.com/png-images/20250410/youtube-channel-logo-design-as-like-tv_11657892.png!sw800"
+        if p["immagine_programma"]:
+            img = p["immagine_programma"]
+
+        
+        if (numIt > 0):
+            jsonText = jsonText + ','    
+        jsonText = jsonText + '{"title":"[COLOR blue]'+orario+'[/COLOR] [COLOR gold]'+titolo+'[/COLOR] [COLOR lime]('+durata+')[/COLOR]",'
+        jsonText = jsonText + '"myresolve":"showMsg@@Il link va cercato nelle liste disponibili",'
+        jsonText = jsonText + '"thumbnail":"'+img+'",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"'+desc.replace('"',"")+'"}'
+        numIt=numIt+1
+    
+    
+    jsonText = jsonText + "]}"
+    logga('JSON-ANY: '+jsonText)
+    links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+
+    return links
+
+def extract_clean_text(html_fragment):
+    parser = CleanTextParser()
+    parser.feed(html_fragment)
+    return parser.get_text()
+
+class CleanTextParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.chunks = []
+
+    def handle_data(self, data):
+        self.chunks.append(data)
+
+    def handle_comment(self, data):
+        # ignora completamente i commenti <!-- -->
+        pass
+
+    def get_text(self):
+        return ' '.join(
+            ' '.join(self.chunks).split()
+        )
+
+
+def normalize_image_url(url):
+    if not url:
+        return None
+
+    if "/_next/image" in url:
+        match = re.search(r"url=([^&]+)", url)
+        if match:
+            return unquote(match.group(1))
+
+    if url.startswith("//"):
+        return "https:" + url
+
+    return url
+
+def parse_duration(text):
+    text = text.lower()
+
+    hours = 0
+    minutes = 0
+
+    m = re.search(r'(\d+)\s*ore?', text)
+    if m:
+        hours = int(m.group(1))
+
+    m = re.search(r'(\d+)\s*min', text)
+    if m:
+        minutes = int(m.group(1))
+
+    total_minutes = hours * 60 + minutes
+
+    return total_minutes if total_minutes > 0 else None
+
+
+class EPGParser(HTMLParser):
+
+    def __init__(self):
+        super().__init__()
+
+        self.data = {
+            "canale": "",
+            "giorno": "",
+            "subtitle_raw": "",
+            "immagine_canale": None,
+            "programmazione": []
+        }
+
+        self._current_program = None
+        self._card_depth = 0
+        self._last_hour = ""
+        self._subtitle_buffer = ""
+
+        self._in_channel_title = False
+        self._in_program_title = False
+        self._in_subtitle = False
+        self._in_description = False
+        self._in_day = False
+
+    def handle_comment(self, data):
+        pass
+
+    def handle_data(self, data):
+        text = data.strip()
+        if not text:
+            return
+    
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+
+        # Nome canale
+        if tag == "h1" and "class" in attrs and "title" in attrs["class"]:
+            self._in_channel_title = True
+
+        # Giorno
+        if tag == "button" and attrs.get("id") == "dayDropdownMenuButton":
+            self._in_day = True
+
+        # Orario
+        if tag == "h3" and "class" in attrs and "hour" in attrs["class"]:
+            self._last_hour = ""
+
+        # Inizio card programma
+        if tag == "div" and attrs.get("data-testid") == "channel-program-card":
+            self._current_program = {
+                "orario": "",
+                "titolo": "",
+                "durata": "",
+                "categoria": "",
+                "descrizione": "",
+                "immagine_programma": None
+            }
+            self._card_depth = 1
+            return
+
+        # Profondità card
+        if self._current_program and tag == "div":
+            self._card_depth += 1
+
+        # Titolo programma
+        if self._current_program and tag == "h2" and "class" in attrs and "card-title" in attrs["class"]:
+            self._in_program_title = True
+
+        # Sottotitolo
+        if self._current_program and tag == "p" and "class" in attrs and "subtitle" in attrs["class"]:
+            self._in_subtitle = True
+
+        # Descrizione
+        if self._current_program and tag == "p" and "class" in attrs and "program-description" in attrs["class"]:
+            self._in_description = True
+
+        # Immagine programma
+        if self._current_program and tag == "img" and "class" in attrs and "card-img" in attrs["class"]:
+            self._current_program["immagine_programma"] = normalize_image_url(attrs.get("src"))
+
+        # Immagine canale
+        if not self.data["immagine_canale"] and tag == "img" and "alt" in attrs:
+            if "logo canale" in attrs["alt"].lower():
+                self.data["immagine_canale"] = normalize_image_url(attrs.get("src"))
+
+    def handle_endtag(self, tag):
+
+        if self._current_program and tag == "div":
+            self._card_depth -= 1
+
+            if self._card_depth == 0:
+
+                # ✅ PARSA DURATA PRIMA
+                if self._subtitle_buffer:
+                    durata_min = parse_duration(self._subtitle_buffer)
+                    if durata_min:
+                        self._current_program["durata"] = f"{durata_min} min"
+                    self._subtitle_buffer = ""
+
+                # ✅ NORMALIZZA TESTI
+                if self._current_program["titolo"]:
+                    self._current_program["titolo"] = " ".join(
+                        self._current_program["titolo"].split()
+                    )
+
+                if self._current_program["descrizione"]:
+                    self._current_program["descrizione"] = " ".join(
+                        self._current_program["descrizione"].split()
+                    )
+
+                # ✅ SALVA PROGRAMMA
+                if self._current_program["titolo"] and self._current_program["orario"]:
+                    self.data["programmazione"].append(self._current_program)
+
+                # ✅ RESET
+                self._current_program = None
+
+        # reset flag
+        self._in_channel_title = False
+        self._in_program_title = False
+        self._in_subtitle = False
+        self._in_description = False
+        self._in_day = False
+
+
+    def handle_data(self, data):
+        text = data.strip()
+        if not text:
+            return
+
+        # Orario
+        if re.match(r"^\d{1,2}:\d{2}$", text):
+            self._last_hour = text
+            return
+
+        # Giorno
+        if self._in_day:
+            self.data["giorno"] = text
+            return
+
+        # Nome canale
+        if self._in_channel_title and not self.data["canale"]:
+            self.data["canale"] = text.replace("Guida Tv", "").strip()
+            return
+
+        if not self._current_program:
+            return
+
+        # Assegna orario
+        if not self._current_program["orario"] and self._last_hour:
+            self._current_program["orario"] = self._last_hour
+
+        # Titolo programma
+        if self._in_program_title:
+            self._current_program["titolo"] += text + " "
+            return
+
+        if self._in_subtitle:
+            self._subtitle_buffer += text + " "
+            return
+        
+        # Descrizione
+        if self._in_description:
+            self._current_program["descrizione"] += text
+
+def showMsg(parIn):
+    msgBox(parIn)
 
 def run (action, params=None):
     logga('Run version '+versione)
@@ -6329,7 +6605,9 @@ def run (action, params=None):
         'tvapp':tvapp,
         'ppv':ppv_to,
         'm3uPlus':m3uPlus,
-        'gaga':gaga
+        'gaga':gaga,
+        'epg':epgInfo,
+        'showMsg':showMsg
     }
 
     if action in commands:
