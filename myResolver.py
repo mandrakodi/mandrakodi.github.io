@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.191'
+versione='1.2.192'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -6458,14 +6458,14 @@ class EPGParser(HTMLParser):
 
             if self._card_depth == 0:
 
-                # ✅ PARSA DURATA PRIMA
+                # PARSA DURATA PRIMA
                 if self._subtitle_buffer:
                     durata_min = parse_duration(self._subtitle_buffer)
                     if durata_min:
                         self._current_program["durata"] = f"{durata_min} min"
                     self._subtitle_buffer = ""
 
-                # ✅ NORMALIZZA TESTI
+                # NORMALIZZA TESTI
                 if self._current_program["titolo"]:
                     self._current_program["titolo"] = " ".join(
                         self._current_program["titolo"].split()
@@ -6476,11 +6476,11 @@ class EPGParser(HTMLParser):
                         self._current_program["descrizione"].split()
                     )
 
-                # ✅ SALVA PROGRAMMA
+                # SALVA PROGRAMMA
                 if self._current_program["titolo"] and self._current_program["orario"]:
                     self.data["programmazione"].append(self._current_program)
 
-                # ✅ RESET
+                # RESET
                 self._current_program = None
 
         # reset flag
