@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.192'
+versione='1.2.193'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 29.12.2025
+# Last update: 30.12.2025
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -6426,7 +6426,7 @@ class EPGParser(HTMLParser):
             self._card_depth = 1
             return
 
-        # Profondità card
+        # Profondita' card
         if self._current_program and tag == "div":
             self._card_depth += 1
 
