@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.193'
+versione='1.2.194'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 30.12.2025
+# Last update: 02.01.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -3497,7 +3497,7 @@ def sportsonlineMenu():
                 if (numCh > 0):
                     jsonText = jsonText + ']},'    
                 jsonText = jsonText + '{"name":"[COLOR gold]'+line.strip()+'[/COLOR] ",'
-                jsonText = jsonText + '"thumbnail":"https://ullmansails.com/wp-content/uploads/2020/05/png-hd-calendar-calendar-png-hd-png-image-500.png",'
+                jsonText = jsonText + '"thumbnail":"https://freepngimg.com/download/calendar/4-2-calendar-png-hd.png",'
                 jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
                 jsonText = jsonText + '"SetViewMode":"51","items":['
                 numIt=0
@@ -3614,7 +3614,7 @@ def nopayMenu(parIn=""):
             if (numCh > 0):
                 jsonText = jsonText + ']},'    
             jsonText = jsonText + '{"name":"[COLOR gold]'+day+'[/COLOR] ",'
-            jsonText = jsonText + '"thumbnail":"https://ullmansails.com/wp-content/uploads/2020/05/png-hd-calendar-calendar-png-hd-png-image-500.png",'
+            jsonText = jsonText + '"thumbnail":"https://freepngimg.com/download/calendar/4-2-calendar-png-hd.png",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"SetViewMode":"51","items":['
             oldDay = day
@@ -6534,6 +6534,28 @@ class EPGParser(HTMLParser):
 def showMsg(parIn):
     msgBox(parIn)
 
+def sansat(parIn):
+    import ast
+    page="https://vividmosaica.com/embed3.php?player=desktop&live=do"+parIn
+    head={
+        "User-Agent":"Mozilla",
+        "Referer":"https://sansat.link/",
+        "Origin":"https://sansat.link"
+    }
+    s = requests.Session()
+    response = s.get(page, headers=head)
+    pattern = r"\(\s*(\[[^\]]+\])\.join\(\"\"\)"
+    array_match = re.findall(pattern, response.text, re.DOTALL)
+    chars = ast.literal_eval(array_match[0])
+    url = "".join(chars)
+    normalized = url.replace("\\/", "/")
+    finalUrl=normalized.replace("https:////", "https://")
+    logga ("SANSAT URL ==> "+finalUrl)
+    video_urls = []
+    video_urls.append((finalUrl+"|Referer=https://vividmosaica.com/&Origin=https://vividmosaica.com&User-Agent=Mozilla", "[COLOR lime]PLAY STREAM[/COLOR]"))
+    return video_urls
+
+
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
@@ -6607,6 +6629,7 @@ def run (action, params=None):
         'm3uPlus':m3uPlus,
         'gaga':gaga,
         'epg':epgInfo,
+        'sansat':sansat,
         'showMsg':showMsg
     }
 
