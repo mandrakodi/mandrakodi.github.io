@@ -1,8 +1,8 @@
-versione='1.2.75'
+versione='1.2.76'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 29.12.2025
+# Last update: 03.01.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -16,6 +16,7 @@ import json
 import string
 import random
 import re
+import time
 import xbmcvfs
 
 # Get the plugin url in plugin:// notation. 
@@ -412,6 +413,7 @@ def jsonToItems(strJson):
                     else:
                         url = get_url(action='plugin', url=link)
             xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
+        logga("CALL LAUNCHER endOfDirectory 1")
         xbmcplugin.endOfDirectory(_handle)
     except:
         import traceback
@@ -489,6 +491,7 @@ def jsonToChannels(strJson):
             jobCh += 1
             xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
             jobCh += 1
+        logga("CALL LAUNCHER endOfDirectory 2")
         xbmcplugin.endOfDirectory(_handle)
     except Exception as err:
         import traceback
@@ -805,7 +808,8 @@ def callReolver(metodo, parametro):
             newUrl2 += "?extPL=wise"
         url = get_url(action='play', url=newUrl2)
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
-
+    
+    logga("CALL LAUNCHER endOfDirectory 3")
     xbmcplugin.endOfDirectory(_handle)
 
 def runApk(apkName, apkPar):
@@ -1632,10 +1636,12 @@ def run():
         raise err
 
     if not viewmode==None and autoView=="1":
+        time.sleep(0.5)
         logga("setting viewmode")
         kodiSkin=xbmc.getSkinDir()
         kodiView=decodeSkinViewMode(kodiSkin, viewmode)
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
+        time.sleep(0.5)
         logga("setting view mode again to "+kodiView)
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
         xbmcaddon.Addon(id=addon_id).setSetting("urlAppo1", kodiView)
