@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.194'
+versione='1.2.195'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 02.01.2026
+# Last update: 10.01.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1764,7 +1764,7 @@ def amstaffTest(parIn):
     ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
     if "dazn" in link or "dai.google.com" in link:
         #ua="Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.9.7 Chrome/56.0.2924.122 Safari/537.36 Sky_STB_ST412_2018/1.0.0 (Sky, EM150UK,)"
-        ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+        ua=myParse.quote("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36")
         host="https://www.dazn.com"
         heads='User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false'
         if token != "":
@@ -6157,7 +6157,7 @@ def resolve_link(url):
     import json, base64, time
     from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
     
-    user_agent = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36'
+    user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0'
     m3u8 = "IgnoreMe"
     logga ("URL IN ==> "+url)
     try:
@@ -6173,54 +6173,72 @@ def resolve_link(url):
         iframe_url = "https://epicplayplay.cfd/premiumtv/daddyhd.php?id="+url
         response = s.get(iframe_url, headers=headers)
         js = response.text
-        #logga ("SOURCE2 ==> "+js)
-        params = {}
-        patterns = {
-            "channel_key": r'(?:const|var|let)\s+(?:CHANNEL_KEY|channelKey)\s*=\s*["\']([^"\']+)["\']',
-            "auth_token": r'(?:const|var|let)\s+AUTH_TOKEN\s*=\s*["\']([^"\']+)["\']',
-            "auth_country": r'(?:const|var|let)\s+AUTH_COUNTRY\s*=\s*["\']([^"\']+)["\']',
-            "auth_ts": r'(?:const|var|let)\s+AUTH_TS\s*=\s*["\']([^"\']+)["\']',
-            "auth_expiry": r'(?:const|var|let)\s+AUTH_EXPIRY\s*=\s*["\']([^"\']+)["\']',
+        logga ("SOURCE2 ==> "+js)
+        params = {
+            "channel_key": None,
+            "auth_token": None,
+            "auth_country": None,
+            "auth_ts": None,
+            "auth_expiry": None,
         }
-        for key, pattern in patterns.items():
-            match = re.search(pattern, js)
-            params[key] = match.group(1) if match else None
-        '''
-        logga("channel_key ==> "+params["channel_key"])
-        logga("auth_token ==> "+params["auth_token"])
-        logga("auth_country ==> "+params["auth_country"])
-        logga("auth_ts ==> "+params["auth_ts"])
-        logga("auth_expiry ==> "+params["auth_expiry"])
-        '''
+
+        # intercetta QUALSIASI const var_<qualcosa> = "valore";
+        pattern = r'const\s+var_[a-zA-Z0-9]+\s*=\s*["\']([^"\']+)["\']'
+
+        matches = re.findall(pattern, js)
+
+        if len(matches) >= 5:
+            params["auth_token"]   = matches[0]
+            params["channel_key"]  = matches[1]
+            params["auth_country"] = matches[2]
+            params["auth_ts"]      = matches[3]
+            params["auth_expiry"]  = matches[4]
+
+        logga("channel_key ==> " + str(params["channel_key"]))
+        logga("auth_token ==> " + str(params["auth_token"]))
+        logga("auth_country ==> " + str(params["auth_country"]))
+        logga("auth_ts ==> " + str(params["auth_ts"]))
+        logga("auth_expiry ==> " + str(params["auth_expiry"]))
 
         channel_key   = params["channel_key"]
-        auth_token = params["auth_token"]
+        auth_token    = params["auth_token"]
+        sess_split = auth_token.split(".")
         session_token = auth_token
-        auth_country = params["auth_country"]
-        time_stamp = params["auth_ts"]
-        lang = 'en'
+        auth_country  = params["auth_country"]
+        time_stamp    = params["auth_ts"]
+        lang = 'it-IT'
         screen = '1920x1080'
-        time_zone = time.tzname[0]
+        time_zone = "Europe/Rome"
         fingerprint = f"{user_agent}|{screen}|{time_zone}|{lang}"
-        sign_data = f"{channel_key}|{auth_country}|{time_stamp}|{user_agent}|{fingerprint}"
-        #logga("SIGN_DATA: "+sign_data)
+        sign_data = f"{channel_key}|{auth_country}|{auth_token}|{user_agent}|{fingerprint}"
+        logga("SIGN_DATA: "+str(sign_data.encode("utf-8")))
         client_token = base64.b64encode(sign_data.encode("utf-8")).decode("ascii")
 
         heartbeat= "https://chevy.kiko2.ru/heartbeat"
         
         referer="https://epicplayplay.cfd"
         heartbeat_headers = {
+            'Accept': '*/*',
             "X-User-Agent": user_agent,
+            "User-Agent": user_agent,
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "Accept-Language": "it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7,es;q=0.6,lt;q=0.5,de;q=0.4,fr;q=0.3,hu;q=0.2,ru;q=0.1,sv;q=0.1,da;q=0.1,ro;q=0.1,pl;q=0.1,hr;q=0.1",
             "Referer": referer,
             "Origin": referer,
             "Connection": "Keep-Alive",
             "Authorization": f"Bearer {session_token}",
             "X-Channel-Key": channel_key,
-            "X-Client-Token": client_token
+            "X-Client-Token": client_token,
+            'sec-ch-ua': '"Chromium";v="140", "Not=A?Brand";v="24", "Opera";v="124"',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'cross-site',
+            'Priority': 'u=1, i'
         }
 
         heart_resp = s.get(heartbeat, headers=heartbeat_headers, timeout=10)
-        #logga("heart_resp ==> "+heart_resp.text+" ("+str(heart_resp.status_code)+")")
+        content_encoding = heart_resp.headers.get('Content-Encoding')
+        logga("heart_resp ==> "+str(heart_resp.status_code)+" ("+content_encoding+")")
 
         server_lookup_url = f"https://chevy.giokko.ru/server_lookup?channel_id={channel_key}"
         lookup_headers = headers.copy()
@@ -6229,7 +6247,7 @@ def resolve_link(url):
             'accept-encoding': 'gzip, deflate, zstd',
             'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7,es;q=0.6,lt;q=0.5,de;q=0.4,fr;q=0.3,hu;q=0.2,ru;q=0.1,sv;q=0.1,da;q=0.1,ro;q=0.1,pl;q=0.1,hr;q=0.1',
             'Origin': referer,
-            'Referer': referer,
+            'Referer': referer+"/",
             'sec-ch-ua': '"Chromium";v="140", "Not=A?Brand";v="24", "Opera";v="124"',
             'Sec-Fetch-Dest': 'empty',
             'Sec-Fetch-Mode': 'cors',
@@ -6238,21 +6256,27 @@ def resolve_link(url):
         })
         lookup_resp = s.get(server_lookup_url, headers=lookup_headers, timeout=6)
         content_encoding = lookup_resp.headers.get('Content-Encoding')
-        #logga("lookup_resp ==> "+lookup_resp.text+" ("+content_encoding+")")
+        logga("lookup_resp ==> "+str(lookup_resp.status_code)+" ("+content_encoding+")")
         server_key = find_single_match(lookup_resp.text, '{"server_key":"(.*?)"}')
         try:
             server_data = lookup_resp.json()
             server_key = server_data.get('server_key')
         except Exception:
             pass
-        #logga("server_key ==> "+server_key)
+        logga("server_key ==> "+server_key)
         if server_key == 'top1/cdn':
-            stream_url = f'https://top1.kiko2.ru/top1/cdn/{channel_key}/mono.m3u8'
+            stream_url = f'https://top1.kiko2.ru/top1/cdn/{channel_key}/mono.css'
         else:
-            stream_url = f'https://{server_key}new.kiko2.ru/{server_key}/{channel_key}/mono.m3u8'
+            stream_url = f'https://{server_key}new.kiko2.ru/{server_key}/{channel_key}/mono.css'
         
-        m3u8 = f'{stream_url}|Referer={referer}/&Origin={referer}&Connection=Keep-Alive&User-Agent={user_agent}'
-        m3u8 = f'{m3u8}|{urlencode(heartbeat_headers)}'
+        uaenc=myParse.quote(user_agent, safe='')
+        cookie = "eplayer_session=" + session_token
+        cookenc=myParse.quote(cookie, safe='')
+
+        m3u8 = f'{stream_url}|Referer={referer}/&Origin={referer}&Connection=Keep-Alive&User-Agent={uaenc}&Cookie={cookenc}'
+        m3u8_resp = s.get(m3u8)
+        logga ("SOURCE_M3U8 ==> "+m3u8_resp.text)
+        #m3u8 = f'{m3u8}|{urlencode(heartbeat_headers)}'
     except Exception as err:
         import traceback
         
@@ -6556,6 +6580,198 @@ def sansat(parIn):
     return video_urls
 
 
+
+
+class FedermotoAPI:
+    BASE_URL = "https://api.federmoto.tv/api/v1/it"
+    FANART = "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+
+    def __init__(self, timeout=15):
+        self.timeout = timeout
+        self.headers = {
+            "Accept": "application/json",
+            "User-Agent": "Kodi-FedermotoTV"
+        }
+
+    def _get(self, url):
+        r = requests.get(url, headers=self.headers, timeout=self.timeout)
+        r.raise_for_status()
+        return r.json()
+
+    # ---------------------------------------------------
+    # 1) SPORTS
+    # ---------------------------------------------------
+    def getSports(self):
+        url = f"{self.BASE_URL}/sports"
+        data = self._get(url)
+        
+        items = []
+        for sport in data.get("data", []):
+            items.append({
+                "title": f"[COLOR lime]{sport.get('name')}[/COLOR]",
+                "thumbnail": sport.get("thumb"),
+                "fanart": self.FANART,
+                "myresolve": f"mototv@@1__{sport.get('id')}"
+            })
+
+        return {
+            "SetViewMode": "500",
+            "items": items
+        }
+
+    # ---------------------------------------------------
+    # 2) CATEGORIES BY SPORT
+    # ---------------------------------------------------
+    def getCategories(self, id_sport):
+        url = f"{self.BASE_URL}/sport/{id_sport}/categories"
+        data = self._get(url)
+
+        items = []
+        for cat in data.get("data", []):
+            items.append({
+                "title": f"[COLOR lime]{cat.get('name_category')}[/COLOR]",
+                "thumbnail": cat.get("logo"),
+                "fanart": self.FANART,
+                "myresolve": f"mototv@@2__{id_sport}__{cat.get('id_category')}__0"
+            })
+
+        return {
+            "SetViewMode": "500",
+            "items": items
+        }
+
+    # ---------------------------------------------------
+    # 3) CONTENT LIST
+    # ---------------------------------------------------
+    def getContentList(self, id_sport, id_category, offset=0):
+        url = (
+            f"{self.BASE_URL}/list?"
+            f"sport={id_sport}&category={id_category}"
+            f"&offset={offset}&status=finished&order=date.desc"
+        )
+
+        data = self._get(url)
+
+        items = []
+        widgets = data.get("data", {}).get("widgets", [])
+        for widget in widgets:
+            for content in widget.get("items", []):
+                items.append({
+                    "title": f"[COLOR lime]{content.get('title')}[/COLOR]",
+                    "thumbnail": content.get("image"),
+                    "fanart": self.FANART,
+                    "myresolve": f"mototv@@3__{content.get('id')}"
+                })
+        
+        # -----------------------------
+        # PAGINAZIONE (NEXT PAGE)
+        # -----------------------------
+        has_next = data.get("data", {}).get("continue", False)
+
+        if has_next:
+            next_offset = str(int(offset) + len(items))
+
+            items.append({
+                "title": "[COLOR yellow]>> Pagina successiva[/COLOR]",
+                "thumbnail": "",
+                "fanart": self.FANART,
+                "myresolve": (
+                    f"mototv@@2__{id_sport}"
+                    f"__{id_category}"
+                    f"__{next_offset}"
+                )
+            })
+
+        return {
+            "SetViewMode": "50",
+            "items": items
+        }
+
+    # ---------------------------------------------------
+    # 4) CONTENT DETAIL (HLS)
+    # ---------------------------------------------------
+    def getContent(self, id_content):
+        url = f"{self.BASE_URL}/content/{id_content}"
+
+        try:
+            data = self._get(url)
+        except Exception:
+            return {
+                "items": [{
+                    "title": "[COLOR red]Errore di rete[/COLOR]",
+                    "thumbnail": "",
+                    "fanart": self.FANART,
+                    "link": ""
+                }]
+            }
+
+        # -----------------------------
+        # ACCESS DENIED / NOT FREE
+        # -----------------------------
+        if not data.get("success") or not data.get("data") or data.get("success")==False:
+            error_msg = "Contenuto non disponibile"
+
+            errors = data.get("errors", [])
+            if errors:
+                error_msg = errors[0].get("message", error_msg)
+
+            return {
+                "items": [{
+                    "title": f"[COLOR red]{error_msg}[/COLOR]",
+                    "thumbnail": "",
+                    "fanart": self.FANART,
+                    "link": ""
+                }]
+            }
+
+        # -----------------------------
+        # CONTENT OK
+        # -----------------------------
+        content = data["data"]
+        videos = content.get("videos", [])
+
+        hls = None
+        if videos:
+            hls = videos[0].get("hls")
+
+        return {
+            "SetViewMode": "50",
+            "items": [{
+                "title": f"[COLOR lime]{content.get('title')}[/COLOR]",
+                "thumbnail": content.get("preview_img"),
+                "fanart": self.FANART,
+                "link": hls
+            }]
+        }
+
+def mototv(parIn):
+    import json
+    mode=0
+    arrPar=parIn.split("__")
+    mode=arrPar[0]
+    logga("MODE ==> "+mode)
+    api = FedermotoAPI()
+    ret=""
+    if mode == "0":
+        ret=json.dumps(api.getSports())
+    if mode == "1":
+        par1=arrPar[1]
+        ret=json.dumps(api.getCategories(par1))
+    if mode == "2":
+        par1=arrPar[1]
+        par2=arrPar[2]
+        par3=arrPar[3]
+        ret=json.dumps(api.getContentList(par1, par2, par3))
+    if mode == "3":
+        par1=arrPar[1]
+        ret=json.dumps(api.getContent(par1))
+    
+    
+    logga("SPORT ==> "+ret)
+    video_urls= []
+    video_urls.append((ret, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls    
+
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
@@ -6630,6 +6846,7 @@ def run (action, params=None):
         'gaga':gaga,
         'epg':epgInfo,
         'sansat':sansat,
+        "mototv":mototv,
         'showMsg':showMsg
     }
 
