@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.195'
+versione='1.2.196'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -6772,6 +6772,283 @@ def mototv(parIn):
     video_urls.append((ret, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls    
 
+
+
+class SportzxClient:
+    """
+    Client per il recupero e la decodifica dei contenuti Sportzx
+    """
+    import json
+    import base64
+    from typing import Optional
+    from typing import Tuple, List, Dict
+    
+
+    APP_PASSWORD = "oAR80SGuX3EEjUGFRwLFKBTiris="
+
+    def __init__(self, excluded_categories=None, timeout: int = 10):
+        """
+        :param excluded_categories: set o dict delle categorie da escludere
+        :param timeout: timeout HTTP in secondi
+        """
+        self.excluded_categories = excluded_categories or {}
+        self.timeout = timeout
+
+    # ---------------------------------------------------------
+    # Recupero API URL dinamico
+    # ---------------------------------------------------------
+    def get_api_url(self) -> Optional[str]:
+        install_url = (
+            "https://firebaseinstallations.googleapis.com/v1/projects/sportzx-7cc3f/installations"
+        )
+
+        install_headers = {
+            "Accept": "application/json",
+            "Accept-Encoding": "gzip",
+            "Cache-Control": "no-cache",
+            "Connection": "Keep-Alive",
+            "Content-Encoding": "gzip",
+            "Content-Type": "application/json",
+            "User-Agent": "Dalvik/2.1.0 (Linux; Android 13)",
+            "X-Android-Cert": "A0047CD121AE5F71048D41854702C52814E2AE2B",
+            "X-Android-Package": "com.sportzx.live",
+            "x-firebase-client": "H4sIAAAAAAAAAKtWykhNLCpJSk0sKVayio7VUSpLLSrOzM9TslIyUqoFAFyivEQfAAAA",
+            "x-goog-api-key": "AIzaSyBa5qiq95T97xe4uSYlKo0Wosmye_UEf6w"
+        }
+
+        install_body = {
+            "fid": "eOaLWBo8S7S1oN-vb23mkf",
+            "appId": "1:446339309956:android:b26582b5d2ad841861bdd1",
+            "authVersion": "FIS_v2",
+            "sdkVersion": "a:18.0.0"
+        }
+
+        try:
+            r = requests.post(
+                install_url,
+                json=install_body,
+                headers=install_headers,
+                timeout=self.timeout
+            )
+            r.raise_for_status()
+            auth_token = r.json().get("authToken", {}).get("token")
+            if not auth_token:
+                raise ValueError("Auth token non trovato")
+        except Exception as e:
+            print(f"Errore recupero auth token: {e}")
+            return None
+
+        config_url = (
+            "https://firebaseremoteconfig.googleapis.com/v1/projects/446339309956/namespaces/firebase:fetch"
+        )
+
+        config_headers = {
+            "Content-Type": "application/json",
+            "User-Agent": "Dalvik/2.1.0 (Linux; Android 13)",
+            "X-Android-Cert": "A0047CD121AE5F71048D41854702C52814E2AE2B",
+            "X-Android-Package": "com.sportzx.live",
+            "X-Firebase-RC-Fetch-Type": "BASE/1",
+            "X-Goog-Api-Key": "AIzaSyBa5qiq95T97xe4uSYlKo0Wosmye_UEf6w",
+            "X-Goog-Firebase-Installations-Auth": auth_token,
+        }
+
+        config_body = {
+            "appVersion": "2.1",
+            "firstOpenTime": "2025-11-10T16:00:00.000Z",
+            "timeZone": "Europe/Rome",
+            "appInstanceIdToken": auth_token,
+            "languageCode": "it-IT",
+            "appBuild": "12",
+            "appInstanceId": "eOaLWBo8S7S1oN-vb23mkf",
+            "countryCode": "IT",
+            "appId": "1:446339309956:android:b26582b5d2ad841861bdd1",
+            "platformVersion": "33",
+            "sdkVersion": "22.1.2",
+            "packageName": "com.sportzx.live"
+        }
+
+        try:
+            r = requests.post(
+                config_url,
+                json=config_body,
+                headers=config_headers,
+                timeout=self.timeout
+            )
+            r.raise_for_status()
+            return r.json().get("entries", {}).get("api_url")
+        except Exception as e:
+            print(f"Errore recupero API URL: {e}")
+            return None
+
+    # ---------------------------------------------------------
+    # AES key / iv
+    # ---------------------------------------------------------
+    @staticmethod
+    def _generate_aes_key_iv(s: str) -> Tuple[bytes, bytes]:
+        CHARSET = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+!@#$%&="
+
+        def u32(x): return x & 0xFFFFFFFF
+
+        data = s.encode()
+        n = len(data)
+
+        u = 0x811c9dc5
+        for b in data:
+            u = u32((u ^ b) * 0x1000193)
+
+        key = bytearray()
+        for i in range(16):
+            b = data[i % n]
+            u = u32((u * 0x1f) + (i ^ b))
+            key.append(CHARSET[u % len(CHARSET)])
+
+        u = 0x811c832a
+        for b in data:
+            u = u32((u ^ b) * 0x1000193)
+
+        iv = bytearray()
+        idx = acc = 0
+        while idx != 0x30:
+            b = data[idx % n]
+            u = u32((u * 0x1d) + (acc ^ b))
+            iv.append(CHARSET[u % len(CHARSET)])
+            idx += 3
+            acc = u32(acc + 7)
+
+        return bytes(key), bytes(iv)
+
+    # ---------------------------------------------------------
+    # Decrypt
+    # ---------------------------------------------------------
+    def decrypt_data(self, b64_data: str) -> bytes:
+        import base64
+        from Cryptodome.Cipher import AES
+        ct = base64.b64decode(b64_data, validate=False)
+        if not ct:
+            return b""
+
+        key, iv = self._generate_aes_key_iv(self.APP_PASSWORD)
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        pt = cipher.decrypt(ct)
+        pad = pt[-1]
+        return pt[:-pad]
+
+    # ---------------------------------------------------------
+    # Fetch + decrypt
+    # ---------------------------------------------------------
+    def fetch_and_decrypt(self, url: str):
+        import json
+        r = requests.get(url, timeout=self.timeout)
+        r.raise_for_status()
+        data = r.json()
+        decrypted = self.decrypt_data(data["data"])
+        return json.loads(decrypted.decode("utf-8"))
+    
+    def format_date(date_str):
+        from datetime import datetime
+        dt = datetime.strptime(date_str, "%Y/%m/%d %H:%M:%S %z")
+        return dt.strftime("%Y/%m/%d %H:%M")
+    
+
+    # ---------------------------------------------------------
+    # Recupero canali
+    # ---------------------------------------------------------
+    def get_channels(self) -> List[Dict]:
+        import json
+        
+        api_url = self.get_api_url()
+        if not api_url:
+            return []
+
+        channels_list = []
+        url_event=f"{api_url}/events.json"
+        
+        events = self.fetch_and_decrypt(url_event)
+        #logga("Eventi: " + json.dumps(events, ensure_ascii=False))
+        events = [
+            {"title": e["title"], "id": e["id"], "cat": e["cat"], "eventName": e["eventInfo"]["eventName"], "time": e["eventInfo"]["startTime"]}
+            for e in events
+            if "cat" in e and e["cat"].lower() not in self.excluded_categories
+        ]
+
+        for event in events:
+            channels = self.fetch_and_decrypt(
+                f"{api_url}/channels/{event['id']}.json"
+            )
+
+            for ch in channels:
+                link, headers = (ch["link"].split("|", 1) + [None])[:2]
+                referer = origin = None
+
+                if headers:
+                    for part in headers.replace("|", "").split("&"):
+                        if part.lower().startswith("referer="):
+                            referer = part.split("=", 1)[1]
+                        elif part.lower().startswith("origin="):
+                            origin = part.split("=", 1)[1]
+
+                keyid = key = None
+                if ch.get("api") and ":" in ch["api"]:
+                    keyid, key = ch["api"].split(":", 1)
+
+                date_str = event["time"]
+                timeSt=date_str[:16]
+                
+                channels_list.append({
+                    "event_title": event["title"],
+                    "event_id": event["id"],
+                    "event_cat": event["cat"],
+                    "event_name": event["eventName"],
+                    "event_time": timeSt,
+                    "channel_title": ch.get("title"),
+                    "stream_url": link.strip(),
+                    "keyid": keyid,
+                    "key": key,
+                    "api": ch.get("api"),
+                    "headers": headers,
+                    "referer": referer,
+                    "origin": origin,
+                })
+
+        return channels_list
+
+def sportzx(parIn):
+    client = SportzxClient()
+    #client = SportzxClient(excluded_categories={"nba", "nfl"})
+    channels = client.get_channels()
+    jsonText='{"SetViewMode":"51","items":['
+    numIt=0
+    for c in channels:
+        tit=c["event_title"]
+        chan=c["channel_title"]
+        url=c["stream_url"]
+        keyid=c["keyid"] if c["keyid"] is not None else "NoKeyId"
+        name=c["event_name"] if c["event_name"] is not None else "NoName"
+        api=c["api"] if c["api"] is not None else "NoApi"
+        headers=c["headers"] if c["headers"] is not None else "NoHeaders"
+        time=c["event_time"] if c["event_time"] is not None else "noTime"
+        cat=c["event_cat"] if c["event_cat"] is not None else "NoCat"
+
+        titolo="[COLOR gold]"+time+"[/COLOR] [COLOR lime]"+cat+" "+name+"[/COLOR] [COLOR blue]("+chan+")[/COLOR]"
+        if (numIt > 0):
+            jsonText = jsonText + ','    
+        jsonText = jsonText + '{"title":"'+titolo
+        if keyid != "NoKeyId":
+            jsonText = jsonText + ' [COLOR aqua](MPD)[/COLOR]","myresolve":"amstaff@@'+url+'|'+api+'",'
+        else:
+            jsonText = jsonText + '","link":"'+url+'|'+headers+'",'
+        jsonText = jsonText + '"thumbnail":"https://www.metatvapk.com/wp-content/uploads/2025/04/image-1.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"'+tit+'"}'
+        numIt=numIt+1  
+        #logga(tit+" - "+chan+" - "+url+" - "+keyid+" - "+key+" - "+api+" - "+referer+" - "+origin+" - "+headers)
+    
+    jsonText = jsonText + "]}"    
+    
+    video_urls= []
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
+
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
@@ -6847,6 +7124,7 @@ def run (action, params=None):
         'epg':epgInfo,
         'sansat':sansat,
         "mototv":mototv,
+        "sportzx":sportzx,
         'showMsg':showMsg
     }
 
