@@ -1,8 +1,8 @@
-versione='1.2.77'
+versione='1.2.78'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 05.01.2026
+# Last update: 12.01.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -990,10 +990,10 @@ def checkDns():
     
     responseCode=404
     try:
-        currSess = requests.Session()
-        head={'user-agent':'iPad','Content-Type':'application/x-www-form-urlencoded','Referer':'https://daddyhd.com/'}
-        page_data1 = currSess.get("https://daddyhd.com/embed/stream-860.php",headers=head)
-        responseCode=page_data1.status_code
+        #currSess = requests.Session()
+        #head={'user-agent':'iPad','Content-Type':'application/x-www-form-urlencoded','Referer':'https://daddyhd.com/'}
+        #page_data1 = currSess.get("https://daddyhd.com/embed/stream-860.php",headers=head)
+        #responseCode=page_data1.status_code
         dns1 = xbmc.getInfoLabel('Network.DNS1Address')
         dns2 = xbmc.getInfoLabel('Network.DNS2Address')
         gate = xbmc.getInfoLabel('Network.GatewayAddress')
@@ -1012,7 +1012,7 @@ def checkDns():
     
     if responseCode != 200:
         mess = "Con le attuali impostazioni di rete,\npotresti avere problemi a recuperare i link da alcuni siti \n(es. https://daddyhd.com/)."
-        msgBox(mess)
+        #msgBox(mess)
 
 def checkMandraScript():
     have_mandra_plugin = '"enabled":true' in xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"Addons.GetAddonDetails","id":1,"params":{"addonid":"script.mandra.kodi", "properties": ["enabled"]}}')
@@ -1481,7 +1481,7 @@ def run():
             if (checkMsgOnLog()):
                 checkResolver()
                 checkJsunpack()
-                checkPortalPy()
+                #checkPortalPy()
                 checkDns()
                 #checkMandraScript()
             checkSkin()
