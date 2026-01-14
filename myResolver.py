@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.197'
+versione='1.2.198'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 12.01.2026
+# Last update: 14.01.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -6921,7 +6921,7 @@ class StreamSportsClient:
         js = self.decode_obfuscated_js(r.text)
         if not js:
             return {"url": "ignore_js"}
-        #logga("JS ==> "+js)
+        logga("JS ==> "+js)
         return self.find_stream_url(js)
 
     # -------------------------
@@ -7011,7 +7011,29 @@ def sports99(parIn):
     if mode == "2":
         par=arrPar[1]
         stream=api.get_stream_url(par)
-        url=stream["url"]
+        url="no_url"
+        try:
+            url=stream["url"]
+        except Exception as e:
+            logga("ERRORE API. TRY FREE_PLAN")
+            return (sports99("3__"+parIn))
+        titolo="[COLOR gold]PLAY STREAM[/COLOR]"
+        jsonText = jsonText + '{"title":"'+titolo+'",'
+        jsonText = jsonText + '"link":"'+url+'",'
+        jsonText = jsonText + '"thumbnail":"https://www.metatvapk.com/wp-content/uploads/2025/04/image-1.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"PLAY"}'
+
+
+    if mode == "3":
+        par=arrPar[1]
+        api = StreamSportsClient("cdnlivetv", "free")
+        stream=api.get_stream_url(par)
+        url="ignore"
+        try:
+            url=stream["url"]
+        except Exception as e:
+            logga("ERRORE API")
         titolo="[COLOR gold]PLAY STREAM[/COLOR]"
         jsonText = jsonText + '{"title":"'+titolo+'",'
         jsonText = jsonText + '"link":"'+url+'",'
@@ -7303,6 +7325,21 @@ def sportzx(parIn):
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
+def vividmosaica(parIn):
+    headers = {"Referer": "https://l2l2.link/"}
+    player_url = "https://vividmosaica.com/embed3.php?player=desktop&live=do"+parIn
+    r = requests.get(player_url, headers=headers, timeout=15)
+    js_code=r.text
+    match = re.search(r'return\s*\(\s*\[(.*?)\]\s*', js_code, re.DOTALL)
+    src = "ignore"
+    if match:
+        content = match.group(1) 
+        src = content.replace('"', '').replace(',', '').replace('\/\/\/\/', '//').replace('\/', '/')
+
+    video_urls= []
+    video_urls.append((src+"|Referer=https://vividmosaica.com/", "[COLOR lime]PLAY STREAM AL[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
+    return video_urls
+
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
@@ -7380,6 +7417,7 @@ def run (action, params=None):
         "mototv":mototv,
         "sportzx":sportzx,
         "sports99":sports99,
+        "vividmo":vividmosaica,
         'showMsg':showMsg
     }
 
