@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.198'
+versione='1.2.199'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 14.01.2026
+# Last update: 25.01.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -3077,7 +3077,7 @@ def imdb(parIn):
     import re
     video_urls = []
 
-    url="https://mostraguarda.stream/set-movie-a//"+parIn
+    url="https://mostraguarda.stream/set-movie-a/"+parIn
     headers = {
         'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
     }
@@ -3115,7 +3115,7 @@ def imdb(parIn):
                 numIt=numIt+1
     
     if numIt==0:
-        jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","link":"ignore",'
+        jsonText = jsonText + '{"title":"[COLOR red]NO HOST FOUND[/COLOR]","myresolve":"showMsg@@No link to play.",'
         jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"NO INFO"}'
@@ -4034,7 +4034,7 @@ def get_channels(parIn='Italy'):
             "region": "AT",
             "catalogId": "iptv",
             "id": "iptv",
-            "adult": True,
+            "adult": False,
             "search": "",
             "sort": "name",
             "filter": {"group": parIn},
@@ -4044,8 +4044,8 @@ def get_channels(parIn='Italy'):
         urlChList="https://vavoo.to/mediahubmx-catalog.json"
         # logga("URL CH_LIST: "+urlChList)
         resp = requests.post(urlChList, json=data, headers=headers, timeout=10)
-        r = resp.json()
         logga ("VAVOO_CH_JSON: "+resp.text)
+        r = resp.json()
         items = r.get("items", [])
         all_channels.extend(items)
         cursor = r.get("nextCursor")
@@ -4097,88 +4097,107 @@ class VavooResolver:
             'User-Agent': 'MediaHubMX/2'
         })
 
+    def getMyIp(self):
+        resp = self.session.get("https://api.ipify.org?format=json")
+        return resp.json().get("ip")
+    
     def getAuthSignature(self):
-        headers = {
-            "user-agent": "okhttp/4.11.0",
-            "accept": "application/json",
-            "content-type": "application/json; charset=utf-8",
-            "content-length": "1106",
-            "accept-encoding": "gzip"
-        }
-        data = {
-            "token": "tosFwQCJMS8qrW_AjLoHPQ41646J5dRNha6ZWHnijoYQQQoADQoXYSo7ki7O5-CsgN4CH0uRk6EEoJ0728ar9scCRQW3ZkbfrPfeCXW2VgopSW2FWDqPOoVYIuVPAOnXCZ5g",
-            "reason": "app-blur",
-            "locale": "de",
-            "theme": "dark",
-            "metadata": {
-                "device": {
-                    "type": "Handset",
-                    "brand": "google",
-                    "model": "Nexus",
-                    "name": "21081111RG",
-                    "uniqueId": "d10e5d99ab665233"
-                },
-                "os": {
-                    "name": "android",
-                    "version": "7.1.2",
-                    "abis": ["arm64-v8a", "armeabi-v7a", "armeabi"],
-                    "host": "android"
-                },
-                "app": {
-                    "platform": "android",
-                    "version": "3.1.20",
-                    "buildId": "289515000",
-                    "engine": "hbc85",
-                    "signatures": ["6e8a975e3cbf07d5de823a760d4c2547f86c1403105020adee5de67ac510999e"],
-                    "installer": "app.revanced.manager.flutter"
-                },
-                "version": {
-                    "package": "tv.vavoo.app",
-                    "binary": "3.1.20",
-                    "js": "3.1.20"
+        import time
+        adesso = int(time.time() * 1000)
+        clientIp = self.getMyIp()
+        i = 0
+        while i < 3:
+            i+=1
+            logga("AUTH_LOOP: "+str(i))
+            try:
+                _headers={
+                    "user-agent": "okhttp/4.11.0", 
+                    "accept": "application/json", 
+                    "content-type": "application/json; charset=utf-8", 
+                    "accept-encoding": "gzip"
                 }
-            },
-            "appFocusTime": 0,
-            "playerActive": False,
-            "playDuration": 0,
-            "devMode": False,
-            "hasAddon": True,
-            "castConnected": False,
-            "package": "tv.vavoo.app",
-            "version": "3.1.20",
-            "process": "app",
-            "firstAppStart": 1743962904623,
-            "lastAppStart": 1743962904623,
-            "ipLocation": "",
-            "adblockEnabled": True,
-            "proxy": {
-                "supported": ["ss", "openvpn"],
-                "engine": "ss",
-                "ssVersion": 1,
-                "enabled": True,
-                "autoServer": True,
-                "id": "pl-waw"
-            },
-            "iap": {
-                "supported": False
-            }
-        }
-        try:
-            resp = self.session.post("https://www.vavoo.tv/api/app/ping", json=data, headers=headers, timeout=10)
-            resp.raise_for_status()
-            return resp.json().get("addonSig")
-        except Exception as e:
-            print(f"Errore nel recupero della signature: {e}")
-            return None
+                
+                _data = {
+                    'token': '',
+                    'reason': 'app-blur', 
+                    'locale': 'de', 
+                    'theme': 'dark',
+                    'metadata': { 
+                        'device': {
+                            'type': 'Handset', 
+                            'brand': 'google', 
+                            'model': 'Pixel', 
+                            'name': 'sdk_gphone64_arm64', 
+                            'uniqueId': 'd10e5d99ab665233' 
+                        }, 
+                        'os': { 
+                            'name': 'android', 
+                            'version': '13', 
+                            'abis': ['arm64-v8a', 'armeabi-v7a', 'armeabi'], 
+                            'host': 'android' 
+                        }, 
+                        'app': { 
+                            'platform': 'android', 
+                            'version': '3.1.21', 
+                            'buildId': '289515000', 
+                            'engine': 
+                            'hbc85', 
+                            'signatures': ['6e8a975e3cbf07d5de823a760d4c2547f86c1403105020adee5de67ac510999e'], 
+                            'installer': 'app.revanced.manager.flutter' 
+                        }, 
+                        'version': { 
+                            'package': 'tv.vavoo.app', 
+                            'binary': '3.1.21', 
+                            'js': '3.1.21' 
+                        } 
+                    },
+                    'appFocusTime': 0, 
+                    'playerActive': False, 
+                    'playDuration': 0, 
+                    'devMode': False, 
+                    'hasAddon': True, 
+                    'castConnected': False,
+                    'package': 'tv.vavoo.app', 
+                    'version': '3.1.21', 
+                    'process': 'app', 
+                    'firstAppStart': adesso, 
+                    'lastAppStart': adesso,
+                    'ipLocation': clientIp, 
+                    'adblockEnabled': True, 
+                    'proxy': { 
+                        'supported': ['ss', 'openvpn'], 
+                        'engine': 'ss', 
+                        'ssVersion': 1, 
+                        'enabled': True, 
+                        'autoServer': True, 
+                        'id': 'de-fra' 
+                    }, 
+                    'iap': { 
+                        'supported': False 
+                    }
+                }
+                resp = self.session.post('https://www.vavoo.tv/api/app/ping', json=_data, headers=_headers, timeout=10)
+                resp.raise_for_status()
+                logga("AUTH_VAVOO: "+resp.text)
+                return resp.json().get("addonSig")
+            except: 
+                continue
+        return None
 
     def gettsSignature(self):
-        vec = {"vec": "9frjpxPjxSNilxJPCJ0XGYs6scej3dW/h/VWlnKUiLSG8IP7mfyDU7NirOlld+VtCKGj03XjetfliDMhIev7wcARo+YTU8KPFuVQP9E2DVXzY2BFo1NhE6qEmPfNDnm74eyl/7iFJ0EETm6XbYyz8IKBkAqPN/Spp3PZ2ulKg3QBSDxcVN4R5zRn7OsgLJ2CNTuWkd/h451lDCp+TtTuvnAEhcQckdsydFhTZCK5IiWrrTIC/d4qDXEd+GtOP4hPdoIuCaNzYfX3lLCwFENC6RZoTBYLrcKVVgbqyQZ7DnLqfLqvf3z0FVUWx9H21liGFpByzdnoxyFkue3NzrFtkRL37xkx9ITucepSYKzUVEfyBh+/3mtzKY26VIRkJFkpf8KVcCRNrTRQn47Wuq4gC7sSwT7eHCAydKSACcUMMdpPSvbvfOmIqeBNA83osX8FPFYUMZsjvYNEE3arbFiGsQlggBKgg1V3oN+5ni3Vjc5InHg/xv476LHDFnNdAJx448ph3DoAiJjr2g4ZTNynfSxdzA68qSuJY8UjyzgDjG0RIMv2h7DlQNjkAXv4k1BrPpfOiOqH67yIarNmkPIwrIV+W9TTV/yRyE1LEgOr4DK8uW2AUtHOPA2gn6P5sgFyi68w55MZBPepddfYTQ+E1N6R/hWnMYPt/i0xSUeMPekX47iucfpFBEv9Uh9zdGiEB+0P3LVMP+q+pbBU4o1NkKyY1V8wH1Wilr0a+q87kEnQ1LWYMMBhaP9yFseGSbYwdeLsX9uR1uPaN+u4woO2g8sw9Y5ze5XMgOVpFCZaut02I5k0U4WPyN5adQjG8sAzxsI3KsV04DEVymj224iqg2Lzz53Xz9yEy+7/85ILQpJ6llCyqpHLFyHq/kJxYPhDUF755WaHJEaFRPxUqbparNX+mCE9Xzy7Q/KTgAPiRS41FHXXv+7XSPp4cy9jli0BVnYf13Xsp28OGs/D8Nl3NgEn3/eUcMN80JRdsOrV62fnBVMBNf36+LbISdvsFAFr0xyuPGmlIETcFyxJkrGZnhHAxwzsvZ+Uwf8lffBfZFPRrNv+tgeeLpatVcHLHZGeTgWWml6tIHwWUqv2TVJeMkAEL5PPS4Gtbscau5HM+FEjtGS+KClfX1CNKvgYJl7mLDEf5ZYQv5kHaoQ6RcPaR6vUNn02zpq5/X3EPIgUKF0r/0ctmoT84B2J1BKfCbctdFY9br7JSJ6DvUxyde68jB+Il6qNcQwTFj4cNErk4x719Y42NoAnnQYC2/qfL/gAhJl8TKMvBt3Bno+va8ve8E0z8yEuMLUqe8OXLce6nCa+L5LYK1aBdb60BYbMeWk1qmG6Nk9OnYLhzDyrd9iHDd7X95OM6X5wiMVZRn5ebw4askTTc50xmrg4eic2U1w1JpSEjdH/u/hXrWKSMWAxaj34uQnMuWxPZEXoVxzGyuUbroXRfkhzpqmqqqOcypjsWPdq5BOUGL/Riwjm6yMI0x9kbO8+VoQ6RYfjAbxNriZ1cQ+AW1fqEgnRWXmjt4Z1M0ygUBi8w71bDML1YG6UHeC2cJ2CCCxSrfycKQhpSdI1QIuwd2eyIpd4LgwrMiY3xNWreAF+qobNxvE7ypKTISNrz0iYIhU0aKNlcGwYd0FXIRfKVBzSBe4MRK2pGLDNO6ytoHxvJweZ8h1XG8RWc4aB5gTnB7Tjiqym4b64lRdj1DPHJnzD4aqRixpXhzYzWVDN2kONCR5i2quYbnVFN4sSfLiKeOwKX4JdmzpYixNZXjLkG14seS6KR0Wl8Itp5IMIWFpnNokjRH76RYRZAcx0jP0V5/GfNNTi5QsEU98en0SiXHQGXnROiHpRUDXTl8FmJORjwXc0AjrEMuQ2FDJDmAIlKUSLhjbIiKw3iaqp5TVyXuz0ZMYBhnqhcwqULqtFSuIKpaW8FgF8QJfP2frADf4kKZG1bQ99MrRrb2A="}
-        try:
-            url = 'https://www.vavoo.tv/api/box/ping2'
-            req = self.session.post(url, data=vec).json()
-            return req['response'].get('signed')
-        except Exception as e:
-            return None
+        i = 0
+        while i < 5:
+            i+=1
+            vec = {"vec": "9frjpxPjxSNilxJPCJ0XGYs6scej3dW/h/VWlnKUiLSG8IP7mfyDU7NirOlld+VtCKGj03XjetfliDMhIev7wcARo+YTU8KPFuVQP9E2DVXzY2BFo1NhE6qEmPfNDnm74eyl/7iFJ0EETm6XbYyz8IKBkAqPN/Spp3PZ2ulKg3QBSDxcVN4R5zRn7OsgLJ2CNTuWkd/h451lDCp+TtTuvnAEhcQckdsydFhTZCK5IiWrrTIC/d4qDXEd+GtOP4hPdoIuCaNzYfX3lLCwFENC6RZoTBYLrcKVVgbqyQZ7DnLqfLqvf3z0FVUWx9H21liGFpByzdnoxyFkue3NzrFtkRL37xkx9ITucepSYKzUVEfyBh+/3mtzKY26VIRkJFkpf8KVcCRNrTRQn47Wuq4gC7sSwT7eHCAydKSACcUMMdpPSvbvfOmIqeBNA83osX8FPFYUMZsjvYNEE3arbFiGsQlggBKgg1V3oN+5ni3Vjc5InHg/xv476LHDFnNdAJx448ph3DoAiJjr2g4ZTNynfSxdzA68qSuJY8UjyzgDjG0RIMv2h7DlQNjkAXv4k1BrPpfOiOqH67yIarNmkPIwrIV+W9TTV/yRyE1LEgOr4DK8uW2AUtHOPA2gn6P5sgFyi68w55MZBPepddfYTQ+E1N6R/hWnMYPt/i0xSUeMPekX47iucfpFBEv9Uh9zdGiEB+0P3LVMP+q+pbBU4o1NkKyY1V8wH1Wilr0a+q87kEnQ1LWYMMBhaP9yFseGSbYwdeLsX9uR1uPaN+u4woO2g8sw9Y5ze5XMgOVpFCZaut02I5k0U4WPyN5adQjG8sAzxsI3KsV04DEVymj224iqg2Lzz53Xz9yEy+7/85ILQpJ6llCyqpHLFyHq/kJxYPhDUF755WaHJEaFRPxUqbparNX+mCE9Xzy7Q/KTgAPiRS41FHXXv+7XSPp4cy9jli0BVnYf13Xsp28OGs/D8Nl3NgEn3/eUcMN80JRdsOrV62fnBVMBNf36+LbISdvsFAFr0xyuPGmlIETcFyxJkrGZnhHAxwzsvZ+Uwf8lffBfZFPRrNv+tgeeLpatVcHLHZGeTgWWml6tIHwWUqv2TVJeMkAEL5PPS4Gtbscau5HM+FEjtGS+KClfX1CNKvgYJl7mLDEf5ZYQv5kHaoQ6RcPaR6vUNn02zpq5/X3EPIgUKF0r/0ctmoT84B2J1BKfCbctdFY9br7JSJ6DvUxyde68jB+Il6qNcQwTFj4cNErk4x719Y42NoAnnQYC2/qfL/gAhJl8TKMvBt3Bno+va8ve8E0z8yEuMLUqe8OXLce6nCa+L5LYK1aBdb60BYbMeWk1qmG6Nk9OnYLhzDyrd9iHDd7X95OM6X5wiMVZRn5ebw4askTTc50xmrg4eic2U1w1JpSEjdH/u/hXrWKSMWAxaj34uQnMuWxPZEXoVxzGyuUbroXRfkhzpqmqqqOcypjsWPdq5BOUGL/Riwjm6yMI0x9kbO8+VoQ6RYfjAbxNriZ1cQ+AW1fqEgnRWXmjt4Z1M0ygUBi8w71bDML1YG6UHeC2cJ2CCCxSrfycKQhpSdI1QIuwd2eyIpd4LgwrMiY3xNWreAF+qobNxvE7ypKTISNrz0iYIhU0aKNlcGwYd0FXIRfKVBzSBe4MRK2pGLDNO6ytoHxvJweZ8h1XG8RWc4aB5gTnB7Tjiqym4b64lRdj1DPHJnzD4aqRixpXhzYzWVDN2kONCR5i2quYbnVFN4sSfLiKeOwKX4JdmzpYixNZXjLkG14seS6KR0Wl8Itp5IMIWFpnNokjRH76RYRZAcx0jP0V5/GfNNTi5QsEU98en0SiXHQGXnROiHpRUDXTl8FmJORjwXc0AjrEMuQ2FDJDmAIlKUSLhjbIiKw3iaqp5TVyXuz0ZMYBhnqhcwqULqtFSuIKpaW8FgF8QJfP2frADf4kKZG1bQ99MrRrb2A="}
+            try:
+                url = 'https://www.vavoo.tv/api/box/ping2'
+                resp=self.session.post(url, data=vec)
+                logga("AUTHTS_VAVOO: "+resp.text)
+                req = resp.json()
+                return req['response'].get('signed')
+            except:
+                continue
+        return None
 
     def resolve_link(self, link, streammode=1, verbose=True):
         if not "vavoo" in link:
@@ -4187,6 +4206,7 @@ class VavooResolver:
         if streammode == 1:
             signature = self.getAuthSignature()
             if not signature:
+                logga("VAVOO_NO_SIGNATURE")
                 return self.resolve_link(link, streammode=0, verbose=verbose)
 
             headers = {
@@ -4207,7 +4227,7 @@ class VavooResolver:
             try:
                 resp = self.session.post("https://vavoo.to/mediahubmx-resolve.json", json=data, headers=headers, timeout=10)
                 resp.raise_for_status()
-
+                logga("VAVOO_RES: "+resp.text)
                 result = resp.json()
                 if isinstance(result, list) and result and result[0].get("url"):
                     resolved_url = result[0]["url"]
@@ -4225,9 +4245,15 @@ class VavooResolver:
                 ts_signature = self.gettsSignature()
                 if not ts_signature:
                     return None
-
-                ts_url = "%s.ts?n=1&b=5&vavoo_auth=%s" % (link.replace("vavoo-iptv", "live2")[0:-12], ts_signature)
-                return ts_url
+                newLink=link.replace("vavoo-iptv", "live2")[:-12]
+                logga("VAVOO_LINK: "+newLink)
+                ts_url = "%s.ts?n=1&b=5&vavoo_auth=%s" % (newLink, ts_signature)
+                status = int(requests.get(ts_url, headers={"User-Agent": "VAVOO/2.6"}, timeout=10, stream=True).status_code)
+                logga("function resolve_link Staus :"+str(status))
+                if status < 400:
+                    return ts_url
+                else:
+                    return None
             except Exception as e:
                 return None
 
