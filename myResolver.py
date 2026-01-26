@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.199'
+versione='1.2.200'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 25.01.2026
+# Last update: 26.01.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1310,11 +1310,11 @@ def get_tmdb_video(tmdb_id="926899"):
     
     video_urls = []
     jsonText='{"SetViewMode":"50","items":['
-    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (IT)[/COLOR]","link":"'+to_ret+'&lang=it",'
+    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (IT)[/COLOR]","link":"'+to_ret+'&lang=it|Referer=https://vixsrc.to/movie/'+tmdb_id+'",'
     jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
     jsonText = jsonText + '"info":"by MandraKodi"},'
-    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (EN)[/COLOR]","link":"'+to_ret+'&lang=en",'
+    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (EN)[/COLOR]","link":"'+to_ret+'&lang=en|Referer=https://vixsrc.to/movie/'+tmdb_id+'",'
     jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
     jsonText = jsonText + '"info":"by MandraKodi"}'
@@ -1333,12 +1333,12 @@ def get_tmdb_episode_video(tmdb_id="1416_1_1"):
     serieId=arrV[0]
     season=arrV[1]
     episode=arrV[2]
-    url = "https://vixsrc.to/tv/{serieId}/{season}/{episode}?lang=it"
+    url = f"https://vixsrc.to/tv/{serieId}/{season}/{episode}?lang=it"
     
     try:
         response = requests.get(url)
         page = response.text.replace("\n", "").replace("\r", "").replace("\t", "")
-        
+        logga ("TMDBS_PAGE: "+url+"\n"+response.text)
         match = re.search(r'window\.masterPlaylist\s*=\s*(.*?)\s*window\.canPlayFHD', page, re.IGNORECASE)
         if match:
             jj = match.group(1).strip()
@@ -1353,7 +1353,7 @@ def get_tmdb_episode_video(tmdb_id="1416_1_1"):
             expires = arr_t["params"]["expires"]
             url_v = arr_t["url"]
             
-            to_ret = f"{url_v}?token={token}&expires={expires}&h=1&lang=it"
+            to_ret = f"{url_v}?token={token}&expires={expires}&h=1&lang=it|Referer=https://vixsrc.to/tv/{serieId}/{season}/{episode}"
     except Exception as e:
         print(f"Error: {e}")
     
