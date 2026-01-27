@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.200'
+versione='1.2.201'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 26.01.2026
+# Last update: 27.01.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -2649,16 +2649,18 @@ def m3uPlus(parIn=None):
         pwd=arrSess[3]
         apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_live_streams&category_id="+catId
         response = s.get(apiUrl, headers=headers)
-
+        
         jsonText='{"SetViewMode":"503","items":['
         
         numIt=0
         lista = response.json()
         for item in lista:
             stream_id = item.get("stream_id")
-            linkUrl="http://"+host+"/live/"+usr+"/"+pwd+"/"+str(stream_id)+".ts"
+            linkUrl="http://"+host+"/live/"+usr+"/"+pwd+"/"+str(stream_id)+".ts|!User-Agent=VLC/3.0.21 LibVLC/3.0.21"
             name = item.get("name")
-            stream_icon = item.get("stream_icon")
+            stream_icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Microsoft_Stream.svg/512px-Microsoft_Stream.svg.png"
+            if 'stream_icon' in item and item['stream_icon'] is not None:
+                stream_icon = item.get("stream_icon")
             if (numIt > 0):
                 jsonText += ','
             numIt += 1
@@ -2670,12 +2672,182 @@ def m3uPlus(parIn=None):
             
         jsonText = jsonText + "]}"
 
+    if mode=="2":
+        win.setProperty("sessionVar1", parIn)
+        host=arrIn[1]
+        usr=arrIn[2]
+        pwd=arrIn[3]
+        apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_vod_categories"
+        response = s.get(apiUrl, headers=headers)
+        #logga("M3UPLUS_JSON: "+response.text)
+        
+        jsonText='{"SetViewMode":"503","items":['
+        
+        
+        numIt=0
+        lista = response.json()
+        for item in lista:
+            catId = item.get("category_id")
+            name = item.get("category_name")
+            if (numIt > 0):
+                jsonText += ','
+            numIt += 1
+            
+            jsonText = jsonText + '{"title":"[COLOR orange]=*= '+name+' =*=[/COLOR]","myresolve":"m3uPlus@@3_@|@_'+name+'_@|@_'+catId+'",'
+            jsonText = jsonText + '"thumbnail":"https://static.vecteezy.com/system/resources/thumbnails/065/914/783/small/stylized-3d-rendering-of-a-file-folder-icon-for-data-management-free-png.png",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"by MandraKodi"}'
+
+        apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_series_categories"
+        response = s.get(apiUrl, headers=headers)
+        lista = response.json()
+        for item in lista:
+            catId = item.get("category_id")
+            name = item.get("category_name")
+            if (numIt > 0):
+                jsonText += ','
+            numIt += 1
+            
+            jsonText = jsonText + '{"title":"[COLOR orange]=*= '+name+' =*=[/COLOR]","myresolve":"m3uPlus@@4_@|@_'+name+'_@|@_'+catId+'",'
+            jsonText = jsonText + '"thumbnail":"https://static.vecteezy.com/system/resources/thumbnails/065/914/783/small/stylized-3d-rendering-of-a-file-folder-icon-for-data-management-free-png.png",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"by MandraKodi"}'
+
+        
+
+        jsonText = jsonText + "]}"
+
+    if mode=="3":
+        parSess=win.getProperty("sessionVar1")
+        catId=arrIn[2]
+        arrSess=parSess.split("_@|@_")
+        host=arrSess[1]
+        usr=arrSess[2]
+        pwd=arrSess[3]
+        apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_vod_streams&category_id="+catId
+        response = s.get(apiUrl, headers=headers)
+        #logga ("RESP: "+response.text)
+        jsonText='{"SetViewMode":"503","items":['
+        
+        numIt=0
+        lista = response.json()
+        for item in lista:
+            stream_id = item.get("stream_id")
+            stream_ext = item.get("container_extension")
+            linkUrl="http://"+host+"/movie/"+usr+"/"+pwd+"/"+str(stream_id)+"."+stream_ext+"|!User-Agent=VLC/3.0.21 LibVLC/3.0.21"
+            name = item.get("name")
+            stream_icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Microsoft_Stream.svg/512px-Microsoft_Stream.svg.png"
+            if 'stream_icon' in item and item['stream_icon'] is not None:
+                stream_icon = item.get("stream_icon")
+            if (numIt > 0):
+                jsonText += ','
+            numIt += 1
+            
+            jsonText = jsonText + '{"title":"[COLOR lime]'+name+'[/COLOR]","link":"'+linkUrl+'|!User-Agent=VLC/3.0.9 LibVLC/3.0.9",'
+            jsonText = jsonText + '"thumbnail":"'+stream_icon+'",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"by MandraKodi"}'
+            
+        jsonText = jsonText + "]}"
+
+    if mode=="4":
+        parSess=win.getProperty("sessionVar1")
+        catId=arrIn[2]
+        arrSess=parSess.split("_@|@_")
+        host=arrSess[1]
+        usr=arrSess[2]
+        pwd=arrSess[3]
+        apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_series&category_id="+catId
+        response = s.get(apiUrl, headers=headers)
+        #logga ("RESP: "+response.text)
+        jsonText='{"SetViewMode":"503","items":['
+        
+        numIt=0
+        lista = response.json()
+        for item in lista:
+            serieId = item.get("series_id")
+            name = item.get("name")
+            cover = item.get("cover")
+            plot = remove_control_chars(item.get("plot")).replace('"', "'")
+            if (numIt > 0):
+                jsonText += ','
+            numIt += 1
+            
+            jsonText = jsonText + '{"title":"[COLOR orange]=*= '+name+' =*=[/COLOR]","myresolve":"m3uPlus@@5_@|@_'+name+'_@|@_'+str(serieId)+'",'
+            jsonText = jsonText + '"thumbnail":"'+cover+'",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"'+plot+'"}'
+            
+        jsonText = jsonText + "]}"
+
+    if mode=="5":
+        parSess=win.getProperty("sessionVar1")
+        catId=arrIn[2]
+        arrSess=parSess.split("_@|@_")
+        host=arrSess[1]
+        usr=arrSess[2]
+        pwd=arrSess[3]
+        apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_series_info&series_id="+catId
+        response = s.get(apiUrl, headers=headers)
+        #logga ("RESP: "+response.text)
+        jsonText='{"SetViewMode":"51","channels":['
+        
+        numIt=0
+        lista = response.json()
+        season_map = {
+            season["season_number"]: season.get("cover", "")
+            for season in lista.get("seasons", [])
+        }
+        
+        episodes = lista.get("episodes", {})
+        numIt = 0
+        numCh = -1
+        oldSea=0
+        for season_num, season_episodes in episodes.items():
+            season_num_int = int(season_num)
+            if (oldSea != season_num_int):
+                oldSea = season_num_int
+                numIt=0
+                season_image = season_map.get(season_num_int, "https://pbs.twimg.com/profile_images/848686618466816000/8MaqE-n5_400x400.jpg")
+                numCh = numCh+1
+                if (numCh > 0):
+                    jsonText = jsonText + ']},'
+                jsonText = jsonText + '{"name":"[COLOR lime]STAGIONE '+season_num+'[/COLOR]",'
+                jsonText = jsonText + '"thumbnail":"'+season_image+'",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"SetViewMode":"51","items":['
+
+            for ep in season_episodes:
+                episode_num = ep.get("episode_num", "")
+                episode_title = ep.get("title", "")
+                episode_id = ep.get("id", "")
+                container_ext = ep.get("container_extension", "")
+                linkUrl="http://"+host+"/series/"+usr+"/"+pwd+"/"+str(episode_id)+"."+container_ext+"|!User-Agent=VLC/3.0.21 LibVLC/3.0.21"
+                info = ep.get("info", {})
+                episode_plot = remove_control_chars(info.get("plot")).replace('"', "'")
+                episode_image = info.get("movie_image", season_image)
+                if (numIt > 0):
+                    jsonText = jsonText + ',' 
+                jsonText = jsonText + '{"title":"[COLOR gold]'+episode_title+'[/COLOR]","link":"'+linkUrl+'",'
+                jsonText = jsonText + '"thumbnail":"'+episode_image+'",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"info":"'+episode_plot+'"}'
+                numIt=numIt+1
+        
+        jsonText = jsonText + "]}]}"
+
+    
+
+    #logga("JSON_FINAL: "+jsonText)
 
     video_urls = []
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
-
+def remove_control_chars(s: str) -> str:
+    if not s:
+        return ""
+    return ''.join(c for c in s if ord(c) >= 32)
 
 
 
