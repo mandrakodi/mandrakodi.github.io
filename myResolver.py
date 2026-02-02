@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.201'
+versione='1.2.202'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 27.01.2026
+# Last update: 01.02.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -7538,6 +7538,86 @@ def vividmosaica(parIn):
     video_urls.append((src+"|Referer=https://vividmosaica.com/", "[COLOR lime]PLAY STREAM AL[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
     return video_urls
 
+def mac_list_check(url, wait=2000):
+    from portal_api import PortalApi
+    import re
+    mac = ""
+    if "_@_" in url:
+        arr = url.split("_@_")
+        url = arr[0]
+        mac = arr[1]
+    
+    
+    if mac != "":
+        portal = PortalApi(url=url, mac=mac)
+    else:
+        portal = PortalApi(url)
+    url = portal.get_link("ffmpeg%20http://localhost/ch/1823_&series=")
+    logga("PORTAL_URL: "+url)
+    try:
+        url = url.split(" ")[1]
+    except:
+        pass
+
+    expr = r'(http.*?://.*?:[\d]+/)(.*?)/(.*?)/.*?$'
+    matches = re.compile(expr, re.IGNORECASE).findall(url)[0]
+    base_url = matches[0]
+    username = matches[1]
+    password = matches[2]
+    l_type = "m3u"
+
+    url = base_url + "get.php?username=" + username + "&password=" + password + "&type=" + l_type
+    logga("URL_MAC: "+url)
+    video_urls= []
+    video_urls.append(("ignoreMe", "[COLOR lime]PLAY STREAM AL[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
+    return video_urls
+
+    """
+    try:
+        portal = PortalApi(url)
+        if mac != "":
+            portal = PortalApi(url=url, mac=mac)
+        url = portal.get_link("ffmpeg%20http://localhost/ch/1823_&series=")
+        logga(url)
+        try:
+            url = url.split(" ")[1]
+        except:
+            pass
+
+        expr = r'(http.*?://.*?:[\d]+/)(.*?)/(.*?)/.*?$'
+        matches = re.compile(expr, re.IGNORECASE).findall(url)[0]
+        base_url = matches[0]
+        username = matches[1]
+        password = matches[2]
+        l_type = "m3u"
+
+        url = base_url + "get.php?username=" + username + "&password=" + password + "&type=" + l_type
+        logga("URL_MAC: "+url)
+        video_urls= []
+        video_urls.append(("ignoreMe", "[COLOR lime]PLAY STREAM AL[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
+        return video_urls
+    except Exception as e:
+        import traceback
+        traceback.print_stack()
+        logga("ERRORE_MAC: "+str(e))
+        pass
+    """
+
+def mediahosting(parIn):
+    player_url="https://mediahosting.space/embed/player?stream="+parIn
+    headers = {"Referer": "https://mediahosting.space/"}
+    r = requests.get(player_url, headers=headers, timeout=15)
+    js_code=r.text
+    match = re.search(r'<source src="(.*?)"', js_code, re.DOTALL)
+    src = "ignore"
+    if match:
+        src = match.group(1) 
+    logga("URL_MEDIA: "+src)
+    video_urls= []
+    video_urls.append((src, "[COLOR lime]PLAY STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
+    return video_urls
+    
+
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
@@ -7615,7 +7695,9 @@ def run (action, params=None):
         "mototv":mototv,
         "sportzx":sportzx,
         "sports99":sports99,
+        "mediahosting":mediahosting,
         "vividmo":vividmosaica,
+        "checkMac":mac_list_check,
         'showMsg':showMsg
     }
 
