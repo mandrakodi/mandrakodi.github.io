@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.202'
+versione='1.2.203'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 01.02.2026
+# Last update: 06.02.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1647,7 +1647,7 @@ def PlayStream(link):
     }
     s = requests.Session()
     
-    urlAuth="https://dokoplay.xyz/premiumtv/daddylive.php?id="+link
+    urlAuth="https://codepcplay.fun/premiumtv/daddyhd.php?id="+link
     fu = s.get(urlAuth, headers=headers)
     logga ("AUTH_PAGE: "+fu.text)
 
@@ -1667,8 +1667,8 @@ def PlayStream(link):
 
     headers = {
         'user-agent': randomUa,
-        'referer': "https://dokoplay.xyz/",
-        'origin': "https://dokoplay.xyz"
+        'referer': "https://codepcplay.fun/",
+        'origin': "https://codepcplay.fun"
     }
     urlAuth="https://top2new.kiko2.ru/auth.php?channel_id=premium"+link+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
     dataJ2 = s.get(urlAuth, headers=headers)
@@ -2064,7 +2064,7 @@ def sportOnline(parIn=None):
     }
     s = requests.Session()
     fu = s.get(parIn, headers=headers)
-    find = re.findall('<iframe src="(.*?)"', fu.text)[0]
+    find = re.findall('by wgstream.sx--><iframe src="(.*?)"', fu.text)[0]
     if (find[0:1]=="/"):
         find="https:"+find
     logga('IFRAME_SPONL: '+find)
@@ -2665,7 +2665,7 @@ def m3uPlus(parIn=None):
                 jsonText += ','
             numIt += 1
             
-            jsonText = jsonText + '{"title":"[COLOR lime]'+name+'[/COLOR]","link":"'+linkUrl+'|!User-Agent=VLC/3.0.9 LibVLC/3.0.9",'
+            jsonText = jsonText + '{"title":"[COLOR lime]'+name+'[/COLOR]","link":"'+linkUrl+'",'
             jsonText = jsonText + '"thumbnail":"'+stream_icon+'",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"info":"by MandraKodi"}'
@@ -2743,7 +2743,7 @@ def m3uPlus(parIn=None):
                 jsonText += ','
             numIt += 1
             
-            jsonText = jsonText + '{"title":"[COLOR lime]'+name+'[/COLOR]","link":"'+linkUrl+'|!User-Agent=VLC/3.0.9 LibVLC/3.0.9",'
+            jsonText = jsonText + '{"title":"[COLOR lime]'+name+'[/COLOR]","link":"'+linkUrl+'",'
             jsonText = jsonText + '"thumbnail":"'+stream_icon+'",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"info":"by MandraKodi"}'
@@ -6361,12 +6361,12 @@ def resolve_link(url):
     try:
         headers = {
             'user-agent': user_agent,
-            'referer': "https://daddyhd.com/"
+            'referer': "https://dlhd.link/"
         }
         s = requests.Session()
         
         
-        iframe_url = "https://epicplayplay.cfd/premiumtv/daddyhd.php?id="+url
+        iframe_url = "https://codepcplay.fun/premiumtv/daddyhd.php?id="+url
         response = s.get(iframe_url, headers=headers)
         js = response.text
         logga ("SOURCE2 ==> "+js)
@@ -6412,7 +6412,7 @@ def resolve_link(url):
 
         heartbeat= "https://chevy.kiko2.ru/heartbeat"
         
-        referer="https://epicplayplay.cfd"
+        referer="https://codepcplay.fun"
         heartbeat_headers = {
             'Accept': '*/*',
             "X-User-Agent": user_agent,
@@ -6755,6 +6755,8 @@ def showMsg(parIn):
     msgBox(parIn)
 
 def sansat(parIn):
+    return vividmosaica(parIn)
+    """
     import ast
     page="https://vividmosaica.com/embed3.php?player=desktop&live=do"+parIn
     head={
@@ -6774,6 +6776,7 @@ def sansat(parIn):
     video_urls = []
     video_urls.append((finalUrl+"|Referer=https://vividmosaica.com/&Origin=https://vividmosaica.com&User-Agent=Mozilla", "[COLOR lime]PLAY STREAM[/COLOR]"))
     return video_urls
+    """
 
 
 
@@ -7616,7 +7619,7 @@ def mediahosting(parIn):
     video_urls= []
     video_urls.append((src, "[COLOR lime]PLAY STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
     return video_urls
-    
+
 
 def run (action, params=None):
     logga('Run version '+versione)
