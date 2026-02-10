@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.204'
+versione='1.2.205'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 06.02.2026
+# Last update: 10.02.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -4454,10 +4454,11 @@ def vavooChPlay(parIn):
     if resolved:
         logga("Link risolto con metodo: "+method)
         logga(resolved)
-        video_urls.append((resolved, "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
+        video_urls.append((parIn, "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
+        video_urls.append((resolved, "[COLOR gold]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
     else:
         logga("Impossibile risolvere il link")
-        video_urls.append(("ignore", "[COLOR red]NO LINK FOUND[/COLOR]", "PLAY VIDEO"))
+        video_urls.append((parIn, "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
     
     return video_urls
 
