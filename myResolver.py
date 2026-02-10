@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.203'
+versione='1.2.204'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -6977,36 +6977,40 @@ def mototv(parIn):
 
 class StreamSportsClient:
     from typing import Optional, Dict, List
+    
+
     def __init__(self, user="streamsports99", plan="vip"):
         self.user = user
         self.plan = plan
         self.base_api = "https://api.cdn-live.tv/api/v1"
         self.player_referer = "https://streamsports99.su/"
 
-    # -------------------------
-    # Utility
-    # -------------------------
-    @staticmethod
-    def convert_base(s: str, base: int) -> int:
+    
+    def convert_base(self, s, base):
         result = 0
         for i, digit in enumerate(reversed(s)):
             result += int(digit) * (base ** i)
         return result
 
-    # -------------------------
-    # JS decoding
-    # -------------------------
-    def decode_obfuscated_js(self, html: str) -> Optional[str]:
-        start = html.find('}("') + 3
-        if start == 2:
+    def decode_obfuscated_js(self, html: str) -> str:
+        import urllib.parse
+        start_marker = '}("'
+        start_idx = html.find(start_marker)
+
+        if start_idx == -1:
             return None
 
-        end = html.find('",', start)
-        encoded = html[start:end]
+        actual_start = start_idx + len(start_marker)
+        end_idx = html.find('",', actual_start)
 
-        params_pos = end + 2
+        if end_idx == -1:
+            return None
+
+        encoded = html[actual_start:end_idx]
+        #logga("ENCODED: "+encoded)
+        params_pos = end_idx + 2
         params = html[params_pos:params_pos + 100]
-
+        #logga("PARAMS: "+params)
         m = re.search(r'(\d+),\s*"([^"]+)",\s*(\d+),\s*(\d+),\s*(\d+)', params)
         if not m:
             return None
@@ -7014,11 +7018,14 @@ class StreamSportsClient:
         charset = m.group(2)
         offset = int(m.group(3))
         base = int(m.group(4))
-
+        #logga("charset: "+m.group(2))
+        #logga("offset: "+m.group(3))
+        #logga("base: "+m.group(4))
         decoded = ""
         parts = encoded.split(charset[base])
 
         for part in parts:
+            logga("part: "+part)
             if part:
                 temp = part
                 for idx, c in enumerate(charset):
@@ -7026,22 +7033,174 @@ class StreamSportsClient:
 
                 val = self.convert_base(temp, base)
                 decoded += chr(val - offset)
+        #logga("decoded: "+decoded)
+        return urllib.parse.unquote(decoded)
 
-        return myParse.unquote(decoded)
+    def get_stream_url(self, player_url):
+        try:
+            headers = {'Referer': self.player_referer,
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+            r = requests.get(player_url, headers=headers, timeout=15)
+            r.raise_for_status()
+            html = r.text
+            #logga("JS_OBF: "+html)
+            js = self.decode_obfuscated_js(html)
+            js = js.replace("\\'", "'").replace('\\"', '"')
+            #logga("JS_DEOBF: "+js)
+            if not js:
+                return None
 
-    # -------------------------
-    # Stream URL extraction
-    # -------------------------
-    @staticmethod
-    def find_stream_url(js_code: str) -> Optional[dict]:
-        pattern = r'["\']([^"\']*index\.m3u8\?token=[^"\']+)["\']'
-        match = re.search(pattern, js_code)
+            deob_result = self.auto_deobfuscate_js(js)
 
-        if not match:
+            url = deob_result.get('concatenations', [])[1]['decoded'] if len(deob_result.get('concatenations', [])) > 1 else ''
+            #print(deob_result)
+            #return find_stream_url(js)
+            return {'url': url} 
+        except Exception as err:
+            import traceback
+            errMsg="ERRORE MANDRAKODI: {0}".format(err)
+            traceback.print_exc()
+            dialog = xbmcgui.Dialog()
+            dialog.ok("Mandrakodi", errMsg)
             return None
+        
+    def get_streams(self, channels):
+        """
+        Recupera gli stream dai canali forniti
+        """
+        if not channels:
+            print("Nessun canale trovato")
+            return
 
-        return {"url": match.group(1)}
+        print(f"Trovati {len(channels)} canali\n")
 
+        results = []
+
+        for i, ch in enumerate(channels, 1):
+            #if ch['code'] != 'it': continue
+
+            if ch['status'] == 'offline':
+                continue
+            #forse si puo comunque provare a prendere lo stream anche se offline
+
+            stream = self.get_stream_url(ch['url'])
+            if not stream:
+                continue
+            
+            print(f"{i}. {ch['name']} ({ch['code']}) - {ch['status']} - {ch['url']}")
+            print(f"   Stream: {stream['url']}")       
+
+
+    def normalize_js_code(self, js_code: str) -> str:
+        # pulizia js
+        js_code = js_code.replace("\\'", "'").replace('\\"', '"').replace("\'", "'")
+        js_code = re.sub(r'\s+', ' ', js_code)
+        return js_code
+
+    def pum_decode(self, s: str) -> str:
+        import base64
+        s = s.replace('-', '+').replace('_', '/')
+        while len(s) % 4 != 0:
+            s += '='
+        try:
+            raw = base64.b64decode(s)
+            return raw.decode('utf-8')
+        except Exception:
+            try:
+                raw = base64.b64decode(s)
+                return raw.decode('latin-1')
+            except Exception:
+                return None
+
+    def find_decode_function(self, js_code: str) -> str:
+        #print(js_code)
+        # pattern di ricerca di fuzioni che usano atob
+        patterns = [
+            r'function\s+(\w+)\s*\(\s*str\s*\)\s*\{[^}]{0,500}atob',
+            r'function\s+(\w+)\s*\(\s*\w+\s*\)\s*\{[^}]{0,500}atob',
+            r'(?:const|let|var)\s+(\w+)\s*=\s*function\s*\(\s*str\s*\)\s*\{[^}]{0,500}atob',
+            r'function\s+(\w+)\s*\([^)]+\)\s*\{(?:[^}]|[\r\n]){0,500}(?:replace.*atob|atob.*replace)',
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, js_code, re.IGNORECASE | re.DOTALL)
+            if match:
+                return match.group(1)
+
+        return None
+
+    def extract_base64_strings(self, js_code: str) -> dict:
+        pattern = r'["\']([A-Za-z0-9_\-+=]{8,})["\']' 
+        matches = re.findall(pattern, js_code)
+
+        base64_dict = {}
+        for match in matches:
+            decoded = self.pum_decode(match)
+            #print(decoded)
+            if decoded:
+                if all(ord(c) < 128 and (c.isprintable() or c in '\\n\\r\\t') for c in decoded):
+                    base64_dict[match] = decoded
+
+        return base64_dict
+
+    def find_variable_assignments(self, js_code: str) -> dict:
+        pattern = r'(?:const|let|var)\s+(\w+)\s*=\s*["\']([^"\']+)["\']'
+        matches = re.findall(pattern, js_code)
+        return {name: value for name, value in matches}
+
+    def find_concatenations(self, js_code: str, var_dict: dict, decode_func_name: str) -> list:
+        pattern = rf'(?:const|let|var)\s+(\w+)\s*=\s*((?:{decode_func_name}\([^)]+\)\s*\+?\s*)+);'
+        matches = re.findall(pattern, js_code, re.MULTILINE | re.DOTALL)
+
+        results = []
+        for var_name, concat_expr in matches:
+            func_calls = re.findall(rf'{decode_func_name}\((\w+)\)', concat_expr)
+
+            decoded_parts = []
+            for arg in func_calls:
+                if arg in var_dict:
+                    decoded = self.pum_decode(var_dict[arg])
+                    if decoded:
+                        decoded_parts.append(decoded)
+
+            if decoded_parts:
+                full_string = ''.join(decoded_parts)
+                results.append({
+                    'variable': var_name,
+                    'parts': func_calls,
+                    'decoded': full_string
+                })
+
+        return results
+
+    def auto_deobfuscate_js(self, js_code: str) -> dict:
+
+        js_code = self.normalize_js_code(js_code)
+        decode_func_name = self.find_decode_function(js_code)
+
+        if not decode_func_name:
+            return {
+                'error': 'Nessuna funzione di decode trovata',
+                'decode_function': None,
+                'variables': {},
+                'concatenations': [],
+                'all_base64_decoded': {}
+            }
+
+        var_dict = self.find_variable_assignments(js_code)
+        concatenations = self.find_concatenations(js_code, var_dict, decode_func_name)
+        all_base64 = self.extract_base64_strings(js_code)
+
+        return {
+            'decode_function': decode_func_name,
+            'variables': var_dict,
+            'concatenations': concatenations,
+            'all_base64_decoded': all_base64
+        }
+
+
+    
     # -------------------------
     # API fetchers
     # -------------------------
@@ -7095,56 +7254,6 @@ class StreamSportsClient:
         except Exception as e:
             print(f"Errore nel parsing: {e}")
             return None
-
-    # -------------------------
-    # Stream resolver
-    # -------------------------
-    def get_stream_url(self, player_url: str) -> Optional[dict]:
-        """
-        try:
-            headers = {"Referer": self.player_referer}
-            r = requests.get(player_url, headers=headers, timeout=15)
-            r.raise_for_status()
-            logga("JS_OBFUSCATED ==> "+r.text)
-            js = self.decode_obfuscated_js(r.text)
-            if not js:
-                return {"url": "ignore_js"}
-            logga("JS ==> "+js)
-            return self.find_stream_url(js)
-        except Exception:
-            return {"url": "ignore_me"}
-        """
-
-        headers = {"Referer": self.player_referer}
-        r = requests.get(player_url, headers=headers, timeout=15)
-        r.raise_for_status()
-        #logga("JS_OBFUSCATED ==> "+r.text)
-        js = self.decode_obfuscated_js(r.text)
-        if not js:
-            return {"url": "ignore_js"}
-        logga("JS ==> "+js)
-        return self.find_stream_url(js)
-
-    # -------------------------
-    # Public methods
-    # -------------------------
-    def get_streams(self, channels: list):
-        if not channels:
-            print("Errore recupero canali")
-            return
-
-        print(f"Trovati {len(channels)} canali\n")
-
-        for i, ch in enumerate(channels, 1):
-            if ch.get("status") == "offline":
-                continue
-
-            stream = self.get_stream_url(ch["url"])
-            if not stream:
-                continue
-
-            print(f"{i}. {ch['name']} ({ch['code']}) - {ch['status']}")
-            print(f"   Stream: {stream['url']}")
 
     def get_live_tv(self):
         print("Recupero canali TV Live\n")
@@ -7217,10 +7326,10 @@ def sports99(parIn):
             url=stream["url"]
         except Exception as e:
             logga("ERRORE API. TRY FREE_PLAN")
-            return (sports99("3__"+parIn))
+            return (sports99("3__"+par))
         titolo="[COLOR gold]PLAY STREAM[/COLOR]"
         jsonText = jsonText + '{"title":"'+titolo+'",'
-        jsonText = jsonText + '"link":"'+url+'",'
+        jsonText = jsonText + '"link":"'+url+'|Referer=https://cdn-live.tv/&Origin=https://cdn-live.tv",'
         jsonText = jsonText + '"thumbnail":"https://www.metatvapk.com/wp-content/uploads/2025/04/image-1.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"PLAY"}'
@@ -7237,7 +7346,7 @@ def sports99(parIn):
             logga("ERRORE API")
         titolo="[COLOR gold]PLAY STREAM[/COLOR]"
         jsonText = jsonText + '{"title":"'+titolo+'",'
-        jsonText = jsonText + '"link":"'+url+'",'
+        jsonText = jsonText + '"link":"'+url+'|Referer=https://cdn-live.tv/&Origin=https://cdn-live.tv",'
         jsonText = jsonText + '"thumbnail":"https://www.metatvapk.com/wp-content/uploads/2025/04/image-1.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"PLAY"}'
@@ -7245,7 +7354,7 @@ def sports99(parIn):
 
     jsonText = jsonText + "]}"
     
-    
+    logga("JSON_99: "+jsonText)
     video_urls= []
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
