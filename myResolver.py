@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.205'
+versione='1.2.206'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 10.02.2026
+# Last update: 11.02.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -3879,7 +3879,7 @@ def taxi(parIn):
     s = requests.Session()
     r = s.get(url, headers=headers)
     page=r.text.replace("\n", "").replace("\r", "").replace("\t", "")
-    #logga("FIND HOSTS AT "+url+"\n"+page)
+    logga("FIND HOSTS AT "+url+"\n"+page)
     ret1 = "by @mandrakodi"
     express1 = r'<title>(.*?)</title>'
     ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(page)[0]
@@ -3894,7 +3894,10 @@ def taxi(parIn):
         express3 = r'<a href="#" class="mr" data-link="(.*?)">'
         ret2 = re.compile(express3, re.MULTILINE | re.DOTALL).findall(mirror)[0]
         if "supervideo" in ret2: 
-            ret2 = re.compile(express3, re.MULTILINE | re.DOTALL).findall(mirror)[1]
+            try:
+                ret2 = re.compile(express3, re.MULTILINE | re.DOTALL).findall(mirror)[1]
+            except:
+                pass
         link=ret2
         if (numIt > 0):
             jsonText = jsonText + ','  
