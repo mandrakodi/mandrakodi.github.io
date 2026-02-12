@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.206'
+versione='1.2.207'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 11.02.2026
+# Last update: 12.02.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1882,7 +1882,10 @@ def proData(parIn=None, flat=0):
     if flat==1:
         return video_url
     video_urls.append((video_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi"))
-    video_urls.append((video_url+"&verifypeer=false", "[COLOR orange]PLAY STREAM 2 [/COLOR]", "by @MandraKodi"))
+    if "dropload.pro" in parIn:
+        video_urls.append((video_url+"|Referer=https://dropload.pro/&Origin=https://dropload.pro", "[COLOR orange]PLAY STREAM 2 (DROP)[/COLOR]", "by @MandraKodi"))
+    else:
+        video_urls.append((video_url+"&verifypeer=false", "[COLOR orange]PLAY STREAM 2 [/COLOR]", "by @MandraKodi"))
     return video_urls
 
 
