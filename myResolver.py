@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.207'
+versione='1.2.208'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 12.02.2026
+# Last update: 14.02.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -2109,7 +2109,12 @@ def wigi(parIn=None):
         find = re.findall('eval\(function(.+?.+)', fu.text)[1]
         unpack = jsunpack.unpack(find)
         c = re.findall('var src="([^"]*)',unpack)[0]
-        video_url = c + '|referer=' + wigiUrl
+        
+        parsed = urlparse(wigiUrl)
+        protocollo = parsed.scheme
+        host = parsed.netloc
+        ref=protocollo+"://"+host
+        video_url = c + '|Referer=' + ref + '/&Origin=' + ref
     except:
         logga("NO PACKED \n"+fu.text)
         pass
@@ -2119,7 +2124,7 @@ def wigi(parIn=None):
     msg = "[COLOR lime]PLAY STREAM[/COLOR]"
     if video_url == '' or video_url == wigiUrl:
         msg = "NO LINK FOUND"
-    video_urls.append((video_url+"&connection=keepalive", msg))
+    video_urls.append((video_url+"&User-Agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36", msg))
     return video_urls
 
 def urlsolver(url):
