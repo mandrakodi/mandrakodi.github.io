@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.210'
+versione='1.2.211'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -7756,6 +7756,72 @@ def streamtp(parIn):
     video_urls.append((src, "[COLOR lime]PLAY "+parIn.upper()+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
     return video_urls
 
+def aceSearch(parIn):
+    import json
+    links = []
+    clipB=""
+    keyboard = xbmc.Keyboard(clipB,'Inserisci Valore')
+    keyboard.doModal()
+    if not (keyboard.isConfirmed() == False):
+        userInput = keyboard.getText().replace(" ", "+")
+        if not (userInput == ''):
+            if PY3:
+                import urllib.parse as myParse
+            else:
+                import urllib as myParse
+
+            
+            #strUrl = url + userInput.replace(" ", "+")
+            parIn = userInput
+        else:
+            logga("NO INPUT")
+            mesNoInput='{"SetViewMode":"500","items":[{"title":"[COLOR red]NO INPUT[/COLOR]","link":"ignore","thumbnail":"https://e7.pngegg.com/pngimages/56/148/png-clipart-computer-icons-wrong-miscellaneous-blue-thumbnail.png","fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg","info":"NO INPUT"}]}'
+            links.append((mesNoInput, "PLAY VIDEO", "No info", "noThumb", "json"))
+            return links
+    else:
+        logga("EXIT KEYBOARD")
+        mesNoInput='{"SetViewMode":"500","items":[{"title":"[COLOR red]NO INPUT[/COLOR]","link":"ignore","thumbnail":"https://e7.pngegg.com/pngimages/56/148/png-clipart-computer-icons-wrong-miscellaneous-blue-thumbnail.png","fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg","info":"NO INPUT"}]}'
+        links.append((mesNoInput, "PLAY VIDEO", "No info", "noThumb", "json"))
+        return links
+    
+    url = "https://search-ace.stream/search?query="+parIn
+    logga("GET JSON FROM: "+url)
+
+    jsonText='{"SetViewMode":"503","items":['
+    numIt=0
+    try:
+        response = requests.get(
+            url,
+            timeout=15,
+            headers={"User-Agent": "Mozilla/5.0"}
+        )
+
+        response.raise_for_status()
+        data = response.json()  # Qui è già una lista
+
+        
+
+        if isinstance(data, list):
+            for item in data:
+                tit=item.get("translated_name", "")
+                aceId=item.get("content_id", "")
+                if (numIt > 0):
+                    jsonText = jsonText + ','
+                jsonText = jsonText + '{"title":"[COLOR gold]'+tit+'[/COLOR]","link":"acestream://'+aceId+'",'
+                jsonText = jsonText + '"thumbnail":"https://acestreamid.com/public/images/logo_site.jpg",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"info":"by MandraKodi"}'
+                numIt=numIt+1     
+                
+
+    except Exception as e:
+        logga("ERRORE")
+    
+    jsonText = jsonText + "]}"
+    logga('JSON-ANY: '+jsonText)
+    links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return links
+
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
@@ -7837,6 +7903,7 @@ def run (action, params=None):
         "vividmo":vividmosaica,
         "streamtp":streamtp,
         "checkMac":mac_list_check,
+        "aceSearch":aceSearch,
         'showMsg':showMsg
     }
 
