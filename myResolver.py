@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.211'
+versione='1.2.212'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -7797,7 +7797,7 @@ def aceSearch(parIn):
         )
 
         response.raise_for_status()
-        data = response.json()  # Qui è già una lista
+        data = response.json() 
 
         
 
