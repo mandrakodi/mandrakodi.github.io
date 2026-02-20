@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.209'
+versione='1.2.210'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 19.02.2026
+# Last update: 20.02.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -7742,6 +7742,19 @@ def mediahosting(parIn):
     video_urls.append((src, "[COLOR lime]PLAY STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
     return video_urls
 
+def streamtp(parIn):
+    player_url="https://streamtp501.com/global1.php?stream="+parIn
+    headers = {"Referer": "https://streamtp501.com/"}
+    r = requests.get(player_url, headers=headers, timeout=15)
+    js_code=r.text
+    match = re.search(r'playbackURL = "(.*?)"', js_code, re.DOTALL)
+    src = "ignore"
+    if match:
+        src = match.group(1) 
+    logga("URL_MEDIA: "+src)
+    video_urls= []
+    video_urls.append((src, "[COLOR lime]PLAY "+parIn.upper()+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
+    return video_urls
 
 def run (action, params=None):
     logga('Run version '+versione)
@@ -7822,6 +7835,7 @@ def run (action, params=None):
         "sports99":sports99,
         "mediahosting":mediahosting,
         "vividmo":vividmosaica,
+        "streamtp":streamtp,
         "checkMac":mac_list_check,
         'showMsg':showMsg
     }
