@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.212'
+versione='1.2.213'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 20.02.2026
+# Last update: 26.02.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1761,7 +1761,7 @@ def amstaffTest(parIn):
     if key64!="0000":
         liz.setProperty('inputstream.adaptive.drm_legacy', drmType+'|'+key64)
     
-    ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
+    ua=myParse.quote("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0")
     if "dazn" in link or "dai.google.com" in link:
         #ua="Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.9.7 Chrome/56.0.2924.122 Safari/537.36 Sky_STB_ST412_2018/1.0.0 (Sky, EM150UK,)"
         ua=myParse.quote("Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.41 (KHTML, like Gecko) Large Screen Safari/537.41 LG Browser/7.00.00(LGE; WEBOS1; 05.06.10; 1); webOS.TV-2014; LG NetCast.TV-2013 Compatible (LGE, WEBOS1, wireless)")
@@ -1804,10 +1804,13 @@ def amstaffTest(parIn):
     else:
         arrF=link.split("/")
         host="https://"+arrF[2]
+        logga("HOST_MPD: "+host)
+        logga("UA_MPD: "+ua)
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
     if token != "":
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false') 
+    
     return liz
 
 def daznToken(parIn):
@@ -7822,6 +7825,130 @@ def aceSearch(parIn):
     links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return links
 
+def zappr(parIn):
+    import json
+    links = []
+    url = "https://channels.zappr.stream/it/dtt/national.json"
+    logga("GET JSON FROM: "+url)
+
+    jsonText='{"SetViewMode":"503","items":['
+    numIt=0
+    try:
+        response = requests.get(
+            url,
+            timeout=15,
+            headers={"User-Agent": "Mozilla/5.0"}
+        )
+
+        response.raise_for_status()
+        logga("RETURN JSON: "+response.text)
+        data = response.json() 
+
+        for item in data["channels"]:
+            lcn=item.get("lcn", "")
+            tit=item.get("name", "")
+            urlStr=item.get("url", "")
+            tipo=item.get("type", "")
+            if tipo !="hls" and tipo!="dash":
+                continue
+            
+            imageStr="https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"
+
+            if (numIt > 0):
+                jsonText = jsonText + ','
+            jsonText = jsonText + '{"title":"[COLOR gold]['+str(lcn)+'] '+tit+'[/COLOR]",'
+            if tipo=="hls" or tipo=="":
+                if "zappr://" in urlStr:
+                    arrU=urlStr.split("/")
+                    parSky=arrU[-1]
+                    jsonText = jsonText + '"myresolve":"skyTV@@'+parSky+'",'
+                else:    
+                    #jsonText = jsonText + '"link":"'+urlStr+'",'
+                    jsonText = jsonText + '"myresolve":"amstaff@@'+urlStr+'|0000",'
+            elif tipo=="dash":
+                license = item.get("license")
+                if license and license=="clearkey":
+                    urlStr = urlStr + "|" + item.get("licensedetails")
+                else:
+                    urlStr = urlStr + "|0000"
+                jsonText = jsonText + '"myresolve":"amstaff@@' + urlStr + '",'
+            else:
+                jsonText = jsonText + '"link":"'+urlStr+'",'
+            jsonText = jsonText + '"thumbnail":"'+imageStr+'",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"'+tipo+'"}'
+            numIt=numIt+1
+
+            #CANALI EXTRA
+            extraCh = item.get("hbbtv", [])    
+            if extraCh:
+                for chExt in extraCh:
+                    sublcn=chExt.get("sublcn", "")
+                    titExt = chExt.get("name", "")
+                    tipoExt = chExt.get("type", "")
+                    urlExt = chExt.get("url", "")
+                    if tipoExt != "hls" and tipoExt != "dash":
+                        continue
+                    
+                    if (numIt > 0):
+                        jsonText = jsonText + ','
+                    jsonText = jsonText + '{"title":"[COLOR cyan]['+str(lcn)+'-'+str(sublcn)+'] '+titExt+'[/COLOR]",'
+                    if tipoExt == "hls" or tipoExt == "":
+                        #jsonText = jsonText + '"link":"'+urlExt+'",'
+                        jsonText = jsonText + '"myresolve":"amstaff@@'+urlExt+'|0000",'
+                    elif tipoExt == "dash":
+                        license = item.get("license")
+                        if license and license=="clearkey":
+                            urlExt = urlExt +"|"+item.get("licensedetails")
+                        else:
+                            urlExt = urlExt +"|0000"
+                        jsonText = jsonText + '"myresolve":"amstaff@@'+urlExt+'",'
+                    else:
+                        jsonText = jsonText + '"link":"'+urlExt+'",'
+                    jsonText = jsonText + '"thumbnail":"'+imageStr+'",'
+                    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                    jsonText = jsonText + '"info":"'+tipoExt+'"}'
+                    numIt=numIt+1
+
+            #CANALI GEOBLOCK
+            geoCh = item.get("geoblock", {})    
+            if geoCh:
+                if isinstance(geoCh, bool):
+                    continue
+                tipoGeo = geoCh.get("type", "")
+                urlGeo = geoCh.get("url", "")
+                
+                if (numIt > 0):
+                    jsonText = jsonText + ','
+                jsonText = jsonText + '{"title":"[COLOR magenta]['+str(lcn)+'] '+tit+'[/COLOR]",'
+                if tipoGeo=="hls" or tipoGeo=="":
+                    #jsonText = jsonText + '"link":"'+urlGeo+'",'
+                    jsonText = jsonText + '"myresolve":"amstaff@@'+urlGeo+'|0000",'
+                elif tipoGeo=="dash":
+                    license = geoCh.get("license")
+                    if license and license=="clearkey":
+                        urlGeo = urlGeo + "|" + geoCh.get("licensedetails")
+                    else:
+                        urlGeo = urlGeo + "|0000"
+                    jsonText = jsonText + '"myresolve":"amstaff@@' + urlGeo + '",'
+                else:
+                    jsonText = jsonText + '"link":"'+urlGeo+'",'
+                jsonText = jsonText + '"thumbnail":"'+imageStr+'",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"info":"'+tipoGeo+'"}'
+                numIt=numIt+1
+
+
+    except Exception as e:
+        msgErr="ERRORE: "+str(e)
+        logga(msgErr)
+        msgBox(msgErr)
+    
+    jsonText = jsonText + "]}"
+    #logga('JSON-ANY: '+jsonText)
+    links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return links
+
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
@@ -7904,6 +8031,7 @@ def run (action, params=None):
         "streamtp":streamtp,
         "checkMac":mac_list_check,
         "aceSearch":aceSearch,
+        "zappr":zappr,
         'showMsg':showMsg
     }
 
