@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.213'
+versione='1.2.214'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -7824,9 +7824,62 @@ def aceSearch(parIn):
     logga('JSON-ANY: '+jsonText)
     links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return links
+def samsung(parIn):
+    import json
+    links = []
+    url = "https://fast.zappr.stream/it/channels.json"
+    logga("GET JSON FROM: "+url)
+
+    jsonText='{"SetViewMode":"503","items":['
+    numIt=0
+    try:
+        response = requests.get(
+            url,
+            timeout=15,
+            headers={"User-Agent": "Mozilla/5.0"}
+        )
+
+        response.raise_for_status()
+        logga("RETURN JSON: "+response.text)
+        data = response.json() 
+
+        for item in data["channels"]:
+            sep=item.get("categorySeparator", "")
+            if sep:
+                if sep=="Samsung TV Plus":
+                    continue
+                else:
+                    break
+            lcn=item.get("lcn", "")
+            tit=item.get("name", "")
+            urlStr=item.get("url", "")
+            tipo=item.get("type", "")
+            logo=item.get("logo", "")
+            if tipo !="hls" and tipo!="dash":
+                continue
+            
+            if (numIt > 0):
+                jsonText = jsonText + ','
+            jsonText = jsonText + '{"title":"[COLOR gold]['+str(lcn)+'] '+tit+'[/COLOR]",'
+            jsonText = jsonText + '"myresolve":"amstaff@@'+urlStr+'|0000",'
+            jsonText = jsonText + '"thumbnail":"'+logo+'",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"'+tipo+'"}'
+            numIt=numIt+1
+    except Exception as e:
+        msgErr="ERRORE: "+str(e)
+        logga(msgErr)
+        msgBox(msgErr)
+    
+    jsonText = jsonText + "]}"
+    #logga('JSON-ANY: '+jsonText)
+    links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return links
 
 def zappr(parIn):
     import json
+    if parIn=="samsung":
+        return samsung(parIn)
     links = []
     url = "https://channels.zappr.stream/it/dtt/national.json"
     logga("GET JSON FROM: "+url)
