@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.215'
+versione='1.2.216'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1894,10 +1894,10 @@ def proData(parIn=None, flat=0):
     if flat==1:
         return video_url
     video_urls.append((video_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi"))
-    if "dropload.pro" in parIn:
-        video_urls.append((video_url+"|Referer=https://dropload.pro/&Origin=https://dropload.pro", "[COLOR orange]PLAY STREAM 2 (DROP)[/COLOR]", "by @MandraKodi"))
-    else:
-        video_urls.append((video_url+"&verifypeer=false", "[COLOR orange]PLAY STREAM 2 [/COLOR]", "by @MandraKodi"))
+    parsed = urlparse(parIn)
+    host = parsed.hostname
+    video_urls.append((video_url+"|Refere=https://"+host+"/&Origin=https://"+host+"&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0&connection=keep-alive", "[COLOR orange]PLAY STREAM 2 [/COLOR]", "by @MandraKodi"))
+    
     return video_urls
 
 
@@ -3938,7 +3938,7 @@ def taxi(parIn):
         if (numIt > 0):
             jsonText = jsonText + ','  
         
-        jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"proData@@'+link+'",'
+        jsonText = jsonText + '{"title":"[COLOR lime]'+ep+'[/COLOR]","myresolve":"risolvi@@'+link+'",'
         jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"'+tito.replace('"', '')+'"}'
