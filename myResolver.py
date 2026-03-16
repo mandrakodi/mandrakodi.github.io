@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.214'
+versione='1.2.215'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 26.02.2026
+# Last update: 16.03.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1414,7 +1414,7 @@ def freeshot(codeIn=None):
     #urlAuth="https://popcdn.day/go.php?stream="+codeIn
     urlAuth="https://popcdn.day/player/"+codeIn
     fu = s.get(urlAuth, headers=headers)
-    #logga("FREE_PAGE: "+fu.text)
+    logga("FREE_PAGE: "+fu.text)
 
     '''
     frameUrl = preg_match(fu.text, 'frameborder="0" src="(.*?)"')
@@ -1739,6 +1739,9 @@ def amstaffTest(parIn):
     arrT=parametro.split("|")
     link=arrT[0]
     key64=arrT[1]
+    if key64=="0:0":
+        key64="0000"
+    logga('key64: '+key64)
     token=""
     try:
       token=arrT[2]
@@ -1793,6 +1796,11 @@ def amstaffTest(parIn):
         host="http://rr.cdn.vodafone.pt"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
+    elif "nexttv.ht" in link:
+        ua=myParse.quote_plus("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36")
+        host="https://clarovideo.com"
+        liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&X-Forwarded-For=213.191.133.200&verifypeer=false')
+        liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&X-Forwarded-For=213.191.133.200&verifypeer=false')
     elif "clarovideo.com" in link:
         ua=myParse.quote_plus("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0")
         host="https://clarovideo.com"
@@ -2075,7 +2083,20 @@ def sportOnline(parIn=None):
     if (find[0:1]=="/"):
         find="https:"+find
     logga('IFRAME_SPONL: '+find)
-    return wigi(find+"|https://sportsonline.si/")
+    headers = {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
+        "Referer": "https://sportsonline.si/"
+    }
+    fu2 = s.get(find, headers=headers)
+    logga(find+"\n"+fu2.text)
+    linkSpo = re.findall('var src = "(.*?)"',fu2.text)[0]
+
+    msg = "[COLOR lime]PLAY VIDEO[/COLOR]"
+    video_urls = []
+    video_urls.append((linkSpo+"|Referer="+find+"&Origin="+find+"&User-Agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36", msg))
+    return video_urls
+
+   
 
 
 def wigi(parIn=None):
@@ -3327,7 +3348,10 @@ def ppvMenu():
     video_urls = []
 
     # Scarica la pagina
-    page = requests.get("https://ppvs.su/api/streams").text
+    api_url="https://api.ppv.sh/api/streams"
+    headers = {"Referer": "https://ppv.sh/", "Origin": "https:/ppv.sh", "Content-Type": "application/json"}
+    page = requests.get(api_url, headers=headers, timeout=15).text
+    #page = requests.get("https://ppvs.su/api/streams").text
     arrJ = json.loads(page)
 
     arrEv = []
@@ -6338,7 +6362,7 @@ def ppv_to(parIn):
     user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0'
     headers = {
         'user-agent': user_agent,
-        'referer': "https://ppvs.to/"
+        'referer': "https://ppv.sh/"
     }
     s = requests.Session()
         
@@ -7742,7 +7766,7 @@ def mediahosting(parIn):
         src = match.group(1) 
     logga("URL_MEDIA: "+src)
     video_urls= []
-    video_urls.append((src, "[COLOR lime]PLAY STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
+    video_urls.append((src+"|Referer=https://mediahosting.space/&Origin=https://mediahosting.space", "[COLOR lime]OPEN STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
     return video_urls
 
 def streamtp(parIn):
