@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.218'
+versione='1.2.219'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -7821,7 +7821,7 @@ class RusticoTvResolver:
         if not matches:
             raise Exception("Array codificato non trovato")
 
-        # prende il più grande (quello giusto)
+        # prende il piu' grande (quello giusto)
         matches.sort(key=len, reverse=True)
         return matches[0]
 
