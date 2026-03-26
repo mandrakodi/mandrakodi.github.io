@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.216'
+versione='1.2.217'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 16.03.2026
+# Last update: 26.03.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -4493,8 +4493,8 @@ def vavooChPlay(parIn):
     if resolved:
         logga("Link risolto con metodo: "+method)
         logga(resolved)
-        video_urls.append((parIn, "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
-        video_urls.append((resolved, "[COLOR gold]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
+        video_urls.append((parIn+"|Referer=https://vavoo.to/&Origin=https://vavoo.to&User-Agent=iPad", "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
+        video_urls.append((resolved+"|Referer=https://vavoo.to/&Origin=https://vavoo.to&User-Agent=iPad", "[COLOR gold]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
     else:
         logga("Impossibile risolvere il link")
         video_urls.append((parIn, "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
@@ -7065,7 +7065,7 @@ class StreamSportsClient:
         parts = encoded.split(charset[base])
 
         for part in parts:
-            logga("part: "+part)
+            #logga("part: "+part)
             if part:
                 temp = part
                 for idx, c in enumerate(charset):
@@ -7369,7 +7369,7 @@ def sports99(parIn):
             return (sports99("3__"+par))
         titolo="[COLOR gold]PLAY STREAM[/COLOR]"
         jsonText = jsonText + '{"title":"'+titolo+'",'
-        jsonText = jsonText + '"link":"'+url+'|Referer=https://cdn-live.tv/&Origin=https://cdn-live.tv",'
+        jsonText = jsonText + '"link":"'+url+'|Referer=https://cdn-live.tv/&Origin=https://cdn-live.tv&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64)",'
         jsonText = jsonText + '"thumbnail":"https://www.metatvapk.com/wp-content/uploads/2025/04/image-1.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"PLAY"}'
@@ -7756,6 +7756,7 @@ def mac_list_check(url, wait=2000):
     """
 
 def mediahosting(parIn):
+    '''
     player_url="https://mediahosting.space/embed/player?stream="+parIn
     headers = {"Referer": "https://mediahosting.space/"}
     r = requests.get(player_url, headers=headers, timeout=15)
@@ -7764,20 +7765,115 @@ def mediahosting(parIn):
     src = "ignore"
     if match:
         src = match.group(1) 
+    '''
+    src="https://cc3.screenistream.xyz:8080/stream/"+parIn+"/index.m3u8?token=T4Nz6WCt2Uwlqma4"
     logga("URL_MEDIA: "+src)
     video_urls= []
     video_urls.append((src+"|Referer=https://mediahosting.space/&Origin=https://mediahosting.space", "[COLOR lime]OPEN STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
     return video_urls
 
+
+
+class RusticoTvResolver:
+    
+    def __init__(self):
+        self.session = requests.Session()
+        self.session.headers.update({
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        })
+
+    # =============================
+    # PUBLIC METHOD
+    # =============================
+    def get_stream_url(self, page_url):
+        html = self._get_html(page_url)
+
+        encoded_array = self._find_encoded_array(html)
+        k = self._extract_k(html)
+
+        playback_url = self._decode(encoded_array, k)
+
+        # headers utili per Kodi / player
+        headers = (
+            "Referer=" + page_url +
+            "&Origin=" + self._get_origin(page_url) +
+            "&User-Agent=Mozilla/5.0"
+        )
+
+        return f"{playback_url}|{headers}"
+
+    # =============================
+    # INTERNAL METHODS
+    # =============================
+
+    def _get_html(self, url):
+        r = self.session.get(url, timeout=10)
+        r.raise_for_status()
+        return r.text
+
+    def _find_encoded_array(self, html):
+        # trova array tipo [[num,"base64"],...]
+        matches = re.findall(
+            r'(\[\[\d+,"[A-Za-z0-9+/=]+"\](?:,\[\d+,"[A-Za-z0-9+/=]+"\])+\])',
+            html
+        )
+
+        if not matches:
+            raise Exception("Array codificato non trovato")
+
+        # prende il più grande (quello giusto)
+        matches.sort(key=len, reverse=True)
+        return matches[0]
+
+    def _extract_k(self, html):
+        nums = re.findall(r'return\s+(\d+);', html)
+
+        if len(nums) < 2:
+            raise Exception("Chiave k non trovata")
+
+        return int(nums[0]) + int(nums[1])
+
+    def _decode(self, encoded_array, k):
+        import json, base64
+        data = json.loads(encoded_array)
+
+        # ordina per indice
+        data.sort(key=lambda x: x[0])
+
+        result = ""
+
+        for _, val in data:
+            decoded = base64.b64decode(val).decode()
+            numbers = re.sub(r"\D", "", decoded)
+
+            char_code = int(numbers) - k
+            result += chr(char_code)
+
+        return result
+
+    def _get_origin(self, url):
+        match = re.match(r'(https?://[^/]+)', url)
+        return match.group(1) if match else url
+
+
+
+
+
 def streamtp(parIn):
-    player_url="https://streamtp501.com/global1.php?stream="+parIn
-    headers = {"Referer": "https://streamtp501.com/"}
+    player_url="https://streamtp10.com/global1.php?stream="+parIn
+    resolver= RusticoTvResolver()
+    src = resolver.get_stream_url(player_url)
+    
+    '''
+    headers = {"Referer": "https://streamtpnew.com/"}
     r = requests.get(player_url, headers=headers, timeout=15)
     js_code=r.text
     match = re.search(r'playbackURL = "(.*?)"', js_code, re.DOTALL)
     src = "ignore"
     if match:
         src = match.group(1) 
+    '''
+
     logga("URL_MEDIA: "+src)
     video_urls= []
     video_urls.append((src, "[COLOR lime]PLAY "+parIn.upper()+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
