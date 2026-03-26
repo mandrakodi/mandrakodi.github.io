@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.217'
+versione='1.2.218'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
