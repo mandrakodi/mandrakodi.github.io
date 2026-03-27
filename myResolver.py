@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.219'
+versione='1.2.220'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -975,18 +975,50 @@ def huhu(parIn=None):
     liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
     return liz
-        
+
+def xor_decrypt(data_b64, key):
+    import base64
+
+    data = base64.b64decode(data_b64)
+    key_bytes = key.encode()
+
+    out = bytearray()
+    for i in range(len(data)):
+        out.append(data[i] ^ key_bytes[i % len(key_bytes)])
+
+    return out.decode("utf-8")
+
 def sky(parIn=None):
-    link="https://calcionew.kiko2.ru/calcio/calcioX2"+parIn+"/mono.m3u8"
-    liz = xbmcgui.ListItem(path=link, offscreen=True)
+    import json
+    import launcher
+    SECRET = "my_secret_key"
+
+    
+    apiUrl="https://test34344.herokuapp.com/filter.php?numTest=A1A159&id="+parIn
+    resp = launcher.makeRequest(apiUrl)
+    
+    res=json.loads(resp)
+    decrypted = xor_decrypt(res["data"], SECRET)
+    data = json.loads(decrypted)
+
+    manifest = data["manifest"]
+    kid = data["kid"]
+    key = data["key"]
+
+    drmType="org.w3.clearkey"
+    key64=kid+":"+key
+
+    liz = xbmcgui.ListItem(path=manifest, offscreen=True)
     liz.setContentLookup(False)
-    liz.setProperty('inputstream', 'inputstream.adaptive')
-    liz.setMimeType("application/x-mpegURL")
-    liz.setProperty('inputstream.adaptive.file_type', 'hls')
-    ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 OPR/116.0.0.0"
-    host="https://4kwebplay.xyz"
-    liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
-    liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host)
+
+    liz.setProperty("inputstream", "inputstream.adaptive")
+    liz.setProperty('inputstream.adaptive.drm_legacy', drmType+'|'+key64)
+
+    ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+    host="https://www.nowtv.it"
+    liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
+    liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
+
     return liz
         
 def daddyPremium(codeIn=None):
