@@ -1,4 +1,4 @@
-versione='1.2.78'
+versione='1.2.79'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -58,7 +58,6 @@ def logga(mess):
         testoLog += mess+"\n";
 
 def makeRequestNoUa(url):
-    logga('TRY TO OPEN '+url)
     html = ""
     if PY3:
         import urllib.request as myRequest
@@ -69,10 +68,6 @@ def makeRequestNoUa(url):
         response = myRequest.urlopen(req, timeout=45)
         html = response.read().decode('utf-8')
         response.close()
-        retff="NOCODE"
-        if html != "":
-            retff=html[0:15]
-        logga('OK REQUEST FROM '+url+' resp: '+retff)
     except:
         logging.warning('Error to open url: '+url)
         pass
@@ -80,7 +75,6 @@ def makeRequestNoUa(url):
 
 
 def makeRequest(url, hdr=None):
-    logga('TRY TO OPEN '+url)
     html = ""
     if PY3:
         import urllib.request as myRequest
@@ -101,10 +95,6 @@ def makeRequest(url, hdr=None):
         response = myRequest.urlopen(req, timeout=45)
         html = response.read().decode('utf-8')
         response.close()
-        retff="NOCODE"
-        if html != "":
-            retff=html[0:15]
-        logga('OK REQUEST FROM '+url+' resp: '+retff)
     except:
         logging.warning('Error to open url: '+url)
         pass
