@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.220'
+versione='1.2.221'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 26.03.2026
+# Last update: 30.03.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1563,21 +1563,63 @@ def daily(parIn=None):
     import json
     video_urls = []
     randomUa=getRandomUA()
-    urlAny="https://www.dailymotion.com/player/metadata/video/"+parIn
+    img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
+    urlAny="https://geo.dailymotion.com/player.html?video="+parIn
     data = requests.get(urlAny,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://www.dailymotion.com'}).content
     if PY3:
         data = data.decode('utf-8')
     logga('JSON DAILY: '+data)
-    dataJ = json.loads(data)
-    name=dataJ["title"]
-    url=dataJ["qualities"]["auto"][0]["url"]
-    img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
-    try:
-        img=dataJ["posters"]["720"]
-    except:
-        pass
-    video_urls.append((url, "[COLOR lime]"+name+"[/COLOR]", "by MandraKodi", img))
+
+    url = preg_match(data, '"manifestUrl":"(.*?)"')
+    '''
+    jsonText='{"SetViewMode":"503","items":['
+    jsonText = jsonText + '{"title":"[COLOR gold]PLAY[/COLOR]","myresolve":"ffmpeg@@'+url+'",'
+    jsonText = jsonText + '"thumbnail":"'+img+'",'
+    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+    jsonText = jsonText + '"info":"by MandraKodi"}'
+    
+    
+    jsonText = jsonText + "]}"
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    '''
+    ref="|User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64)&Referer=https://www.dailymotion.com/&Origin=https://www.dailymotion.com&Accept=*/*&Accept-Language=it-IT,it;q=0.9&Connection=keep-alive"
+    video_urls.append((url+ref, "[COLOR lime]PLAY STREAM[/COLOR]", "by MandraKodi", img))
+    video_urls.append((url, "[COLOR gold]PLAY STREAM (EXT PLAYER)[/COLOR]", "by MandraKodi", img))
     return video_urls
+
+def daily_ffmpeg(parIn=None):
+    randomUa=getRandomUA()
+    img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
+    urlAny="https://geo.dailymotion.com/player.html?video="+parIn
+    data = requests.get(urlAny,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://www.dailymotion.com'}).content
+    if PY3:
+        data = data.decode('utf-8')
+    
+    url = preg_match(data, '"manifestUrl":"(.*?)"')
+    headers = (
+        "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        "&referer=https://www.dailymotion.com/"
+        "&origin=https://www.dailymotion.com"
+        "&accept=*/*"
+    )
+
+    # Costruzione URL compatibile FFmpeg
+    ffmpeg_url = f"{url}|{headers}"
+    
+
+    liz = xbmcgui.ListItem('DailyMotion', path=ffmpeg_url)
+    liz.setProperty('inputstream', '')
+    liz.setMimeType("application/vnd.apple.mpegurl")
+    liz.setProperty("IsPlayable", "true")
+    liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
+    liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
+    timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
+    logga("TimeShift ==> "+timeShift)
+    if timeShift != "no_time_shift":
+        logga("OK TimeShift")
+        liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
+    
+    return liz
 
 
 def anyplay(parIn=None):
