@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.221'
+versione='1.2.222'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1588,13 +1588,12 @@ def daily(parIn=None):
     return video_urls
 
 def daily_ffmpeg(parIn=None):
-    randomUa=getRandomUA()
+    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
     img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
     urlAny="https://geo.dailymotion.com/player.html?video="+parIn
     data = requests.get(urlAny,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://www.dailymotion.com'}).content
     if PY3:
         data = data.decode('utf-8')
-    
     url = preg_match(data, '"manifestUrl":"(.*?)"')
     headers = (
         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
@@ -1602,7 +1601,10 @@ def daily_ffmpeg(parIn=None):
         "&origin=https://www.dailymotion.com"
         "&accept=*/*"
     )
-
+    if url == None:
+        msgBox("NO LINK FOUND")
+    else:
+        logga("URL_DAILY: "+url)
     # Costruzione URL compatibile FFmpeg
     ffmpeg_url = f"{url}|{headers}"
     
