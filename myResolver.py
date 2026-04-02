@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.224'
+versione='1.2.225'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1588,12 +1588,28 @@ def daily(parIn=None):
     return video_urls
 
 def daily_ffmpeg(parIn=None):
+    url = f"https://www.dailymotion.com/player/metadata/video/{parIn}"
+    
+    headers = {
+        "User-Agent": "Mozilla/5.0"
+    }
+
+    res = requests.get(url, headers=headers)
+    data = res.json()
+    url=""
+    try:
+        url = data["qualities"]["auto"][0]["url"]
+    except:
+        msgBox("NO LINK FOUND")
+    
+    '''
     randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
     img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
     urlAny="https://geo.dailymotion.com/player.html?video="+parIn
     data = requests.get(urlAny,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://www.dailymotion.com'}).content
     if PY3:
         data = data.decode('utf-8')
+    logga("DAILY_PAGE: "+data)
     url = preg_match(data, '"manifestUrl":"(.*?)"')
     headers = (
         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
@@ -1601,11 +1617,20 @@ def daily_ffmpeg(parIn=None):
         "&origin=https://www.dailymotion.com"
         "&accept=*/*"
     )
-    if url == None:
-        msgBox("NO LINK FOUND")
+    if url == None or url == "":
+        logga("NO LINK FOUND")
+        url="https://www.dailymotion.com/cdn/HLS/"+parIn+".m3u8"
     else:
         logga("URL_DAILY: "+url)
+    '''
+
     # Costruzione URL compatibile FFmpeg
+    headers = (
+        "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        "&referer=https://www.dailymotion.com/"
+        "&origin=https://www.dailymotion.com"
+        "&accept=*/*"
+    )
     ffmpeg_url = f"{url}|{headers}"
     
 
@@ -8199,6 +8224,56 @@ def zappr(parIn):
     links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return links
 
+def wweReplay(parIn=None):
+    channel_id = "Selvampuratchi"
+    base_url = f"https://api.dailymotion.com/user/{channel_id}/videos"
+
+    page = 1
+    all_videos = []
+
+    while True:
+        params = {
+            "fields": "id,title,thumbnail_url",
+            "limit": 100,
+            "page": page
+        }
+
+        res = requests.get(base_url, params=params)
+        data = res.json()
+
+        videos = data.get("list", [])
+        all_videos.extend(videos)
+
+        print(f"Pagina {page}: {len(videos)} video")
+
+        if not data.get("has_more"):
+            break
+
+        page += 1
+    
+    links = []
+    jsonText='{"SetViewMode":"50","items":['
+    numIt=0
+    for video in all_videos:
+        video_id = video.get("id")
+        title = video.get("title", "")
+        img = video.get("thumbnail_url", "")
+        if (numIt > 0):
+            jsonText = jsonText + ','
+        jsonText = jsonText + '{"title":"[COLOR lime]'+title+'[/COLOR]",'
+        jsonText = jsonText + '"myresolve":"ffmpeg_daily@@' + video_id + '",'
+        jsonText = jsonText + '"thumbnail":"'+img+'",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"by MandraKodi"}'
+        numIt=numIt+1
+
+    jsonText = jsonText + "]}"
+    #logga('JSON-ANY: '+jsonText)
+    links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return links
+
+
+
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
@@ -8282,6 +8357,7 @@ def run (action, params=None):
         "checkMac":mac_list_check,
         "aceSearch":aceSearch,
         "zappr":zappr,
+        "wweReplay":wweReplay,
         'showMsg':showMsg
     }
 
