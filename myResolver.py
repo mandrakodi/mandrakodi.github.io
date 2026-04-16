@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.226'
+versione='1.2.227'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 14.04.2026
+# Last update: 16.04.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -6695,12 +6695,15 @@ def epgInfo(parIn, timeout=10):
     epg = parser.data
     #logga("EPG: "+json.dumps(epg, indent=2, ensure_ascii=False))
     links = []
-    jsonText='{"SetViewMode":"503","items":['
+    jsonText='{"SetViewMode": "504", "items":['
     numIt=0
     for p in epg["programmazione"]:
         orario = p["orario"]
         titolo = p["titolo"]
         desc = p["descrizione"]
+        descJson=parser.extract_description_by_title(html, titolo)
+        if descJson:
+            desc = descJson
         durata = p["durata"]
         img="https://img.pikbest.com/png-images/20250410/youtube-channel-logo-design-as-like-tv_11657892.png!sw800"
         if p["immagine_programma"]:
@@ -6805,6 +6808,111 @@ class EPGParser(HTMLParser):
 
     def handle_comment(self, data):
         pass
+
+    def extract_description_by_title(self, html, target_title):
+        """
+        Estrae la description cercando uno specifico titolo
+        dentro JSON embedded (anche escaped).
+        """
+
+        if not target_title:
+            return None
+
+        # normalizza titolo input
+        target_norm = self._normalize_text(target_title)
+
+        pattern = re.compile(
+            r'\{\\?"id\\?".*?\\?"title\\?":\\?"(.*?)\\?".*?\\?"description\\?":\\?"(.*?)\\?".*?\}',
+            re.DOTALL
+        )
+
+        matches = pattern.findall(html)
+        
+        for title, desc in matches:
+            try:
+                # decode escape (\u0026 ecc.)
+                title_clean = bytes(title, "utf-8").decode("unicode_escape")
+                desc_clean = bytes(desc, "utf-8").decode("unicode_escape")
+
+                title_norm = self._normalize_text(title_clean)
+
+                # match flessibile
+                #logga("PROVO "+title_norm)
+                if target_norm == title_norm or target_norm in title_norm:
+                    toRet = " ".join(desc_clean.split())
+                    toRet_norm = self.normalize_description(toRet)
+                    
+                    return toRet_norm 
+
+            except Exception:
+                continue
+
+        return None
+
+    def normalize_description(self, text):
+        import unicodedata, html
+        if not text:
+            return ""
+
+        # 1. FIX encoding (copre TUTTE le accentate rotte)
+        text = self._fix_encoding(text)
+
+        # 2. decode unicode escape (\uXXXX)
+        try:
+            text = bytes(text, "utf-8").decode("unicode_escape")
+        except:
+            pass
+
+        # 3. decode HTML entities
+        text = html.unescape(text)
+
+        # 4. normalizzazione unicode
+        text = unicodedata.normalize("NFKC", text)
+
+        # 5. rimuove backslash finali o isolati
+        text = re.sub(r'\\+$', '', text)       # backslash a fine stringa
+        text = text.replace("\\", "")          # eventuali residui
+
+        # 6. rimuove caratteri di controllo
+        text = re.sub(r"[\x00-\x1F\x7F]", " ", text)
+
+        # 7. normalizza spazi
+        text = re.sub(r"\s+", " ", text)
+
+        return text.strip()
+
+    def _fix_encoding(self, text):
+        try:
+            fixed = text.encode("latin1", errors="ignore").decode("utf-8", errors="ignore")
+            return fixed if len(fixed) > len(text) * 0.8 else text
+        except:
+            return text
+    
+    def _normalize_text(self, text, tipo=0):
+        if not text:
+            return ""
+
+        text = text.lower()
+
+        # decode eventuali escape unicode tipo \u0026
+        try:
+            text = bytes(text, "utf-8").decode("unicode_escape")
+        except:
+            pass
+
+        # rimuove anno tra parentesi (es: (2013))
+        text = re.sub(r"\(\s*\d{4}\s*\)", "", text)
+
+        # rimuove anno standalone (es: "Fast Furious 2013")
+        text = re.sub(r"\b(19|20)\d{2}\b", "", text)
+
+        # normalizza simboli
+        text = text.replace("&", "and")
+
+        # rimuove caratteri non alfanumerici
+        text = re.sub(r"[^a-z0-9 ]", " ", text)
+
+        return " ".join(text.split())
 
     def handle_data(self, data):
         text = data.strip()
@@ -6943,6 +7051,7 @@ class EPGParser(HTMLParser):
         # Descrizione
         if self._in_description:
             self._current_program["descrizione"] += text
+
 
 def showMsg(parIn):
     msgBox(parIn)
@@ -7920,8 +8029,8 @@ def mediahosting(parIn):
     if match:
         src = match.group(1) 
     '''
-    src="https://yaler.screenistream.xyz/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
-    #src="https://cc3.screenistream.xyz:8080/stream/"+parIn+"/index.m3u8?token=T4Nz6WCt2Uwlqma4"
+    #src="https://yaler.screenistream.xyz/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
+    src="https://1nyaler.screenistream.xyz/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
     logga("URL_MEDIA: "+src)
     video_urls= []
     video_urls.append((src+"|Referer=https://mediahosting.space/&Origin=https://mediahosting.space", "[COLOR lime]OPEN STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
