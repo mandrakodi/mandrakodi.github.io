@@ -1,8 +1,8 @@
-versione='1.2.80'
+versione='1.2.81'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 30.03.2026
+# Last update: 16.04.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -38,10 +38,10 @@ ua = ""
 
 autoView="Not in use"
 try:
-    autoView = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
+    autoView = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo5")
 except:
     pass
-if (autoView=="Not in use"):
+if (autoView != "Not in use"):
     autoView="1"
 
 PY3 = sys.version_info[0] == 3
@@ -1492,7 +1492,7 @@ def run():
             params = parameters_string_to_dict(sys.argv[2])
             action =  params['action']
             url =  params['url']
-            
+            logga("URL: "+url+" - ACTION: "+action)
             if action == 'getExtData':
                 getExternalJson(url)
             elif action == 'getExtData2':
