@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.227'
+versione='1.2.228'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 16.04.2026
+# Last update: 30.04.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1376,6 +1376,7 @@ def get_tmdb_video(tmdb_id="926899"):
     newUrl = "ignoreMe"
     
     url = "https://vixsrc.to/api/movie/"+tmdb_id+"/?lang=it"
+    okVideo=True
     try:
         
         response = requests.get(url).content.decode("utf-8")
@@ -1388,21 +1389,27 @@ def get_tmdb_video(tmdb_id="926899"):
         newUrl=vixsrc(movieUrl)
         tito="[COLOR lime]PLAY VIDEO TMDB[/COLOR]"
         if "ignore" in newUrl:
-            tito="[COLOR red]NO VIDEO FOUND[/COLOR]"
-        #video_urls.append((newUrl, tito, "by @mandrakodi", "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png"))
-
+            okVideo=False
+        
     except Exception as e:
+        okVideo=False
         logga(f"Error: {e}")
     
     jsonText='{"SetViewMode":"50","items":['
-    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (IT)[/COLOR]","link":"'+newUrl+'&lang=it|Referer=https://vixsrc.to/movie/'+tmdb_id+'",'
-    jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
-    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-    jsonText = jsonText + '"info":"by MandraKodi"},'
-    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (EN)[/COLOR]","link":"'+newUrl+'&lang=en|Referer=https://vixsrc.to/movie/'+tmdb_id+'",'
-    jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
-    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-    jsonText = jsonText + '"info":"by MandraKodi"}'
+    if okVideo:
+        jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (IT)[/COLOR]","link":"'+newUrl+'&lang=it|Referer=https://vixsrc.to/movie/'+tmdb_id+'",'
+        jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"by MandraKodi"},'
+        jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (EN)[/COLOR]","link":"'+newUrl+'&lang=en|Referer=https://vixsrc.to/movie/'+tmdb_id+'",'
+        jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"by MandraKodi"}'
+    else:
+        jsonText = jsonText + '{"title":"[COLOR red]NO VIDEO FOUND[/COLOR]","link":"ignoreMe",'
+        jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"by MandraKodi"}'
     
     
     jsonText = jsonText + "]}"
@@ -2645,6 +2652,18 @@ def scwsNew(parIn=None, parInp2=0):
         
         return liz
     
+    if parInp2==2:
+        pageM3u8 = requests.get(urlSc,headers=headSCt).content
+        logga("M3U8: "+pageM3u8)
+        li = xbmcgui.ListItem(path=urlSc)
+
+        li.setProperty('inputstream', 'inputstream.adaptive')
+        li.setProperty('inputstream.adaptive.manifest_type', 'hls')
+
+        #li.setSubtitles([subtitle_url])
+
+        return li
+    
     return video_urls
 
 
@@ -2841,7 +2860,7 @@ def m3uPlus(parIn=None):
         lista = response.json()
         for item in lista:
             stream_id = item.get("stream_id")
-            linkUrl="http://"+host+"/live/"+usr+"/"+pwd+"/"+str(stream_id)+".m3u8"
+            linkUrl="http://"+host+"/live/"+usr+"/"+pwd+"/"+str(stream_id)+".m3u8|!User-Agent=VLC/3.0.21 LibVLC/3.0.21"
             name = item.get("name")
             stream_icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Microsoft_Stream.svg/512px-Microsoft_Stream.svg.png"
             if 'stream_icon' in item and item['stream_icon'] is not None:
@@ -3837,7 +3856,7 @@ def sportsonlineMenu():
     video_urls = []
 
     arrWeek={"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"}
-    url="https://sportsonline.st/prog.txt"
+    url="https://sportsonline.vc/prog.txt"
     headers = {
         'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
     }
@@ -4045,6 +4064,7 @@ def menuIstorm(parIn=""):
     return video_urls
 
 def taxi(parIn):
+    
     import re
     video_urls = []
 
@@ -4066,6 +4086,7 @@ def taxi(parIn):
 
     s = requests.Session()
     r = s.get(url, headers=headers)
+    logga("TAXI_PAGE: "+r.text)
     page=r.text.replace("\n", "").replace("\r", "").replace("\t", "")
     logga("FIND HOSTS AT "+url+"\n"+page)
     ret1 = "by @mandrakodi"
@@ -8382,7 +8403,7 @@ def zappr(parIn):
         msgBox(msgErr)
     
     jsonText = jsonText + "]}"
-    #logga('JSON-ANY: '+jsonText)
+    #logga('JSON-ZAPPR: '+jsonText)
     links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return links
 
