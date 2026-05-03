@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.228'
+versione='1.2.229'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 30.04.2026
+# Last update: 03.05.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1514,10 +1514,11 @@ def freeshot(codeIn=None):
     token=arrTk2[0]
     '''
     token = preg_match(fu.text, 'currentToken: "(.*?)"')
-    #logga ("TOKEN: "+token)
+    logga ("TOKEN: "+token)
     
-    link_ch="https://planetary.lovetier.bz/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token
-    #link_ch=frameUrl.replace("embed.html", "index.fmp4.m3u8")
+    #link_ch="https://planetary.lovetier.bz/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token
+    link_ch="https://lovely.lovetier.bz/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token
+    
     jsonText='{"SetViewMode":"50","items":['
     jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM [/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+link_ch+'",'
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
@@ -3853,6 +3854,7 @@ def daddyLiveMenu():
 
 def sportsonlineMenu():
     import datetime
+    import certifi
     video_urls = []
 
     arrWeek={"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"}
@@ -3861,7 +3863,7 @@ def sportsonlineMenu():
         'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
     }
     s = requests.Session()
-    r = s.get(url, headers=headers)
+    r = s.get(url, headers=headers, verify=certifi.where())
     jsonText='{"SetViewMode":"500","channels":['
     #arrLine = r.text.splitlines
     numIt=0
@@ -3870,7 +3872,7 @@ def sportsonlineMenu():
     for line in r.text.splitlines():
         if line == "" or line[0:1]== "." or line[0:1]== "|":
             continue
-        logga("ROW: "+line)
+        #logga("ROW: "+line)
         for day in arrWeek:
             if day in line:
                 if (numCh > 0):
