@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.229'
+versione='1.2.230'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 03.05.2026
+# Last update: 05.05.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -3513,6 +3513,77 @@ def createSportMenu(parIn=""):
         return platinumMenu()
     if parIn=="ppv":
         return ppvMenu()
+    if parIn=="tennis":
+        return tennisReplayMenu()
+    
+
+def tennisReplayMenu():
+    import json
+    video_urls = []
+
+    api_url="https://tennisreplay.tv/videos"
+    headers = {"Referer": "https://tennisreplay.tv/", "Origin": "https:/tennisreplay.tv", "Content-Type": "application/json"}
+    #page = requests.get(api_url, headers=headers, timeout=15).text
+    page = requests.get(api_url, timeout=15).text
+    
+    arrJ = json.loads(page)
+
+    arrEv = []
+    for event in arrJ:
+        youtubeId = event["youtubeId"]
+        title = event["title"]
+        duration = event["duration"]
+        year = event["year"]
+        arrEv.append(f"{year}@@{title}@@{youtubeId}@@{duration}")
+        
+    # Ordina come in PHP
+    arrEv.sort()
+
+    # Seconda parte: costruzione struttura finale
+    toRet = {"SetViewMode": "500", "channels": []}
+
+    numGroup = -1
+    oldYear = ""
+    numIt = 0
+
+    for row in arrEv:
+        year, title, youtubeId, duration = row.split("@@")
+
+        if oldYear != year:
+            numGroup += 1
+            oldYear = year
+
+            toRet["channels"].append({
+                "name": f"[COLOR gold]{year}[/COLOR]",
+                "thumbnail": "https://freepngimg.com/download/calendar/4-2-calendar-png-hd.png",
+                "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+                "SetViewMode": "50",
+                "items": []
+            })
+            numIt = 0
+            toRet["channels"][numGroup]["SetViewMode"]="51"
+        
+        # Aggiunge item evento
+        toRet["channels"][numGroup]["items"].append({
+            "title": f"[COLOR gold]{title}[/COLOR] [COLOR aqua]({duration})[/COLOR]",
+            "myresolve": f"risolvi@@https://www.youtube.com/watch?v={youtubeId}",
+            "thumbnail": f"https://img.youtube.com/vi/{youtubeId}/0.jpg",
+            "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+            "info": title
+        })
+
+        numIt += 1
+
+    # Output finale JSON formattato
+    jsonText=json.dumps(
+        toRet,
+        ensure_ascii=False,
+        indent=4
+    )
+    
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
+
 
 def ppvMenu():
     import json
@@ -3575,6 +3646,7 @@ def ppvMenu():
                 "items": []
             })
             numIt = 0
+            
 
         # Aggiunge item evento
         toRet["channels"][numGroup]["items"].append({
@@ -3593,6 +3665,7 @@ def ppvMenu():
         ensure_ascii=False,
         indent=4
     )
+    
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
