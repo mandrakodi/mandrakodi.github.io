@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.230'
+versione='1.2.231'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 05.05.2026
+# Last update: 06.05.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -7759,6 +7759,116 @@ def sports99(parIn):
     return video_urls
 
 
+
+
+
+def cdnLive(parIn):
+    api = CdnLiveClient(start_url=parIn)
+    url= api.find_stream()
+    logga("CDN_URL: "+url)
+    ref = "https://cdnlivetv.tv"
+    ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+    refer = "|Referer=" + ref + "/&Origin=" + ref + "&User-Agent=" + ua + "&force_isaf=1"
+    video_urls= []
+    video_urls.append((url+refer, "[COLOR lime]PLAY VIDEO[/COLOR]"))
+    return video_urls
+
+class CdnLiveClient:
+    
+    def __init__(self, start_url: string = "", timeout: int = 10):
+        """
+        :param timeout: timeout HTTP in secondi
+        """
+        self.start_url = start_url
+        self.timeout = timeout
+
+
+    def deHunter(self, encoded):
+        import re
+        import base64
+        def duf(d, e, f):
+            _0xce1e = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/"
+            g = list(_0xce1e)
+            h = g[0:e]
+            d = list(d)[::-1]
+            j = 0
+            for c, b in enumerate(d):
+                if b in h:
+                    j = j + h.index(b) * e ** c
+            if j == 0: return "0"
+            k = ""
+            while j > 0:
+                k = g[j % f] + k
+                j = (j - (j % f)) // f
+            return k
+
+        def hunter(h, u, n, t, e, r):
+            r = ""
+            i = 0
+            while i < len(h):
+                s = ""
+                while i < len(h) and h[i] != n[e]:
+                    s += h[i]
+                    i += 1
+                for j in range(len(n)):
+                    s = s.replace(n[j], str(j))
+                if s:
+                    val = duf(s, e, 10)
+                    r += chr(int(val) - t)
+                i += 1
+            return r
+
+        def compose_string(stringa):
+            stringa_corretta = stringa.replace('-', '+').replace('_', '/')
+            padding = len(stringa_corretta) % 4
+            if padding:
+                stringa_corretta += '=' * (4 - padding)
+            byte_data = base64.b64decode(stringa_corretta)
+            try:
+                return byte_data.decode('utf-8')
+            except:
+                return byte_data.decode('latin-1')
+
+        data_match = re.search(r'\("([^"]+)"\s*,\s*(\d+)\s*,\s*"([^"]+)"\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\)', encoded)
+        if not data_match:
+            data_match = re.search(r'\((["\'].*?["\'])\)', encoded)
+            if not data_match: return ""
+            args = eval(f"({data_match.group(1)})")
+        else:
+            args = (data_match.group(1), int(data_match.group(2)), data_match.group(3), int(data_match.group(4)), int(data_match.group(5)), int(data_match.group(6)))
+
+        result = hunter(*args)
+        player_src = re.compile(r'source:.*?src:\s*([a-zA-Z0-9_]+)', re.DOTALL).findall(result)
+        if not player_src:
+            m3u8 = re.compile(r'["\'](http.*?\.m3u8.*?)["\']', re.DOTALL).findall(result)
+            return m3u8[0] if m3u8 else result
+
+        splitted_str = re.compile(r'const\s+' + player_src[0] + r'\s*=\s*(.*?);', re.DOTALL).findall(result)
+        if not splitted_str: return result
+        
+        splitted_vars = re.compile(r'([a-zA-Z0-9_]+)').findall(splitted_str[0])
+        bstr = ""
+        for sv in splitted_vars:
+            s = re.compile(r'const\s+' + sv + r'\s*=\s*[\'"]([^\'"]+)[\'"]', re.DOTALL).findall(result)
+            if s:
+                bstr += compose_string(s[0])
+        return bstr
+
+    def find_stream(self):
+        r = requests.get(self.start_url, headers={'referer': "https://streamsports99.su/"})
+        logga("CDN_PAGE: "+r.text)
+        hunted = re.compile(r'<script.*?>\s*(.*?eval\(function\(h,u,n,t,e,r\).*?)\s*</script>', re.DOTALL).findall(r.text)
+        if not hunted:
+             hunted = re.compile(r'eval\(function\(h,u,n,t,e,r\).*?\)', re.DOTALL).findall(r.text)
+        
+        if hunted:
+            url = self.deHunter(hunted[0])
+            return url
+        logga("NO HUNTED")
+        return ""
+
+
+
 class SportzxClient:
     """
     Client per il recupero e la decodifica dei contenuti Sportzx
@@ -8304,6 +8414,8 @@ def aceSearch(parIn):
     logga('JSON-ANY: '+jsonText)
     links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return links
+
+
 def samsung(parIn):
     import json
     links = []
@@ -8532,6 +8644,8 @@ def wweReplay(parIn=None):
 
 
 
+
+
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
@@ -8616,6 +8730,7 @@ def run (action, params=None):
         "aceSearch":aceSearch,
         "zappr":zappr,
         "wweReplay":wweReplay,
+        "cdnLive":cdnLive,
         'showMsg':showMsg
     }
 
