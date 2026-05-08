@@ -1,15 +1,16 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.231'
+versione='1.2.232'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 06.05.2026
+# Last update: 08.05.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
 import os
 import string
 import random
+import traceback
 
 from urllib.parse import quote_plus, urlparse, parse_qsl, unquote
 from requests import Response
@@ -8486,7 +8487,7 @@ def zappr(parIn):
         )
 
         response.raise_for_status()
-        logga("RETURN JSON: "+response.text)
+        #logga("RETURN JSON: "+response.text)
         data = response.json() 
 
         for item in data["channels"]:
@@ -8513,7 +8514,13 @@ def zappr(parIn):
             elif tipo=="dash":
                 license = item.get("license")
                 if license and license=="clearkey":
-                    urlStr = urlStr + "|" + item.get("licensedetails")
+                    licensedetails = item.get("licensedetails", {})
+                    if isinstance(licensedetails, dict):
+                        lic = ",".join(f"{k}:{v}" for k, v in licensedetails.items())
+                    else:
+                        lic =  str(licensedetails)
+
+                    urlStr += "|" + lic
                 else:
                     urlStr = urlStr + "|0000"
                 jsonText = jsonText + '"myresolve":"amstaff@@' + urlStr + '",'
@@ -8544,7 +8551,13 @@ def zappr(parIn):
                     elif tipoExt == "dash":
                         license = item.get("license")
                         if license and license=="clearkey":
-                            urlExt = urlExt +"|"+item.get("licensedetails")
+                            licensedetails = item.get("licensedetails", {})
+                            if isinstance(licensedetails, dict):
+                                lic = ",".join(f"{k}:{v}" for k, v in licensedetails.items())
+                            else:
+                                lic =  str(licensedetails)
+
+                            urlExt += "|" + lic
                         else:
                             urlExt = urlExt +"|0000"
                         jsonText = jsonText + '"myresolve":"amstaff@@'+urlExt+'",'
@@ -8572,7 +8585,13 @@ def zappr(parIn):
                 elif tipoGeo=="dash":
                     license = geoCh.get("license")
                     if license and license=="clearkey":
-                        urlGeo = urlGeo + "|" + geoCh.get("licensedetails")
+                        licensedetails = item.get("licensedetails", {})
+                        if isinstance(licensedetails, dict):
+                            lic = ",".join(f"{k}:{v}" for k, v in licensedetails.items())
+                        else:
+                            lic =  str(licensedetails)
+
+                        urlGeo = urlGeo + "|" + lic
                     else:
                         urlGeo = urlGeo + "|0000"
                     jsonText = jsonText + '"myresolve":"amstaff@@' + urlGeo + '",'
@@ -8586,6 +8605,7 @@ def zappr(parIn):
 
     except Exception as e:
         msgErr="ERRORE: "+str(e)
+        traceback.print_exc()
         logga(msgErr)
         msgBox(msgErr)
     
