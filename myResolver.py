@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.232'
+versione='1.2.233'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 08.05.2026
+# Last update: 10.05.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -2235,12 +2235,14 @@ def GetLSProData(page_in, refe=None):
 
 def sportOnline(parIn=None):
     logga('PAR_SPONL: '+parIn)
+    video_urls = []
     headers = {
         'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
     }
     s = requests.Session()
     fu = s.get(parIn, headers=headers)
-    find = re.findall('by wgstream.sx--><iframe src="(.*?)"', fu.text)[0]
+    logga('HTML_SPONL: '+fu.text)
+    find = re.findall('player--><iframe src="(.*?)"', fu.text)[0]
     if (find[0:1]=="/"):
         find="https:"+find
     logga('IFRAME_SPONL: '+find)
@@ -2250,11 +2252,25 @@ def sportOnline(parIn=None):
     }
     fu2 = s.get(find, headers=headers)
     logga(find+"\n"+fu2.text)
-    linkSpo = re.findall('var src = "(.*?)"',fu2.text)[0]
+    try:
+        linkSpo = re.findall('var src = "(.*?)"',fu2.text)[0]
+        linkSpoRef = linkSpo+"|Referer="+find+"&Origin="+find+"&User-Agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+        
+        
+        video_urls.append((linkSpo, "[COLOR lime]PLAY VIDEO[/COLOR]"))
+        video_urls.append((linkSpoRef, "[COLOR gold]PLAY VIDEO[/COLOR]"))
+    except:
+        jsonText='{"SetViewMode":"503","items":['
+        jsonText = jsonText + '{"title":"[COLOR red]NO LINK FOUND[/COLOR]",'
+        jsonText = jsonText + '"myresolve":"showMsg@@Nessun link trovato",'
+        jsonText = jsonText + '"thumbnail":"https://cdn-icons-png.flaticon.com/512/2748/2748558.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"NO LINK FOUND"}'
+        
 
-    msg = "[COLOR lime]PLAY VIDEO[/COLOR]"
-    video_urls = []
-    video_urls.append((linkSpo+"|Referer="+find+"&Origin="+find+"&User-Agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36", msg))
+        jsonText = jsonText + "]}"
+        
+        video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
    
