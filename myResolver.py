@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.234'
+versione='1.2.235'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -1183,19 +1183,21 @@ def daddyCode(codeIn=None):
     #logga ("PAGE_DADDY: "+page_data)
     urlAuth = re.findall("window.atob\('(.*?)'\)", page_data)[0]
     link = base64.b64decode(urlAuth).decode("utf-8")
+    link2 = link.replace("index.m3u8", "tracks-v1a1/mono.m3u8")
     #logga ("LINK: "+link)
 
 
 
     #m3u8=resolve_link(codeIn)
-    m3u8=link+"|referer=https://donis.jimpenopisonline.online/&origin=https://donis.jimpenopisonline.online&connection=keep-alive&user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 OPR/130.0.0.0"
-
+    m3u8=link+"|referer=https://donis.jimpenopisonline.online/&origin=https://donis.jimpenopisonline.online&user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 OPR/130.0.0.0"
+    m3u82=link2+"|referer=https://donis.jimpenopisonline.online/&origin=https://donis.jimpenopisonline.online&user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 OPR/130.0.0.0"
+    
     jsonText='{"SetViewMode":"50","items":['
     jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"'+m3u8+'",'
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
     jsonText = jsonText + '"info":"by MandraKodi"},'
-    jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+m3u8+'",'
+    jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+m3u82+'",'
     #jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"daddy@@https://dlhd.so/embed/stream-'+codeIn+'.php",'
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
