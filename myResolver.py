@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.235'
+versione='1.2.236'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 14.05.2026
+# Last update: 19.05.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -609,8 +609,8 @@ def testDns(parIn=""):
     
     logga('CALL DNS TEST '+parIn)
     randomUa=getRandomUA()
-    testUrl="https://daddylivestream.com/embed/stream-877.php"
-    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://daddylivestream.com/'}
+    testUrl="https://dlhd.pk/stream/stream-877.php"
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://dlhd.pk//'}
     resolve="daddyCode@@877"
     if parIn=="StrCom":
         sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
@@ -992,12 +992,12 @@ def xor_decrypt(data_b64, key):
 def sky(parIn=None):
     import json
     import launcher
+    
     SECRET = "my_secret_key"
 
     
     apiUrl="https://test34344.herokuapp.com/filter.php?numTest=A1A159&id="+parIn
     resp = launcher.makeRequest(apiUrl)
-    
     res=json.loads(resp)
     decrypted = xor_decrypt(res["data"], SECRET)
     data = json.loads(decrypted)
@@ -1008,7 +1008,19 @@ def sky(parIn=None):
 
     drmType="org.w3.clearkey"
     key64=kid+":"+key
-
+    
+    data_str = data["fine"]
+    if "EXPIRE" not in data_str:
+        from datetime import datetime, timedelta
+        try:
+            data_roma = datetime.strptime(data_str, "%d/%m/%Y %H:%M:%S")
+            data_roma = data_roma + timedelta(hours=2)
+            if data_roma < datetime.now():
+                data_scad=data_roma.strftime("%d/%m/%Y %H:%M:%S")
+                msgBox("Link scaduto "+data_scad)
+        except:
+            pass
+    
     liz = xbmcgui.ListItem(path=manifest, offscreen=True)
     liz.setContentLookup(False)
 
