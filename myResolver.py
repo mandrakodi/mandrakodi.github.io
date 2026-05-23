@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.236'
+versione='1.2.237'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 19.05.2026
+# Last update: 23.05.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -992,6 +992,7 @@ def xor_decrypt(data_b64, key):
 def sky(parIn=None):
     import json
     import launcher
+    from datetime import datetime, timedelta
     
     SECRET = "my_secret_key"
 
@@ -1010,12 +1011,15 @@ def sky(parIn=None):
     key64=kid+":"+key
     
     data_str = data["fine"]
+    logga ("data_str ==> "+data_str)
+    data_adesso = datetime.now()
+    logga("ADESSO: " +data_adesso.strftime("%d/%m/%Y %H:%M:%S"))
     if "EXPIRE" not in data_str:
-        from datetime import datetime, timedelta
+        
         try:
             data_roma = datetime.strptime(data_str, "%d/%m/%Y %H:%M:%S")
             data_roma = data_roma + timedelta(hours=2)
-            if data_roma < datetime.now():
+            if data_roma < data_adesso:
                 data_scad=data_roma.strftime("%d/%m/%Y %H:%M:%S")
                 msgBox("Link scaduto "+data_scad)
         except:
@@ -8283,7 +8287,8 @@ def mediahosting(parIn):
         src = match.group(1) 
     '''
     #src="https://yaler.screenistream.xyz/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
-    src="https://1nyaler.screenistream.xyz/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
+    #src="https://1nyaler.screenistream.xyz/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
+    src="https://1nyaler.streamhostingcdn.top/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
     logga("URL_MEDIA: "+src)
     video_urls= []
     video_urls.append((src+"|Referer=https://mediahosting.space/&Origin=https://mediahosting.space", "[COLOR lime]OPEN STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
