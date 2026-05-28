@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.237'
+versione='1.2.238'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.05.2026
+# Last update: 28.05.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1213,7 +1213,7 @@ def daddyCode(codeIn=None):
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
     jsonText = jsonText + '"info":"by MandraKodi"},'
-    jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+m3u82+'",'
+    jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+m3u8+'",'
     #jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"daddy@@https://dlhd.so/embed/stream-'+codeIn+'.php",'
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
