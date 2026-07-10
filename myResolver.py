@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.238'
+versione='1.2.239'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 28.05.2026
+# Last update: 10.07.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -4613,85 +4613,54 @@ class VavooResolver:
     
     def getAuthSignature(self):
         import time
+        unique_id = str(uuid.uuid4())
         adesso = int(time.time() * 1000)
-        clientIp = self.getMyIp()
-        i = 0
-        while i < 3:
-            i+=1
-            logga("AUTH_LOOP: "+str(i))
-            try:
-                _headers={
-                    "user-agent": "okhttp/4.11.0", 
-                    "accept": "application/json", 
-                    "content-type": "application/json; charset=utf-8", 
-                    "accept-encoding": "gzip"
-                }
-                
-                _data = {
-                    'token': '',
-                    'reason': 'app-blur', 
-                    'locale': 'de', 
-                    'theme': 'dark',
-                    'metadata': { 
-                        'device': {
-                            'type': 'Handset', 
-                            'brand': 'google', 
-                            'model': 'Pixel', 
-                            'name': 'sdk_gphone64_arm64', 
-                            'uniqueId': 'd10e5d99ab665233' 
-                        }, 
-                        'os': { 
-                            'name': 'android', 
-                            'version': '13', 
-                            'abis': ['arm64-v8a', 'armeabi-v7a', 'armeabi'], 
-                            'host': 'android' 
-                        }, 
-                        'app': { 
-                            'platform': 'android', 
-                            'version': '3.1.21', 
-                            'buildId': '289515000', 
-                            'engine': 
-                            'hbc85', 
-                            'signatures': ['6e8a975e3cbf07d5de823a760d4c2547f86c1403105020adee5de67ac510999e'], 
-                            'installer': 'app.revanced.manager.flutter' 
-                        }, 
-                        'version': { 
-                            'package': 'tv.vavoo.app', 
-                            'binary': '3.1.21', 
-                            'js': '3.1.21' 
-                        } 
+        try:
+            _headers={
+                "user-agent": "electron-fetch/1.0 electron (+https://github.com/arantes555/electron-fetch)",
+                "accept": "application/json",
+                "content-type": "application/json; charset=utf-8",
+                "accept-encoding": "gzip",
+                "Accept-Language": "de"
+            }
+
+            _data = {
+                'token': '',
+                'reason': 'app-focus',
+                'locale': 'de',
+                'theme': 'dark',
+                'metadata': {
+                    'device': { 'type': 'desktop', 'uniqueId': unique_id },
+                    "os": { "name": "win32", "version": "Windows 10 Pro", "abis": ["x64"], "host": "Lenovo"},
+                    "app": { "platform": "electron"},
+                    "version": { "package": "tv.vavoo.app", "binary": "1.3.1", "js": "1.3.1"},
                     },
-                    'appFocusTime': 0, 
-                    'playerActive': False, 
-                    'playDuration': 0, 
-                    'devMode': False, 
-                    'hasAddon': True, 
-                    'castConnected': False,
-                    'package': 'tv.vavoo.app', 
-                    'version': '3.1.21', 
-                    'process': 'app', 
-                    'firstAppStart': adesso, 
-                    'lastAppStart': adesso,
-                    'ipLocation': clientIp, 
-                    'adblockEnabled': True, 
-                    'proxy': { 
-                        'supported': ['ss', 'openvpn'], 
-                        'engine': 'ss', 
-                        'ssVersion': 1, 
-                        'enabled': True, 
-                        'autoServer': True, 
-                        'id': 'de-fra' 
-                    }, 
-                    'iap': { 
-                        'supported': False 
-                    }
-                }
-                resp = self.session.post('https://www.lokke.app/api/app/ping', json=_data, headers=_headers, timeout=10)
-                resp.raise_for_status()
-                logga("AUTH_VAVOO: "+resp.text)
-                return resp.json().get("addonSig")
-            except: 
-                continue
+                'appFocusTime': 0,
+                'playerActive': False,
+                'playDuration': 0,
+                'devMode': False,
+                'hasAddon': True,
+                'castConnected': False,
+                'package': 'tv.vavoo.app',
+                'version': '1.3.1',
+                'process': 'app',
+                'firstAppStart': adesso - 86400000,
+                'lastAppStart': adesso,
+                'ipLocation': None,
+                'adblockEnabled': True,
+                'migrationApplied': False,
+                'proxy': { 'supported': ['ss'], 'engine': 'Mu', 'enabled': False, 'autoServer': True },
+                'iap': { 'supported': False, 'error': '' }
+            }
+            url = "https://www.vavoo.tv/api/app/ping"
+            timeOut = 8000
+            resp = self.session.post(url, json=_data, headers=_headers, timeout=timeOut)
+            resp.raise_for_status()
+            addonSig = resp.json().get("addonSig")
+            return addonSig
+        except Exception as e:
+            pass
+
         return None
 
     def gettsSignature(self):
@@ -4794,10 +4763,10 @@ def vavooChPlay(parIn):
         logga(resolved)
         video_urls.append((resolved+"|Referer=https://vavoo.to/&Origin=https://vavoo.to&User-Agent=iPad", "[COLOR gold]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
         video_urls.append((resolved, "[COLOR cyan]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
-        video_urls.append((parIn+"|Referer=https://vavoo.to/&Origin=https://vavoo.to&User-Agent=iPad", "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
+        video_urls.append((parIn+"/index.m3u8|Referer=https://vavoo.to/&Origin=https://vavoo.to&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 OPR/131.0.0.0", "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
     else:
         logga("Impossibile risolvere il link")
-        video_urls.append((parIn, "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
+        video_urls.append((parIn+"/index.m3u8|Referer=https://vavoo.to/&Origin=https://vavoo.to&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 OPR/131.0.0.0", "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
     
     return video_urls
 
