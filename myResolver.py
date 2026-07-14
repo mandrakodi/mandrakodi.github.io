@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.239'
+versione='1.2.240'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 10.07.2026
+# Last update: 14.07.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1188,24 +1188,24 @@ def daddyCode(codeIn=None):
     video_urls = []
 
 
-    pUrl="https://dlhd.pk/stream/stream-"+codeIn+".php"
-    page_1 = requests.get(pUrl,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://dlhd.pk/'}).text
+    pUrl="https://dlhd.st/stream/stream-"+codeIn+".php"
+    page_1 = requests.get(pUrl,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://dlhd.st/'}).text
     dadUrl = re.findall('<iframe src="(.*?)"', page_1)[0]
-    #logga ("dadUrl: "+dadUrl)
+    logga ("dadUrl: "+dadUrl)
 
     #dadUrl="https://donis.jimpenopisonline.online/premiumtv/daddy.php?id="+codeIn
 
-    page_data = requests.get(dadUrl,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://dlhd.pk/'}).text
-    #logga ("PAGE_DADDY: "+page_data)
+    page_data = requests.get(dadUrl,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://dlhd.st/'}).text
+    logga ("PAGE_DADDY: "+page_data)
     urlAuth = re.findall("window.atob\('(.*?)'\)", page_data)[0]
     link = base64.b64decode(urlAuth).decode("utf-8")
     link2 = link.replace("index.m3u8", "tracks-v1a1/mono.m3u8")
-    #logga ("LINK: "+link)
+    logga ("LINK: "+link)
 
 
 
     #m3u8=resolve_link(codeIn)
-    m3u8=link+"|referer=https://donis.jimpenopisonline.online/&origin=https://donis.jimpenopisonline.online&user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 OPR/130.0.0.0"
+    m3u8=link+"|referer=https://hamis.romponalis.st/&origin=https://hamis.romponalis.st&user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 OPR/130.0.0.0"
     m3u82=link2+"|referer=https://donis.jimpenopisonline.online/&origin=https://donis.jimpenopisonline.online&user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 OPR/130.0.0.0"
     
     jsonText='{"SetViewMode":"50","items":['
