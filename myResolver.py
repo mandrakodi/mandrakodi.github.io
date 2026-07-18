@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.242'
+versione='1.2.243'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 14.07.2026
+# Last update: 18.07.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1536,23 +1536,14 @@ def freeshot(codeIn=None):
         'referer': "https://thisnot.business/"
     }
     s = requests.Session()
-    #urlAuth="https://popcdn.day/go.php?stream="+codeIn
-    urlAuth="https://popcdn.day/player/"+codeIn
+    urlAuth="https://lovetier.bz/player/"+codeIn
     fu = s.get(urlAuth, headers=headers)
     logga("FREE_PAGE: "+fu.text)
 
-    '''
-    frameUrl = preg_match(fu.text, 'frameborder="0" src="(.*?)"')
-    arrTk=frameUrl.split("token=")
-    tk1=arrTk[1]
-    arrTk2=tk1.split("&")
-    token=arrTk2[0]
-    '''
     token = preg_match(fu.text, 'currentToken: "(.*?)"')
     logga ("TOKEN: "+token)
     
-    #link_ch="https://planetary.lovetier.bz/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token
-    link_ch="https://lovely.lovetier.bz/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token
+    link_ch="https://cdn.bluetier.top/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token
     
     jsonText='{"SetViewMode":"50","items":['
     jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM [/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+link_ch+'",'
