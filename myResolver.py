@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.243'
+versione='1.2.244'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -8246,12 +8246,11 @@ def mediahosting(parIn):
     if match:
         src = match.group(1) 
     '''
-    #src="https://yaler.screenistream.xyz/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
-    #src="https://1nyaler.screenistream.xyz/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
-    src="https://1nyaler.streamhostingcdn.top/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
+    src="https://p4.streamhostingcdn.top/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
     logga("URL_MEDIA: "+src)
+    ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 OPR/133.0.0.0"
     video_urls= []
-    video_urls.append((src+"|Referer=https://mediahosting.space/&Origin=https://mediahosting.space", "[COLOR lime]OPEN STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
+    video_urls.append((src+"|Referer=https://hostingmediapro.top/&Origin=https://hostingmediapro.top&User-Agent="+ua, "[COLOR gold]OPEN STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
     return video_urls
 
 
