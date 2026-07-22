@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.244'
+versione='1.2.245'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 18.07.2026
+# Last update: 22.07.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -7903,9 +7903,18 @@ class SportzxClient:
     # ---------------------------------------------------------
     # Recupero API URL dinamico
     # ---------------------------------------------------------
+    @staticmethod
+    def _generate_fid() -> str:
+        import base64, os
+        raw = bytearray(os.urandom(17))
+        raw[0] = (raw[0] & 0x0F) | 0x70
+        b64 = base64.urlsafe_b64encode(raw).decode().rstrip("=")
+        return b64[:22]
+
     def get_api_url(self) -> Optional[str]:
+        fid = self._generate_fid()
         install_url = (
-            "https://firebaseinstallations.googleapis.com/v1/projects/sportzx-7cc3f/installations"
+            "https://firebaseinstallations.googleapis.com/v1/projects/sportzx-afe67/installations"
         )
 
         install_headers = {
@@ -7919,12 +7928,12 @@ class SportzxClient:
             "X-Android-Cert": "A0047CD121AE5F71048D41854702C52814E2AE2B",
             "X-Android-Package": "com.sportzx.live",
             "x-firebase-client": "H4sIAAAAAAAAAKtWykhNLCpJSk0sKVayio7VUSpLLSrOzM9TslIyUqoFAFyivEQfAAAA",
-            "x-goog-api-key": "AIzaSyBa5qiq95T97xe4uSYlKo0Wosmye_UEf6w"
+            "x-goog-api-key": "AIzaSyCTIFo_vw_-XrjzDeE1yG4KuAqGLchzZ0M"
         }
 
         install_body = {
-            "fid": "eOaLWBo8S7S1oN-vb23mkf",
-            "appId": "1:446339309956:android:b26582b5d2ad841861bdd1",
+            "fid": fid,
+            "appId": "1:234785582029:android:f5f9299eaa7a0d73",
             "authVersion": "FIS_v2",
             "sdkVersion": "a:18.0.0"
         }
@@ -7938,14 +7947,16 @@ class SportzxClient:
             )
             r.raise_for_status()
             auth_token = r.json().get("authToken", {}).get("token")
+            #logga("auth_token: "+auth_token)
             if not auth_token:
                 raise ValueError("Auth token non trovato")
         except Exception as e:
-            print(f"Errore recupero auth token: {e}")
+            strErr=(f"Errore recupero auth token: {e}")
+            logga(strErr)
             return None
 
         config_url = (
-            "https://firebaseremoteconfig.googleapis.com/v1/projects/446339309956/namespaces/firebase:fetch"
+            "https://firebaseremoteconfig.googleapis.com/v1/projects/234785582029/namespaces/firebase:fetch"
         )
 
         config_headers = {
@@ -7954,7 +7965,7 @@ class SportzxClient:
             "X-Android-Cert": "A0047CD121AE5F71048D41854702C52814E2AE2B",
             "X-Android-Package": "com.sportzx.live",
             "X-Firebase-RC-Fetch-Type": "BASE/1",
-            "X-Goog-Api-Key": "AIzaSyBa5qiq95T97xe4uSYlKo0Wosmye_UEf6w",
+            "X-Goog-Api-Key": "AIzaSyCTIFo_vw_-XrjzDeE1yG4KuAqGLchzZ0M",
             "X-Goog-Firebase-Installations-Auth": auth_token,
         }
 
@@ -7965,9 +7976,9 @@ class SportzxClient:
             "appInstanceIdToken": auth_token,
             "languageCode": "it-IT",
             "appBuild": "12",
-            "appInstanceId": "eOaLWBo8S7S1oN-vb23mkf",
+            "appInstanceId": fid,
             "countryCode": "IT",
-            "appId": "1:446339309956:android:b26582b5d2ad841861bdd1",
+            "appId": "1:234785582029:android:f5f9299eaa7a0d73",
             "platformVersion": "33",
             "sdkVersion": "22.1.2",
             "packageName": "com.sportzx.live"
@@ -7981,9 +7992,12 @@ class SportzxClient:
                 timeout=self.timeout
             )
             r.raise_for_status()
-            return r.json().get("entries", {}).get("api_url")
+            toRet = r.json().get("entries", {}).get("api_url")
+            #logga("API_URL: "+toRet)
+            return toRet
         except Exception as e:
-            print(f"Errore recupero API URL: {e}")
+            strErr=(f"Errore recupero API URL: {e}")
+            logga (strErr)
             return None
 
     # ---------------------------------------------------------
@@ -8029,6 +8043,8 @@ class SportzxClient:
     def decrypt_data(self, b64_data: str) -> bytes:
         import base64
         from Cryptodome.Cipher import AES
+        b64_data = b64_data.strip()
+        b64_data += '=' * (-len(b64_data) % 4)
         ct = base64.b64decode(b64_data, validate=False)
         if not ct:
             return b""
@@ -8037,6 +8053,8 @@ class SportzxClient:
         cipher = AES.new(key, AES.MODE_CBC, iv)
         pt = cipher.decrypt(ct)
         pad = pt[-1]
+        if pad < 1 or pad > 16:
+            return pt
         return pt[:-pad]
 
     # ---------------------------------------------------------
@@ -8047,7 +8065,11 @@ class SportzxClient:
         r = requests.get(url, timeout=self.timeout)
         r.raise_for_status()
         data = r.json()
+        if not data.get("data"):
+            return []
         decrypted = self.decrypt_data(data["data"])
+        if not decrypted:
+            return []
         return json.loads(decrypted.decode("utf-8"))
     
     def format_date(date_str):
@@ -8078,9 +8100,12 @@ class SportzxClient:
         ]
 
         for event in events:
-            channels = self.fetch_and_decrypt(
-                f"{api_url}/channels/{event['id']}.json"
-            )
+            try:
+                channels = self.fetch_and_decrypt(
+                    f"{api_url}/channels/{event['id']}.json"
+                )
+            except Exception:
+                continue
 
             for ch in channels:
                 link, headers = (ch["link"].split("|", 1) + [None])[:2]
@@ -8150,7 +8175,7 @@ def sportzx(parIn):
         #logga(tit+" - "+chan+" - "+url+" - "+keyid+" - "+key+" - "+api+" - "+referer+" - "+origin+" - "+headers)
     
     jsonText = jsonText + "]}"    
-    
+    #logga (jsonText)
     video_urls= []
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
