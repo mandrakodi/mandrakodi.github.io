@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.245'
+versione='1.2.246'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 22.07.2026
+# Last update: 29.07.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -2636,10 +2636,17 @@ def scwsNew(parIn=None, parInp2=0):
     if PY3:
         pageT = pageT.decode('utf-8')
     pageT = pageT.replace("\n", "").replace("\r", "").replace("\t", "")
-    #logga("SC_PAGE: "+pageT)
-    patron = r'src="(.*?)"'
-    m3u8Url = preg_match(pageT, patron)
-    logga("URL_M3U8: "+m3u8Url)
+    #logga("SC_PAGE: "+base+"\n"+pageT)
+
+    
+    m3u8Url = ""
+    risultati = re.findall(r'src="(.*?)"', pageT)
+    for src in risultati:
+        if "vixcloud.co" in src:
+            m3u8Url = src
+    
+
+    #logga("URL_M3U8: "+m3u8Url)
     arrT=m3u8Url.split("?")
     arrPar=m3u8Url.split("&amp;")
     baseUrl=arrT[0]
@@ -2647,7 +2654,7 @@ def scwsNew(parIn=None, parInp2=0):
     if PY3:
         pageT2 = pageT2.decode('utf-8')
     pageT3=pageT2.replace("\n", "").replace("\r", "").replace("\t", "")
-    logga("pageT2: "+pageT3)
+    #logga("pageT2: "+pageT3)
     urlSc="ignore"
     tito="[COLOR lime]PLAY VIDEO SC[/COLOR]"
     try:    
