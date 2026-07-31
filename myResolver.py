@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.246'
+versione='1.2.247'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 29.07.2026
+# Last update: 31.07.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1345,13 +1345,80 @@ def gdplayer(parIn):
         video_urls.append((link, "[COLOR lime]Play Stream "+daddyC+"[/COLOR]" , "PLAY VIDEO ", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
         return video_urls
 
+def _decode_url(raw):
+    import json
+    r"""Decodifica sequenze \uXXXX nell'URL grezzo estratto dalla pagina."""
+    try:
+        return json.loads('"' + raw.replace('"', '\\"') + '"')
+    except Exception:
+        return raw.replace('\\/', '/').replace('\\u0026', '&')
 
 def vixsrc(movieUrl=None):
+    import json
+    _BASE = 'https://vixsrc.to'
+
+    _TOKEN_RE   = re.compile(r'''["']token["']\s*:\s*["'](\w+)["']''')
+    _URL_RE     = re.compile(r'''["']url["']\s*:\s*["']([^"']+)["']''')
+    randomUA=getRandomUA()
+    
+    headSCt={'user-agent':randomUA}
+    
+    #logga("movieUrl: "+movieUrl)
+    wp_data = requests.get(movieUrl,headers=headSCt).text
+    logga("wp_data: "+wp_data)
+
+    token = None
+    m = _TOKEN_RE.search(wp_data)
+    if m:
+        token = m.group(1)
+
+    m = _URL_RE.search(wp_data)
+    hls_url = _build_hls_url(m.group(1), token, wp_data, movieUrl)
+    logga("hls_url: "+hls_url)
+    return hls_url+"&referer=1&scz=1"
+
+def _build_hls_url(raw_url, token, wp_data, page_url):
+    from urllib.parse import urlparse, parse_qs, urlencode, urljoin
+    _EXPIRES_RE = re.compile(r'''["']expires["']\s*:\s*["'](\d+)["']''')
+    _FHD_RE     = re.compile(r'"canPlayFHD"\s*:\s*true|canPlayFHD\s*=\s*true')
+    _M3U8_RE    = re.compile(r'(/playlist/[^/?#]+?)(?:\.m3u8)?(?=[?#]|$)')
+    logga ("raw_url: "+raw_url)
+    logga ("page_url: "+page_url)
+    url_pulita = _decode_url(raw_url)
+    url_pulita = _M3U8_RE.sub(r'\1.m3u8', url_pulita)
+    logga ("url_pulita: "+url_pulita)
+    if '?' in url_pulita:
+        base, qs = url_pulita.split('?', 1)
+        params = {k: v[0] for k, v in parse_qs(qs).items()}
+    else:
+        base   = url_pulita
+        params = {}
+
+    params['token'] = token
+
+    m = _EXPIRES_RE.search(wp_data)
+    if m:
+        params['expires'] = m.group(1)
+
+    if _FHD_RE.search(wp_data):
+        params['h'] = '1'
+
+    params.setdefault('lang', 'it')
+
+    for k, v in parse_qs(urlparse(page_url).query).items():
+        params.setdefault(k, v[0])
+
+    url_finale = base + '?' + urlencode(params)
+    toRet=url_finale.replace('&amp;', '&').replace("&skin=vixsrc&canPlayFHD=1", "")
+    logga("toRet: "+toRet)
+    return toRet
+
+def vixsrcOld(movieUrl=None):
     import json
     newUrl="ignoreMe"
     try:
         sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
-        scUrl=makeRequest(sc_url)
+        #scUrl=makeRequest(sc_url)
         
         arrT=movieUrl.split("?")
         arrPar=movieUrl.split("&")
@@ -1374,9 +1441,10 @@ def vixsrc(movieUrl=None):
             jsonUrl = res[0]+'"url":"'+res[1]+'"}'
                 
             #jsonUrl = preg_match(pageT3, patron)+'"sex":"ok"}'
-            #logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
+            logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
             arrJ2 = json.loads(jsonUrl.replace("'", '"'))
-            urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
+            #urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
+            urlSc=baseUrl+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
             urlTmp=arrJ2["url"]
             if "?" in urlTmp:
                 urlSc=urlTmp+"&token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
@@ -1403,7 +1471,7 @@ def vixsrc(movieUrl=None):
     except Exception as e:
         errMsg=f"Error: {e}"
         msgBox(errMsg)
-    return newUrl
+    return newUrl.replace("playlist", "embed")
 
 def get_tmdb_video(tmdb_id="926899"):
     import json
@@ -1411,17 +1479,19 @@ def get_tmdb_video(tmdb_id="926899"):
     newUrl = "ignoreMe"
     
     url = "https://vixsrc.to/api/movie/"+tmdb_id+"/?lang=it"
+    logga("API URL: "+url)
     okVideo=True
     try:
         
         response = requests.get(url).content.decode("utf-8")
-        
+        logga("API JSON: "+response)
         respJ=json.loads(response)
         m3u8Url=respJ["src"].replace("&amp;", "&")
         movieUrl="https://vixsrc.to"+m3u8Url
         
         logga ("M3U8: "+movieUrl)
         newUrl=vixsrc(movieUrl)
+        logga ("newUrl: "+newUrl)
         tito="[COLOR lime]PLAY VIDEO TMDB[/COLOR]"
         if "ignore" in newUrl:
             okVideo=False
@@ -1432,11 +1502,11 @@ def get_tmdb_video(tmdb_id="926899"):
     
     jsonText='{"SetViewMode":"50","items":['
     if okVideo:
-        jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (IT)[/COLOR]","link":"'+newUrl+'&lang=it|Referer=https://vixsrc.to/movie/'+tmdb_id+'",'
+        jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (IT)[/COLOR]","link":"'+newUrl.replace("vixsrc.to","vixcloud.co")+'",'
         jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"by MandraKodi"},'
-        jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (EN)[/COLOR]","link":"'+newUrl+'&lang=en|Referer=https://vixsrc.to/movie/'+tmdb_id+'",'
+        jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM (EN)[/COLOR]","link":"'+newUrl+'",'
         jsonText = jsonText + '"thumbnail":"https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"by MandraKodi"}'
@@ -8278,7 +8348,7 @@ def mediahosting(parIn):
     if match:
         src = match.group(1) 
     '''
-    src="https://p4.streamhostingcdn.top/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
+    src="https://p5.streamhostingcdn.top/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
     logga("URL_MEDIA: "+src)
     ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 OPR/133.0.0.0"
     video_urls= []
