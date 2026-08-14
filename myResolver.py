@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.247'
+versione='1.2.248'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 31.07.2026
+# Last update: 14.08.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1606,14 +1606,14 @@ def freeshot(codeIn=None):
         'referer': "https://thisnot.business/"
     }
     s = requests.Session()
-    urlAuth="https://lovetier.bz/player/"+codeIn
+    urlAuth="https://wideiptv.top/player/"+codeIn
     fu = s.get(urlAuth, headers=headers)
     logga("FREE_PAGE: "+fu.text)
 
     token = preg_match(fu.text, 'currentToken: "(.*?)"')
     logga ("TOKEN: "+token)
     
-    link_ch="https://cdn.bluetier.top/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token
+    link_ch="https://ds164.bluetier.top/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token
     
     jsonText='{"SetViewMode":"50","items":['
     jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM [/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+link_ch+'",'
