@@ -1,0 +1,30 @@
+<playercorefactory>
+	<players>
+		<player name="AcePlayer" type="ExternalPlayer" audio="false" video="true">
+			<filename>C:\Programmi\ACEStream\player\ace_player.exe</filename>
+			<hidexbmc>true</hidexbmc>
+			<playcountminimumtime>120</playcountminimumtime>
+		</player>
+		<player name="FFMPEG_REC" type="ExternalPlayer" audio="false" video="true">
+			<filename>C:\Programmi\ffmpeg\FFMPEG_Recorder.exe</filename>
+			<hideKodi>false</hideKodi>
+		</player>
+		<player name="MpvPlayer" type="ExternalPlayer" audio="false" video="true">
+			<filename>C:\Programmi\player\mpv.exe</filename>
+			<hidexbmc>true</hidexbmc>
+			<playcountminimumtime>120</playcountminimumtime>
+		</player>
+		<player name="WebTorrent" type="ExternalPlayer" audio="false" video="true">
+			<filename>C:\Programmi\WebTorrent\WebTorrent.exe</filename>
+			<args> "{0}"</args>
+			<hidexbmc>false</hidexbmc>
+			<playcountminimumtime>120</playcountminimumtime>
+		</player>
+	</players>
+	<rules action="prepend">
+			<rule name="acestream" filename="acestream://*" player="AcePlayer" />
+			<rule name="magnet" filename="magnet:*" player="WebTorrent" />
+			<rule name="play_to_mpv" filename=".*playTo=mpv" player="MpvPlayer" />
+			<rule name="other" video="true" player="videodefaultplayer" /> <!--videodefaultplayer-->
+	</rules>
+</playercorefactory>
