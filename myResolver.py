@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.248'
+versione='1.2.249'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 14.08.2026
+# Last update: 21.08.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -609,8 +609,8 @@ def testDns(parIn=""):
     
     logga('CALL DNS TEST '+parIn)
     randomUa=getRandomUA()
-    testUrl="https://dlhd.pk/stream/stream-877.php"
-    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://dlhd.pk//'}
+    testUrl="https://dlstreams.st/stream/stream-877.php"
+    head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://dlstreams.st/'}
     resolve="daddyCode@@877"
     if parIn=="StrCom":
         sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
@@ -1717,7 +1717,7 @@ def wikisport(parIn=None):
 def daily(parIn=None):
     import json
     video_urls = []
-    randomUa=getRandomUA()
+    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.7827.201 Safari/537.36"
     img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
     urlAny="https://geo.dailymotion.com/player.html?video="+parIn
     data = requests.get(urlAny,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://www.dailymotion.com'}).content
