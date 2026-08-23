@@ -1,8 +1,8 @@
-versione='1.2.81'
+versione='1.2.82'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 16.04.2026
+# Last update: 23.08.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -941,10 +941,11 @@ def checkResolver():
     resolver_file = os.path.join(home, 'myResolver.py')
     local_vers = '0.0.0'
     if os.path.exists(resolver_file)==True:
-        resF = open(resolver_file)
-        resolver_content = resF.read()
-        resF.close()
+        
         try:
+            resF = open(resolver_file, "r", encoding="utf-8", errors="replace")
+            resolver_content = resF.read()
+            resF.close()
             local_vers = re.findall("versione='(.*)'",resolver_content)[0]
         except:
             logga('ERRORE FIND LOCAL VERS')
@@ -992,10 +993,12 @@ def checkDns():
     
     responseCode=404
     try:
-        #currSess = requests.Session()
-        #head={'user-agent':'iPad','Content-Type':'application/x-www-form-urlencoded','Referer':'https://daddyhd.com/'}
-        #page_data1 = currSess.get("https://daddyhd.com/embed/stream-860.php",headers=head)
-        #responseCode=page_data1.status_code
+        currSess = requests.Session()
+        head={'user-agent':'Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/533.3 (KHTML, like Gecko) Chrome/5.0.358.0 Safari/533.3',
+              'Content-Type':'application/x-www-form-urlencoded',
+              'Referer':'https://dlstreams.st/'}
+        page_data1 = currSess.get("https://dlstreams.st/stream/stream-860.php",headers=head)
+        responseCode=page_data1.status_code
         dns1 = xbmc.getInfoLabel('Network.DNS1Address')
         dns2 = xbmc.getInfoLabel('Network.DNS2Address')
         gate = xbmc.getInfoLabel('Network.GatewayAddress')
@@ -1013,7 +1016,7 @@ def checkDns():
     logga("############# END NETWORK INFO #############")
     
     if responseCode != 200:
-        mess = "Con le attuali impostazioni di rete,\npotresti avere problemi a recuperare i link da alcuni siti \n(es. https://daddyhd.com/)."
+        mess = "Con le attuali impostazioni di rete,\npotresti avere problemi a recuperare i link da alcuni siti \n(es. https://dlhd.st/)."
         #msgBox(mess)
 
 def checkMandraScript():
