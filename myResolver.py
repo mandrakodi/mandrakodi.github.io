@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.250'
+versione='1.2.251'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 22.08.2026
+# Last update: 23.08.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -8145,6 +8145,7 @@ class SportzxClient:
         if not data.get("data"):
             return []
         decrypted = self.decrypt_data(data["data"])
+        logga("Eventi: " + decrypted.decode("utf-8", errors="replace"))
         if not decrypted:
             return []
         return json.loads(decrypted.decode("utf-8"))
@@ -8167,7 +8168,7 @@ class SportzxClient:
 
         channels_list = []
         url_event=f"{api_url}/events.json"
-        
+        logga ("url_event: "+url_event)
         events = self.fetch_and_decrypt(url_event)
         #logga("Eventi: " + json.dumps(events, ensure_ascii=False))
         events = [
@@ -8806,11 +8807,6 @@ def futLibre(parIn=None):
 
 
 def decode_stream(embed_iframe):
-    """
-    Prende embed_iframe, estrae il parametro r=,
-    decodifica il Base64 e restituisce esclusivamente
-    il valore del parametro stream.
-    """
     import base64
     from urllib.parse import urlparse, parse_qs
 
@@ -8819,7 +8815,7 @@ def decode_stream(embed_iframe):
         return ""
 
     try:
-        # Prende tutto ciò che si trova dopo r=
+        # Prende tutto quello che si trova dopo r=
         encoded = embed_iframe.split("r=", 1)[1]
 
         # Decodifica Base64
@@ -8847,6 +8843,7 @@ def convert_schedule(source):
 
     
     FANART = "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+
     # Raggruppamento degli eventi per competizione
     competitions = defaultdict(list)
 
