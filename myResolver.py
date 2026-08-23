@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.249'
+versione='1.2.250'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 21.08.2026
+# Last update: 22.08.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -8775,7 +8775,360 @@ def wweReplay(parIn=None):
     return links
 
 
+def futLibre(parIn=None):
+    import time
+    links = []
+    if parIn=="menu":
+        timestamp = int(time.time() * 1000)
+        url="https://futbollibretv.net.pe/agenda-data.php?actualizacion="+str(timestamp)
+        
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        source = response.json()
+        # Conversione
+        result = convert_schedule(source)
+        #logga('JSON-FUT: '+result)
+        links.append((result, "PLAY VIDEO", "No info", "noThumb", "json"))
+    else:
+        url="https://futbollibre.ch/vivo/canales.php?stream="+parIn
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        source = response.text
+        #logga ("source: "+source)
+        urlVideo=""
+        try:
+            urlVideo=re.findall('const playbackURL = "(.*?)"', source)[0]
+        except Exception:
+            pass
 
+        links.append((urlVideo, "[COLOR gold]PLAY VIDEO[/COLOR]", "PLAY"))
+    return links
+
+
+def decode_stream(embed_iframe):
+    """
+    Prende embed_iframe, estrae il parametro r=,
+    decodifica il Base64 e restituisce esclusivamente
+    il valore del parametro stream.
+    """
+    import base64
+    from urllib.parse import urlparse, parse_qs
+
+    #logga("embed_iframe: "+embed_iframe)
+    if not embed_iframe or "r=" not in embed_iframe:
+        return ""
+
+    try:
+        # Prende tutto ciò che si trova dopo r=
+        encoded = embed_iframe.split("r=", 1)[1]
+
+        # Decodifica Base64
+        decoded = base64.b64decode(encoded).decode("utf-8")
+
+        # Analizza l'URL ottenuto
+        parsed = urlparse(decoded)
+
+        # Estrae i parametri GET
+        params = parse_qs(parsed.query)
+
+        # Restituisce esclusivamente stream
+        return params.get("stream", [""])[0]
+
+    except Exception:
+        return ""
+
+
+def convert_schedule(source):
+    from collections import defaultdict
+    
+    from urllib.parse import urlparse, parse_qs
+    import json
+    import datetime
+
+    
+    FANART = "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+    # Raggruppamento degli eventi per competizione
+    competitions = defaultdict(list)
+
+    for event in source.get("data", []):
+
+        attributes = event.get("attributes", {})
+
+        diary_description = attributes.get(
+            "diary_description",
+            ""
+        ).strip()
+
+        if not diary_description:
+            continue
+
+        # -------------------------------------------------
+        # COMPETIZIONE / DESCRIZIONE
+        # -------------------------------------------------
+
+        lines = [
+            line.strip()
+            for line in diary_description.splitlines()
+            if line.strip()
+        ]
+
+        if not lines:
+            continue
+
+        first_line = lines[0]
+
+        if ":" in first_line:
+            competizione = first_line.split(":", 1)[0].strip()
+        else:
+            competizione = first_line.strip()
+
+        # Descrizione dell'evento
+        if len(lines) > 1:
+            description = " ".join(lines[1:]).strip()
+        else:
+            parts = first_line.split(":", 1)
+
+            if len(parts) > 1:
+                description = parts[1].strip()
+            else:
+                description = ""
+
+        # -------------------------------------------------
+        # DATA E ORA
+        # -------------------------------------------------
+        
+        date_diary = attributes.get(
+            "date_diary",
+            ""
+        ).strip()
+
+        diary_hour = attributes.get(
+            "diary_hour",
+            ""
+        ).strip()
+
+        try:
+            if date_diary!="" and diary_hour!="":
+                
+                myDate = f"{date_diary} {diary_hour}"
+                
+                data = myDate.replace(":", " ").split()
+
+                anno = int(data[0].split("-")[0])
+                mese = int(data[0].split("-")[1])
+                giorno = int(data[0].split("-")[2])
+
+                ora = int(data[1])
+                minuto = int(data[2])
+                secondo = int(data[3])
+
+                dataJ = datetime.datetime(anno, mese, giorno, ora, minuto, secondo)
+
+                event_datetime = dataJ + datetime.timedelta(hours=7)
+                
+
+                # Data e ora da visualizzare
+                data_visualizzata = event_datetime.strftime(
+                    "%d/%m/%Y"
+                )
+
+                ora_visualizzata = event_datetime.strftime(
+                    "%H:%M"
+                )
+                
+                # Utilizzato per l'ordinamento
+                sort_datetime = event_datetime
+            else:
+                logga("NO DATA ORA")
+                data_visualizzata = "NO "
+                ora_visualizzata = "TIME"
+                sort_datetime = datetime.datetime.max
+                
+
+        except Exception as err:
+            import traceback
+            traceback.print_exc()
+            data_visualizzata = date_diary
+            ora_visualizzata = diary_hour[:5]
+            sort_datetime = datetime.datetime.max
+
+        # -------------------------------------------------
+        # IMMAGINE NAZIONE
+        # -------------------------------------------------
+
+        image_country = ""
+        name_country = ""
+        country = attributes.get(
+            "country",
+            {}
+        ).get("data")
+
+        if country:
+
+            country_attributes = country.get(
+                "attributes",
+                {}
+            )
+
+            name_country = country_attributes.get("name", "")
+            competizione += " ("+name_country+")"
+
+            image_data = (
+                country_attributes
+                .get("image", {})
+                .get("data")
+            )
+
+            if image_data:
+
+                image_country = (
+                    image_data
+                    .get("attributes", {})
+                    .get("url", "")
+                )
+
+        # -------------------------------------------------
+        # EMBEDS
+        # -------------------------------------------------
+
+        embeds = (
+            attributes
+            .get("embeds", {})
+            .get("data", [])
+        )
+
+        if not embeds:
+            continue
+
+        newDesc=description
+        # Salva l'evento per il raggruppamento
+        competitions[competizione].append({
+            "description": newDesc,
+            "date": data_visualizzata,
+            "hour": ora_visualizzata,
+            "sort_datetime": sort_datetime,
+            "image_country": "https://img.futbollibrehd.com.pe"+image_country,
+            "embeds": embeds
+        })
+
+    # =====================================================
+    # COSTRUZIONE OUTPUT
+    # =====================================================
+
+    output = {
+        "channels": []
+    }
+
+    # Competenze ordinate alfabeticamente
+    for competizione in sorted(
+        competitions.keys(),
+        key=str.lower
+    ):
+
+        events = competitions[competizione]
+
+        # Eventi ordinati per data e ora
+        events.sort(
+            key=lambda event: event["sort_datetime"]
+        )
+
+        items = []
+
+        # -------------------------------------------------
+        # EVENTI DELLA COMPETIZIONE
+        # -------------------------------------------------
+
+        for event in events:
+
+            description = event["description"]
+            data = event["date"]
+            hour = event["hour"]
+            image_country = event["image_country"]
+
+            # Titolo base
+            title_base = (
+                f"{data} {hour[:5]} - {description}"
+            )
+
+            # Ogni embed genera un item
+            for embed in event["embeds"]:
+
+                embed_attributes = embed.get(
+                    "attributes",
+                    {}
+                )
+
+                channel_name = embed_attributes.get(
+                    "embed_name",
+                    ""
+                ).strip()
+
+                embed_iframe = embed_attributes.get(
+                    "embed_iframe",
+                    ""
+                ).strip()
+
+                # -------------------------------------------------
+                # ESTRAZIONE STREAM
+                # -------------------------------------------------
+
+                stream = decode_stream(
+                    embed_iframe
+                )
+
+                # -------------------------------------------------
+                # TITOLO
+                # -------------------------------------------------
+
+                if channel_name:
+
+                    title = (
+                        f"{title_base} - "
+                        f"{channel_name}"
+                    )
+
+                else:
+
+                    title = title_base
+
+                # -------------------------------------------------
+                # ITEM
+                # -------------------------------------------------
+
+                items.append({
+                    "title": "[COLOR lime]"+title+"[/COLOR]",
+                    "myresolve": "futLibre@@"+stream,
+                    "thumbnail": image_country,
+                    "fanart": FANART,
+                    "info": description
+                })
+
+        # -------------------------------------------------
+        # CHANNEL
+        # -------------------------------------------------
+
+        if items:
+
+            # Thumbnail della competizione.
+            # Viene utilizzata quella del primo evento.
+            thumbnail = events[0]["image_country"]
+
+            output["channels"].append({
+                "name": "[COLOR gold]"+competizione+"[/COLOR]",
+                "thumbnail": thumbnail,
+                "fanart": FANART,
+                "items": items
+            })
+
+    # =====================================================
+    # RESTITUISCE UNA STRINGA JSON
+    # =====================================================
+
+    return json.dumps(
+        output,
+        ensure_ascii=False,
+        indent=4
+    )
 
 
 def run (action, params=None):
@@ -8863,6 +9216,7 @@ def run (action, params=None):
         "zappr":zappr,
         "wweReplay":wweReplay,
         "cdnLive":cdnLive,
+        "futLibre":futLibre,
         'showMsg':showMsg
     }
 
