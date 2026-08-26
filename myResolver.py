@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.251'
+versione='1.2.252'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 23.08.2026
+# Last update: 26.08.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1997,10 +1997,10 @@ def amstaffTest(parIn):
     key64=arrT[1]
     if key64=="0:0":
         key64="0000"
-    logga('key64: '+key64)
-    token=""
+    #logga('key64: '+key64)
+    user_ag=""
     try:
-      token=arrT[2]
+      user_ag=arrT[2]
     except:
         pass
     drmType="org.w3.clearkey"
@@ -2024,12 +2024,16 @@ def amstaffTest(parIn):
     if "dazn" in link or "dai.google.com" in link:
         #ua="Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.9.7 Chrome/56.0.2924.122 Safari/537.36 Sky_STB_ST412_2018/1.0.0 (Sky, EM150UK,)"
         ua=myParse.quote("Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.41 (KHTML, like Gecko) Large Screen Safari/537.41 LG Browser/7.00.00(LGE; WEBOS1; 05.06.10; 1); webOS.TV-2014; LG NetCast.TV-2013 Compatible (LGE, WEBOS1, wireless)")
+        if user_ag != "":
+            ua=myParse.quote(user_ag)
         logga("UA: "+ua)
         host="https://www.dazn.com"
         heads='User-Agent='+ua+'&Referer='+host+'/&Origin='+host
+        """
         if token != "":
             ua=myParse.quote_plus("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36")
             heads=token+'&referer='+host+'/&origin='+host+'&user-agent='+ua
+        """
         liz.setProperty('inputstream.adaptive.stream_headers', heads)
         liz.setProperty('inputstream.adaptive.manifest_headers', heads)
     elif "lba-ew" in link:
@@ -2072,8 +2076,6 @@ def amstaffTest(parIn):
         logga("UA_MPD: "+ua)
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
-    if token != "":
-        liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false') 
     
     return liz
 
