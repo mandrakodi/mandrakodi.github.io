@@ -2392,6 +2392,7 @@ def GetLSProData(page_in, refe=None):
         return page_in
 
 def sportOnline(parIn=None):
+    # by @Jions00
     # Flusso allineato a EasyProxy sportsonline.py (versione sync per Kodi):
     # 1) pagina canale (es. https://w6.sportsonliine.click/channels/hd/hd7.php)
     # 2) iframe player (es. https://xxx.dynproclaim.net/e/yyy)
