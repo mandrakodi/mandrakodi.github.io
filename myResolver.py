@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.253'
+versione='1.2.254'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 19.09.2026
+# Last update: 20.09.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -2392,32 +2392,81 @@ def GetLSProData(page_in, refe=None):
         return page_in
 
 def sportOnline(parIn=None):
+    # Flusso allineato a EasyProxy sportsonline.py (versione sync per Kodi):
+    # 1) pagina canale (es. https://w6.sportsonliine.click/channels/hd/hd7.php)
+    # 2) iframe player (es. https://xxx.dynproclaim.net/e/yyy)
+    # 3) estrazione m3u8: prima window._econfig (player attuale),
+    #    poi fallback P.A.C.K.E.R. via jsunpack, poi m3u8 inline.
     logga('PAR_SPONL: '+parIn)
     video_urls = []
-    headers = {
-        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
-    }
-    s = requests.Session()
-    fu = s.get(parIn, headers=headers)
-    logga('HTML_SPONL: '+fu.text)
-    find = re.findall('player--><iframe src="(.*?)"', fu.text)[0]
-    if (find[0:1]=="/"):
-        find="https:"+find
-    logga('IFRAME_SPONL: '+find)
-    headers = {
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
-        "Referer": "https://sportsonline.si/"
-    }
-    fu2 = s.get(find, headers=headers)
-    logga(find+"\n"+fu2.text)
+    UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
     try:
-        linkSpo = re.findall('var src = "(.*?)"',fu2.text)[0]
-        linkSpoRef = linkSpo+"|Referer="+find+"&Origin="+find+"&User-Agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
-        
-        
-        video_urls.append((linkSpo, "[COLOR lime]PLAY VIDEO[/COLOR]"))
-        video_urls.append((linkSpoRef, "[COLOR gold]PLAY VIDEO[/COLOR]"))
-    except:
+        if not parIn:
+            raise ValueError("empty parIn")
+        s = requests.Session()
+        fu = s.get(parIn, headers={'user-agent': UA, 'Referer': 'https://sportsonline.st/', 'Origin': 'https://sportsonline.st'}, timeout=20)
+        m = re.search(r'<iframe[^>]+src=["\']([^"\']+)["\']', fu.text, re.IGNORECASE)
+        if not m:
+            raise ValueError("no iframe")
+        iframe_url = m.group(1).strip()
+        if iframe_url.startswith("//"):
+            iframe_url = "https:" + iframe_url
+        logga('IFRAME_SPONL: '+iframe_url)
+        parsed_if = urlparse(iframe_url)
+        origin_if = parsed_if.scheme + "://" + parsed_if.netloc
+        fu2 = s.get(iframe_url, headers={'User-Agent': UA, 'Referer': parIn, 'Origin': origin_if}, timeout=20)
+        html2 = fu2.text
+        link = None
+        # 3a) player attuale: window._econfig (stessa decodifica di EasyProxy)
+        m_cfg = re.search(r"window\._econfig\s*=\s*['\"]([^'\"]{100,})['\"]", html2)
+        if m_cfg:
+            link = _decode_barecrop_econfig(m_cfg.group(1))
+            if link:
+                logga('ECONFIG_SPONL: '+link[:80])
+        # 3b) fallback P.A.C.K.E.R.
+        if not link:
+            try:
+                import jsunpack
+                blocks = re.findall(r"eval\(function\(p,a,c,k,e.*?\}\(.*?\)\)", html2, re.DOTALL)
+                for block in blocks:
+                    try:
+                        unpacked = jsunpack.unpack(block)
+                    except:
+                        continue
+                    for pat in (r'var\s+src\s*=\s*["\']([^"\']+\.m3u8[^"\']*)["\']',
+                                r'src\s*=\s*["\']([^"\']+\.m3u8[^"\']*)["\']',
+                                r'file\s*:\s*["\']([^"\']+\.m3u8[^"\']*)["\']',
+                                r'(https?://[^\s"\'<>\\]+\.m3u8[^\s"\'<>\\]*)'):
+                        mm2 = re.search(pat, unpacked)
+                        if mm2:
+                            link = mm2.group(1)
+                            break
+                    if link:
+                        break
+            except:
+                pass
+        # 3c) fallback m3u8 inline
+        if not link:
+            for pat in (r'var\s+src\s*=\s*["\']([^"\']+\.m3u8[^"\']*)["\']',
+                        r'src\s*=\s*["\']([^"\']+\.m3u8[^"\']*)["\']',
+                        r'file\s*:\s*["\']([^"\']+\.m3u8[^"\']*)["\']',
+                        r'(https?://[^\s"\'<>\\]+\.m3u8[^\s"\'<>\\]*)'):
+                mm2 = re.search(pat, html2)
+                if mm2:
+                    link = mm2.group(1)
+                    break
+        if not link:
+            raise ValueError("no stream")
+        link = link.strip().replace("\\/", "/")
+        if link.startswith("//"):
+            link = "https:" + link
+        linkSpoRef = link+"|Referer="+iframe_url+"&Origin="+origin_if+"&User-Agent="+UA
+        # Solo la versione con header: il server risponde 403 senza
+        # User-Agent/Referer corretti, quindi il link "nudo" in Kodi
+        # non partirebbe mai (Kodi usa la sua UA di default).
+        video_urls.append((linkSpoRef, "[COLOR lime]PLAY VIDEO[/COLOR]"))
+    except Exception as e:
+        logga('ERR_SPONL: '+str(e))
         jsonText='{"SetViewMode":"503","items":['
         jsonText = jsonText + '{"title":"[COLOR red]NO LINK FOUND[/COLOR]",'
         jsonText = jsonText + '"myresolve":"showMsg@@Nessun link trovato",'
@@ -4109,29 +4158,45 @@ def daddyLiveMenu():
 
 def sportsonlineMenu():
     import datetime
-    import certifi
     video_urls = []
 
     arrWeek={"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"}
-    url="https://sportsonline.vc/prog.txt"
+    # Dominio attuale (19-09-26): sportsonline.st - con fallback sui vecchi domini
+    prog_urls=[
+        "https://sportsonline.st/prog.txt",
+        "https://sportsonline.si/prog.txt",
+        "https://sportsonline.vc/prog.txt"
+    ]
     headers = {
-        'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+        'user-agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
     }
     s = requests.Session()
-    r = s.get(url, headers=headers, verify=certifi.where())
+    prog_text = ""
+    for url in prog_urls:
+        try:
+            r = s.get(url, headers=headers, timeout=20)
+            if r.status_code == 200 and "|" in r.text:
+                logga('PROGTXT_SPONL OK: '+url)
+                prog_text = r.text.lstrip("\ufeff")
+                break
+            logga('PROGTXT_SPONL KO '+url+' status '+str(r.status_code))
+        except Exception as e:
+            logga('PROGTXT_SPONL ERR '+url+' '+str(e))
+            continue
     jsonText='{"SetViewMode":"500","channels":['
-    #arrLine = r.text.splitlines
+    #arrLine = prog_text.splitlines
     numIt=0
     numCh=0
     start=0
-    for line in r.text.splitlines():
+    for line in prog_text.splitlines():
+        line = line.strip().lstrip("\ufeff")
         if line == "" or line[0:1]== "." or line[0:1]== "|":
             continue
         #logga("ROW: "+line)
         for day in arrWeek:
             if day in line:
                 if (numCh > 0):
-                    jsonText = jsonText + ']},'    
+                    jsonText = jsonText + ']},'
                 jsonText = jsonText + '{"name":"[COLOR gold]'+line.strip()+'[/COLOR] ",'
                 jsonText = jsonText + '"thumbnail":"https://freepngimg.com/download/calendar/4-2-calendar-png-hd.png",'
                 jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
@@ -4139,6 +4204,7 @@ def sportsonlineMenu():
                 numIt=0
                 numCh=numCh+1
                 start=1
+                break
         if start==1:
             if "|" in line:
                 arrT=line.split("|")
