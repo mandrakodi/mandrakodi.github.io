@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.252'
+versione='1.2.253'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 26.08.2026
+# Last update: 19.09.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1181,9 +1181,154 @@ def daddy(parIn=None):
     
     return video_urls
 
-
+def _decode_barecrop_econfig(enc):
+    """Decodifica window._econfig - fix per nuovo player Barecrop (come EasyProxy)"""
+    import base64, math, json
+    try:
+        if not enc:
+            return None
+        s = base64.b64decode(enc).decode("latin1")
+        n = 4
+        order = [2, 0, 3, 1]
+        chunk_len = math.ceil(len(s) / n)
+        parts = [s[i * chunk_len:(i + 1) * chunk_len] for i in range(n)]
+        arr = [""] * n
+        for i, o in enumerate(order):
+            a = str(parts[i])
+            if len(a) < 4:
+                return None
+            a = a[:3] + a[4:]
+            arr[o] = base64.b64decode(a).decode("latin1")
+        final = base64.b64decode("".join(arr)).decode("utf-8", errors="ignore")
+        cfg = json.loads(final)
+        if isinstance(cfg, dict):
+            url = cfg.get("stream_url") or cfg.get("stream_url_nop2p")
+            if isinstance(url, str) and url.startswith("http"):
+                return url.strip()
+        return None
+    except Exception:
+        return None
 
 def daddyCode(codeIn=None):
+    import re, json, base64
+    video_urls = []
+
+    ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 OPR/130.0.0.0"
+
+    if not codeIn:
+        return video_urls
+
+    try:
+        # Prova piu' origini come fallback se dlhd.st risulta bloccato - verifica su https://dlive.sx/watch.php?id=861
+        origins = ["https://dlive.sx", "https://dlhd.st", "https://dlstreams.st"]
+        session = requests.Session()
+        session.headers.update({"User-Agent": ua})
+        page_1 = None
+        dadUrl = None
+        used_origin = None
+        for origin in origins:
+            try:
+                pUrl = origin + "/stream/stream-" + codeIn + ".php"
+                headers = {'user-agent': ua,'accept':'*/*','Referer': origin + '/'}
+                resp = session.get(pUrl, headers=headers, timeout=8)
+                if resp.status_code != 200:
+                    logga(f"DADDY {origin} status {resp.status_code} for {codeIn}")
+                    continue
+                page_1 = resp.text
+                m = re.findall('<iframe src="(.*?)"', page_1)
+                if not m:
+                    logga(f"DADDY no iframe from {origin} for {codeIn}")
+                    continue
+                dadUrl = m[0]
+                if dadUrl.startswith("//"):
+                    from urllib.parse import urlparse
+                    dadUrl = urlparse(pUrl).scheme + ":" + dadUrl
+                # Se l'iframe punta ancora a /stream/*.php (caso watch.php), segui il secondo livello
+                if "/stream/stream-" in dadUrl and "tiestep.top" not in dadUrl and "hamis" not in dadUrl:
+                    # secondo livello
+                    try:
+                        resp2 = session.get(dadUrl, headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer': origin + '/'}, timeout=8)
+                        if resp2.status_code == 200:
+                            m2 = re.findall('<iframe src="(.*?)"', resp2.text)
+                            if m2:
+                                dadUrl = m2[0]
+                                if dadUrl.startswith("//"):
+                                    from urllib.parse import urlparse as up2
+                                    dadUrl = up2(pUrl).scheme + ":" + dadUrl
+                    except: pass
+                used_origin = origin
+                logga(f"DADDY got iframe {dadUrl} from {origin}")
+                break
+            except Exception as e:
+                logga(f"DADDY origin {origin} exception {e}")
+                continue
+        if not dadUrl:
+            logga(f"DADDY no iframe for {codeIn} su nessun origin")
+            video_urls.append(("ignoreMe", f"[COLOR red]No iframe for {codeIn}[/COLOR]", "No link", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
+            return video_urls
+
+        # Referer per il player = pUrl completo (come nel fix di oggi pomeriggio) + Origin
+        referer_for_player = pUrl  # usa il pUrl completo, non solo origin
+        # Usa ua completo e Origin come nel fix funzionante
+        page_data = session.get(dadUrl, headers={'user-agent': ua,'accept':'*/*','Referer': referer_for_player, 'Origin': used_origin}, timeout=8).text
+
+        link = None
+        # 1) Nuovo formato _econfig (Barecrop) - fix principale
+        m_cfg = re.search(r"window\._econfig\s*=\s*['\"]([^'\"]{100,})['\"]", page_data)
+        if m_cfg:
+            link = _decode_barecrop_econfig(m_cfg.group(1))
+            if link:
+                logga(f"DADDY _econfig decoded {link[:80]}")
+
+        # 2) Vecchio formato atob (fallback)
+        if not link:
+            m_atob = re.findall("window.atob\\('(.*?)'\\)", page_data)
+            if m_atob:
+                try:
+                    link = base64.b64decode(m_atob[0]).decode("utf-8")
+                    logga(f"DADDY atob decoded {link[:80]}")
+                except: pass
+
+        # 3) Fallback generico m3u8
+        if not link:
+            m_m3u8 = re.search(r"https?://[^\s'\"<>\\]+\.m3u8[^\s'\"<>\\]*", page_data)
+            if m_m3u8:
+                link = m_m3u8.group(0)
+                logga(f"DADDY generic m3u8 {link[:120]}")
+
+        if not link:
+            logga(f"DADDY no stream URL for {codeIn}")
+            video_urls.append(("ignoreMe", f"[COLOR red]No stream found for {codeIn}[/COLOR]", "No link", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
+            return video_urls
+
+        arrU = dadUrl.split("/")
+        refe = arrU[0]+"//"+arrU[2]+"/"
+        origin = arrU[0]+"//"+arrU[2]
+
+        m3u8=link+"|referer="+refe+"&origin="+origin+"&user-agent="+ua
+
+        jsonText='{"SetViewMode":"50","items":['
+        jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"'+m3u8+'",'
+        jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"by MandraKodi"},'
+        jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","ffmpeg_link":"'+m3u8+'",'
+        jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"by MandraKodi"}'
+        jsonText = jsonText + "]}"
+        logga('JSON-DADDY: '+jsonText)
+        video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+        return video_urls
+    except Exception as e:
+        logga(f"DADDY exception for {codeIn}: {e}")
+        import traceback
+        traceback.print_exc()
+        video_urls.append(("ignoreMe", f"[COLOR red]Error for {codeIn}[/COLOR]", "No link", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
+        return video_urls
+
+
+def daddyCode_old(codeIn=None):
     import re, json, base64
     video_urls = []
 
@@ -1214,90 +1359,6 @@ def daddyCode(codeIn=None):
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
     jsonText = jsonText + '"info":"by MandraKodi"},'
     jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg@@'+m3u8+'",'
-    #jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"daddy@@https://dlhd.so/embed/stream-'+codeIn+'.php",'
-    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
-    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-    jsonText = jsonText + '"info":"by MandraKodi"}'
-    
-   
-    
-    jsonText = jsonText + "]}"
-    logga('JSON-DADDY: '+jsonText)
-    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
-    
-    return video_urls
-
-
-    randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
-    #randomUa=getRandomUA()
-    headers = {
-        'user-agent': randomUa,
-        'referer': "https://dlhd.dad/"
-    }
-    s = requests.Session()
-    
-    #urlSrv="https://dlhd.dad/stream/stream-"+codeIn+".php"
-    #fuSrv = s.get(urlSrv, headers=headers, verify=False)
-    #urlAuth = re.findall('<iframe src="(.*?)"', fuSrv.text)[0]
-    #logga("SERVER_AUTH_DADDY: "+urlAuth)
-    #arrAuth=urlAuth.split("/")
-    #hostAuth=arrAuth[2]
-    hostAuth="epicplayplay.cfd"
-    urlAuth="https://"+hostAuth+"/premiumtv/daddyhd.php?id="+codeIn
-    
-    fu = s.get(urlAuth, headers=headers)
-    logga ("AUTH_PAGE: "+fu.text)
-
-    bundle64 = re.findall('const IJXX="(.*?)"', fu.text)[0]
-    logga("BUNDLE_DADDY: "+bundle64)
-    bundle=base64.b64decode(bundle64).decode("utf-8")
-    arrAuth=json.loads(bundle)
-    authTs64 = arrAuth["b_ts"]
-    authRnd64 = arrAuth["b_rnd"]
-    authSig64 = arrAuth["b_sig"]
-
-    authTs = base64.b64decode(authTs64).decode("utf-8")
-    authRnd = base64.b64decode(authRnd64).decode("utf-8")
-    authSig = base64.b64decode(authSig64).decode("utf-8")
-    
-    sigHt=re.findall('src="https://security.giokko.ru/secure.php(.*?)"', fu.text)[0]
-    logga("DADDY NEW_URL "+sigHt)
-    arrSig=sigHt.split("&sig=")
-    authSig=arrSig[1]
-
-    headers = {
-        'user-agent': randomUa,
-        'referer': "https://"+hostAuth+"/",
-        'origin': "https://"+hostAuth
-    }
-    urlAuth="https://top2new.giokko.ru/auth.php?channel_id=premium"+codeIn+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
-    urlAuth="https://security.giokko.ru/secure.php"+sigHt
-    
-    dataJ2 = s.get(urlAuth, headers=headers)
-    logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
-    
-    urlSrv="https://"+hostAuth+"/server_lookup.php?channel_id=premium"+codeIn
-
-    dataJson = s.get(urlSrv, headers=headers)
-    logga("DADDY JSON "+dataJson.text)
-    arrJ = json.loads(dataJson.text)
-    server=arrJ["server_key"]
-    logga("DADDY_CODE SERVER "+server)
-    link="https://"+server+"new.giokko.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
-    
-    refe="https://"+hostAuth+"/"
-    origin="https://"+hostAuth
-    
-    
-    final_url=link+"|Referer="+refe+"&Origin="+origin+"&Connection=Keep-Alive&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
-    
-
-    jsonText='{"SetViewMode":"50","server":"'+server+'","items":['
-    jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"'+final_url+'",'
-    jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
-    jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-    jsonText = jsonText + '"info":"by MandraKodi"},'
-    jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+final_url+'",'
     #jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"daddy@@https://dlhd.so/embed/stream-'+codeIn+'.php",'
     jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
     jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'

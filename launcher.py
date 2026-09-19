@@ -1,8 +1,8 @@
-versione='1.2.82'
+versione='1.2.83'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 23.08.2026
+# Last update: 19.09.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -244,6 +244,8 @@ def jsonToItems(strJson):
             is_updateCode = False
             is_delSet = False
             is_personal = False
+            is_ffmpeg_link = False
+            ffmpeg_link_url = ""
             is_enabled = True
 
             if 'enabled' in item:
@@ -301,6 +303,11 @@ def jsonToItems(strJson):
                     arrT=link.split(":")
                     link=arrT[0]
                     resolverPar=arrT[1]
+            if 'ffmpeg_link' in item:
+                is_ffmpeg_link = True
+                is_folder = False
+                ffmpeg_link_url = item["ffmpeg_link"]
+                link = ffmpeg_link_url
                 #logga("MY_RES_LINK: "+link)
                 #logga("MY_RES_PAR: "+resolverPar)
             if 'regexPage' in item:
@@ -360,6 +367,26 @@ def jsonToItems(strJson):
                 url = get_url(action='regex', url=link, exp=regExp)
             elif is_myresolve == True:
                 url = get_url(action='myresolve', url=link, parIn=resolverPar)
+            elif is_ffmpeg_link == True:
+                # Direct ffmpegdirect playable without extra directory
+                list_item.setProperty('IsPlayable', 'true')
+                list_item.setProperty('inputstream', 'inputstream.ffmpegdirect')
+                list_item.setMimeType('application/x-mpegURL')
+                list_item.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
+                list_item.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
+                try:
+                    timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
+                    if timeShift != "no_time_shift":
+                        list_item.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
+                except:
+                    pass
+                # Handle pipe headers for ffmpegdirect if present
+                if "|" in ffmpeg_link_url:
+                    # Keep pipe headers in URL, ffmpegdirect will parse them
+                    url = ffmpeg_link_url
+                else:
+                    url = ffmpeg_link_url
+                is_folder = False
             elif is_pvr == True:
                 url = get_url(action='pvr', url=link)
             elif is_log == True:
