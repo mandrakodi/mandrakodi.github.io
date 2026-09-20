@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.254'
+versione='1.2.255'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -8479,11 +8479,11 @@ def mediahosting(parIn):
     if match:
         src = match.group(1) 
     '''
-    src="https://p5.streamhostingcdn.top/stream/"+parIn+"/index.m3u8?token=aN7QrmHIoz60HOhI"
+    src="https://p7.streamhostingcdn.top/stream/"+parIn+"/index.m3u8?token=o_mnFDukW1rajOBK2cJPcw&ark_r=p7"
     logga("URL_MEDIA: "+src)
     ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 OPR/133.0.0.0"
     video_urls= []
-    video_urls.append((src+"|Referer=https://hostingmediapro.top/&Origin=https://hostingmediapro.top&User-Agent="+ua, "[COLOR gold]OPEN STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
+    video_urls.append((src+"|Referer=https://prohostmedia.top/&Origin=https://prohostmedia.top&User-Agent="+ua, "[COLOR lime]OPEN STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
     return video_urls
 
 
