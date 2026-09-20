@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.255'
+versione='1.2.256'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -8574,19 +8574,20 @@ class RusticoTvResolver:
 
 
 def streamtp(parIn):
-    player_url="https://streamtp10.com/global1.php?stream="+parIn
+    player_url="https://streamtp-golden1.click/global1.php?stream="+parIn
+    '''
     resolver= RusticoTvResolver()
     src = resolver.get_stream_url(player_url)
-    
     '''
-    headers = {"Referer": "https://streamtpnew.com/"}
+
+    headers = {"Referer": "https://rusticotv.la/"}
     r = requests.get(player_url, headers=headers, timeout=15)
     js_code=r.text
     match = re.search(r'playbackURL = "(.*?)"', js_code, re.DOTALL)
     src = "ignore"
     if match:
-        src = match.group(1) 
-    '''
+        src = match.group(1).replace("\\", "") 
+    
 
     logga("URL_MEDIA: "+src)
     video_urls= []
