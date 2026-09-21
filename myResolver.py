@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.256'
+versione='1.2.257'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
-# Last update: 20.09.2026
+# Last update: 21.09.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1220,7 +1220,7 @@ def daddyCode(codeIn=None):
 
     try:
         # Prova piu' origini come fallback se dlhd.st risulta bloccato - verifica su https://dlive.sx/watch.php?id=861
-        origins = ["https://dlive.sx", "https://dlhd.st", "https://dlstreams.st"]
+        origins = ["https://dlive.sx", "https://dlhd.st", "https://dlstreams.st", "https://dlhd.pk"]
         session = requests.Session()
         session.headers.update({"User-Agent": ua})
         page_1 = None
@@ -2097,7 +2097,7 @@ def amstaffTest(parIn):
         """
         liz.setProperty('inputstream.adaptive.stream_headers', heads)
         liz.setProperty('inputstream.adaptive.manifest_headers', heads)
-    elif "lba-ew" in link:
+    elif "lba-ew" in link or "dve-streams.akamaized.net" in link:
         ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0"
         host="https://www.lbatv.com"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
@@ -7929,7 +7929,7 @@ def sports99(parIn):
             if (numIt > 0):
                 jsonText = jsonText + ','    
             jsonText = jsonText + '{"title":"'+titolo+'",'
-            jsonText = jsonText + '"myresolve":"sports99@@2__'+url+'",'
+            jsonText = jsonText + '"myresolve":"cdnLive@@'+url+'",'
             jsonText = jsonText + '"thumbnail":"'+img+'",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"info":"'+tit+'"}'
@@ -7937,6 +7937,8 @@ def sports99(parIn):
 
     if mode == "2":
         par=arrPar[1]
+
+
         stream=api.get_stream_url(par)
         url="no_url"
         try:
@@ -7981,7 +7983,8 @@ def sports99(parIn):
 
 
 def cdnLive(parIn):
-    api = CdnLiveClient(start_url=parIn)
+    urlToResole=parIn.replace("user=streamsports99&plan=vip", "user=cdnlivetv&plan=free")
+    api = CdnLiveClient(start_url=urlToResole)
     url= api.find_stream()
     logga("CDN_URL: "+url)
     ref = "https://cdnlivetv.tv"
@@ -8075,15 +8078,131 @@ class CdnLiveClient:
     def find_stream(self):
         r = requests.get(self.start_url, headers={'referer': "https://streamsports99.su/"})
         logga("CDN_PAGE: "+r.text)
-        hunted = re.compile(r'<script.*?>\s*(.*?eval\(function\(h,u,n,t,e,r\).*?)\s*</script>', re.DOTALL).findall(r.text)
-        if not hunted:
-             hunted = re.compile(r'eval\(function\(h,u,n,t,e,r\).*?\)', re.DOTALL).findall(r.text)
-        
-        if hunted:
-            url = self.deHunter(hunted[0])
-            return url
-        logga("NO HUNTED")
-        return ""
+        url = self.estrai_link_finale(r.text)
+        if url == None:
+            return "NoLink"
+        return url
+
+
+    def estrai_link_finale(self, html):
+        import re
+        import base64
+        """
+        Estrae dall'HTML un URL costruito tramite:
+        function <nome>(s) { ... atob(s) ... }
+        var <nome> = '<base64>';
+        ...
+        var <nome_finale> = <funzione>(var1) + <funzione>(var2) + ...;
+
+        Restituisce il link finale oppure None.
+        """
+
+        # Cerca tutti gli script della pagina
+        scripts = re.findall(
+            r'<script\b[^>]*>(.*?)</script>',
+            html,
+            flags=re.IGNORECASE | re.DOTALL
+        )
+
+        for script in scripts:
+
+            # ---------------------------------------------------------
+            # 1. Trova la funzione che contiene atob()
+            # ---------------------------------------------------------
+            m_func = re.search(
+                r'function\s+([A-Za-z_$][\w$]*)\s*'
+                r'\(\s*[A-Za-z_$][\w$]*\s*\)\s*\{'
+                r'.*?atob\s*\(',
+                script,
+                flags=re.DOTALL
+            )
+
+            if not m_func:
+                continue
+
+            decode_func = m_func.group(1)
+
+            # ---------------------------------------------------------
+            # 2. Recupera tutte le variabili stringa
+            #    var XXXXX = 'Base64';
+            # ---------------------------------------------------------
+            variables = {}
+
+            for m in re.finditer(
+                r'\bvar\s+([A-Za-z_$][\w$]*)\s*=\s*'
+                r'([\'"])(.*?)\2\s*;',
+                script,
+                flags=re.DOTALL
+            ):
+                variables[m.group(1)] = m.group(3)
+
+            if not variables:
+                continue
+
+            # ---------------------------------------------------------
+            # 3. Cerca una assegnazione che utilizza la funzione
+            #
+            #    var XXXXX = decode(a) + decode(b) + decode(c);
+            # ---------------------------------------------------------
+            pattern = (
+                r'\bvar\s+([A-Za-z_$][\w$]*)\s*=\s*'
+                r'((?:'
+                + re.escape(decode_func)
+                + r'\s*\(\s*[A-Za-z_$][\w$]*\s*\)\s*\+\s*)*'
+                + re.escape(decode_func)
+                + r'\s*\(\s*[A-Za-z_$][\w$]*\s*\))\s*;'
+            )
+
+            matches = re.finditer(pattern, script)
+
+            for m in matches:
+                expression = m.group(2)
+
+                # Recupera le variabili utilizzate nell'espressione
+                names = re.findall(
+                    re.escape(decode_func) +
+                    r'\s*\(\s*([A-Za-z_$][\w$]*)\s*\)',
+                    expression
+                )
+
+                if not names:
+                    continue
+
+                try:
+                    result = ""
+
+                    for name in names:
+                        encoded = variables.get(name)
+
+                        if encoded is None:
+                            raise ValueError(
+                                "Variabile non trovata: " + name
+                            )
+
+                        # Base64 URL-safe, come nella funzione JS
+                        encoded = encoded.replace("-", "+").replace("_", "/")
+
+                        encoded += "=" * (-len(encoded) % 4)
+
+                        raw = base64.b64decode(encoded)
+
+                        # Equivalente pratico di:
+                        # decodeURIComponent(escape(atob(s)))
+                        try:
+                            decoded = raw.decode("utf-8")
+                        except UnicodeDecodeError:
+                            decoded = raw.decode("latin-1")
+
+                        result += decoded
+
+                    # Deve sembrare effettivamente un URL
+                    if re.match(r'^https?://', result):
+                        return result
+
+                except Exception:
+                    continue
+
+        return None
 
 
 
