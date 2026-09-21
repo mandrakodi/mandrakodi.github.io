@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.257'
+versione='1.2.258'
 # Module: myResolve
 # Author: ElSupremo
 # Created on: 10.04.2021
@@ -9031,8 +9031,8 @@ def futLibre(parIn=None):
     links = []
     if parIn=="menu":
         timestamp = int(time.time() * 1000)
-        url="https://futbollibretv.net.pe/agenda-data.php?actualizacion="+str(timestamp)
-        
+        #url="https://futbollibretv.net.pe/agenda-data.php?actualizacion="+str(timestamp)
+        url="https://agenda18.com/agenda.json?v=2.3"
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         source = response.json()
@@ -9041,14 +9041,16 @@ def futLibre(parIn=None):
         #logga('JSON-FUT: '+result)
         links.append((result, "PLAY VIDEO", "No info", "noThumb", "json"))
     else:
-        url="https://futbollibre.ch/vivo/canales.php?stream="+parIn
+        #url="https://futbollibre.ch/vivo/canales.php?stream="+parIn
+        url="https://la18hd.su/vivo/canal.php?stream="+parIn
+        logga ("url: "+url)
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         source = response.text
-        #logga ("source: "+source)
+        logga ("source: "+source)
         urlVideo=""
         try:
-            urlVideo=re.findall('const playbackURL = "(.*?)"', source)[0]
+            urlVideo=re.findall('var playbackURL = "(.*?)"', source)[0]
         except Exception:
             pass
 
