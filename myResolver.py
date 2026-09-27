@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.259'
+versione='1.2.260'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
@@ -7072,7 +7072,7 @@ def resolve_link(url):
     return m3u8
 
 def epgInfo(parIn, timeout=10):
-    import json
+    import json, launcher
     url="https://guidatv.org/canali/"+parIn
     req = Request(
         url,
@@ -7089,10 +7089,28 @@ def epgInfo(parIn, timeout=10):
     parser.feed(html)
 
     epg = parser.data
-    #logga("EPG: "+json.dumps(epg, indent=2, ensure_ascii=False))
+    msgProgram="Il link va cercato nelle liste disponibili"
     links = []
     jsonText='{"SetViewMode": "504", "items":['
     numIt=0
+    try:
+        apiUrl="https://test34344.herokuapp.com/filter.php?numTest=A1A201&mode=8&ch="+parIn
+        resp = launcher.makeRequest(apiUrl)
+        #logga("RESP: "+resp)
+        res=json.loads(resp)
+        for u in res["listaUrl"]:
+            if (numIt > 0):
+                jsonText = jsonText + ',' 
+            jsonText = jsonText + '{"title":"[COLOR cyan]PLAY STREAM MPD[/COLOR]",'
+            jsonText = jsonText + '"myresolve":"amstaff@@'+u["urlMpd"]+'",'
+            jsonText = jsonText + '"thumbnail":"https://openclipart.org/image/800px/270781",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"PLAY STREAM MPD"}'
+            numIt=numIt+1
+        if numIt > 0:
+            msgProgram="Per avviare lo stream, cliccare sul link in alto"
+    except:
+        pass
     for p in epg["programmazione"]:
         orario = p["orario"]
         titolo = p["titolo"]
@@ -7109,7 +7127,7 @@ def epgInfo(parIn, timeout=10):
         if (numIt > 0):
             jsonText = jsonText + ','    
         jsonText = jsonText + '{"title":"[COLOR blue]'+orario+'[/COLOR] [COLOR gold]'+titolo.replace('"',"")+'[/COLOR] [COLOR lime]('+durata+')[/COLOR]",'
-        jsonText = jsonText + '"myresolve":"showMsg@@Il link va cercato nelle liste disponibili",'
+        jsonText = jsonText + '"myresolve":"showMsg@@'+msgProgram+'",'
         jsonText = jsonText + '"thumbnail":"'+img+'",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"'+desc.replace('"',"")+'"}'
