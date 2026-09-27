@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.258'
+versione='1.2.259'
 # Module: myResolve
-# Author: ElSupremo
+# Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 21.09.2026
+# Last update: 27.09.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1181,6 +1181,25 @@ def daddy(parIn=None):
     
     return video_urls
 
+def _is_defaced_kodi(body):
+    """True se la playlist e' la fake PNG-HLS 'HACKERMAN' (TS nascosto nei
+    PNG, giocabile solo dal player custom del sito, non da Kodi/ffmpeg)."""
+    if not body:
+        return False
+    low = body[:16000].lower()
+    return ("hackerman" in low or "null367" in low or "tiktokcdn" in low)
+
+def _unwrap_port_kodi():
+    """Porta del loopback unwrap proxy pubblicata dal service. Default 8755
+    se il service non e' (ancora) partito."""
+    try:
+        p = int(xbmcgui.Window(10000).getProperty("mandra_unwrap_port") or 0)
+        if p > 0:
+            return p
+    except Exception:
+        pass
+    return 8755
+
 def _decode_barecrop_econfig(enc):
     """Decodifica window._econfig - fix per nuovo player Barecrop (come EasyProxy)"""
     import base64, math, json
@@ -1219,85 +1238,148 @@ def daddyCode(codeIn=None):
         return video_urls
 
     try:
-        # Prova piu' origini come fallback se dlhd.st risulta bloccato - verifica su https://dlive.sx/watch.php?id=861
+        # Prova i player in ordine (stream/cast/watch/plus/casting/player/hub)
+        # sulla prima origine raggiungibile e usa il primo con playlist pulita.
+        # Il Player 1 serve ora playlist PNG-HLS "HACKERMAN" (TS nascosto nei
+        # PNG, giocabile solo dal player custom del sito): va scartato,
+        # altrimenti Kodi/ffmpeg ricevono immagini al posto del video.
+        # Se il Player 1 tornasse pulito, verrebbe riusato da solo (e' primo).
         origins = ["https://dlive.sx", "https://dlhd.st", "https://dlstreams.st", "https://dlhd.pk"]
+        players = ["stream", "cast", "watch", "plus", "casting", "player", "hub"]
         session = requests.Session()
         session.headers.update({"User-Agent": ua})
-        page_1 = None
-        dadUrl = None
-        used_origin = None
-        for origin in origins:
-            try:
-                pUrl = origin + "/stream/stream-" + codeIn + ".php"
-                headers = {'user-agent': ua,'accept':'*/*','Referer': origin + '/'}
-                resp = session.get(pUrl, headers=headers, timeout=8)
-                if resp.status_code != 200:
-                    logga(f"DADDY {origin} status {resp.status_code} for {codeIn}")
-                    continue
-                page_1 = resp.text
-                m = re.findall('<iframe src="(.*?)"', page_1)
-                if not m:
-                    logga(f"DADDY no iframe from {origin} for {codeIn}")
-                    continue
-                dadUrl = m[0]
-                if dadUrl.startswith("//"):
-                    from urllib.parse import urlparse
-                    dadUrl = urlparse(pUrl).scheme + ":" + dadUrl
-                # Se l'iframe punta ancora a /stream/*.php (caso watch.php), segui il secondo livello
-                if "/stream/stream-" in dadUrl and "tiestep.top" not in dadUrl and "hamis" not in dadUrl:
-                    # secondo livello
-                    try:
-                        resp2 = session.get(dadUrl, headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer': origin + '/'}, timeout=8)
-                        if resp2.status_code == 200:
-                            m2 = re.findall('<iframe src="(.*?)"', resp2.text)
-                            if m2:
-                                dadUrl = m2[0]
-                                if dadUrl.startswith("//"):
-                                    from urllib.parse import urlparse as up2
-                                    dadUrl = up2(pUrl).scheme + ":" + dadUrl
-                    except: pass
-                used_origin = origin
-                logga(f"DADDY got iframe {dadUrl} from {origin}")
-                break
-            except Exception as e:
-                logga(f"DADDY origin {origin} exception {e}")
-                continue
-        if not dadUrl:
-            logga(f"DADDY no iframe for {codeIn} su nessun origin")
-            video_urls.append(("ignoreMe", f"[COLOR red]No iframe for {codeIn}[/COLOR]", "No link", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
-            return video_urls
-
-        # Referer per il player = pUrl completo (come nel fix di oggi pomeriggio) + Origin
-        referer_for_player = pUrl  # usa il pUrl completo, non solo origin
-        # Usa ua completo e Origin come nel fix funzionante
-        page_data = session.get(dadUrl, headers={'user-agent': ua,'accept':'*/*','Referer': referer_for_player, 'Origin': used_origin}, timeout=8).text
-
         link = None
-        # 1) Nuovo formato _econfig (Barecrop) - fix principale
-        m_cfg = re.search(r"window\._econfig\s*=\s*['\"]([^'\"]{100,})['\"]", page_data)
-        if m_cfg:
-            link = _decode_barecrop_econfig(m_cfg.group(1))
+        dadUrl = None
+        defaced_master = None
+        defaced_ref = None
+        for origin in origins:
             if link:
-                logga(f"DADDY _econfig decoded {link[:80]}")
-
-        # 2) Vecchio formato atob (fallback)
-        if not link:
-            m_atob = re.findall("window.atob\\('(.*?)'\\)", page_data)
-            if m_atob:
+                break
+            origin_ok = False
+            for player in players:
                 try:
-                    link = base64.b64decode(m_atob[0]).decode("utf-8")
-                    logga(f"DADDY atob decoded {link[:80]}")
-                except: pass
+                    pUrl = origin + "/" + player + "/stream-" + codeIn + ".php"
+                    resp = session.get(pUrl, headers={'user-agent': ua, 'accept': '*/*', 'Referer': origin + '/'}, timeout=6)
+                    if resp.status_code != 200:
+                        logga(f"DADDY {player}@{origin} status {resp.status_code}")
+                        continue
+                    origin_ok = True
+                    m = re.findall('<iframe src="(.*?)"', resp.text)
+                    if not m:
+                        logga(f"DADDY no iframe {player}@{origin}")
+                        continue
+                    iframe = m[0]
+                    if iframe.startswith("//"):
+                        from urllib.parse import urlparse
+                        iframe = urlparse(pUrl).scheme + ":" + iframe
+                    # Se l'iframe punta ancora a /stream/*.php, segui il secondo livello
+                    if "/stream/stream-" in iframe and "tiestep.top" not in iframe and "hamis" not in iframe and "daddyliveplayer" not in iframe:
+                        try:
+                            resp2 = session.get(iframe, headers={'user-agent': ua, 'accept': '*/*', 'Referer': origin + '/'}, timeout=6)
+                            if resp2.status_code == 200:
+                                m2 = re.findall('<iframe src="(.*?)"', resp2.text)
+                                if m2:
+                                    iframe = m2[0]
+                                    if iframe.startswith("//"):
+                                        from urllib.parse import urlparse as up2
+                                        iframe = up2(pUrl).scheme + ":" + iframe
+                        except:
+                            pass
+                    rd = session.get(iframe, headers={'user-agent': ua, 'accept': '*/*', 'Referer': pUrl, 'Origin': origin}, timeout=6)
+                    if rd.status_code != 200:
+                        logga(f"DADDY iframe {iframe} status {rd.status_code}")
+                        continue
+                    page_data = rd.text
+                    cand = None
+                    # 1) formato _econfig (tiestep)
+                    m_cfg = re.search(r"window\._econfig\s*=\s*['\"]([^'\"]{100,})['\"]", page_data)
+                    if m_cfg:
+                        cand = _decode_barecrop_econfig(m_cfg.group(1))
+                        if cand:
+                            logga(f"DADDY _econfig decoded {cand[:80]}")
+                    # 2) formato atob classico (hamis)
+                    if not cand:
+                        m_atob = re.findall("window.atob\\('(.*?)'\\)", page_data)
+                        if m_atob:
+                            try:
+                                cand = base64.b64decode(m_atob[0]).decode("utf-8")
+                                logga(f"DADDY atob decoded {cand[:80]}")
+                            except:
+                                pass
+                    # 3) formato const SRC (daddyliveplayer)
+                    if not cand:
+                        m_src = re.search(r"(?:const|let|var)\s+SRC\s*=\s*[\"'](https?://[^\"']+?)[\"']", page_data)
+                        if m_src:
+                            cand = m_src.group(1).strip()
+                            logga(f"DADDY const SRC {cand[:80]}")
+                    # 4) fallback generico m3u8
+                    if not cand:
+                        m_m3u8 = re.search(r"https?://[^\s'\"<>\\]+\.m3u8[^\s'\"<>\\]*", page_data)
+                        if m_m3u8:
+                            cand = m_m3u8.group(0)
+                            logga(f"DADDY generic m3u8 {cand[:120]}")
+                    if not cand:
+                        logga(f"DADDY no stream URL {player}@{origin}")
+                        continue
+                    # Verifica master: scarta fake PNG-HLS e playlist morte.
+                    # Stesso link per DIRECT e FFMPEG, basta un check.
+                    arrI = iframe.split("/")
+                    refI = arrI[0] + "//" + arrI[2] + "/"
+                    try:
+                        rm = session.get(cand, headers={'user-agent': ua, 'accept': '*/*', 'Referer': refI, 'Origin': refI[:-1]}, timeout=6)
+                        if rm.status_code != 200:
+                            logga(f"DADDY master {rm.status_code} {player}@{origin}")
+                            continue
+                        body = rm.text
+                        if _is_defaced_kodi(body):
+                            logga(f"DADDY defaced playlist, skip {player}@{origin}")
+                            if not defaced_master:
+                                defaced_master = cand
+                                defaced_ref = refI
+                            continue
+                        if "#EXTM3U" not in body[:8000]:
+                            logga(f"DADDY not a playlist {player}@{origin}")
+                            continue
+                    except Exception as e:
+                        logga(f"DADDY master check {player}@{origin}: {e}")
+                        continue
+                    link = cand
+                    dadUrl = iframe
+                    logga(f"DADDY using {player}@{origin}")
+                    break
+                except Exception as e:
+                    logga(f"DADDY {player}@{origin} exception {e}")
+                    continue
+            if not origin_ok:
+                logga(f"DADDY origin {origin} non raggiungibile, provo la prossima")
+                continue
+            # Prima origine raggiungibile esaurita (stesso backend per tutte): stop
+            break
 
-        # 3) Fallback generico m3u8
         if not link:
-            m_m3u8 = re.search(r"https?://[^\s'\"<>\\]+\.m3u8[^\s'\"<>\\]*", page_data)
-            if m_m3u8:
-                link = m_m3u8.group(0)
-                logga(f"DADDY generic m3u8 {link[:120]}")
-
-        if not link:
-            logga(f"DADDY no stream URL for {codeIn}")
+            if defaced_master:
+                # Solo Player wrappato disponibile: passa dal proxy loopback
+                # del service (spacchetta PNG->TS). Vale per DIRECT e FFMPEG.
+                port = _unwrap_port_kodi()
+                import urllib.parse as _up
+                prox = "http://127.0.0.1:%d/m?u=%s&ref=%s" % (
+                    port, _up.quote(defaced_master, safe=""),
+                    _up.quote(defaced_ref, safe=""))
+                logga(f"DADDY unwrap proxy {prox[:80]}")
+                m3u8 = prox
+                jsonText = '{"SetViewMode":"50","items":['
+                jsonText = jsonText + '{"title":"[COLOR aqua]PLAY STREAM PNG ' + codeIn + '[/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"' + m3u8 + '",'
+                jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"info":"by MandraKodi"},'
+                jsonText = jsonText + '{"title":"[COLOR cyan]PLAY STREAM PNG ' + codeIn + '[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","ffmpeg_link":"' + m3u8 + '",'
+                jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"info":"by MandraKodi"}'
+                jsonText = jsonText + "]}"
+                video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+                return video_urls
+            logga(f"DADDY no working stream for {codeIn}")
             video_urls.append(("ignoreMe", f"[COLOR red]No stream found for {codeIn}[/COLOR]", "No link", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
             return video_urls
 
