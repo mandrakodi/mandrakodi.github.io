@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.260'
+versione='1.2.261'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 27.09.2026
+# Last update: 29.09.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -7098,17 +7098,28 @@ def epgInfo(parIn, timeout=10):
         resp = launcher.makeRequest(apiUrl)
         #logga("RESP: "+resp)
         res=json.loads(resp)
-        for u in res["listaUrl"]:
-            if (numIt > 0):
-                jsonText = jsonText + ',' 
-            jsonText = jsonText + '{"title":"[COLOR cyan]PLAY STREAM MPD[/COLOR]",'
-            jsonText = jsonText + '"myresolve":"amstaff@@'+u["urlMpd"]+'",'
-            jsonText = jsonText + '"thumbnail":"https://openclipart.org/image/800px/270781",'
-            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-            jsonText = jsonText + '"info":"PLAY STREAM MPD"}'
-            numIt=numIt+1
-        if numIt > 0:
-            msgProgram="Per avviare lo stream, cliccare sul link in alto"
+        if res["listaUrl"][0]["urlMpd"]=="NO_LINK":
+            lista = ["mtv", "comedy-central", "history-channel", "discovery-channel-hd", "deakids", "nickelodeon"]
+            if parIn in lista or "sky" in parIn:
+                jsonText = jsonText + '{"title":"[COLOR cyan]FIND STREAM MPD[/COLOR]",'
+                jsonText = jsonText + '"myresolve":"sky@@'+parIn+'",'
+                jsonText = jsonText + '"thumbnail":"https://openclipart.org/image/800px/270781",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"info":"PLAY STREAM MPD"}'
+                numIt=numIt+1
+                msgProgram="Per avviare lo stream, cliccare sul link in alto"
+        else:    
+            for u in res["listaUrl"]:
+                if (numIt > 0):
+                    jsonText = jsonText + ',' 
+                jsonText = jsonText + '{"title":"[COLOR cyan]PLAY STREAM MPD[/COLOR]",'
+                jsonText = jsonText + '"myresolve":"amstaff@@'+u["urlMpd"]+'",'
+                jsonText = jsonText + '"thumbnail":"https://openclipart.org/image/800px/270781",'
+                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+                jsonText = jsonText + '"info":"PLAY STREAM MPD"}'
+                numIt=numIt+1
+            if numIt > 0:
+                msgProgram="Per avviare lo stream, cliccare sul link in alto"
     except:
         pass
     for p in epg["programmazione"]:
@@ -8938,6 +8949,8 @@ def zappr(parIn):
         return samsung(parIn)
     links = []
     url = "https://channels.zappr.stream/it/dtt/national.json"
+    if parIn != "menu":
+        url = "https://channels.zappr.stream/it/dtt/regional/"+parIn+".json"
     logga("GET JSON FROM: "+url)
 
     jsonText='{"SetViewMode":"503","items":['
