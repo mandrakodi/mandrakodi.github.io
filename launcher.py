@@ -1,8 +1,8 @@
-versione='1.2.83'
+versione='1.2.84'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 19.09.2026
+# Last update: 10.10.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -171,7 +171,7 @@ def getExternalJson(strPath):
         remoteLog("NO_FONTE@@"+strPath)
         logging.warning("NO JSON AT: "+strPath)
         strSource = connProblemMsg()
-    
+
     jsonToItems(strSource)
 	
 def jsonToItems(strJson):
@@ -233,6 +233,7 @@ def jsonToItems(strJson):
             extLink2 = False
             is_folder = False
             is_magnet = False
+            is_f4m = False
             is_myresolve = False
             is_regex = False
             is_m3u = False
@@ -334,6 +335,9 @@ def jsonToItems(strJson):
             if 'magnet' in item:
                 is_magnet = True
                 link = item["magnet"]
+            if 'f4m' in item:
+                is_f4m = True
+                link = item["f4m"]
             if 'pvr' in item:
                 is_pvr = True
                 link = item["pvr"]
@@ -414,6 +418,9 @@ def jsonToItems(strJson):
             elif is_magnet == True:
                 list_item.setProperty('IsPlayable', 'true')
                 url = get_urlMagnet(uri=link)
+            elif is_f4m == True:
+                list_item.setProperty('IsPlayable', 'true')
+                url = get_urlF4m(url=link)
             elif is_chrome == True:
                 url = get_urlChrome(mode='showSite', stopPlayback='no', kiosk='no', url=link)
             else:
@@ -446,6 +453,9 @@ def get_url(**kwargs):
 
 def get_urlMagnet(**kwargs):
     return '{0}?{1}'.format("plugin://plugin.video.elementum/play", urlencode(kwargs))
+
+def get_urlF4m(**kwargs):
+    return '{0}?{1}&streamtype=TSDOWNLOADER&name=PLAY_STREAM&user-agent=VLC'.format("plugin://plugin.video.f4mTester/", urlencode(kwargs))
 
 def get_urlChrome(**kwargs):
     return '{0}?{1}'.format("plugin://plugin.program.browser.launcher/", urlencode(kwargs))
@@ -1006,6 +1016,7 @@ def getIPAddress():
 
 def checkDns():
     import time, requests
+    logga("############ START NETWORK INFO ############")
     ip = getIPAddress()
     dns1 = "0.0.0.0"
     dns2 = "0.0.0.0"
@@ -1023,8 +1034,8 @@ def checkDns():
         currSess = requests.Session()
         head={'user-agent':'Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/533.3 (KHTML, like Gecko) Chrome/5.0.358.0 Safari/533.3',
               'Content-Type':'application/x-www-form-urlencoded',
-              'Referer':'https://dlstreams.st/'}
-        page_data1 = currSess.get("https://dlstreams.st/stream/stream-860.php",headers=head)
+              'Referer':'https://dlive.sx/'}
+        page_data1 = currSess.get("https://dlive.sx/stream/stream-877.php", headers=head, timeout=5)
         responseCode=page_data1.status_code
         dns1 = xbmc.getInfoLabel('Network.DNS1Address')
         dns2 = xbmc.getInfoLabel('Network.DNS2Address')
@@ -1038,7 +1049,7 @@ def checkDns():
     infoDns += "\n## DNS1: %s" %  (dns1)
     infoDns += "\n## DNS2: %s" %  (dns2)
     
-    logga("############ START NETWORK INFO ############")
+    
     logga(infoDns)
     logga("############# END NETWORK INFO #############")
     
@@ -1664,4 +1675,3 @@ def run():
         logga("Last ViewMode Saved: "+kodiView)
     if debug == "on":
         logging.warning("MANDRA_LOG: \n"+testoLog)
-        
