@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.261'
+versione='1.2.262'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 29.09.2026
+# Last update: 10.10.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -386,19 +386,19 @@ def livetv(page_url):
             return resolveMyUrl(ytp)
         if (arrP1[0]=="t=alieztv"):
             codeAL=arrP1[1].split("c=")[1]
-            alp="https://emb.apl375.me/player/live.php?id="+codeAL+"&w=700&h=480"
+            alp="https://emb.apl614.online/player/live.php?id="+codeAL+"&w=700&h=480"
             page_data = downloadHttpPage(alp)
             page_data_flat=page_data.replace("\n", "").replace("\r", "").replace("\t", "")
-            logga ("HTML_ALP375: "+page_data_flat)
+            #logga ("HTML_ALP375: "+page_data_flat)
             src = preg_match(page_data, "pl.init\('([^']*)")
-            logga ("SRC ==> "+src)
+            #logga ("SRC ==> "+src)
             video_urls.append(("https:"+src, "[COLOR lime]PLAY STREAM AL[/COLOR]", "by @MandraKodi", "https://cdn.livetv822.me/img/minilogo.gif"))
             return video_urls
     except:
         pass
     page_data = downloadHttpPage(page_url)
     page_data_flat=page_data.replace("\n", "").replace("\r", "").replace("\t", "")
-    logga ("HTML_LIVETV: "+page_data_flat)
+    #logga ("HTML_LIVETV: "+page_data_flat)
     src = preg_match(page_data, '<iframe  allowFullScreen="true" scrolling=no frameborder="0 "width="700" height="480" src="([^"]*)')
     if src != "":
         arrHost=src.split("/")
@@ -3175,7 +3175,8 @@ def m3uPlus(parIn=None):
         lista = response.json()
         for item in lista:
             stream_id = item.get("stream_id")
-            linkUrl="http://"+host+"/live/"+usr+"/"+pwd+"/"+str(stream_id)+".m3u8|!User-Agent=VLC/3.0.21 LibVLC/3.0.21"
+            linkUrl="http://"+host+"/live/"+usr+"/"+pwd+"/"+str(stream_id)+".ts"
+            #|!User-Agent=VLC/3.0.21 LibVLC/3.0.21
             name = item.get("name")
             stream_icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Microsoft_Stream.svg/512px-Microsoft_Stream.svg.png"
             if 'stream_icon' in item and item['stream_icon'] is not None:
@@ -3184,7 +3185,11 @@ def m3uPlus(parIn=None):
                 jsonText += ','
             numIt += 1
             
-            jsonText = jsonText + '{"title":"[COLOR lime]'+name+'[/COLOR]","link":"'+linkUrl+'",'
+            jsonText = jsonText + '{"title":"[COLOR lime]'+name+'[/COLOR]","link":"'+linkUrl+'|!User-Agent=VLC/3.0.21 LibVLC/3.0.21",'
+            jsonText = jsonText + '"thumbnail":"'+stream_icon+'",'
+            jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+            jsonText = jsonText + '"info":"by MandraKodi"},'
+            jsonText = jsonText + '{"title":"[COLOR gold]'+name+' (F4M)[/COLOR]","f4m":"'+linkUrl+'",'
             jsonText = jsonText + '"thumbnail":"'+stream_icon+'",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"info":"by MandraKodi"}'
@@ -3245,7 +3250,7 @@ def m3uPlus(parIn=None):
         pwd=arrSess[3]
         apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_vod_streams&category_id="+catId
         response = s.get(apiUrl, headers=headers)
-        #logga ("RESP: "+response.text)
+        logga ("RESP: "+response.text)
         jsonText='{"SetViewMode":"503","items":['
         
         numIt=0
@@ -3262,7 +3267,7 @@ def m3uPlus(parIn=None):
                 jsonText += ','
             numIt += 1
             
-            jsonText = jsonText + '{"title":"[COLOR lime]'+name+'[/COLOR]","link":"'+linkUrl+'",'
+            jsonText = jsonText + '{"title":"[COLOR lime]'+name.replace("\\", "")+'[/COLOR]","link":"'+linkUrl+'",'
             jsonText = jsonText + '"thumbnail":"'+stream_icon+'",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
             jsonText = jsonText + '"info":"by MandraKodi"}'
@@ -3357,7 +3362,7 @@ def m3uPlus(parIn=None):
 
     
 
-    #logga("JSON_FINAL: "+jsonText)
+    logga("JSON_FINAL: "+jsonText)
 
     video_urls = []
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
