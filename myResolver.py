@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.264'
+versione='1.2.265'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
@@ -3237,14 +3237,15 @@ def getScSerie(parIn=None):
     jsonCode = preg_match(pageT, patron)
     scwsId = 0
     titolo="NOT FOUND";
-    logga ("JSON_CODE: "+jsonCode)
+    logga ("JSON_CODE: "+base+"\n"+jsonCode)
+    jsonText='{"SetViewMode":"503","items":['
     try:
         arrJ2 = json.loads(jsonCode.replace("&quot;", '"'))
         
         titolo = arrJ2["props"]["title"]["name"]
         logga("titolo: "+titolo)
         img=""
-        jsonText='{"SetViewMode":"503","items":['
+        
         numIt=0
         for (immagine) in arrJ2["props"]["title"]["images"]:
             if (immagine["type"]=="cover"):
@@ -3291,23 +3292,16 @@ def getScSerie(parIn=None):
             except:
                 logga("BAD ITEMS: "+newJson)
                 pass
-    except Exception as err:
-        import traceback
-        
-        errMsg="ERROR_MK2: {0}".format(err)
-        par=re.split('%3f', sys.argv[2])
-        parErr = par[-1]
-        logging.warning(errMsg+"\nPAR_ERR --> "+parErr)
-        traceback.print_exc()
-
+    except Exception:
         logga("NO SCWS_ID FROM "+base)
-        jsonText = jsonText + '{"title":"[COLOR red]NO PAGE FOUND[/COLOR]","link":"ignore",'
+        jsonText = jsonText + '{"title":"[COLOR red]NO PAGE FOUND[/COLOR]","myresolve":"showMsg@@Serie non trovata",'
         jsonText = jsonText + '"thumbnail":"https://cdn-icons-png.flaticon.com/512/2748/2748558.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"NO PAGE FOUND"}'
+        
 
     jsonText = jsonText + "]}"
-    #logga('JSON-SC: '+jsonText)
+    logga('JSON-SC: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
