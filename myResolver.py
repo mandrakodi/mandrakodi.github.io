@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.263'
+versione='1.2.264'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 16.10.2026
+# Last update: 24.10.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1189,16 +1189,191 @@ def _is_defaced_kodi(body):
     low = body[:16000].lower()
     return ("hackerman" in low or "null367" in low or "tiktokcdn" in low)
 
-def _unwrap_port_kodi():
-    """Porta del loopback unwrap proxy pubblicata dal service. Default 8755
-    se il service non e' (ancora) partito."""
+_DADDY_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 OPR/130.0.0.0"
+
+# edge+slug -> (token, deadline monotonic). Il token e' breve e legato all'IP.
+_PREMIUM_TOKENS = {}
+
+def _premium_parts(url):
+    """(edge, slug) per playlist premium edge: https://edge.host/premiumNNN/index.m3u8"""
     try:
-        p = int(xbmcgui.Window(10000).getProperty("mandra_unwrap_port") or 0)
-        if p > 0:
-            return p
+        m = re.match(r"^(?P<edge>https?://[^/]+)/(?P<slug>premium\d+)/index\.m3u8$", (url or "").split("?", 1)[0])
+        return (m.group("edge"), m.group("slug")) if m else None
     except Exception:
-        pass
-    return 8755
+        return None
+
+def _premium_playlist_url(session, playlist_url, force=False):
+    """Attacca/rinnova il token (?t=) richiesto dalle playlist premium edge.
+
+    L'edge serve la playlist solo con un token breve legato all'IP, preso da
+    {edge}/api/playlist-token?slug=... (Origin/Referer https://dembed.st).
+    Fix EasyProxy 6155511d.
+    """
+    import time as _t
+    try:
+        from urllib.parse import parse_qsl, urlencode
+        parts = _premium_parts(playlist_url)
+        if not parts:
+            return playlist_url
+        edge, slug = parts
+        key = (edge, slug)
+        now = _t.monotonic()
+        cached = _PREMIUM_TOKENS.get(key)
+        tok = cached[0] if (cached and not force and cached[1] > now) else None
+        if not tok:
+            hdrs = {'user-agent': _DADDY_UA, 'accept': '*/*',
+                    'Referer': 'https://dembed.st/', 'Origin': 'https://dembed.st'}
+            r = session.get(edge + "/api/playlist-token?slug=" + slug, headers=hdrs, timeout=5)
+            j = r.json()
+            tok = str(j.get("token") or "").strip()
+            if not tok:
+                return playlist_url
+            ttl = max(20.0, float(j.get("ttl") or 120))
+            _PREMIUM_TOKENS[key] = (tok, now + ttl * 0.5)
+        base, _, query = playlist_url.partition("?")
+        params = [(k, v) for k, v in parse_qsl(query, keep_blank_values=True)
+                  if k.lower() not in ("t", "_")]
+        params.append(("t", tok))
+        return base + "?" + urlencode(params)
+    except Exception:
+        return playlist_url
+
+def _strip_fake_png(data):
+    """TS nascosto in un PNG/WebP (stessa logica del proxy EasyProxy)."""
+    if not data:
+        return data
+    if data[:1] == b"\x47":
+        return data
+    if data.startswith(b"\x89PNG\r\n\x1a\n") or (data[:4] == b"RIFF" and data[8:12] == b"WEBP"):
+        limit = min(4096, max(0, len(data) - 188))
+        for i in range(limit):
+            if data[i] == 0x47 and data[i + 188] == 0x47:
+                payload = data[i:]
+                if len(payload) > 376 and payload[376] != 0x47:
+                    continue
+                return payload
+    return data
+
+def _ts_video_payload(data):
+    """True se il TS contiene PES video (00 00 01 E0..EF). Port EasyProxy 26f9c9ee."""
+    audio = False
+    unknown = False
+    for offset in range(0, len(data) - 187, 188):
+        packet = data[offset:offset + 188]
+        if packet[0] != 0x47 or packet[1] & 0x80 or packet[3] & 0xC0:
+            return None
+        if not packet[1] & 0x40 or not packet[3] & 0x10:
+            continue
+        start = 5 + packet[4] if packet[3] & 0x20 else 4
+        payload = packet[start:]
+        if len(payload) < 4:
+            unknown = True
+            continue
+        if payload[:3] != b"\x00\x00\x01":
+            continue
+        stream_id = payload[3]
+        if 0xE0 <= stream_id <= 0xEF:
+            return True
+        if 0xC0 <= stream_id <= 0xDF:
+            audio = True
+        else:
+            unknown = True
+    return False if (audio and not unknown) else None
+
+def _segment_carries_video(session, segment_url, headers, timeout=8, encrypted=False):
+    """Probe bounded: TS nativo con video PES; PNG/WebP spacchettato in memoria."""
+    try:
+        max_bytes = 16 * 1024 * 1024
+        with session.get(segment_url, headers=headers, timeout=timeout, stream=True) as r:
+            if r.status_code not in (200, 206):
+                return False
+            hb = bytearray()
+            for chunk in r.iter_content(4096):
+                hb.extend(chunk)
+                if len(hb) >= 4096:
+                    break
+            hb = bytes(hb)
+            if not hb:
+                return False
+            if encrypted:
+                return True
+            low = (segment_url or "").lower()
+            is_image = (hb.startswith(b"\x89PNG\r\n\x1a\n")
+                        or (hb[:4] == b"RIFF" and hb[8:12] == b"WEBP")
+                        or ".image" in low or "tiktokcdn" in low or "~tplv-" in low)
+            if is_image:
+                data = bytearray(hb)
+                for chunk in r.iter_content(65536):
+                    data.extend(chunk)
+                    if len(data) > max_bytes:
+                        return False
+                blob = _strip_fake_png(bytes(data))
+                if len(blob) < 377 or blob[0] != 0x47 or blob[188] != 0x47:
+                    return False
+                return _ts_video_payload(blob) is not False
+            if hb[:1] != b"\x47":
+                return True  # fMP4/altro: basta il check HTTP
+            data = bytearray(hb)
+            pending = hb
+            for chunk in r.iter_content(65536):
+                data.extend(chunk)
+                pending += chunk
+                if len(data) > max_bytes:
+                    return False
+                complete = len(pending) // 188 * 188
+                ev = _ts_video_payload(pending[:complete])
+                if ev is True:
+                    return True
+                pending = pending[complete:]
+            return _ts_video_payload(bytes(data)) is not False
+    except Exception:
+        return False
+
+def _inherit_query(absolute_url, base_url):
+    """Il CDN mette il token nella playlist e lista URI relativi: urljoin lo perde."""
+    from urllib.parse import urlparse as _up
+    p = _up(absolute_url)
+    if p.query:
+        return absolute_url
+    bq = _up(base_url).query
+    if not bq:
+        return absolute_url
+    return p._replace(query=bq).geturl()
+
+def _first_media_uri(body, base_url, want_playlist):
+    from urllib.parse import urljoin
+    for raw in (body or "").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        low = line.lower().split("?")[0].split("#")[0]
+        if (low.endswith(".m3u8")) == want_playlist:
+            return _inherit_query(urljoin(base_url, line), base_url)
+    return None
+
+def _validate_stream_video(session, playlist_url, body, referer):
+    """master -> variant -> primo segmento: deve avere video PES (anti schermo verde)."""
+    try:
+        hdrs = {'user-agent': _DADDY_UA, 'accept': '*/*', 'Referer': referer, 'Origin': referer[:-1]}
+        cur_url, cur_body = playlist_url, body
+        if "#EXTINF" not in body:
+            v = _first_media_uri(body, playlist_url, want_playlist=True)
+            if not v:
+                return False
+            v = _premium_playlist_url(session, v)
+            rv = session.get(v, headers=hdrs, timeout=6)
+            if rv.status_code != 200:
+                return False
+            cur_body, cur_url = rv.text, v
+            if "#EXTM3U" not in cur_body[:8000]:
+                return False
+        seg = _first_media_uri(cur_body, cur_url, want_playlist=False)
+        if not seg:
+            return False
+        encrypted = bool(re.search(r'#EXT-X-KEY:[^\n]*METHOD=(?!NONE\b)', cur_body))
+        return _segment_carries_video(session, seg, hdrs, timeout=8, encrypted=encrypted)
+    except Exception:
+        return False
 
 def _decode_barecrop_econfig(enc):
     """Decodifica window._econfig - fix per nuovo player Barecrop (come EasyProxy)"""
@@ -1229,37 +1404,103 @@ def _decode_barecrop_econfig(enc):
         return None
 
 def daddyCode(codeIn=None):
-    import re, json, base64
+    import re, json, base64, time
     video_urls = []
 
-    ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 OPR/130.0.0.0"
+    ua = _DADDY_UA
 
     if not codeIn:
         return video_urls
 
     try:
-        # Prova i player in ordine (stream/cast/watch/plus/casting/player/hub)
-        # sulla prima origine raggiungibile e usa il primo con playlist pulita.
-        # Il Player 1 serve ora playlist PNG-HLS "HACKERMAN" (TS nascosto nei
-        # PNG, giocabile solo dal player custom del sito): va scartato,
-        # altrimenti Kodi/ffmpeg ricevono immagini al posto del video.
-        # Se il Player 1 tornasse pulito, verrebbe riusato da solo (e' primo).
-        origins = ["https://dlive.sx", "https://dlhd.st", "https://dlstreams.st", "https://dlhd.pk"]
-        players = ["stream", "cast", "watch", "plus", "casting", "player", "hub"]
+        # EasyProxy main: P2 (cast, TS pulito) per primo; P1 (stream) poi.
+        # Eccezione 861: P1 primo (il P2 dell'861 ha video non decodificabile).
+        origins = ["https://dlive.sx", "https://dlhd.st"]
+        players = ["cast", "stream", "watch", "plus", "casting", "player", "hub"]
+        if str(codeIn) == "861":
+            players = ["stream", "cast", "watch", "plus", "casting", "player", "hub"]
+
         session = requests.Session()
         session.headers.update({"User-Agent": ua})
+        host_backoff = {}
+        seen_iframes = set()
+
+        def _host_limited(url):
+            from urllib.parse import urlparse as _up
+            return time.monotonic() < host_backoff.get((_up(url).hostname or "").lower(), 0)
+
+        def _mark_limited(url, resp):
+            from urllib.parse import urlparse as _up
+            host = (_up(url).hostname or "").lower()
+            raw = str(resp.headers.get("Retry-After") or "").strip()
+            try:
+                secs = float(raw) if raw else 5.0
+            except ValueError:
+                secs = 5.0
+            host_backoff[host] = time.monotonic() + max(1.0, min(secs, 60.0))
+            logga(f"DADDY {host} rate-limited {secs:.0f}s")
+
+        def _decode_player_page(page_data):
+            """_econfig -> atob -> const SRC -> m3u8 generico."""
+            cand = None
+            m_cfg = re.search(r"window\._econfig\s*=\s*['\"]([^'\"]{100,})['\"]", page_data)
+            if m_cfg:
+                cand = _decode_barecrop_econfig(m_cfg.group(1))
+                if cand:
+                    logga(f"DADDY _econfig decoded {cand[:80]}")
+            if not cand:
+                m_atob = re.findall("window.atob\\('(.*?)'\\)", page_data)
+                if m_atob:
+                    try:
+                        cand = base64.b64decode(m_atob[0]).decode("utf-8")
+                        logga(f"DADDY atob decoded {cand[:80]}")
+                    except Exception:
+                        cand = None
+            if not cand:
+                m_src = re.search(r"(?:const|let|var)\s+SRC\s*=\s*[\"'](https?://[^\"']+?)[\"']", page_data)
+                if m_src:
+                    cand = m_src.group(1).strip()
+                    logga(f"DADDY const SRC {cand[:80]}")
+            if not cand:
+                m_m3u8 = re.search(r"https?://[^\s'\"<>\\]+\.m3u8[^\s'\"<>\\]*", page_data)
+                if m_m3u8:
+                    cand = m_m3u8.group(0)
+                    logga(f"DADDY generic m3u8 {cand[:120]}")
+            return cand
+
+        # Player attivo del sito (iframe #playerFrame), best effort
+        try:
+            wr = session.get("https://dlive.sx/watch.php?id=" + str(codeIn),
+                             headers={'user-agent': ua, 'accept': '*/*', 'Referer': 'https://dlive.sx/'}, timeout=5)
+            if wr.status_code == 200:
+                mf = re.search(r'<iframe[^>]*id="playerFrame"[^>]*src="([^"]+)"', wr.text)
+                if mf:
+                    for p in players:
+                        if ("/" + p + "/stream-") in mf.group(1):
+                            if p != players[0]:
+                                players.remove(p)
+                                players.insert(0, p)
+                                logga(f"DADDY active player {p}")
+                            break
+        except Exception:
+            pass
+
         link = None
         dadUrl = None
-        defaced_master = None
-        defaced_ref = None
         for origin in origins:
             if link:
                 break
             origin_ok = False
             for player in players:
                 try:
+                    from urllib.parse import urlparse as _up, urljoin as _uj
                     pUrl = origin + "/" + player + "/stream-" + codeIn + ".php"
+                    if _host_limited(pUrl):
+                        continue
                     resp = session.get(pUrl, headers={'user-agent': ua, 'accept': '*/*', 'Referer': origin + '/'}, timeout=6)
+                    if resp.status_code == 429:
+                        _mark_limited(pUrl, resp)
+                        continue
                     if resp.status_code != 200:
                         logga(f"DADDY {player}@{origin} status {resp.status_code}")
                         continue
@@ -1270,78 +1511,70 @@ def daddyCode(codeIn=None):
                         continue
                     iframe = m[0]
                     if iframe.startswith("//"):
-                        from urllib.parse import urlparse
-                        iframe = urlparse(pUrl).scheme + ":" + iframe
-                    # Se l'iframe punta ancora a /stream/*.php, segui il secondo livello
-                    if "/stream/stream-" in iframe and "tiestep.top" not in iframe and "hamis" not in iframe and "daddyliveplayer" not in iframe:
-                        try:
-                            resp2 = session.get(iframe, headers={'user-agent': ua, 'accept': '*/*', 'Referer': origin + '/'}, timeout=6)
-                            if resp2.status_code == 200:
-                                m2 = re.findall('<iframe src="(.*?)"', resp2.text)
-                                if m2:
-                                    iframe = m2[0]
-                                    if iframe.startswith("//"):
-                                        from urllib.parse import urlparse as up2
-                                        iframe = up2(pUrl).scheme + ":" + iframe
-                        except:
-                            pass
+                        iframe = _up(pUrl).scheme + ":" + iframe
+                    elif iframe.startswith("/"):
+                        iframe = _uj(pUrl, iframe)
+                    if iframe in seen_iframes:
+                        continue
+                    seen_iframes.add(iframe)
                     rd = session.get(iframe, headers={'user-agent': ua, 'accept': '*/*', 'Referer': pUrl, 'Origin': origin}, timeout=6)
+                    if rd.status_code == 429:
+                        _mark_limited(iframe, rd)
+                        continue
                     if rd.status_code != 200:
                         logga(f"DADDY iframe {iframe} status {rd.status_code}")
                         continue
-                    page_data = rd.text
-                    cand = None
-                    # 1) formato _econfig (tiestep)
-                    m_cfg = re.search(r"window\._econfig\s*=\s*['\"]([^'\"]{100,})['\"]", page_data)
-                    if m_cfg:
-                        cand = _decode_barecrop_econfig(m_cfg.group(1))
-                        if cand:
-                            logga(f"DADDY _econfig decoded {cand[:80]}")
-                    # 2) formato atob classico (hamis)
+                    cand = _decode_player_page(rd.text)
                     if not cand:
-                        m_atob = re.findall("window.atob\\('(.*?)'\\)", page_data)
-                        if m_atob:
-                            try:
-                                cand = base64.b64decode(m_atob[0]).decode("utf-8")
-                                logga(f"DADDY atob decoded {cand[:80]}")
-                            except:
-                                pass
-                    # 3) formato const SRC (daddyliveplayer)
-                    if not cand:
-                        m_src = re.search(r"(?:const|let|var)\s+SRC\s*=\s*[\"'](https?://[^\"']+?)[\"']", page_data)
-                        if m_src:
-                            cand = m_src.group(1).strip()
-                            logga(f"DADDY const SRC {cand[:80]}")
-                    # 4) fallback generico m3u8
-                    if not cand:
-                        m_m3u8 = re.search(r"https?://[^\s'\"<>\\]+\.m3u8[^\s'\"<>\\]*", page_data)
-                        if m_m3u8:
-                            cand = m_m3u8.group(0)
-                            logga(f"DADDY generic m3u8 {cand[:120]}")
+                        # secondo livello (iframe dentro l'iframe), una volta
+                        m2 = re.findall('<iframe src="(.*?)"', rd.text)
+                        if m2:
+                            iframe2 = m2[0]
+                            if iframe2.startswith("//"):
+                                iframe2 = _up(iframe).scheme + ":" + iframe2
+                            elif iframe2.startswith("/"):
+                                iframe2 = _uj(iframe, iframe2)
+                            if iframe2 not in seen_iframes:
+                                seen_iframes.add(iframe2)
+                                try:
+                                    rd2 = session.get(iframe2, headers={'user-agent': ua, 'accept': '*/*', 'Referer': iframe}, timeout=6)
+                                    if rd2.status_code == 200:
+                                        cand = _decode_player_page(rd2.text)
+                                        if cand:
+                                            iframe = iframe2
+                                except Exception:
+                                    pass
                     if not cand:
                         logga(f"DADDY no stream URL {player}@{origin}")
                         continue
-                    # Verifica master: scarta fake PNG-HLS e playlist morte.
-                    # Stesso link per DIRECT e FFMPEG, basta un check.
+                    # playlist premium edge: serve il token (?t=)
+                    cand = _premium_playlist_url(session, cand)
                     arrI = iframe.split("/")
                     refI = arrI[0] + "//" + arrI[2] + "/"
-                    try:
-                        rm = session.get(cand, headers={'user-agent': ua, 'accept': '*/*', 'Referer': refI, 'Origin': refI[:-1]}, timeout=6)
-                        if rm.status_code != 200:
-                            logga(f"DADDY master {rm.status_code} {player}@{origin}")
-                            continue
-                        body = rm.text
-                        if _is_defaced_kodi(body):
-                            logga(f"DADDY defaced playlist, skip {player}@{origin}")
-                            if not defaced_master:
-                                defaced_master = cand
-                                defaced_ref = refI
-                            continue
-                        if "#EXTM3U" not in body[:8000]:
-                            logga(f"DADDY not a playlist {player}@{origin}")
-                            continue
-                    except Exception as e:
-                        logga(f"DADDY master check {player}@{origin}: {e}")
+
+                    def _get_master(u):
+                        return session.get(u, headers={'user-agent': ua, 'accept': '*/*', 'Referer': refI, 'Origin': refI[:-1]}, timeout=6)
+
+                    rm = _get_master(cand)
+                    if rm.status_code == 403 and _premium_parts(cand):
+                        cand = _premium_playlist_url(session, cand, force=True)
+                        rm = _get_master(cand)
+                    if rm.status_code == 429:
+                        _mark_limited(cand, rm)
+                        continue
+                    if rm.status_code != 200:
+                        logga(f"DADDY master {rm.status_code} {player}@{origin}")
+                        continue
+                    body = rm.text
+                    if _is_defaced_kodi(body):
+                        # PNG-HLS "HACKERMAN": senza unwrap (no service) si passa oltre
+                        logga(f"DADDY defaced playlist, skip {player}@{origin}")
+                        continue
+                    if "#EXTM3U" not in body[:8000]:
+                        logga(f"DADDY not a playlist {player}@{origin}")
+                        continue
+                    if not _validate_stream_video(session, cand, body, refI):
+                        logga(f"DADDY no video PES {player}@{origin}")
                         continue
                     link = cand
                     dadUrl = iframe
@@ -1351,43 +1584,20 @@ def daddyCode(codeIn=None):
                     logga(f"DADDY {player}@{origin} exception {e}")
                     continue
             if not origin_ok:
-                logga(f"DADDY origin {origin} non raggiungibile, provo la prossima")
+                logga(f"DADDY origin {origin} non raggiungibile")
                 continue
-            # Prima origine raggiungibile esaurita (stesso backend per tutte): stop
             break
 
         if not link:
-            if defaced_master:
-                # Solo Player wrappato disponibile: passa dal proxy loopback
-                # del service (spacchetta PNG->TS). Vale per DIRECT e FFMPEG.
-                port = _unwrap_port_kodi()
-                import urllib.parse as _up
-                prox = "http://127.0.0.1:%d/m?u=%s&ref=%s" % (
-                    port, _up.quote(defaced_master, safe=""),
-                    _up.quote(defaced_ref, safe=""))
-                logga(f"DADDY unwrap proxy {prox[:80]}")
-                m3u8 = prox
-                jsonText = '{"SetViewMode":"50","items":['
-                jsonText = jsonText + '{"title":"[COLOR aqua]PLAY STREAM PNG ' + codeIn + '[/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"' + m3u8 + '",'
-                jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
-                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-                jsonText = jsonText + '"info":"by MandraKodi"},'
-                jsonText = jsonText + '{"title":"[COLOR cyan]PLAY STREAM PNG ' + codeIn + '[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","ffmpeg_link":"' + m3u8 + '",'
-                jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
-                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-                jsonText = jsonText + '"info":"by MandraKodi"}'
-                jsonText = jsonText + "]}"
-                video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
-                return video_urls
             logga(f"DADDY no working stream for {codeIn}")
             video_urls.append(("ignoreMe", f"[COLOR red]No stream found for {codeIn}[/COLOR]", "No link", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
             return video_urls
 
         arrU = dadUrl.split("/")
         refe = arrU[0]+"//"+arrU[2]+"/"
-        origin = arrU[0]+"//"+arrU[2]
+        org = arrU[0]+"//"+arrU[2]
 
-        m3u8=link+"|referer="+refe+"&origin="+origin+"&user-agent="+ua
+        m3u8 = link + "|referer=" + refe + "&origin=" + org + "&user-agent=" + ua
 
         jsonText='{"SetViewMode":"50","items":['
         jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"'+m3u8+'",'
@@ -1408,7 +1618,6 @@ def daddyCode(codeIn=None):
         traceback.print_exc()
         video_urls.append(("ignoreMe", f"[COLOR red]Error for {codeIn}[/COLOR]", "No link", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
         return video_urls
-
 
 def daddyCode_old(codeIn=None):
     import re, json, base64
@@ -2488,7 +2697,7 @@ def sportOnline(parIn=None):
             raise ValueError("empty parIn")
         s = requests.Session()
         fu = s.get(parIn, headers={'user-agent': UA, 'Referer': 'https://sportsonline.st/', 'Origin': 'https://sportsonline.st'}, timeout=20)
-        m = re.search(r'<iframe[^>]+src=["\']([^"\']+)["\']', fu.text, re.IGNORECASE)
+        m = re.search(r'<iframe[^>]+(?<!data-)src=["\']([^"\']+)["\']', fu.text, re.IGNORECASE)
         if not m:
             raise ValueError("no iframe")
         iframe_url = m.group(1).strip()
@@ -2901,13 +3110,13 @@ def scwsNew(parIn=None, parInp2=0):
     if PY3:
         pageT = pageT.decode('utf-8')
     pageT = pageT.replace("\n", "").replace("\r", "").replace("\t", "")
-    #logga("SC_PAGE: "+base+"\n"+pageT)
+    logga("SC_PAGE: "+base+"\n"+pageT)
 
     
     m3u8Url = ""
     risultati = re.findall(r'src="(.*?)"', pageT)
     for src in risultati:
-        if "vixcloud.co" in src:
+        if "vixcloud.co" in src or "vixcloud.cc" in src:
             m3u8Url = src
     
 
@@ -4271,79 +4480,132 @@ def sportsonlineMenu():
         except Exception as e:
             logga('PROGTXT_SPONL ERR '+url+' '+str(e))
             continue
-    jsonText='{"SetViewMode":"500","channels":['
-    #arrLine = prog_text.splitlines
-    numIt=0
-    numCh=0
-    start=0
+    # --- Parsing palinsesto (lingua canale, oggi/domani, slot [ENDED]) ---
+    import json
+    try:
+        from zoneinfo import ZoneInfo
+        ROME_TZ = ZoneInfo("Europe/Rome")
+    except Exception:
+        ROME_TZ = None
+    SITE_TZ = datetime.timezone(datetime.timedelta(hours=1))  # prog.txt = CET fisso
+    ENDED_AFTER_HOURS = 3.0
+    WEEKDAYS = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
+
+    now_rome = datetime.datetime.now(datetime.timezone.utc)
+    now_rome = now_rome.astimezone(ROME_TZ) if ROME_TZ else now_rome.astimezone()
+    today_date = now_rome.date()
+    tomorrow_date = today_date + datetime.timedelta(days=1)
+    days_wanted = {
+        WEEKDAYS[today_date.weekday()]: today_date,
+        WEEKDAYS[tomorrow_date.weekday()]: tomorrow_date,
+    }
+
+    lines = prog_text.splitlines()
+
+    # Lingua per canale dalle righe tipo "HD7 ITALIAN" / "BR2 BRAZILIAN"
+    ch_lang = {}
+    for ln in lines:
+        ls = ln.strip()
+        if ls and " " in ls and not ls.startswith(("http", "|", "#")):
+            parts_l = ls.split(None, 1)
+            cid = parts_l[0].strip().lower()
+            if cid and not any(d in cid.upper() for d in WEEKDAYS):
+                ch_lang[cid] = parts_l[1].strip()
+
+    per_day = {}
+    days_order = []
+    cur_label = None
+    cur_date = None
     for line in prog_text.splitlines():
-        line = line.strip().lstrip("\ufeff")
-        if line == "" or line[0:1]== "." or line[0:1]== "|":
+        ls = line.strip().lstrip("\ufeff")
+        up = ls.upper().strip()
+        if up in WEEKDAYS:
+            cur_label = up
+            cur_date = days_wanted.get(up)
+            if cur_date is not None and cur_label not in per_day:
+                per_day[cur_label] = []
+                days_order.append(cur_label)
             continue
-        #logga("ROW: "+line)
-        for day in arrWeek:
-            if day in line:
-                if (numCh > 0):
-                    jsonText = jsonText + ']},'
-                jsonText = jsonText + '{"name":"[COLOR gold]'+line.strip()+'[/COLOR] ",'
-                jsonText = jsonText + '"thumbnail":"https://freepngimg.com/download/calendar/4-2-calendar-png-hd.png",'
-                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-                jsonText = jsonText + '"SetViewMode":"51","items":['
-                numIt=0
-                numCh=numCh+1
-                start=1
-                break
-        if start==1:
-            if "|" in line:
-                arrT=line.split("|")
-                titolMatch=arrT[0].replace(" x ", " vs ").replace(" @ ", " vs ")
-                hh = titolMatch[0:2]
-                mm = titolMatch[3:5]
-                titMatch=titolMatch[6:].strip()
-                newTit = re.sub('[^a-zA-Z0-9 \n\.]', '*', titMatch)
-                timeMatch="00:00"
-                try:
-                    dt = datetime.datetime(2000, 6, 10, int(hh), int(mm), 45)
-                    newDate = dt + datetime.timedelta(hours=1)
-                    hh2=str(newDate.hour)
-                    if newDate.hour < 10:
-                        hh2="0"+str(newDate.hour)
-                    mm2=str(newDate.minute)
-                    if newDate.minute < 10:
-                        mm2="0"+str(newDate.minute)
-                    timeMatch=hh2+":"+mm2
-                except:
-                    pass
-                linkMatch=arrT[1].strip()
-                arrL=linkMatch.split("/")
-                tit=arrL[-1].replace(".php", "")
-                if (numIt > 0):
-                    jsonText = jsonText + ','    
-                
-                jsonText = jsonText + '{"title":"[COLOR gold]'+timeMatch+'[/COLOR] [COLOR lime]'+newTit.strip()+'[/COLOR] [COLOR aqua]('+tit+')[/COLOR]",'
-                #jsonText = jsonText + '"myresolve":"spon@@'+linkMatch.replace("v2.sportsonline", "sportsonline")+'",'
-                jsonText = jsonText + '"myresolve":"spon@@'+linkMatch+'",'
-                jsonText = jsonText + '"thumbnail":"https://www.avis.it/wp-content/uploads/2018/06/Sport_balls.png",'
-                jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-                jsonText = jsonText + '"info":"by MandraKodi"}'
-                numIt=numIt+1
-            #except:
-                #logga("ERRORE")
-                #pass
-    if (numIt > 0):
-        jsonText = jsonText + ']}' 
+        if cur_date is None:
+            continue
+        if "|" not in ls or ls[0:1] in (".", "|"):
+            continue
+        arrT = ls.split("|")
+        if len(arrT) < 2:
+            continue
+        event_info = arrT[0].strip().replace(" x ", " vs ").replace(" @ ", " vs ")
+        page_url = arrT[1].strip()
+        mch = re.search(r'/([a-z0-9]+)\.php$', page_url, re.IGNORECASE)
+        channel_id = mch.group(1).lower() if mch else ""
+        language = ch_lang.get(channel_id, "")
 
+        time_str = ""
+        name = event_info
+        event_dt = None
+        ref_date = cur_date
+        ev = event_info.split(None, 1)
+        if len(ev) == 2:
+            try:
+                t = datetime.datetime.strptime(ev[0].strip(), "%H:%M")
+                event_dt = datetime.datetime.combine(cur_date, t.time(), tzinfo=SITE_TZ)
+                rdt = event_dt.astimezone(ROME_TZ) if ROME_TZ else event_dt.astimezone()
+                time_str = rdt.strftime("%H:%M")
+                name = ev[1].strip()
+                ref_date = rdt.date()
+            except Exception:
+                event_dt = None
+                name = event_info
+                ref_date = cur_date
 
-    
-    
-    
-    if numIt==0:
-        jsonText = '{"SetViewMode":"503","items":[{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",'
-        jsonText = jsonText + '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",'
-        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
-        jsonText = jsonText + '"info":"NO INFO"}'
+        is_ended = event_dt is not None and now_rome > (event_dt + datetime.timedelta(hours=ENDED_AFTER_HOURS))
+        prefix = ""
+        if is_ended:
+            prefix += "[COLOR red][ENDED][/COLOR] "
+        if ref_date != today_date:
+            prefix += "[COLOR yellow]" + ref_date.strftime("%d/%m") + "[/COLOR] "
 
-    jsonText = jsonText + "]}"
+        title = prefix
+        if time_str:
+            title += "[COLOR gold]" + time_str + "[/COLOR] "
+        title += "[COLOR lime]" + name + "[/COLOR]"
+        if channel_id:
+            lang_disp = (" " + language) if language else ""
+            title += " [COLOR aqua](" + channel_id.upper() + lang_disp + ")[/COLOR]"
+
+        key = event_dt.timestamp() if event_dt is not None else float("inf")
+        per_day[cur_label].append((
+            is_ended, key,
+            {
+                "title": title,
+                "myresolve": "spon@@" + page_url,
+                "thumbnail": "https://www.avis.it/wp-content/uploads/2018/06/Sport_balls.png",
+                "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+                "info": "by MandraKodi"
+            }
+        ))
+
+    output = {"SetViewMode": "500", "channels": []}
+    for day in days_order:
+        upcoming = sorted([e for e in per_day[day] if not e[0]], key=lambda x: x[1])
+        ended = sorted([e for e in per_day[day] if e[0]], key=lambda x: x[1])
+        items = [t[2] for t in upcoming] + [t[2] for t in ended]
+        if not items:
+            continue
+        output["channels"].append({
+            "name": "[COLOR gold]" + day + "[/COLOR] ",
+            "thumbnail": "https://freepngimg.com/download/calendar/4-2-calendar-png-hd.png",
+            "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",
+            "SetViewMode": "51",
+            "items": items
+        })
+
+    if output["channels"]:
+        jsonText = json.dumps(output, ensure_ascii=False)
+    else:
+        jsonText = '{"SetViewMode":"503","items":[{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",' \
+                   '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",' \
+                   '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",' \
+                   '"info":"NO INFO"}]}'
     logga('JSON-ZONLINE: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
