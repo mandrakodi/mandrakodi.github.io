@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.265'
+versione='1.2.266'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
@@ -9188,7 +9188,7 @@ def samsung(parIn):
             
             if (numIt > 0):
                 jsonText = jsonText + ','
-            jsonText = jsonText + '{"title":"[COLOR gold]['+str(lcn)+'] '+tit+'[/COLOR]",'
+            jsonText = jsonText + '{"title":"[COLOR magenta]['+str(lcn)+'] '+tit+'[/COLOR]",'
             jsonText = jsonText + '"myresolve":"amstaff@@'+urlStr+'|0000",'
             jsonText = jsonText + '"thumbnail":"'+logo+'",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
