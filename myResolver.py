@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.266'
+versione='1.2.267'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
@@ -4596,10 +4596,7 @@ def sportsonlineMenu():
     if output["channels"]:
         jsonText = json.dumps(output, ensure_ascii=False)
     else:
-        jsonText = '{"SetViewMode":"503","items":[{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",' \
-                   '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",' \
-                   '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",' \
-                   '"info":"NO INFO"}]}'
+        jsonText = '{"SetViewMode":"503","items":[{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",' '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",' '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",' '"info":"NO INFO"}]}'
     logga('JSON-ZONLINE: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
