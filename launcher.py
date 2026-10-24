@@ -1,8 +1,8 @@
-versione='1.2.84'
+versione='1.2.85'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 10.10.2026
+# Last update: 24.10.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -1001,9 +1001,9 @@ def checkResolver():
         logga('remote_vers '+remote_vers)
         if local_vers != remote_vers:
             logga('TRY TO UPDATE VERSION')
-            f = open(resolver_file, "w")
-            f.write(strSource)
-            f.close()
+            strSource = strSource.replace('\r\n', '\n').replace('\r', '\n')
+            with open(resolver_file, "w", newline='\n') as f:
+                f.write(strSource)
             msgBox("Codice Resolver aggiornato alla versione: "+remote_vers)
             logga('VERSION UPDATE')
 
@@ -1151,9 +1151,10 @@ def updateCode(parIn):
         if local_vers != remote_vers:
             logga('TRY TO UPDATE VERSION')
             try:
-                f = open(launcher_file, "w")
-                f.write(strSource)
-                f.close()
+                strSource = strSource.replace('\r\n', '\n').replace('\r', '\n')
+                with open(launcher_file, "w", newline='\n') as f:
+                    f.write(strSource)
+                
                 logga('VERSION UPDATE')
                 msgBox("Codice Launcher aggiornato alla versione: "+remote_vers)
             except:
@@ -1188,9 +1189,10 @@ def updateCode(parIn):
         if local_vers != remote_vers:
             logga('TRY TO UPDATE VERSION')
             try:
-                f = open(resolve_file, "w")
-                f.write(strSource)
-                f.close()
+                strSource = strSource.replace('\r\n', '\n').replace('\r', '\n')
+                with open(resolve_file, "w", newline='\n') as f:
+                    f.write(strSource)
+                
                 logga('VERSION UPDATE')
                 msgBox("Codice Resolver aggiornato alla versione: "+remote_vers)
             except:
