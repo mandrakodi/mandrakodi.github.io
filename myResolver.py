@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.267'
+versione='1.2.268'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 24.10.2026
+# Last update: 26.10.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -386,7 +386,7 @@ def livetv(page_url):
             return resolveMyUrl(ytp)
         if (arrP1[0]=="t=alieztv"):
             codeAL=arrP1[1].split("c=")[1]
-            alp="https://emb.apl622.online/player/live.php?id="+codeAL+"&w=700&h=480"
+            alp="https://emb.apl620.online/player/live.php?id="+codeAL+"&w=700&h=480"
             page_data = downloadHttpPage(alp)
             page_data_flat=page_data.replace("\n", "").replace("\r", "").replace("\t", "")
             #logga ("HTML_ALP375: "+page_data_flat)
