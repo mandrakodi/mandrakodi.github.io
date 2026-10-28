@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.268'
+versione='1.2.269'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 26.10.2026
+# Last update: 28.10.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -8967,7 +8967,9 @@ def mediahosting(parIn):
     if match:
         src = match.group(1) 
     '''
-    src="https://p7.streamhostingcdn.top/stream/"+parIn+"/index.m3u8?token=o_mnFDukW1rajOBK2cJPcw&ark_r=p7"
+    
+    #src="https://p7.streamhostingcdn.top/stream/"+parIn+"/index.m3u8?token=T03PNCIP4udw0l_Bj5KEjw&ark_r=p7"
+    src="https://p5.streamhostingcdn.top/stream/"+parIn+"/index.m3u8?token=&exp=0"
     logga("URL_MEDIA: "+src)
     ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 OPR/133.0.0.0"
     video_urls= []
