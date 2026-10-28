@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.269'
+versione='1.2.270'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
@@ -1965,7 +1965,7 @@ def freeshot(codeIn=None):
     token = preg_match(fu.text, 'currentToken: "(.*?)"')
     logga ("TOKEN: "+token)
     
-    link_ch="https://ds164.bluetier.top/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token
+    link_ch="https://ds169.bluetier.top/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token
     
     jsonText='{"SetViewMode":"50","items":['
     jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM [/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+link_ch+'",'
