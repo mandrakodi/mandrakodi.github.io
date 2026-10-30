@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.270'
+versione='1.2.271'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 28.10.2026
+# Last update: 30.10.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1415,7 +1415,7 @@ def daddyCode(codeIn=None):
     try:
         # EasyProxy main: P2 (cast, TS pulito) per primo; P1 (stream) poi.
         # Eccezione 861: P1 primo (il P2 dell'861 ha video non decodificabile).
-        origins = ["https://dlive.sx", "https://dlhd.st"]
+        origins = ["https://thedaddy.pk", "https://dlive.sx", "https://dlhd.st"]
         players = ["cast", "stream", "watch", "plus", "casting", "player", "hub"]
         if str(codeIn) == "861":
             players = ["stream", "cast", "watch", "plus", "casting", "player", "hub"]
@@ -1598,6 +1598,7 @@ def daddyCode(codeIn=None):
         org = arrU[0]+"//"+arrU[2]
 
         m3u8 = link + "|referer=" + refe + "&origin=" + org + "&user-agent=" + ua
+        mpd = link + "|0000|Mozilla|referer=" + refe + "&origin=" + org + "&user-agent=" + ua
 
         jsonText='{"SetViewMode":"50","items":['
         jsonText = jsonText + '{"title":"[COLOR lime]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](DIRECT)[/COLOR]","link":"'+m3u8+'",'
@@ -1605,6 +1606,10 @@ def daddyCode(codeIn=None):
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"by MandraKodi"},'
         jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](FFMPEG)[/COLOR]","ffmpeg_link":"'+m3u8+'",'
+        jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
+        jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
+        jsonText = jsonText + '"info":"by MandraKodi"},'
+        jsonText = jsonText + '{"title":"[COLOR magenta]PLAY STREAM '+codeIn+'[/COLOR] [COLOR gold](IS)[/COLOR]","myresolve":"amstaff@@'+mpd+'",'
         jsonText = jsonText + '"thumbnail":"https://i.imgur.com/8EL6mr3.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"by MandraKodi"}'
@@ -2352,7 +2357,12 @@ def amstaffTest(parIn):
     #logga('key64: '+key64)
     user_ag=""
     try:
-      user_ag=arrT[2]
+        user_ag=arrT[2]
+    except:
+        pass
+    param_url=""
+    try:
+        param_url=arrT[3]
     except:
         pass
     drmType="org.w3.clearkey"
@@ -2422,12 +2432,17 @@ def amstaffTest(parIn):
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&verifypeer=false')
     else:
-        arrF=link.split("/")
-        host="https://"+arrF[2]
-        logga("HOST_MPD: "+host)
-        logga("UA_MPD: "+ua)
-        liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
-        liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
+        if param_url != "":
+            logga("PAR_MPD: "+param_url)
+            liz.setProperty('inputstream.adaptive.stream_headers', param_url)
+            liz.setProperty('inputstream.adaptive.manifest_headers', param_url)
+        else:
+            arrF=link.split("/")
+            host="https://"+arrF[2]
+            logga("HOST_MPD: "+host)
+            logga("UA_MPD: "+ua)
+            liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
+            liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
     
     return liz
 
@@ -3351,6 +3366,7 @@ def m3uPlus(parIn=None):
         for item in lista:
             catId = item.get("category_id")
             name = item.get("category_name")
+            name = re.sub(r'[^\w\s\.,;!?\'()\[\]{}\-]', '', name)
             if (numIt > 0):
                 jsonText += ','
             numIt += 1
@@ -3381,6 +3397,7 @@ def m3uPlus(parIn=None):
             linkUrl="http://"+host+"/live/"+usr+"/"+pwd+"/"+str(stream_id)+".ts"
             #|!User-Agent=VLC/3.0.21 LibVLC/3.0.21
             name = item.get("name")
+            name = re.sub(r'[^\w\s\.,;!?\'()\[\]{}\-]', '', name)
             stream_icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Microsoft_Stream.svg/512px-Microsoft_Stream.svg.png"
             if 'stream_icon' in item and item['stream_icon'] is not None:
                 stream_icon = item.get("stream_icon")
@@ -3416,6 +3433,7 @@ def m3uPlus(parIn=None):
         for item in lista:
             catId = item.get("category_id")
             name = item.get("category_name")
+            name = re.sub(r'[^\w\s\.,;!?\'()\[\]{}\-]', '', name)
             if (numIt > 0):
                 jsonText += ','
             numIt += 1
@@ -3431,6 +3449,7 @@ def m3uPlus(parIn=None):
         for item in lista:
             catId = item.get("category_id")
             name = item.get("category_name")
+            name = re.sub(r'[^\w\s\.,;!?\'()\[\]{}\-]', '', name)
             if (numIt > 0):
                 jsonText += ','
             numIt += 1
@@ -3463,6 +3482,7 @@ def m3uPlus(parIn=None):
             stream_ext = item.get("container_extension")
             linkUrl="http://"+host+"/movie/"+usr+"/"+pwd+"/"+str(stream_id)+"."+stream_ext+"|!User-Agent=VLC/3.0.21 LibVLC/3.0.21"
             name = item.get("name")
+            name = re.sub(r'[^\w\s\.,;!?\'()\[\]{}\-]', '', name)
             stream_icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Microsoft_Stream.svg/512px-Microsoft_Stream.svg.png"
             if 'stream_icon' in item and item['stream_icon'] is not None:
                 stream_icon = item.get("stream_icon")
@@ -3494,6 +3514,7 @@ def m3uPlus(parIn=None):
         for item in lista:
             serieId = item.get("series_id")
             name = item.get("name")
+            name = re.sub(r'[^\w\s\.,;!?\'()\[\]{}\-]', '', name)
             cover = item.get("cover")
             plot = remove_control_chars(item.get("plot")).replace('"', "'")
             if (numIt > 0):
