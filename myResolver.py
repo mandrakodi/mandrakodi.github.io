@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.272'
+versione='1.2.273'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 05.11.2026
+# Last update: 05.10.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -2844,6 +2844,9 @@ def wigi(parIn=None):
     return video_urls
 
 def urlsolver(url):
+    if "ok.ru" in url:
+        return okRu(url)
+    
     video_urls = []
 
     resolvedUrl=get_resolved(url)
