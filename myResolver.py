@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.271'
+versione='1.2.272'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 30.10.2026
+# Last update: 05.11.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -9774,6 +9774,38 @@ def convert_schedule(source):
     )
 
 
+def okRu(parIn=None):
+    url=parIn
+    video_urls = []
+    import json
+    try:
+        response = requests.get(
+            url,
+            timeout=15,
+            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0", "Referer": "https://ok.ru/", "Origin": "https://ok.ru/"}
+        )
+
+        response.raise_for_status()
+        html=response.text
+        #logga("RETURN TEXT: "+html)
+        v = re.findall('data-options="(.*?)"', html)[0]
+        jsonCode=v.replace('&quot;', '"')
+        #logga("RETURN JSON: "+jsonCode)
+        data = json.loads(jsonCode)
+        videos = data["flashvars"]["metadata"]["videos"]
+        poster = data["poster"]
+        for video in videos:
+            name=video["name"]
+            urlVideo=video["url"]
+            urlVideo = urlVideo.replace("%3B", ";").replace("u0026", "&")
+            video_urls.append((urlVideo+"|referer="+parIn, "[COLOR lime]PLAY "+name+"[/COLOR]", "by @MandraKodi", poster))
+    except Exception:
+        video_urls.append(("ignoreMe", "[COLOR red]NO VIDEO FOUND[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
+    
+    
+    return video_urls
+    
+
 def run (action, params=None):
     logga('Run version '+versione)
     commands = {
@@ -9860,6 +9892,7 @@ def run (action, params=None):
         "wweReplay":wweReplay,
         "cdnLive":cdnLive,
         "futLibre":futLibre,
+        "okru":okRu,
         'showMsg':showMsg
     }
 
