@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.274'
+versione='1.2.275'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 07.11.2026
+# Last update: 11.11.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -609,7 +609,7 @@ def testDns(parIn=""):
     
     logga('CALL DNS TEST '+parIn)
     randomUa=getRandomUA()
-    testUrl="https://dlstreams.st/stream/stream-877.php"
+    testUrl="https://thedaddy.li/stream/stream-877.php"
     head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://dlstreams.st/'}
     resolve="daddyCode@@877"
     if parIn=="StrCom":
@@ -1415,7 +1415,7 @@ def daddyCode(codeIn=None):
     try:
         # EasyProxy main: P2 (cast, TS pulito) per primo; P1 (stream) poi.
         # Eccezione 861: P1 primo (il P2 dell'861 ha video non decodificabile).
-        origins = ["https://thedaddy.pk", "https://dlive.sx", "https://dlhd.st"]
+        origins = ["https://thedaddy.pk", "https://thedaddy.li", "https://dlhd.pk", "https://dlhd.st"]
         players = ["cast", "stream", "watch", "plus", "casting", "player", "hub"]
         if str(codeIn) == "861":
             players = ["stream", "cast", "watch", "plus", "casting", "player", "hub"]
@@ -2398,8 +2398,8 @@ def amstaffTest(parIn):
         """
         liz.setProperty('inputstream.adaptive.stream_headers', heads)
         liz.setProperty('inputstream.adaptive.manifest_headers', heads)
-    elif "lba-ew" in link or "dve-streams.akamaized.net" in link:
-        ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0"
+    elif "lba-ew" in link or "dve-streams.akamaized.net" in link or "powerpoint-industry-helena" in link:
+        ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0"
         host="https://www.lbatv.com"
         liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
