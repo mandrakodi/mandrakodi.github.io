@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.275'
+versione='1.2.276'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 11.11.2026
+# Last update: 12.11.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1712,13 +1712,13 @@ def _decode_url(raw):
 
 def vixsrc(movieUrl=None):
     import json
-    _BASE = 'https://vixsrc.to'
+    _BASE = 'https://vixcloud.cc'
 
     _TOKEN_RE   = re.compile(r'''["']token["']\s*:\s*["'](\w+)["']''')
     _URL_RE     = re.compile(r'''["']url["']\s*:\s*["']([^"']+)["']''')
     randomUA=getRandomUA()
     
-    headSCt={'user-agent':randomUA}
+    headSCt={'user-agent':randomUA, 'referer':'https://streamingunity.fun'}
     
     #logga("movieUrl: "+movieUrl)
     wp_data = requests.get(movieUrl,headers=headSCt).text
@@ -1844,7 +1844,7 @@ def get_tmdb_video(tmdb_id="926899"):
         logga("API JSON: "+response)
         respJ=json.loads(response)
         m3u8Url=respJ["src"].replace("&amp;", "&")
-        movieUrl="https://vixsrc.to"+m3u8Url
+        movieUrl="https://vixcloud.cc"+m3u8Url
         
         logga ("M3U8: "+movieUrl)
         newUrl=vixsrc(movieUrl)
