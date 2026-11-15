@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.276'
+versione='1.2.277'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 12.11.2026
+# Last update: 15.11.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -1415,7 +1415,7 @@ def daddyCode(codeIn=None):
     try:
         # EasyProxy main: P2 (cast, TS pulito) per primo; P1 (stream) poi.
         # Eccezione 861: P1 primo (il P2 dell'861 ha video non decodificabile).
-        origins = ["https://thedaddy.pk", "https://thedaddy.li", "https://dlhd.pk", "https://dlhd.st"]
+        origins = ["https://thedaddy.li", "https://thedaddy.pk", "https://dlhd.st", "https://dlhd.pk", "https://dlhd.st"]
         players = ["cast", "stream", "watch", "plus", "casting", "player", "hub"]
         if str(codeIn) == "861":
             players = ["stream", "cast", "watch", "plus", "casting", "player", "hub"]
@@ -1970,7 +1970,7 @@ def freeshot(codeIn=None):
     token = preg_match(fu.text, 'currentToken: "(.*?)"')
     logga ("TOKEN: "+token)
     
-    link_ch="https://ds169.bluetier.top/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token
+    link_ch="https://cdn.hdm1.net/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token+"|referer=https://wideiptv.top/&origin=https://wideiptv.top"
     
     jsonText='{"SetViewMode":"50","items":['
     jsonText = jsonText + '{"title":"[COLOR orange]PLAY STREAM [/COLOR] [COLOR gold](FFMPEG)[/COLOR]","myresolve":"ffmpeg_noRef@@'+link_ch+'",'
