@@ -1,8 +1,8 @@
-versione='1.2.85'
+versione='1.3.0'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 24.10.2026
+# Last update: 16.11.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -50,8 +50,8 @@ if PY3:
 else:
     from urlparse import urlparse, parse_qsl
     from urllib import urlencode, quote
-	
-def logga(mess):
+
+def logga(mess):	
     global testoLog
     if debug == "on":
         logging.warning("MANDRA_LOG: \n"+mess)
@@ -74,7 +74,7 @@ def makeRequestNoUa(url):
     return html
 
 
-def makeRequest(url, hdr=None):
+def makeRequest(url, hdr=None, tout=30):
     html = ""
     if PY3:
         import urllib.request as myRequest
@@ -92,7 +92,7 @@ def makeRequest(url, hdr=None):
         hdr = {"User-Agent" : ua}
     try:
         req = myRequest.Request(url, headers=hdr)
-        response = myRequest.urlopen(req, timeout=45)
+        response = myRequest.urlopen(req, timeout=tout)
         html = response.read().decode('utf-8')
         response.close()
     except:
@@ -109,7 +109,6 @@ def getSource():
             logging.warning('MANDRA_LOG: NO DISCLAIMER')
             strSource = underMaintMsg()
         else:
-            logga('OK SOURCE ')
             liveVersion = "Mandrakodi "+str(xbmcaddon.Addon(id=addon_id).getAddonInfo("version"))
             strSource=strSource.replace("Mandrakodi 2.0", liveVersion)
     except Exception as err:
@@ -177,7 +176,6 @@ def getExternalJson(strPath):
 def jsonToItems(strJson):
     global viewmode
     try:
-        logga('START jsonToItems')
         dataJson = json.loads(strJson)
     except Exception as err:
         errMsg="Errore: Nessuna risposta dal server (No Json)"
@@ -200,18 +198,14 @@ def jsonToItems(strJson):
     try:
         viewmode = dataJson['SetViewMode']
         skin_name = xbmc.getSkinDir()
-        logga("view mode for "+skin_name+" on "+viewmode)
     except:
         viewmode = "51"
-        logga('no view mode')
         pass
     
     try:
         arrChan = dataJson['channels']
-        logga("OK CHANNELS")
         return jsonToChannels(strJson)
     except:
-        logga('NO CHANNELS. GetItems')
         pass
     
     link = ""
@@ -295,7 +289,6 @@ def jsonToItems(strJson):
                 is_myresolve = True
                 is_folder = True
                 link = item["myresolve"]
-                #logga("MY_RESOLVE_LINK: "+link)
                 if "@@" in link:
                     arrT=link.split("@@")
                     link=arrT[0]
@@ -309,8 +302,6 @@ def jsonToItems(strJson):
                 is_folder = False
                 ffmpeg_link_url = item["ffmpeg_link"]
                 link = ffmpeg_link_url
-                #logga("MY_RES_LINK: "+link)
-                #logga("MY_RES_PAR: "+resolverPar)
             if 'regexPage' in item:
                 is_regex = True
                 link = item["regexPage"]
@@ -425,7 +416,6 @@ def jsonToItems(strJson):
                 url = get_urlChrome(mode='showSite', stopPlayback='no', kiosk='no', url=link)
             else:
                 if 'apk' in item:
-                    logga('APK MODE')
                     list_item.setProperty('IsPlayable', 'true')
                     is_folder = True
                     apkName=item["apk"]
@@ -437,7 +427,6 @@ def jsonToItems(strJson):
                     else:
                         url = get_url(action='plugin', url=link)
             xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
-        logga("CALL LAUNCHER endOfDirectory 1")
         xbmcplugin.endOfDirectory(_handle)
     except:
         import traceback
@@ -518,7 +507,6 @@ def jsonToChannels(strJson):
             jobCh += 1
             xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
             jobCh += 1
-        logga("CALL LAUNCHER endOfDirectory 2")
         xbmcplugin.endOfDirectory(_handle)
     except Exception as err:
         import traceback
@@ -535,7 +523,6 @@ def channelToItems(strChName, _handle):
     for channel in channelsArray["channels"]:
         titolo = channel["name"]
         if titolo == strChName:
-            logga("FOUND CH: "+titolo)
             jsonToItems(json.dumps(channel))
 
 def simpleRegex(page, find):
@@ -543,9 +530,7 @@ def simpleRegex(page, find):
     html = makeRequest(page, hdr)
     #if PY3:
         #html = html.decode('utf-8')
-    logga("HTML:\n"+html)		
     urlSteam = re.findall(find, html)[0]
-    logga("urlSteam:\n"+urlSteam)	
     return urlSteam
 
 def jsonrpcRequest(method, params=None):
@@ -578,7 +563,6 @@ def callReolver(metodo, parametro):
     if metodo=="daddy" and "dlhd.so" in parametro:
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://techvig.net/wp-content/uploads/2022/07/Daddylive-Alternative-2022.png"
-        logga("CALL myResolver.PlayStream for "+parametro)
         if checkPluginInstalled("inputstream.ffmpegdirect") == False:
             msgBox("Installare il plugin [B]inputstream.ffmpegdirect[/B] dalla repository di Kodi > Lettore video InputStream")
             return
@@ -671,7 +655,6 @@ def callReolver(metodo, parametro):
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://png.pngtree.com/png-vector/20230124/ourmid/pngtree-arrow-icon-3d-play-png-image_6565151.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
-        #logga("CALL myResolver.amstaff for "+parametro)
         list_item = myResolver.daznToken(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
@@ -683,7 +666,6 @@ def callReolver(metodo, parametro):
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
-        logga("CALL myResolver.antena for "+parametro)
         list_item = myResolver.antena(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
@@ -695,7 +677,6 @@ def callReolver(metodo, parametro):
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
         newTit="[COLOR lime]PLAY DADDY[/COLOR]"
-        logga("CALL myResolver.daddyPremium for "+parametro)
         list_item = myResolver.daddyPremium(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
@@ -707,7 +688,6 @@ def callReolver(metodo, parametro):
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
-        logga("CALL myResolver.huhu for "+parametro)
         list_item = myResolver.huhu(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
@@ -719,7 +699,6 @@ def callReolver(metodo, parametro):
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
-        logga("CALL myResolver.sky for "+parametro)
         list_item = myResolver.sky(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
@@ -731,7 +710,6 @@ def callReolver(metodo, parametro):
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
-        logga("CALL myResolver.ffmpeg for "+parametro)
         list_item = myResolver.ffmpeg(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
@@ -743,7 +721,6 @@ def callReolver(metodo, parametro):
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
-        logga("CALL myResolver.ffmpeg_noRef for "+parametro)
         list_item = myResolver.ffmpeg_noRef(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
@@ -755,7 +732,6 @@ def callReolver(metodo, parametro):
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
         newTit="[COLOR lime]PLAY STREAM[/COLOR]"
-        logga("CALL myResolver.daily_ffmpeg for "+parametro)
         list_item = myResolver.daily_ffmpeg(parametro)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
@@ -764,7 +740,6 @@ def callReolver(metodo, parametro):
         xbmcplugin.setContent(_handle, 'movies')
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     elif metodo=="mpd":
-        logga("PAR: "+parametro)
         arrTmp=parametro.split("____")
         link=arrTmp[0]
         newTit="[COLOR lime]PLAY MPD[/COLOR]"
@@ -775,7 +750,6 @@ def callReolver(metodo, parametro):
         fanart="https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
         img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
        
-        logga("CALL myResolver.play_mpd for "+link)
         list_item = myResolver.play_mpd(link)
         list_item.setLabel(newTit)
         list_item.setLabel2(newTit)
@@ -809,8 +783,6 @@ def callReolver(metodo, parametro):
                     if tipo == "json":
                         return jsonToItems(newLink)
 
-                logga("Stream_Url ==> " + newLink)
-                logga("Stream_Tit ==> " + newP)
                 newTit="[COLOR lime]PLAY LINK "+str(numLink)+" ("+newLink[0:4]+")[/COLOR]"
                 if newP != "":
                     newTit=newP
@@ -824,7 +796,6 @@ def callReolver(metodo, parametro):
                     xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
                     numLink += 1
         else:
-            logga("StreamUrl ==> " + retVal)
             newTit="[COLOR lime]PLAY LINK ("+retVal[0:4]+")[/COLOR]"
             list_item = xbmcgui.ListItem(label=newTit)
             list_item.setInfo('video', {'title': newTit,'genre': 'generic','mediatype': 'movie','credits': 'ElSupremo'})
@@ -848,7 +819,6 @@ def callReolver(metodo, parametro):
         url = get_url(action='play', url=newUrl2)
         xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     
-    logga("CALL LAUNCHER endOfDirectory 3")
     xbmcplugin.endOfDirectory(_handle)
 
 def runApk(apkName, apkPar):
@@ -903,18 +873,15 @@ def reloadDefault():
         home = xbmc.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path').decode('utf-8'))
     defualt_file = os.path.join(home, 'default.py')
     timeUnix=os.path.getmtime(defualt_file)
-    logga('TIME FILE '+str(timeUnix))
     if (timeUnix < 1637834000):
         remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/default.py"
         strSource = makeRequest(remoteResolverUrl)
         if strSource is None or strSource == "":
-            logga('We failed to get source from '+remoteResolverUrl)
-            
+            logga("NO SOURCE")
         else:
             f = open(defualt_file, "w")
             f.write(strSource.encode('utf-8'))
             f.close()
-            logga("DEFAULT.PY UPDATE")
 
 def checkJsunpack():
     home = ''
@@ -927,8 +894,7 @@ def checkJsunpack():
         remoteResolverUrl = "https://mandrakodi.github.io/jsunpack.py"
         strSource = makeRequest(remoteResolverUrl)
         if strSource is None or strSource == "":
-            logga('We failed to get source from '+remoteResolverUrl)
-            
+            logga("NO SOURCE")
         else:
             #if PY3:
                 #strSource = strSource.decode('utf-8')
@@ -945,11 +911,9 @@ def checkPortalPy():
     remoteResolverUrl = "https://mandrakodi.github.io/portal_api.py"
     strSource = makeRequest(remoteResolverUrl)
     if strSource is None or strSource == "":
-        logga('We failed to get source from '+remoteResolverUrl)
-        
+        logga("NO SOURCE")
     
     if os.path.exists(resolver_file)==False:
-        logga("UPDATE PORTAL_API")
         saveFile(resolver_file, strSource)
     else:
         resF = open(resolver_file)
@@ -957,19 +921,15 @@ def checkPortalPy():
         resF.close()
         try:
             local_vers = re.findall("versione='(.*)'",resolver_content)[0]
-            logga('local_vers '+local_vers)
             remote_vers = re.findall("versione='(.*)'",strSource)[0]
             if local_vers != remote_vers:
-                logga("UPDATE PORTAL_API")
                 saveFile(resolver_file, strSource)
         except Exception as err:
-            logga("NO VERSION - UPDATE PORTAL_API")
             saveFile(resolver_file, strSource)
 
        
 
 def checkResolver():
-    logga("START CHECK_RESOLVER")
     home = ''
     if PY3:
         home = xbmcvfs.translatePath(xbmcaddon.Addon(id=addon_id).getAddonInfo('path'))
@@ -985,27 +945,21 @@ def checkResolver():
             resF.close()
             local_vers = re.findall("versione='(.*)'",resolver_content)[0]
         except:
-            logga('ERRORE FIND LOCAL VERS')
             pass
-        logga('Resolver_local_vers '+local_vers)
         
         remoteResolverUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/myResolver.py"
         strSource = makeRequest(remoteResolverUrl)
         if strSource is None or strSource == "":
-            logga('We failed to get source from '+remoteResolverUrl)
             remote_vers = local_vers
         else:
             #if PY3:
                 #strSource = strSource.decode('utf-8')		
             remote_vers = re.findall("versione='(.*)'",strSource)[0]
-        logga('remote_vers '+remote_vers)
         if local_vers != remote_vers:
-            logga('TRY TO UPDATE VERSION')
             strSource = strSource.replace('\r\n', '\n').replace('\r', '\n')
             with open(resolver_file, "w", newline='\n') as f:
                 f.write(strSource)
             msgBox("Codice Resolver aggiornato alla versione: "+remote_vers)
-            logga('VERSION UPDATE')
 
 def getIPAddress():
     import socket
@@ -1016,7 +970,6 @@ def getIPAddress():
 
 def checkDns():
     import time, requests
-    logga("############ START NETWORK INFO ############")
     ip = getIPAddress()
     dns1 = "0.0.0.0"
     dns2 = "0.0.0.0"
@@ -1050,8 +1003,6 @@ def checkDns():
     infoDns += "\n## DNS2: %s" %  (dns2)
     
     
-    logga(infoDns)
-    logga("############# END NETWORK INFO #############")
     
     if responseCode != 200:
         mess = "Con le attuali impostazioni di rete,\npotresti avere problemi a recuperare i link da alcuni siti \n(es. https://dlhd.st/)."
@@ -1071,7 +1022,6 @@ def checkPluginInstalled(pluginId):
         dialog = xbmcgui.Dialog()
         mess = "Il plugin "+pluginId+" non risulta installato."
         dialog.ok("Mandrakodi", mess)
-    logga("CHECK IF "+pluginId+" IS INSTALLED: "+str(have_mandra_plugin))
     return have_mandra_plugin
     
 
@@ -1101,8 +1051,7 @@ def uploadLog():
     try:
         addon_log_uploader = xbmcaddon.Addon('script.kodi.loguploader')
     except:
-        logga('loguploader seems to be not installed or disabled')
-        
+        logga("NO LOG PLUGIN")
         
     if not addon_log_uploader:
         xbmc.executebuiltin('InstallAddon(script.kodi.loguploader)', wait=True)
@@ -1110,10 +1059,8 @@ def uploadLog():
         try:
             addon_log_uploader = xbmcaddon.Addon('script.kodi.loguploader')
         except:
-            logga('Logfile Uploader cannot be found')
-            
+           logga("NO SOURCE") 
     if not addon_log_uploader:
-        logga('Cannot send log because Logfile Uploader cannot be found')
         msgBox("Il plugin Kodi File Uploader non risulta installato. Lo trovi nella repo di Kodi sotto Addon-Programmi.")
         return False
     xbmc.executebuiltin('RunScript(script.kodi.loguploader)')
@@ -1136,26 +1083,21 @@ def updateCode(parIn):
         except:
             msgBox("Non e' stato possibile leggere il file locale:[CR]"+launcher_file)
         
-        logga('local_vers '+local_vers)
 
 
         remoteLauncherUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/launcher.py"
         strSource = makeRequest(remoteLauncherUrl)
         if strSource is None or strSource == "":
-            logga('We failed to get source from '+remoteLauncherUrl)
             msgBox("Non e' stato possibile contattare la sorgente.[CR]L'addon potrebbe non essere aggiornato.")
             remote_vers = local_vers
         else:
             remote_vers = re.findall("versione='(.*)'",strSource)[0]
-        logga('remote_vers '+remote_vers)
         if local_vers != remote_vers:
-            logga('TRY TO UPDATE VERSION')
             try:
                 strSource = strSource.replace('\r\n', '\n').replace('\r', '\n')
                 with open(launcher_file, "w", newline='\n') as f:
                     f.write(strSource)
                 
-                logga('VERSION UPDATE')
                 msgBox("Codice Launcher aggiornato alla versione: "+remote_vers)
             except:
                 msgBox("Non e' stato possibile aggiornare il file locale:[CR]"+launcher_file)
@@ -1174,26 +1116,21 @@ def updateCode(parIn):
             local_vers = re.findall("versione='(.*)'",resolver_content)[0]
         except:
             msgBox("Non e' stato possibile leggere il file locale:[CR]"+resolve_file)
-        logga('local_vers '+local_vers)
 
 
         remoteLauncherUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/myResolver.py"
         strSource = makeRequest(remoteLauncherUrl)
         if strSource is None or strSource == "":
-            logga('We failed to get source from '+remoteLauncherUrl)
             msgBox("Non e' stato possibile contattare la sorgente.[CR]L'addon potrebbe non essere aggiornato.")
             remote_vers = local_vers
         else:
             remote_vers = re.findall("versione='(.*)'",strSource)[0]
-        logga('remote_vers '+remote_vers)
         if local_vers != remote_vers:
-            logga('TRY TO UPDATE VERSION')
             try:
                 strSource = strSource.replace('\r\n', '\n').replace('\r', '\n')
                 with open(resolve_file, "w", newline='\n') as f:
                     f.write(strSource)
                 
-                logga('VERSION UPDATE')
                 msgBox("Codice Resolver aggiornato alla versione: "+remote_vers)
             except:
                 msgBox("Non e' stato possibile aggiornare il file locale:[CR]"+resolve_file)
@@ -1226,7 +1163,6 @@ def copyPlayerCoreFactory(parIn):
         strSource = makeRequest(remoteXmlUrl)
         if strSource is None or strSource == "":
             mess = "Impossibile recuperare il file"
-            logga('We failed to get source from '+remoteXmlUrl)
         else:
             #if PY3:
                 #strSource = strSource.decode('utf-8')
@@ -1265,15 +1201,11 @@ def preg_match(data, patron, index=0):
 
 def m3u2json(src):
     import re
-    m3uSource = makeRequest(src)
+    m3uSource = makeRequest(src, tout=5)
     if m3uSource is None or m3uSource == "":
-        logga('We failed to get source from '+src)
         msgBox("Errore download m3u")
         return
-    else:
-        #if PY3:
-            #m3uSource = m3uSource.decode('utf-8')		
-        logga('OK source')
+    
         
     regex = r'#EXTINF:(.*?),(.*?)$\s(http.*?//.*?)$'	
     matches = re.compile(regex, re.MULTILINE).findall(m3uSource)
@@ -1321,7 +1253,6 @@ def m3u2json(src):
         writeFileLog(str(numIt)+"\n"+strLog, "a+")
         traceback.print_exc()
         return 
-    logga("FOUND "+str(numIt)+" ROWS")
 
     if (okGroup):
         arrTmp.sort()
@@ -1369,7 +1300,6 @@ def m3u2json(src):
                     strJson +=  strJsonNew
                     numIt += 1
                 except:
-                    logga("BAD ITEMS: "+strJsonNew)
                     pass
                 
 
@@ -1397,7 +1327,6 @@ def decodeSkinViewMode (mySkin='', viewMode=''):
         retMode = str(xbmcaddon.Addon(id=addon_id).getSetting("SkinInfo1"))
     if (retMode == "504" or retMode == "Info2"):
         retMode = str(xbmcaddon.Addon(id=addon_id).getSetting("SkinInfo2"))
-    logga ("SKIN: "+mySkin+" - VIEW: "+str(retMode))
 
     return retMode
 
@@ -1405,12 +1334,7 @@ def personalList(listtType=''):
     import json
     baseScript = makeRequest("https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/enterScrip.txt")
     if baseScript is None or baseScript == "":
-        logga('We failed to get source from serverSource')
-        
-    else:
-        #if PY3:
-            #baseScript = baseScript.decode('utf-8')
-        logga('OK get source from serverSource')
+        logga("NO SOURCE")
         
     baseScript = baseScript.replace("\r\n", "").replace("\n", "").replace("\r", "")          
     urlToCall=""
@@ -1425,11 +1349,9 @@ def personalList(listtType=''):
     if (fileName=="" or fileName=="blank"):
         msgBox("E' necessario specificare un file nelle impostazioni")
     else:
-        logga('FILE_NAME: '+fileName)
         urlToCall=baseScript+"JOB810&type="+listtType+"&url="+fileName
         if 	(listtType=="MAC"):
             urlToCall=baseScript+"JOB811&url="+fileName
-        logga('URL TO CALL: '+urlToCall)
         try:
             return getExternalJson(urlToCall)
         except Exception as err:
@@ -1441,7 +1363,6 @@ def checkSkin():
     kodiSkin=xbmc.getSkinDir()
     wall=xbmcaddon.Addon(id=addon_id).getSetting("SkinWall")
     if str(kodiSkin).endswith("estuary"):
-        logga ("SKIN ESTUARY")
         if (wall!="55"):
             xbmcaddon.Addon(id=addon_id).setSetting("SkinWall", "55")    
             xbmcaddon.Addon(id=addon_id).setSetting("SkinList1", "55")    
@@ -1449,7 +1370,6 @@ def checkSkin():
             xbmcaddon.Addon(id=addon_id).setSetting("SkinInfo1", "55")    
             xbmcaddon.Addon(id=addon_id).setSetting("SkinInfo2", "55")    
     if str(kodiSkin).endswith("confluence"):
-        logga ("SKIN CONFLUENCE")
         if (wall!="500"):
             dialog = xbmcgui.Dialog()
             mess="Rilevata Skin Confluence. Vuoi impostare la visualizzazione per questa skin?"
@@ -1478,11 +1398,9 @@ def remoteLog(msgToLog):
     urlLog = baseLog + "&msgLog=" + myParse.quote(ua+"@@"+msgToLog)
     strSource = makeRequest(urlLog)
     if strSource is None or strSource == "":
-        logga('MANDRA_LOG: NO REMOTE LOG')
-        
+        logga("NO SOURCE")
     else:
-        logga('OK REMOTE LOG')
-        
+       logga("OK LOG") 
 
 def writeFileLog(strIn, modo):
     home = ''
@@ -1522,7 +1440,6 @@ def run():
     url = "start"
     try:
         if not sys.argv[2]:
-            logga("=== ADDON START ===")
             if (checkMsgOnLog()):
                 checkResolver()
                 checkJsunpack()
@@ -1535,7 +1452,6 @@ def run():
             params = parameters_string_to_dict(sys.argv[2])
             action =  params['action']
             url =  params['url']
-            logga("URL: "+url+" - ACTION: "+action)
             if action == 'getExtData':
                 getExternalJson(url)
             elif action == 'getExtData2':
@@ -1556,31 +1472,24 @@ def run():
                         logging.warning("GET JSON FROM: "+strUrl)
                         getExternalJson(strUrl)
                     else:
-                        logga("NO INPUT")
                         mesNoInput='{"SetViewMode":"500","items":[{"title":"[COLOR red]NO INPUT[/COLOR]","link":"ignore","thumbnail":"https://e7.pngegg.com/pngimages/56/148/png-clipart-computer-icons-wrong-miscellaneous-blue-thumbnail.png","fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg","info":"NO INPUT"}]}'
                         jsonToItems(mesNoInput)
                 else:
-                    logga("EXIT KEYBOARD")
                     mesNoInput='{"SetViewMode":"500","items":[{"title":"[COLOR red]NO INPUT[/COLOR]","link":"ignore","thumbnail":"https://e7.pngegg.com/pngimages/56/148/png-clipart-computer-icons-wrong-miscellaneous-blue-thumbnail.png","fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg","info":"NO INPUT"}]}'
                     jsonToItems(mesNoInput)
             elif action == 'apk':
                 apkN =  params['apk']
-                logga("RUN APK: "+apkN)
                 runApk(apkN, url)
             elif action == 'getChannel':
-                logga("OPEN CHANNEL: "+url)
                 channelToItems(url, _handle)
             elif action == 'personal':
-                logga("OPEN PERSONAL: "+url)
                 personalList(url)
             elif action == 'regex':
                 express =  params['exp']
-                logga("REGEX: "+url+" - "+express)
                 url = simpleRegex(url, express)
                 play_video(url)
             elif action == 'myresolve':
                 parIn =  params['parIn']
-                logga("MyResolver: "+url+" - "+parIn)
                 callReolver(url, parIn)
             elif action == 'openSettings':
                 try:
@@ -1590,7 +1499,6 @@ def run():
                 except:
                     xbmc.executebuiltin('Addon.OpenSettings(plugin.video.mandrakodi)')
             elif action == 'plugin':
-                logga("CALL PLUGIN: "+url)
                 url2=url.replace("plugin://", "")
                 url3=url2.split("?")
                 pl=""
@@ -1598,12 +1506,10 @@ def run():
                 if ('?' in url):
                     pl=url3[0].replace("/", "")
                     par=url3[1]
-                    logga("plug: "+pl+" --> "+par)
                     if (checkPluginInstalled(pl)):
                         xbmc.executebuiltin("RunPlugin("+url+")")
                 else:
                     pl=url3[0].replace("/", "")
-                    logga("onlyplugin: "+pl)
                     if (checkPluginInstalled(pl)):
                         xbmc.executebuiltin('RunAddon("'+pl+'")')
 
@@ -1624,7 +1530,6 @@ def run():
                             pass
                         uArr = url.split("/")
                         url=baseAce+"/ace/getstream?id="+uArr[-1]
-                        logga("URL_ACE: "+url)
                     elif (resp==1):
                         if (xbmc.getCondVisibility("system.platform.android")):
                             options2 = ["PlayerCoreFactory", "org.acestream.media", "org.acestream.media.atv", "org.acestream.core", "org.acestream.core.atv", "org.acestream.node", "org.acestream.web", "org.free.aceserve"]
@@ -1666,14 +1571,11 @@ def run():
 
     if not viewmode==None and autoView=="1":
         time.sleep(0.5)
-        logga("setting viewmode")
         kodiSkin=xbmc.getSkinDir()
         kodiView=decodeSkinViewMode(kodiSkin, viewmode)
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
         time.sleep(0.5)
-        logga("setting view mode again to "+kodiView)
         xbmc.executebuiltin("Container.SetViewMode("+kodiView+")")
         xbmcaddon.Addon(id=addon_id).setSetting("urlAppo1", kodiView)
-        logga("Last ViewMode Saved: "+kodiView)
     if debug == "on":
         logging.warning("MANDRA_LOG: \n"+testoLog)
