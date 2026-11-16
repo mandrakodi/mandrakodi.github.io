@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.2.277'
+versione='1.3.0'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 15.11.2026
+# Last update: 16.11.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -57,32 +57,24 @@ def downloadHttpPage(urlIn, **opt):
         }
         s = requests.Session()
         if opt.get('header', None) is not None:
-            logga("SET HEADER")
             head = opt['header']
         
         if opt.get('headers', None) is not None:
-            logga("SET HEADERS")
             head = opt['headers']
         
         if opt.get('post', None) is not None:
             postData=opt['post']
-            logga("POST DATA: "+postData)
             toRet = s.post(urlIn, data=postData, allow_redirects=True, headers=head, timeout=15)
         else:    
-            logga("START")
             toRet = s.get(urlIn, headers=head, timeout=45) 
             if opt.get('sleep', None) is not None:
-                logga("SLEEP")
                 time.sleep(opt['sleep'])
-                logga("RE-START")
                 s = requests.Session()
                 toRet = s.get(urlIn, headers=head, timeout=45)
-            logga("END")
         if PY3:
             toRet = toRet.decode('utf-8')
     except:
         pass
-    #logga("PAGE:\n"+toRet.text)
     return toRet.text
 
 
@@ -201,11 +193,9 @@ def discovery(parIn=None):
     links = []
     host = "https://www.discoveryplus.com"
     deviceId = uuid.uuid4().hex
-    logga("URL DEVICEID 4 DISCOVERY: "+deviceId)
     session = requests.Session()
     domain = 'https://' + session.get("https://prod-realmservice.mercury.dnitv.com/realm-config/www.discoveryplus.com%2Fit%2Fepg").json()["domain"]
     urlTk='{}/token?deviceId={}&realm=dplay&shortlived=true'.format(domain, deviceId)
-    logga("URL TOKEN DISCOVERY: "+urlTk)
     token = session.get(urlTk).json()['data']['attributes']['token']
     session.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Referer': host,
@@ -261,7 +251,6 @@ def discovery(parIn=None):
         data = dataStr.json().get('data',{}).get('attributes',{})
         url = data['streaming'][0]['url']
     except:
-        logga("ERRORE DISCOVERY: "+dataStr)
         pass
     links.append((url, "[COLOR gold]PLAY DISCOVERY[/COLOR]"))
     return links
@@ -293,10 +282,8 @@ def rocktalk(parIn=None):
         )
         cipher = Cipher_PKCS1_v1_5.new(_pubkey)
         ret64=b64encode(cipher.encrypt(_msg))
-        logga('JSON PAYLOAD: '+str(ret64))
         return ret64
 
-    logga('TVTAP PARIN: '+parIn)
     links = []
     
     player_user_agent = "mediaPlayerhttp/1.8 (Linux;Android 7.1.2) ExoPlayerLib/2.5.3"
@@ -312,7 +299,6 @@ def rocktalk(parIn=None):
         
         r = requests.post('https://rocktalk.net/tv/index.php?case=get_all_channels', headers=headers, data={"payload": payload(), "username": "603803577"}, timeout=15)
         jj=str(r.json())
-        logga('JSON ALL_CH: '+jj.replace("'", '"'))
 
         jsonText='{"SetViewMode":"503","items":['
         numIt=0
@@ -332,7 +318,6 @@ def rocktalk(parIn=None):
             numIt=numIt+1
         
         jsonText = jsonText + "]}"
-        logga('JSON-ANY: '+jsonText)
         links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
 
         
@@ -346,7 +331,6 @@ def rocktalk(parIn=None):
         data={"payload": payload(), "channel_id": ch_id, "username": "603803577"},
         timeout=15)
 
-    logga('JSON TVTAP: '+str(r.json()))
     msgRes = r.json()["msg"]
     if msgRes == "Invalid request!":
         links.append(("ignoreme", "[COLOR red]No Link Found[/COLOR]"))
@@ -373,7 +357,6 @@ def livetv(page_url):
     import json
     video_urls = []
     randomUa=getRandomUA()
-    logga ("PAGE_LIVETV: "+page_url)
 
     arrP=page_url.split("webplayer2.php?")
     try:
@@ -382,36 +365,29 @@ def livetv(page_url):
         if (arrP1[0]=="t=youtube" or arrP1[0]=="t=youtub"):
             codeYT=arrP1[1].split("c=")[1]
             ytp="https://www.youtube.com/watch?v="+codeYT
-            logga ("PAGE_YOUTUBE: "+ytp)
             return resolveMyUrl(ytp)
         if (arrP1[0]=="t=alieztv"):
             codeAL=arrP1[1].split("c=")[1]
             alp="https://emb.apl620.online/player/live.php?id="+codeAL+"&w=700&h=480"
             page_data = downloadHttpPage(alp)
             page_data_flat=page_data.replace("\n", "").replace("\r", "").replace("\t", "")
-            #logga ("HTML_ALP375: "+page_data_flat)
             src = preg_match(page_data, "pl.init\('([^']*)")
-            #logga ("SRC ==> "+src)
             video_urls.append(("https:"+src, "[COLOR lime]PLAY STREAM AL[/COLOR]", "by @MandraKodi", "https://cdn.livetv822.me/img/minilogo.gif"))
             return video_urls
     except:
         pass
     page_data = downloadHttpPage(page_url)
     page_data_flat=page_data.replace("\n", "").replace("\r", "").replace("\t", "")
-    #logga ("HTML_LIVETV: "+page_data_flat)
     src = preg_match(page_data, '<iframe  allowFullScreen="true" scrolling=no frameborder="0 "width="700" height="480" src="([^"]*)')
     if src != "":
         arrHost=src.split("/")
         host="https://"+arrHost[2]
         final_url=""
         try:
-            logga ("PAGE2_LIVETV: "+src)
             if "topembed.pw" in src:
                 extCode=arrHost[-1].replace("ex", "bet")
-                logga("topembed code: "+extCode)
                 urlTopServer="https://topembed.pw/server_lookup.php?channel_id="+extCode
                 serverTop = requests.get(urlTopServer).json()["server_key"]
-                logga("topembed server: "+serverTop)
                 
                 if serverTop=="top1/cdn":
                     final_url= "https://top1.kiko2.ru/top1/cdn/" + extCode + "/mono.m3u8"
@@ -431,24 +407,19 @@ def livetv(page_url):
                 if (src.startswith("//")):
                     src="https:"+src
                 page_data2 = downloadHttpPage(src)
-                logga ("PAGE2_LIVETV_HTML:\n"+page_data2)
                 final_url=preg_match(page_data2, "source: '(.*?)'")
                 if final_url == "":
                     jsCode=preg_match(page_data2, '<script type="text/javascript" src="(.*?)"')
                     if jsCode != "":
-                        #logga ("JSCODE: "+jsCode)
                         arrJs=jsCode.split("/")
                         urlJs="https://"+arrJs[2]+"/player/m/"+arrJs[-1]+"/"+arrJs[-2]
-                        #logga ("JSCODE_A: "+urlJs)
                         page_data3 = downloadHttpPage(urlJs)
-                        #logga ("PAGE3_LIVETV_HTML:\n"+page_data3)
                         final_url=preg_match(page_data3, "\"file\": '(.*?)'")+"|connection=keepalive&Referer="+page_url+"&User-Agent="+randomUa
                     else:
                         final_url = findM3u8(src, page_url)
         except:
             pass
         if final_url == "" or final_url == src:
-            logga ("GetLSProData: "+src)
             final_url = GetLSProData(src)
         last_url=""
         if "|" in final_url:
@@ -466,7 +437,6 @@ def livetv(page_url):
 def streamsb(page_url):
     import base64
     video_urls = []
-    logga ("PAGE_SB: "+page_url)
     data = downloadHttpPage(page_url)
     
     title="VIDEO"
@@ -478,25 +448,20 @@ def streamsb(page_url):
     dl_url = 'https://{}/dl?op=download_orig&id={}&mode={}&hash={}'
     
     host = get_domain_from_url(page_url)
-    logga ("HOST_SB: "+host)
     
     #sources = find_multiple_matches(data, r'download_video([^"]+)[^\d]+(\d+)p')
     sources = find_multiple_matches(data, r"download_video\('(.*?)','(.*?)','(.*?)'\)")
     
     if sources:
-        logga ("OK_SOURCE_SB: "+sources[0][0]+" - "+sources[0][1]+" - "+sources[0][2]) 
         code = sources[0][0]
         mode = "n"
         hash = sources[0][2]
         newUrl=dl_url.format(host, code, mode, hash)
-        logga ("NEW_URL_SB: "+newUrl)
         data = downloadHttpPage(newUrl)
         
         captcha = girc(data, 'https://{0}/'.format(host), base64.b64encode('https://{0}:443'.format(host).encode('utf-8')).decode('utf-8').replace('=', ''))
         if captcha:
-            logga ("CAPTCHA_SB: "+captcha)
             hash = find_single_match(data, r'"hash" value="([^"]+)')
-            logga ("HASH_CAPTCHA_SB: "+hash)
             newUrl2 = dl_url.format(host, code, mode, hash)
             data = downloadHttpPage(newUrl2, post='op=download_orig&id='+code+'&mode='+mode+'&hash='+hash+'&g-recaptcha-response='+captcha, timeout=10, header={'Referer':newUrl})
             media_url = find_single_match(data, r'<a href="http(.*?)" class="(.*?)">')
@@ -504,16 +469,14 @@ def streamsb(page_url):
                 vUrl="http"+str(media_url[0])
                 video_urls.append([vUrl+"|Referer="+page_url, "[COLOR lime]PLAY "+title+"[/COLOR]"])
             else:
-                logga ("NO_MEDIA_URL:") 
+                logga("NO MEDIA URL")
         else:
-            logga ("NO_CAPTCHA_SB\n"+data)
             media_url = find_single_match(data, r'<a href="http(.*?)" class="(.*?)">')
             if media_url:
                 vUrl="http"+str(media_url[0])
                 video_urls.append([vUrl+"|Referer="+page_url, "[COLOR gold]PLAY "+title+"[/COLOR]"])
     else:
        video_urls.append(["", "[COLOR red]NO LINK FOUND[/COLOR]"])
-       logga ("NO_SOURCE_SB: \n") 
     return video_urls
 
 
@@ -521,7 +484,6 @@ def streamsb(page_url):
 def myStream(parIn=None):
     video_urls = []
     page_url = "https://embed.mystream.to/"+parIn
-    logga('CALL: '+page_url)
     page_data = requests.get(page_url,headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
@@ -529,7 +491,6 @@ def myStream(parIn=None):
     page_decode = decodeMyStream(page_data)
     video_url = preg_match(page_decode, r"'src',\s*'([^']+)")
 
-    logga('video_url '+video_url)
     video_urls.append((video_url, ""))
 
     return video_urls
@@ -579,7 +540,6 @@ def decodeMyStream(data):
 
 def wizhdFind(parIn):
     randomUa=getRandomUA()
-    logga('CALL: '+parIn)
     page_data = requests.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'http://wizhdsports.net/'}).content
     if PY3:
         try:
@@ -588,11 +548,9 @@ def wizhdFind(parIn):
             page_data = page_data.decode('latin1')
 
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
-    logga('IFRAME WIZ: '+iframe_url)
     if iframe_url.startswith("//"):
         iframe_url="https:"+iframe_url
     if "embed" in iframe_url:
-        logga("CALL proData")
         vUrl = GetLSProData(iframe_url, parIn)+"|connection=keepalive&Referer="+parIn+"&User-Agent="+randomUa
     else:
         vUrl = findM3u8(iframe_url, parIn)
@@ -607,7 +565,6 @@ def testDns(parIn=""):
     dns2 = xbmc.getInfoLabel('Network.DNS2Address')
     video_urls = []
     
-    logga('CALL DNS TEST '+parIn)
     randomUa=getRandomUA()
     testUrl="https://thedaddy.li/stream/stream-877.php"
     head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://dlstreams.st/'}
@@ -623,7 +580,6 @@ def testDns(parIn=""):
     ret="[COLOR lime]TEST DNS: OK[/COLOR]"
     thumb="https://upload.wikimedia.org/wikipedia/commons/f/fb/2000px-ok_x_nuvola_green.png"
     try:
-        logga('URL DNS TEST '+testUrl)
         currSess = requests.Session()
         page_data1 = currSess.get(testUrl, headers=head)
         page_data = page_data1.content
@@ -671,7 +627,6 @@ def testDns(parIn=""):
 def markky(parIn):
     video_urls = []
     vUrl = ""
-    logga('CALL NOPAY FOR: '+parIn)
     randomUa=getRandomUA()
     head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://markkystreams.com/'}
     page_data = ""
@@ -688,7 +643,6 @@ def markky(parIn):
         except:
             page_data = page_data.decode('latin1')
     
-    logga("page_soloper "+page_data)
     url = preg_match(page_data, r'source: "(.*?)"')
     video_urls.append((url+"|connection=keepalive&verifypeer=false&Referer="+parIn, "[COLOR gold]PLAY STREAM[/COLOR]", "PLAY STREAM", "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
     return video_urls
@@ -697,7 +651,6 @@ def nopay(parIn):
     import time
     video_urls = []
     vUrl = ""
-    logga('CALL NOPAY FOR: '+parIn)
     randomUa=getRandomUA()
     head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://amstaff.city/index.php'}
     page_data = ""
@@ -718,13 +671,10 @@ def nopay(parIn):
         except:
             page_data = page_data.decode('latin1')
     
-    logga("page_soloper "+page_data)
     iframe_url = preg_match(page_data, r"iframe\s*src='([^']+)")
     
-    logga('IFRAME NOPAY: '+iframe_url)
     if iframe_url == "":
         iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
-        logga('IFRAME_2 NOPAY: '+iframe_url)
 
     if "olalivehdplay.ru" in iframe_url:
         mpdUrl="https://asdfasdft.hlsjs.ru/fls/cdn/"+iframe_url.split("=")[-1]+"/index.m3u8|connection=keepalive&verifypeer=false&Referer=https:"+iframe_url+"&User-Agent="+randomUa
@@ -772,14 +722,12 @@ def nopay(parIn):
         return pepper(newPage)
     
     if "tutele1.net" in newPage:
-        logga("CALL proData 4 tutele1")
         vUrl = GetLSProData(newPage, parIn)
         final_url = vUrl + "|connection=keepalive&verifypeer=false&Referer="+newPage+"&User-Agent="+randomUa
         video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+vUrl, "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
         return video_urls
     
     if "embed" in newPage:
-        logga("CALL proData")
         vUrl = GetLSProData(newPage, parIn)
         final_url = vUrl + "|connection=keepalive&verifypeer=false&Referer="+newPage+"&User-Agent="+randomUa
         video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+vUrl, "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
@@ -805,7 +753,6 @@ def nopay(parIn):
     
     if video_url != "":
         vUrl = video_url + '|connection=keepalive&User-Agent='+myParse.quote(randomUa)+'&Referer='+newPage
-    logga('video_url '+vUrl)
 
     final_url = vUrl
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+vUrl, "https://res.9appsinstall.com/group4/M00/51/F1/ghoGAFy4guuAJwiKAAAquIT5LH0862.png"))
@@ -864,7 +811,6 @@ def findM3u8(linkIframe, refPage):
             video_url = preg_match(page_data2, express1)
         if video_url != "":
             vUrl = video_url + '|connection=keepalive&User-Agent='+myParse.quote(ua)+'&Referer='+linkIframe
-        logga('video_url '+vUrl)
 
     except:
         pass
@@ -872,7 +818,6 @@ def findM3u8(linkIframe, refPage):
     return vUrl
 
 def assiaFind(parIn):
-    logga('ASSIA_PAR: '+parIn)
     randomUa=getRandomUA()
     page_data = requests.get(parIn,headers={'user-agent':randomUa,'accept':'*/*','Referer':'http://assia1.tv/'}).content
     if PY3:
@@ -882,7 +827,6 @@ def assiaFind(parIn):
             page_data = page_data.decode('latin1')
     video_url = preg_match(page_data, "source: '(.*?)'")
     
-    logga('video_url '+video_url)
     return video_url
 
 def assia(parIn=None):
@@ -897,12 +841,10 @@ def assia(parIn=None):
 
 def mixdrop(page_url):
     import jsunpack, ast
-    logga("url=" + page_url)
     video_urls = []
     # data = httptools.downloadpage(page_url).data
     ua='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
     data  = downloadHttpPage(page_url, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':page_url})
-    logga("mixdrop: " + data)
     packed = preg_match(data, r'(eval.*?)</script>')
     unpacked = jsunpack.unpack(packed)
     list_vars=re.findall(r'MDCore\.\w+\s*=\s*"([^"]+)"', unpacked, re.DOTALL)
@@ -924,7 +866,6 @@ def daddyFind(parIn):
     if PY3:
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
-    logga('IFRAME DADDY: '+iframe_url)
     if iframe_url.endswith(".mp4"):
         video_url = iframe_url
         return video_url
@@ -934,10 +875,8 @@ def daddyFind(parIn):
             page_data2 = page_data2.decode('utf-8')
         
         iframe_url2 = preg_match(page_data2, r'iframe\s*src="([^"]+)')
-        logga('IFRAME DADDY2: '+iframe_url2)
         if iframe_url2=="":
             video_url = preg_match(page_data2.replace('//source:','//source_no:'), "source:'(.*?)'")
-            logga('VIDEO DADDY2: '+video_url)
             
         if "http" in iframe_url2:
             page_data3 = requests.get(iframe_url2,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://widevine.licenses4.me/'}).content
@@ -1011,9 +950,7 @@ def sky(parIn=None):
     key64=kid+":"+key
     
     data_str = data["fine"]
-    logga ("data_str ==> "+data_str)
     data_adesso = datetime.now()
-    logga("ADESSO: " +data_adesso.strftime("%d/%m/%Y %H:%M:%S"))
     if "EXPIRE" not in data_str:
         
         try:
@@ -1050,7 +987,6 @@ def daddyPremium(codeIn=None):
     dataJson = s.get(urlSrv, headers=headers)
     arrJ = json.loads(dataJson.text)
     server=arrJ["server_key"]
-    logga("DADDY_PREMIUM SERVER "+server)
     link="https://"+server+"new.kiko2.ru/"+server+"/premium"+codeIn+"/mono.m3u8"
     
     liz = xbmcgui.ListItem(path=link, offscreen=True)
@@ -1068,16 +1004,13 @@ def daddyPremium(codeIn=None):
 def antena(parIn=None):
     img="https://static.vecteezy.com/system/resources/previews/018/842/688/non_2x/realistic-play-button-video-player-and-streaming-icon-live-stream-3d-render-illustration-free-png.png"
     video_urls = []
-    logga('PAR_ANTENA: '+parIn)
     page_data = requests.get(parIn,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://antenasports.ru/'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, r'iframe\s*src="([^"]+)')
-    logga('IFRAME ANTENA: '+iframe_url)
     
     arrL=iframe_url.split("=")
     idCh=arrL[1]
-    logga('IDCH ANTENA: '+idCh)
     
     randomUa="Mozilla/5.0 (iPad; CPU OS 133 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
     link="https://webufffit.mizhls.ru/lb/"+idCh+"/index.m3u8"
@@ -1139,7 +1072,6 @@ def ffmpeg_noRef(link=None):
 
 def koolto(parIn=None):
     video_urls = []
-    logga('PAR_KOOL: '+parIn)
     final_url = "https://www.kool.to/play/"+parIn+"/index.m3u8|Referer=https://www.kool.to/&Origin=https://www.kool.to&Connection=keep-alive&User-Agent=ipad"
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi", "https://i.imgur.com/8EL6mr3.png"))
     
@@ -1156,9 +1088,7 @@ def koolto(parIn=None):
 
 def daddy(parIn=None):
     video_urls = []
-    logga('PAR_DADDY: '+parIn)
     video_url = daddyFind(parIn)
-    logga('URL DADDYS: '+video_url)
     tito = "DADDY"
     refe = parIn
     try:
@@ -1438,7 +1368,6 @@ def daddyCode(codeIn=None):
             except ValueError:
                 secs = 5.0
             host_backoff[host] = time.monotonic() + max(1.0, min(secs, 60.0))
-            logga(f"DADDY {host} rate-limited {secs:.0f}s")
 
         def _decode_player_page(page_data):
             """_econfig -> atob -> const SRC -> m3u8 generico."""
@@ -1447,25 +1376,22 @@ def daddyCode(codeIn=None):
             if m_cfg:
                 cand = _decode_barecrop_econfig(m_cfg.group(1))
                 if cand:
-                    logga(f"DADDY _econfig decoded {cand[:80]}")
+                    logga ("OK CAND")
             if not cand:
                 m_atob = re.findall("window.atob\\('(.*?)'\\)", page_data)
                 if m_atob:
                     try:
                         cand = base64.b64decode(m_atob[0]).decode("utf-8")
-                        logga(f"DADDY atob decoded {cand[:80]}")
                     except Exception:
                         cand = None
             if not cand:
                 m_src = re.search(r"(?:const|let|var)\s+SRC\s*=\s*[\"'](https?://[^\"']+?)[\"']", page_data)
                 if m_src:
                     cand = m_src.group(1).strip()
-                    logga(f"DADDY const SRC {cand[:80]}")
             if not cand:
                 m_m3u8 = re.search(r"https?://[^\s'\"<>\\]+\.m3u8[^\s'\"<>\\]*", page_data)
                 if m_m3u8:
                     cand = m_m3u8.group(0)
-                    logga(f"DADDY generic m3u8 {cand[:120]}")
             return cand
 
         # Player attivo del sito (iframe #playerFrame), best effort
@@ -1480,7 +1406,6 @@ def daddyCode(codeIn=None):
                             if p != players[0]:
                                 players.remove(p)
                                 players.insert(0, p)
-                                logga(f"DADDY active player {p}")
                             break
         except Exception:
             pass
@@ -1502,12 +1427,10 @@ def daddyCode(codeIn=None):
                         _mark_limited(pUrl, resp)
                         continue
                     if resp.status_code != 200:
-                        logga(f"DADDY {player}@{origin} status {resp.status_code}")
                         continue
                     origin_ok = True
                     m = re.findall('<iframe src="(.*?)"', resp.text)
                     if not m:
-                        logga(f"DADDY no iframe {player}@{origin}")
                         continue
                     iframe = m[0]
                     if iframe.startswith("//"):
@@ -1522,7 +1445,6 @@ def daddyCode(codeIn=None):
                         _mark_limited(iframe, rd)
                         continue
                     if rd.status_code != 200:
-                        logga(f"DADDY iframe {iframe} status {rd.status_code}")
                         continue
                     cand = _decode_player_page(rd.text)
                     if not cand:
@@ -1545,7 +1467,6 @@ def daddyCode(codeIn=None):
                                 except Exception:
                                     pass
                     if not cand:
-                        logga(f"DADDY no stream URL {player}@{origin}")
                         continue
                     # playlist premium edge: serve il token (?t=)
                     cand = _premium_playlist_url(session, cand)
@@ -1563,33 +1484,25 @@ def daddyCode(codeIn=None):
                         _mark_limited(cand, rm)
                         continue
                     if rm.status_code != 200:
-                        logga(f"DADDY master {rm.status_code} {player}@{origin}")
                         continue
                     body = rm.text
                     if _is_defaced_kodi(body):
                         # PNG-HLS "HACKERMAN": senza unwrap (no service) si passa oltre
-                        logga(f"DADDY defaced playlist, skip {player}@{origin}")
                         continue
                     if "#EXTM3U" not in body[:8000]:
-                        logga(f"DADDY not a playlist {player}@{origin}")
                         continue
                     if not _validate_stream_video(session, cand, body, refI):
-                        logga(f"DADDY no video PES {player}@{origin}")
                         continue
                     link = cand
                     dadUrl = iframe
-                    logga(f"DADDY using {player}@{origin}")
                     break
                 except Exception as e:
-                    logga(f"DADDY {player}@{origin} exception {e}")
                     continue
             if not origin_ok:
-                logga(f"DADDY origin {origin} non raggiungibile")
                 continue
             break
 
         if not link:
-            logga(f"DADDY no working stream for {codeIn}")
             video_urls.append(("ignoreMe", f"[COLOR red]No stream found for {codeIn}[/COLOR]", "No link", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
             return video_urls
 
@@ -1614,11 +1527,9 @@ def daddyCode(codeIn=None):
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"by MandraKodi"}'
         jsonText = jsonText + "]}"
-        logga('JSON-DADDY: '+jsonText)
         video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
         return video_urls
     except Exception as e:
-        logga(f"DADDY exception for {codeIn}: {e}")
         import traceback
         traceback.print_exc()
         video_urls.append(("ignoreMe", f"[COLOR red]Error for {codeIn}[/COLOR]", "No link", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
@@ -1633,15 +1544,12 @@ def daddyCode_old(codeIn=None):
     pUrl="https://dlhd.st/stream/stream-"+codeIn+".php"
     page_1 = requests.get(pUrl,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://dlhd.st/'}).text
     dadUrl = re.findall('<iframe src="(.*?)"', page_1)[0]
-    #logga ("dadUrl: "+dadUrl)
-
+    
     page_data = requests.get(dadUrl,headers={'user-agent':'Mozilla/5.0','accept':'*/*','Referer':'https://dlhd.st/'}).text
-    #logga ("PAGE_DADDY: "+page_data)
     urlAuth = re.findall("window.atob\('(.*?)'\)", page_data)[0]
     link = base64.b64decode(urlAuth).decode("utf-8")
     
-    #logga ("LINK: "+link)
-
+    
     arrU = dadUrl.split("/")
     refe = arrU[0]+"//"+arrU[2]+"/"
     origin = arrU[0]+"//"+arrU[2]
@@ -1663,7 +1571,6 @@ def daddyCode_old(codeIn=None):
    
     
     jsonText = jsonText + "]}"
-    logga('JSON-DADDY: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     
     return video_urls
@@ -1673,7 +1580,6 @@ def gdplayer(parIn):
     video_urls = []
     url="https://en.freewatchtv.top/live-tv/"+parIn
     response = requests.get(url)
-    logga ("GDPLAYER_PAGE: "+url+"\n"+response.text)
     page = response.text.replace("\n", "").replace("\r", "").replace("\t", "")
     match = re.search(r'data-src="https:\/\/ava\.karmakurama\.com\/\?id=(.*?)"', page, re.IGNORECASE)
     daddyC="000"
@@ -1686,7 +1592,6 @@ def gdplayer(parIn):
         except:
             pass
         pass    
-    logga ("GDPLAYER_CODE: "+daddyC)
     if daddyC=="000":
         video_urls.append(("ignoreMe", "[COLOR orange]No Link Found for "+parIn+"[/COLOR]" , "NO LINK ", "https://clipart-library.com/image_gallery2/Television-Free-Download-PNG.png"))
         return video_urls
@@ -1694,7 +1599,6 @@ def gdplayer(parIn):
     for linkTmp in jj:
         newList=list(linkTmp)
         newLink=newList[0]
-        #logga("JJSON: "+newLink)
         arr_t = json.loads(newLink)
         server=arr_t["server"]
         refe="https://en.freewatchtv.top"
@@ -1720,9 +1624,7 @@ def vixsrc(movieUrl=None):
     
     headSCt={'user-agent':randomUA, 'referer':'https://streamingunity.fun'}
     
-    #logga("movieUrl: "+movieUrl)
     wp_data = requests.get(movieUrl,headers=headSCt).text
-    logga("wp_data: "+wp_data)
 
     token = None
     m = _TOKEN_RE.search(wp_data)
@@ -1731,7 +1633,6 @@ def vixsrc(movieUrl=None):
 
     m = _URL_RE.search(wp_data)
     hls_url = _build_hls_url(m.group(1), token, wp_data, movieUrl)
-    logga("hls_url: "+hls_url)
     return hls_url+"&referer=1&scz=1"
 
 def _build_hls_url(raw_url, token, wp_data, page_url):
@@ -1739,11 +1640,8 @@ def _build_hls_url(raw_url, token, wp_data, page_url):
     _EXPIRES_RE = re.compile(r'''["']expires["']\s*:\s*["'](\d+)["']''')
     _FHD_RE     = re.compile(r'"canPlayFHD"\s*:\s*true|canPlayFHD\s*=\s*true')
     _M3U8_RE    = re.compile(r'(/playlist/[^/?#]+?)(?:\.m3u8)?(?=[?#]|$)')
-    logga ("raw_url: "+raw_url)
-    logga ("page_url: "+page_url)
     url_pulita = _decode_url(raw_url)
     url_pulita = _M3U8_RE.sub(r'\1.m3u8', url_pulita)
-    logga ("url_pulita: "+url_pulita)
     if '?' in url_pulita:
         base, qs = url_pulita.split('?', 1)
         params = {k: v[0] for k, v in parse_qs(qs).items()}
@@ -1767,7 +1665,6 @@ def _build_hls_url(raw_url, token, wp_data, page_url):
 
     url_finale = base + '?' + urlencode(params)
     toRet=url_finale.replace('&amp;', '&').replace("&skin=vixsrc&canPlayFHD=1", "")
-    logga("toRet: "+toRet)
     return toRet
 
 def vixsrcOld(movieUrl=None):
@@ -1784,11 +1681,8 @@ def vixsrcOld(movieUrl=None):
 
         headSCt={'user-agent':randomUA}
         
-        #logga("movieUrl: "+movieUrl)
         pageT2 = requests.get(movieUrl,headers=headSCt).text
-        #logga("pageT2: "+pageT2)
         pageT3=pageT2.replace("\n", "").replace("\r", "").replace("\t", "")
-        #logga("pageT2: "+pageT3)
         urlSc="ignore"
         
         try:    
@@ -1798,7 +1692,6 @@ def vixsrcOld(movieUrl=None):
             jsonUrl = res[0]+'"url":"'+res[1]+'"}'
                 
             #jsonUrl = preg_match(pageT3, patron)+'"sex":"ok"}'
-            logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
             arrJ2 = json.loads(jsonUrl.replace("'", '"'))
             #urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
             urlSc=baseUrl+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
@@ -1811,19 +1704,14 @@ def vixsrcOld(movieUrl=None):
             numPar=0
             for param in arrPar:
                 if numPar > 0:
-                    #logga("PARAM: "+param)
                     arrP2=param.split("=")
                     if (arrP2[0]=="canPlayFHD"):
                         urlSc= urlSc + "&h=1"
                     if (arrP2[0]=="b"):
                         urlSc= urlSc + "&b=1"
-                    #newPar = newPar+"&"+param
                 numPar=numPar+1
-            #urlSc= urlSc + newPar
-            logga("FINAL URL: "+urlSc)
         except:
             tito="[COLOR red]NO VIDEO FOUND[/COLOR]"
-        #newUrl=urlSc+"|referer="+scUrl.replace("\n", '')+"&user-agent=Mozilla"
         newUrl=urlSc
     except Exception as e:
         errMsg=f"Error: {e}"
@@ -1836,26 +1724,21 @@ def get_tmdb_video(tmdb_id="926899"):
     newUrl = "ignoreMe"
     
     url = "https://vixsrc.to/api/movie/"+tmdb_id+"/?lang=it"
-    logga("API URL: "+url)
     okVideo=True
     try:
         
         response = requests.get(url).content.decode("utf-8")
-        logga("API JSON: "+response)
         respJ=json.loads(response)
         m3u8Url=respJ["src"].replace("&amp;", "&")
         movieUrl="https://vixcloud.cc"+m3u8Url
         
-        logga ("M3U8: "+movieUrl)
         newUrl=vixsrc(movieUrl)
-        logga ("newUrl: "+newUrl)
         tito="[COLOR lime]PLAY VIDEO TMDB[/COLOR]"
         if "ignore" in newUrl:
             okVideo=False
         
     except Exception as e:
         okVideo=False
-        logga(f"Error: {e}")
     
     jsonText='{"SetViewMode":"50","items":['
     if okVideo:
@@ -1875,7 +1758,6 @@ def get_tmdb_video(tmdb_id="926899"):
     
     
     jsonText = jsonText + "]}"
-    logga('JSON-TMDB: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
 
 
@@ -1897,7 +1779,6 @@ def get_tmdb_episode_video(tmdb_id="1416_1_1"):
         m3u8Url=respJ["src"].replace("&amp;", "&")
         movieUrl="https://vixsrc.to"+m3u8Url
         
-        logga ("M3U8: "+movieUrl)
         to_ret=vixsrc(movieUrl)
     
     except Exception as e:
@@ -1918,7 +1799,6 @@ def get_tmdb_episode_video(tmdb_id="1416_1_1"):
     
     
     jsonText = jsonText + "]}"
-    logga('JSON-TMDB: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     
     return video_urls
@@ -1935,7 +1815,6 @@ def sibNet(parIn=None):
     if PY3:
         dataJson = dataJson.decode('Latin-1')
     
-    logga('SIBNET_CONTENT: '+dataJson)
     tito = preg_match(dataJson, "title: '(.*?)',")
     if tito != None:
         tito= tito.replace("[B]","").replace("[/B]","").replace("[/COLOR]","")
@@ -1945,7 +1824,6 @@ def sibNet(parIn=None):
     else:
         tito = "[COLOR orange]PLAY STREAM[/COLOR]"
     iframe_url = preg_match(dataJson, 'player.src\(\[\{src: "(.*?)", type')
-    logga('URL SIB: '+iframe_url)
     if iframe_url != None:
         iframe_url ="https://video.sibnet.ru"+iframe_url
     else:
@@ -1965,10 +1843,8 @@ def freeshot(codeIn=None):
     s = requests.Session()
     urlAuth="https://wideiptv.top/player/"+codeIn
     fu = s.get(urlAuth, headers=headers)
-    logga("FREE_PAGE: "+fu.text)
 
     token = preg_match(fu.text, 'currentToken: "(.*?)"')
-    logga ("TOKEN: "+token)
     
     link_ch="https://cdn.hdm1.net/"+codeIn+"/tracks-v1a1/mono.m3u8?token="+token+"|referer=https://wideiptv.top/&origin=https://wideiptv.top"
     
@@ -1986,7 +1862,6 @@ def freeshot(codeIn=None):
    
     
     jsonText = jsonText + "]}"
-    logga('JSON-FREE: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     
     return video_urls
@@ -2006,10 +1881,8 @@ def tvapp(parIn=None):
     divUrl = preg_match(fu.text, '<div id="stream_name" name="(.*?)">')
     urlJsonLink="https://thetvapp.to/token/"+divUrl
     fuJson = s.get(urlJsonLink, headers=headers).text
-    logga("JSON TVAPP: "+fuJson)
     arrJ = json.loads(fuJson)
     videoLink=arrJ["url"]
-    logga("LINK TVAPP: "+videoLink)
     
     video_urls.append((videoLink, "[COLOR lime]PLAY STREAM (PLAYER EST.)[/COLOR]", "PLAY STREAM", "https://www.pepperlive.info/Live1.jpg"))
     return video_urls
@@ -2023,10 +1896,8 @@ def enigma4k(parIn=None):
     dataJson = requests.get(urlP,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://enigma4k.live'}).content
     if PY3:
         dataJson = dataJson.decode('utf-8')
-    logga("JSON ENIGMA: "+dataJson)
     arrJ = json.loads(dataJson)
     videoLink=arrJ["videoLink"]
-    logga("LINK ENIGMA: "+videoLink)
     return urlsolver(videoLink)
 
 def pepper(parIn=None):
@@ -2036,7 +1907,6 @@ def pepper(parIn=None):
     if PY3:
         page_data = page_data.decode('utf-8')
     iframe_url = preg_match(page_data, '<iframe width="100%" height="100%" allow=\'encrypted-media\' src="(.*?)"')
-    logga('URL PEPPER: https:'+iframe_url)
     if "amstaff.city" in iframe_url:
         iframe_url2=iframe_url
         return nopay("https:"+iframe_url2)
@@ -2051,7 +1921,6 @@ def pepper(parIn=None):
             except:
                 page_data2 = page_data2.decode('latin1')
         iframe_url2 = preg_match(page_data2, '<iframe src="(.*?)"')
-        logga('URL PEPPER2: https:'+iframe_url2)
         video_url = GetLSProData("https:"+iframe_url2, parIn)
     final_url = video_url + "|connection=keepalive&Referer=https:"+iframe_url2+"&User-Agent="+randomUa
     video_urls.append((final_url, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: "+video_url, "https://www.pepperlive.info/Live1.jpg"))
@@ -2064,10 +1933,8 @@ def wikisport(parIn=None):
     page_data = requests.get(pageUrl,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://wikisport.click'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
-    #logga('wikisport page: '+pageUrl+"\n"+page_data)
     iframe_url = preg_match(page_data, 'return\(\[(.*?)\]')
     final_url = iframe_url.replace('"', '').replace(",", "").replace("\\", "").replace("https:////", "https://")
-    logga('URL wikisport: '+final_url)
     video_urls.append((final_url+ "|connection=keepalive&Referer="+pageUrl+"&Origin=https://wikisport.click&User-Agent="+randomUa, "[COLOR lime]PLAY STREAM[/COLOR]", "PLAY: ", "https://www.pepperlive.info/Live1.jpg"))
     return video_urls
 
@@ -2080,7 +1947,6 @@ def daily(parIn=None):
     data = requests.get(urlAny,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://www.dailymotion.com'}).content
     if PY3:
         data = data.decode('utf-8')
-    logga('JSON DAILY: '+data)
 
     url = preg_match(data, '"manifestUrl":"(.*?)"')
     '''
@@ -2121,7 +1987,6 @@ def daily_ffmpeg(parIn=None):
     data = requests.get(urlAny,headers={'user-agent':randomUa,'accept':'*/*','Referer':'https://www.dailymotion.com'}).content
     if PY3:
         data = data.decode('utf-8')
-    logga("DAILY_PAGE: "+data)
     url = preg_match(data, '"manifestUrl":"(.*?)"')
     headers = (
         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
@@ -2130,10 +1995,8 @@ def daily_ffmpeg(parIn=None):
         "&accept=*/*"
     )
     if url == None or url == "":
-        logga("NO LINK FOUND")
         url="https://www.dailymotion.com/cdn/HLS/"+parIn+".m3u8"
     else:
-        logga("URL_DAILY: "+url)
     '''
 
     # Costruzione URL compatibile FFmpeg
@@ -2153,9 +2016,7 @@ def daily_ffmpeg(parIn=None):
     liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
     liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
     timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
-    logga("TimeShift ==> "+timeShift)
     if timeShift != "no_time_shift":
-        logga("OK TimeShift")
         liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
     
     return liz
@@ -2171,17 +2032,14 @@ def anyplay(parIn=None):
     if PY3:
         page_data = page_data.decode('utf-8')
     dataJ = preg_match(page_data, 'const data = \[(.*?)\];')
-    #logga('ANY JSON'+dataJ)
     arrP1 = dataJ.split(',episodes:')
     srrs = arrP1[1]
     arrP2 = srrs.split(',similarSeries:')
     dj2='{"episodes":'+arrP2[0]
-    #logga("ANY PAGE ANTE\n"+dj2)
     mapping = {'old_id:':'"old_id":', 'id:':'"id":', 'subbed:':'"subbed":', 'download_link:':'"download_link":', 'title:':'"title":', 'slug:':'"slug":', 'number:':'"number":', 'score:':'"score":', 'user:':'"user":', 'username:':'"username":', 'email:':'"email":', 'provider:':'"provider":', 'password:':'"password":', 'resetPasswordToken:':'"resetPasswordToken":', 'confirmationToken:':'"confirmationToken":', 'confirmed:':'"confirmed":', 'blocked:':'"blocked":', 'avatar_url:':'"avatar_url":', 'gender:':'"gender":', 'banner_url:':'"banner_url":', 'bio:':'"bio":', 'settingsProfileVisibility:':'"settingsProfileVisibility":', 'title:':'"title":', 'temp_sub:':'"temp_sub":', 'quality:':'"quality":', 'release_date:':'"release_date":', 'seconds:null':'"seconds":"0"', 'streaming_link:':'"streaming_link":', 'birth_date:':'"birth_date":', 'seconds:':'"seconds":', 'embed:':'"embed":', 'createdAt:':'"createdAt":', 'updatedAt:':'"updatedAt":', 'publishedAt:':'"publishedAt":', 'settingsProfileComments:':'"settingsProfileComments":', 'home_visibile:':'"home_visibile":', 'location:':'"location":', 'release_hour:':'"release_hour":'}
     for k, v in mapping.items():
         dj2 = dj2.replace(k, v)
 
-    #logga("ANY PAGE POST\n"+dj2)
     jsonText='{"SetViewMode":"503","items":['
     numIt=0
     arrJ = json.loads(dj2)
@@ -2194,7 +2052,6 @@ def anyplay(parIn=None):
         if (int(numEp)<0):
             numEp="0"+numEp
         tit="Ep. "+numEp+" - "+title
-        #logga(tit+" "+link) 
         if (numIt > 0):
             jsonText = jsonText + ','    
         jsonText = jsonText + '{"title":"[COLOR gold]'+tit+'[/COLOR]","link":"'+link+'",'
@@ -2204,7 +2061,6 @@ def anyplay(parIn=None):
         numIt=numIt+1
     
     jsonText = jsonText + "]}"
-    logga('JSON-ANY: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
@@ -2224,7 +2080,6 @@ def getSourceFrame(parIn):
     express = r"<iframe src='(.*?)'"
     try:
         srcIfra = re.compile(express, re.MULTILINE | re.DOTALL).findall(r.text)[0]
-        logga("FIND IFRAME: "+srcIfra)
         headers = {
             "user-agent": UA,
             "referer": parIn
@@ -2251,7 +2106,6 @@ def getSourceFrame(parIn):
 
 def PlayStream(link):
     import re, json, base64
-    logga("CH_DADDY: "+link)
     randomUa="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 OPR/120.0.0.0"
     
     headers = {
@@ -2262,10 +2116,8 @@ def PlayStream(link):
     
     urlAuth="https://codepcplay.fun/premiumtv/daddyhd.php?id="+link
     fu = s.get(urlAuth, headers=headers)
-    logga ("AUTH_PAGE: "+fu.text)
 
     bundle64 = re.findall('const XJZ="(.*?)"', fu.text)[0]
-    logga("BUNDLE_DADDY: "+bundle64)
     bundle=base64.b64decode(bundle64).decode("utf-8")
     arrAuth=json.loads(bundle)
     authTs64 = arrAuth["b_ts"]
@@ -2285,7 +2137,6 @@ def PlayStream(link):
     }
     urlAuth="https://top2new.kiko2.ru/auth.php?channel_id=premium"+link+"&ts="+authTs+"&rnd="+authRnd+"&sig="+authSig
     dataJ2 = s.get(urlAuth, headers=headers)
-    logga("DADDY AUTH "+urlAuth+"\n"+dataJ2.text)
     
     
     
@@ -2308,15 +2159,12 @@ def PlayStream(link):
     liz.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
     liz.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
     timeShift = xbmcaddon.Addon(id=addon_id).getSetting("urlAppo4")
-    logga("TimeShift ==> "+timeShift)
     if timeShift != "no_time_shift":
-        logga("OK TimeShift")
         liz.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
     
     return liz
 
 def daznTokenOld(parIn):
-    logga ("PAR_DAZN: "+parIn)
     arrT=parIn.split("SPLITTA_QUI")
     link=arrT[0].replace("PARAMETRI_TUOI", "&")
     key=arrT[1]
@@ -2324,7 +2172,6 @@ def daznTokenOld(parIn):
     ua=arrT[3]
     drmType="org.w3.clearkey"
     host="https://www.dazn.com"
-    logga ("link_DAZN: "+link)
 
     liz = xbmcgui.ListItem(path=link, offscreen=True)
     liz.setContentLookup(False)
@@ -2341,20 +2188,17 @@ def daznTokenOld(parIn):
 def amstaffTest(parIn):
     import base64
     if "http" in parIn:
-        logga("NO_BASE64")
         parametro=parIn
     else:
         parametro=base64.b64decode(fix_base64_padding(parIn)).decode("utf-8")
     
     win = xbmcgui.Window(10000)
     sessionVar1 = win.getProperty("sessionVar1")
-    logga('sessionVar1: '+sessionVar1)
     arrT=parametro.split("|")
     link=arrT[0]
     key64=arrT[1]
     if key64=="0:0":
         key64="0000"
-    #logga('key64: '+key64)
     user_ag=""
     try:
         user_ag=arrT[2]
@@ -2388,7 +2232,6 @@ def amstaffTest(parIn):
         ua=myParse.quote("Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.41 (KHTML, like Gecko) Large Screen Safari/537.41 LG Browser/7.00.00(LGE; WEBOS1; 05.06.10; 1); webOS.TV-2014; LG NetCast.TV-2013 Compatible (LGE, WEBOS1, wireless)")
         if user_ag != "":
             ua=myParse.quote(user_ag)
-        logga("UA: "+ua)
         host="https://www.dazn.com"
         heads='User-Agent='+ua+'&Referer='+host+'/&Origin='+host
         """
@@ -2433,14 +2276,11 @@ def amstaffTest(parIn):
         liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&verifypeer=false')
     else:
         if param_url != "":
-            logga("PAR_MPD: "+param_url)
             liz.setProperty('inputstream.adaptive.stream_headers', param_url)
             liz.setProperty('inputstream.adaptive.manifest_headers', param_url)
         else:
             arrF=link.split("/")
             host="https://"+arrF[2]
-            logga("HOST_MPD: "+host)
-            logga("UA_MPD: "+ua)
             liz.setProperty('inputstream.adaptive.stream_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
             liz.setProperty('inputstream.adaptive.manifest_headers', 'User-Agent='+ua+'&Referer='+host+'/&Origin='+host+'&verifypeer=false')
     
@@ -2478,7 +2318,6 @@ def amstaff(parIn):
     headers['Referer'] = "https://amstaff.city/"
     headers['Origin'] = "https://amstaff.city"
     parHead=urllib.parse.urlencode(headers)
-    logga("AMSTAFF_HEAD: "+parHead)
 
 
     phd="Referer=https://amstaff.city/&Origin=https://amstaff.city&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
@@ -2488,7 +2327,6 @@ def amstaff(parIn):
     b64_string = key
     #b64_string += "=" * ((4 - len(b64_string) % 4) % 4)
     key64=base64.b64decode(b64_string).decode("utf-8").replace("{","").replace("}","").replace('"',"")
-    logga("AMSTAFF64: "+key64)
     liz = xbmcgui.ListItem('Amstaff', path=link)
     liz.setMimeType('application/dash+xml')
     liz.setContentLookup(False)
@@ -2503,19 +2341,15 @@ def amstaff(parIn):
    
 def proData(parIn=None, flat=0):
     video_urls = []
-    logga('PAR: '+parIn)
     if "supervideo.tv" in parIn or "supervideo.cc" in parIn:
-        logga('CALL SUPERVIDEO')
         return supervideo(parIn)
     video_url = GetLSProData(parIn)
-    logga('URL PRODATA: '+video_url)
     if "sportsonline.ps" in parIn:
         arrTT=video_url.split("|")
         ref=arrTT[1]
         vid=arrTT[0]
         video_url = vid + "|Referer=https://forgepattern.net&Origin=https://forgepattern.net&User-Agent=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%3B+rv%3A98.0%29+Gecko%2F20100101+Firefox%2F98.0&Keep-Alive=true"
         #video_url += ref.replace("referer", "&Origin") + "&User-Agent=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%3B+rv%3A98.0%29+Gecko%2F20100101+Firefox%2F98.0&Keep-Alive=true"
-        logga('URL sportsonline: '+video_url)
     if flat==1:
         return video_url
     video_urls.append((video_url, "[COLOR lime]PLAY STREAM [/COLOR]", "by @MandraKodi"))
@@ -2533,13 +2367,11 @@ def decodeProtected(linkIn):
     s = requests.Session()
     page=s.get(linkIn, allow_redirects=False,timeout=20)
     redir=page.headers["Location"]
-    logga("TROVATO: "+redir+" FROM "+page.url)
     return redir
 
 def gaga(linkIn):
     video_urls = []
     url=checkUnpacked(linkIn, "https://calcio.events")
-    logga ("URL_GAGA: "+url)
     video_urls.append((url, "[COLOR lime]PLAY STREAM GAGA[/COLOR]", "by @MandraKodi"))
     return video_urls
 
@@ -2549,15 +2381,12 @@ def checkUnpacked(page_in, refe=""):
     myRefe=page_in
     if refe != "":
         myRefe=refe
-    logga("checkUnpacked: "+page_in)
     fu = downloadHttpPage(page_in, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':myRefe})
     if fu != "":
-        #logga("RESULT: "+fu)
         find = ""
         try:
             find = re.findall('eval\(function(.+?.+)', fu)[0]
             unpack = jsunpack.unpack(find)
-            logga('UNPACK: '+unpack)
             try:
                 toRet = re.findall('src:"([^"]*)',unpack)[0]
             except:
@@ -2571,11 +2400,9 @@ def checkUnpacked(page_in, refe=""):
                             toRet = re.findall('source:"([^"]*)',unpack)[0]
                         except:
                             pass
-            logga('URL_UNPACK '+toRet)
         except:
             pass
     else:
-        logga('LA PAGINA '+page_in+' NON RISPONDE')
         toRet="NO_PAGE"
     toRet = 'https:' + toRet if toRet.startswith('//') else toRet
     return toRet
@@ -2583,10 +2410,8 @@ def checkUnpacked(page_in, refe=""):
 def GetLSProData(page_in, refe=None):
     import jsunpack, time
 
-    logga('page_in '+page_in)
     if refe != None:
-        logga('REFER '+refe)
-    
+        logga ("NO REFE")
     c = checkUnpacked(page_in)
     if c == "NO_PAGE":
         dialog = xbmcgui.Dialog()
@@ -2594,11 +2419,9 @@ def GetLSProData(page_in, refe=None):
         dialog.ok("Mandrakodi", mess)
         return ""
     if c != "":
-        logga('UNPACKED')
         return c
 
     if "streamhide.to" in page_in:
-        logga('URL_STREAMHIDE ')
         return findM3u8(page_in, page_in)
 
     headers = {
@@ -2635,7 +2458,6 @@ def GetLSProData(page_in, refe=None):
 
     if src == "":
         rsx='<iframe width="100%" height="100%" '+"allow='encrypted-media'"+' src="([^"]*)'
-        logga('REGEX: '+rsx)
         src = preg_match(page_data, rsx)
 
     if src == "":
@@ -2647,51 +2469,38 @@ def GetLSProData(page_in, refe=None):
 
 
     src = 'https:' + src if src.startswith('//') else src
-    logga('GetLSProData_iframe_url '+src)
 
     if "nopay2.info" in page_in and src.startswith('/ch/'):
-        logga('starlive.xyz ')
         pageNew="https://nopay2.info"+src
         fu = requests.get(pageNew, headers={'user-agent':'iPad','referer':page_in}).text
         find = re.findall("source: '(.*?)'", fu)[0]
         return find+"|referer=https://nopay.info"+src
     elif "enigma4k.live" in page_in:
-        logga('enigma4k.live ')
         return GetLSProData(src, page_in)
     elif "buzztv" in src:
-        logga('BUZZTV ')
         return GetLSProData(src)
     elif "embed" in src and ("tutele1" in page_in or "starlive" in page_in or "elixx" in page_in or "sportsonline" in page_in or "pepperlive" in page_in or "l1l1.to" in page_in or "buzztv" in page_in):
-        logga('iframe_embed for '+page_in)
+        logga("EMBED")
     elif "starlive.xyz" in src:
-        logga('starlive.xyz ')
         return GetLSProData(src)
     elif "protectlink.stream" in src:
-        logga('protectlink.stream')
         newSrc=decodeProtected(src)
         return resolveMyUrl(newSrc)
     elif "cloudstream" in src:
-        logga('CLOUDSTREAM')
         return GetLSProData(src)
     elif "supervideo.tv" in src:
-        logga('SUPERVIDEO')
         return supervideo(src)
     elif "pepperlive" in src or "projectlive" in src:
-        logga('PEPPER/PROJECT')
         return GetLSProData(src.replace('projectlive', 'pepperlive'))
     elif "hdmario" in src:
-        logga('HDMARIO')
         return GetLSProData(src)
     else:
-        logga('CALL findM3u8 FUNCTION ')
         return findM3u8(src, page_in)
 
     fu = requests.get(src, headers={'user-agent':'iPad','referer':page_in}).text
     try:
         find = re.findall('eval\(function(.+?.+)', fu)[0]
-        logga('EVAL ==> '+find)
         unpack = jsunpack.unpack(find)
-        logga('UNPACK ==> '+unpack)
         c = re.findall('var src="([^"]*)',unpack)[0]
         return c + '|referer=' + src
     except:
@@ -2704,7 +2513,6 @@ def sportOnline(parIn=None):
     # 2) iframe player (es. https://xxx.dynproclaim.net/e/yyy)
     # 3) estrazione m3u8: prima window._econfig (player attuale),
     #    poi fallback P.A.C.K.E.R. via jsunpack, poi m3u8 inline.
-    logga('PAR_SPONL: '+parIn)
     video_urls = []
     UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
     try:
@@ -2718,7 +2526,6 @@ def sportOnline(parIn=None):
         iframe_url = m.group(1).strip()
         if iframe_url.startswith("//"):
             iframe_url = "https:" + iframe_url
-        logga('IFRAME_SPONL: '+iframe_url)
         parsed_if = urlparse(iframe_url)
         origin_if = parsed_if.scheme + "://" + parsed_if.netloc
         fu2 = s.get(iframe_url, headers={'User-Agent': UA, 'Referer': parIn, 'Origin': origin_if}, timeout=20)
@@ -2729,7 +2536,7 @@ def sportOnline(parIn=None):
         if m_cfg:
             link = _decode_barecrop_econfig(m_cfg.group(1))
             if link:
-                logga('ECONFIG_SPONL: '+link[:80])
+                logga("OK LINK")
         # 3b) fallback P.A.C.K.E.R.
         if not link:
             try:
@@ -2773,9 +2580,8 @@ def sportOnline(parIn=None):
         # non partirebbe mai (Kodi usa la sua UA di default).
         video_urls.append((linkSpoRef, "[COLOR lime]PLAY VIDEO[/COLOR]"))
     except Exception as e:
-        logga('ERR_SPONL: '+str(e))
         jsonText='{"SetViewMode":"503","items":['
-        jsonText = jsonText + '{"title":"[COLOR red]NO LINK FOUND[/COLOR]",'
+        jsonText = jsonText + '{"title":"[COLOR red]STREAM OFFLINE[/COLOR]",'
         jsonText = jsonText + '"myresolve":"showMsg@@Nessun link trovato",'
         jsonText = jsonText + '"thumbnail":"https://cdn-icons-png.flaticon.com/512/2748/2748558.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
@@ -2792,7 +2598,6 @@ def sportOnline(parIn=None):
 
 def wigi(parIn=None):
     import jsunpack
-    logga('PAR_WIGI: '+parIn)
     if "amstaff.city" in parIn or "nopay2.info" in parIn:
         return nopay(parIn.replace("nopay.info", "nopay2.info"))
     
@@ -2815,8 +2620,6 @@ def wigi(parIn=None):
        wigiUrl = parIn
        refe = parIn 
         
-    logga('URL_WIGI: '+wigiUrl)
-    logga('URL_REFE: '+refe)
 
     s = requests.Session()
     fu = s.get(wigiUrl, headers=headers)
@@ -2832,11 +2635,9 @@ def wigi(parIn=None):
         ref=protocollo+"://"+host
         video_url = c + '|Referer=' + ref + '/&Origin=' + ref
     except:
-        logga("NO PACKED \n"+fu.text)
         pass
 
 
-    logga('video_url '+video_url)
     msg = "[COLOR lime]PLAY STREAM[/COLOR]"
     if video_url == '' or video_url == wigiUrl:
         msg = "NO LINK FOUND"
@@ -2852,18 +2653,15 @@ def urlsolver(url):
     resolvedUrl=get_resolved(url)
     if isinstance(resolvedUrl, list):
         for linkTmp in resolvedUrl:
-            logga('video_tmp_url '+''.join(linkTmp))
             video_urls.append((''.join(linkTmp), "[COLOR gold]PLAY STREAM[/COLOR]"))
             return video_urls
     else:
-        logga('video_resolved_url '+resolvedUrl)
         if (resolvedUrl != url):
             video_urls.append((resolvedUrl, "[COLOR gold]LINK 1[/COLOR]"))
             if "|" in resolvedUrl:
                 video_urls.append((resolvedUrl+"&verifypeer=false", "[COLOR lime]LINK 2[/COLOR]"))
                 arrV = resolvedUrl.split("|")
                 linkClean=arrV[0]
-                logga('video_resolved_cleaned '+linkClean)
                 video_urls.append((linkClean, "[COLOR orange]LINK 3[/COLOR]"))		
             else:
                 randomUa=getRandomUA()
@@ -2875,35 +2673,29 @@ def urlsolver(url):
 
 def uprot(parIn):
     video_urls = []
-    logga("UPROT URL IN: "+parIn)
     headers = {
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
         "Referer": "https://toonita.green/"
     }
     s = requests.Session()
     fu = s.get(parIn, headers=headers)
-    logga("UPROT TEXT: "+fu.text)
     video_url = parIn
     try:
         fu2=fu.text.replace("\n", "").replace("\r", "").replace("\t", "")
         find = preg_match(fu2, r'<div id="ad_space">\s*<center><a href="(.*?)"><button')
-        #logga("HTML\n"+fu2+"\n"+find)
         if "maxstream.video" in find:
             fu = s.get(find, headers=headers)
             fu3=fu.text.replace("\n", "").replace("\r", "").replace("\t", "")
             find2 = preg_match(fu3, r'src="https://maxstream.video/(.*?)" scrolling="no">')
-            #logga("UPROT URL maxstream: "+find2+"\n"+fu3)
             if find2!="":
                 find=find2
         return resolveMyUrl(find)
     except:
-        logga("NO link \n"+fu2)
         video_urls.append(("ignore", "[COLOR red]NO LINK FOUND[/COLOR]"))	
         pass
     return video_urls
 
 def toonIta(parIn):
-    logga("TOONITA URL IN: "+parIn)
     video_urls = []
     headers = {
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
@@ -2914,13 +2706,10 @@ def toonIta(parIn):
     video_url = parIn
     try:
         pageHtml=fu.text
-        logga("TOONITA HTML: "+pageHtml)
         listaHtml=pageHtml.split("</td>")
         numero=len(listaHtml)
-        logga("TOONITA TR: "+str(numero))
         my_list = []
         for (row) in listaHtml:
-            logga("TOONITA ROW: "+row)
             regEx= r'href="https:\/\/uprot.net\/(.*?)\/(.*?)" target="_blank" rel="noopener nofollow" title="(.*?)"'
             list=preg_match(row, regEx)
             #list = re.compile(regEx, re.MULTILINE | re.DOTALL).findall(row)
@@ -2931,7 +2720,6 @@ def toonIta(parIn):
 
         #list = re.findall(regEx, fu.text)
         numero=len(my_list)
-        logga("TOONITA TROVATI: "+str(numero))
         jsonText='{"SetViewMode":"51","channels":['
         numIt = 0
         numCh = -1
@@ -2942,7 +2730,6 @@ def toonIta(parIn):
             host=arrEl[1]
             id=arrEl[2]
             ep=title.replace("Streaming di ", "").replace(" su StreamTape", "").replace(" su Max", "").replace(" su Flexy", "")
-            #logga("EP_07:"+ep[:7])
             if ep[:7]=="Scarica":
                 continue
             
@@ -2959,7 +2746,6 @@ def toonIta(parIn):
             
             if (numIt > 0):
                 jsonText = jsonText + ',' 
-            #jsonText = jsonText + '{"title":"[COLOR gold]'+host+'[/COLOR]","myresolve":"uprot@@https://uprot.net/'+host+'/'+id+'",'
             jsonText = jsonText + '{"title":"[COLOR gold]'+host+'[/COLOR]","myresolve":"uprot@@https://uprot.net/'+host+'/'+id+'",'
             jsonText = jsonText + '"thumbnail":"https://pbs.twimg.com/profile_images/848686618466816000/8MaqE-n5_400x400.jpg",'
             jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
@@ -2975,7 +2761,6 @@ def toonIta(parIn):
             jsonText = jsonText + '"info":"NO INFO"}'
 
         jsonText = jsonText + "]}]}"
-        logga("TOONITA JSON: "+jsonText)
         video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     except Exception as err:
         import traceback
@@ -2984,7 +2769,6 @@ def toonIta(parIn):
         traceback.print_exc()
         dialog = xbmcgui.Dialog()
         dialog.ok("Mandrakodi", errMsg)
-        logga("NO PACKED \n"+fu.text)
         video_urls.append(("ignore", "[COLOR red]NO LINK FOUND[/COLOR]"))	
         pass
     return video_urls
@@ -3001,7 +2785,6 @@ def resolveMyUrl(url):
     xxx_plugins_path = 'special://home/addons/script.module.resolveurl.xxx/resources/plugins/'
     if xbmcvfs.exists(xxx_plugins_path):
         resolveurl.add_plugin_dirs(xbmcvfs.translatePath(xxx_plugins_path))
-    logga ("TRY TO RESOLVE "+url)
     resolved = ""
     try:
         hmf = resolveurl.HostedMediaFile(url)
@@ -3023,26 +2806,22 @@ def get_resolved(url):
     if resolved != "" and resolved != url:
         return resolved
     else:
-        logga("NO RESOLVER DADDY")		
-
+        logga("NO daddyFind")
     resolved = wizhdFind(url)
     if resolved != "" and resolved != url:
         return resolved
     else:
-        logga("NO RESOLVER WIZHD")		
-
+        logga("NO wizhdFind")
     resolved = assiaFind(url)
     if resolved != "" and resolved != url:
         return resolved
     else:
-        logga("NO RESOLVER ASSIA")		
-
+        logga("NO assiaFind")
     resolved = GetLSProData(url)
     if resolved != "" and resolved != url:
         return resolved
     else:
-        logga("NO RESOLVER DATA")		
-
+        logga("NO GetLSProData")
     return resolveMyUrl(url)
 
 def scommunity(parIn=None):
@@ -3055,7 +2834,6 @@ def scommunity(parIn=None):
 
     headSCt={'user-agent':randomUA}
     urlComm = base + parIn
-    logga("urlComm => "+urlComm)
     s = requests.Session()
     r = s.get(urlComm, headers=headSCt) 
 
@@ -3076,11 +2854,9 @@ def scommunity(parIn=None):
     numSeason=arrJ["props"]["episode"]["season"]["number"]
     titleEp=str(numSeason)+"x"+str(numEp)+" - "+nameEp
     scws_id = arrJ["props"]["episode"]["scws_id"]
-    logga("scws_id => "+str(scws_id))
     return getUrlSc(str(scws_id), titleEp)
 
 def getUrlSc(scws_id, tit=None):
-    logga('getUrlSc '+scws_id)
     from time import time
     from base64 import b64encode
     from hashlib import md5
@@ -3095,13 +2871,11 @@ def getUrlSc(scws_id, tit=None):
     page_data = requests.get("http://test34344.herokuapp.com/getMyIp.php", headers={'user-agent':'Mozilla/5.0','accept':'*/*'}).content
     if PY3:
         page_data = page_data.decode('utf-8')
-    logga('IP_community '+page_data)
     try:
         arrJ2 = json.loads(page_data)
         clientIp = arrJ2["client_ip"]
-        logga("LOCAL IP: "+clientIp)
     except:
-        logga("NO LOCAL IP")
+        logga("EXCEPT")
     if clientIp:
         expires = int(time() + 172800)
         token = b64encode(md5('{}{} Yc8U6r8KjAKAepEA'.format(expires, clientIp).encode('utf-8')).digest()).decode('utf-8').replace('=', '').replace('+', '-').replace('/', '_')
@@ -3113,7 +2887,6 @@ def getUrlSc(scws_id, tit=None):
 
 def scwsNew(parIn=None, parInp2=0):
     import json
-    logga("SCWS: "+parIn)
     video_urls = []
 
     sc_url="https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/cs_url.txt"
@@ -3128,7 +2901,6 @@ def scwsNew(parIn=None, parInp2=0):
     if PY3:
         pageT = pageT.decode('utf-8')
     pageT = pageT.replace("\n", "").replace("\r", "").replace("\t", "")
-    logga("SC_PAGE: "+base+"\n"+pageT)
 
     
     m3u8Url = ""
@@ -3138,7 +2910,6 @@ def scwsNew(parIn=None, parInp2=0):
             m3u8Url = src
     
 
-    logga("URL_M3U8: "+m3u8Url)
     arrT=m3u8Url.split("?")
     arrPar=m3u8Url.split("&amp;")
     baseUrl=arrT[0]
@@ -3146,7 +2917,6 @@ def scwsNew(parIn=None, parInp2=0):
     if PY3:
         pageT2 = pageT2.decode('utf-8')
     pageT3=pageT2.replace("\n", "").replace("\r", "").replace("\t", "")
-    logga("pageT2: "+pageT3)
     urlSc="ignore"
     tito="[COLOR lime]PLAY VIDEO SC[/COLOR]"
     try:    
@@ -3156,7 +2926,6 @@ def scwsNew(parIn=None, parInp2=0):
         jsonUrl = res[0]+'"url":"'+res[1]+'"}'
             
         #jsonUrl = preg_match(pageT3, patron)+'"sex":"ok"}'
-        logga("JSON_M3U8: "+jsonUrl.replace("'", '"'))
         arrJ2 = json.loads(jsonUrl.replace("'", '"'))
         urlSc=baseUrl.replace("embed", "playlist")+"?token="+arrJ2["token"]+"&expires="+arrJ2["expires"]+"&n=1"
         urlTmp=arrJ2["url"]
@@ -3176,7 +2945,6 @@ def scwsNew(parIn=None, parInp2=0):
                 #newPar = newPar+"&"+param
             numPar=numPar+1
         #urlSc= urlSc + newPar
-        logga("FINAL URL: "+urlSc)
     except:
         tito="[COLOR red]NO VIDEO FOUND[/COLOR]"
     newUrl=urlSc+"|referer="+scUrl.replace("\n", '')+"&user-agent=Mozilla"
@@ -3196,7 +2964,6 @@ def scwsNew(parIn=None, parInp2=0):
     
     if parInp2==2:
         pageM3u8 = requests.get(urlSc,headers=headSCt).content
-        logga("M3U8: "+pageM3u8)
         li = xbmcgui.ListItem(path=urlSc)
 
         li.setProperty('inputstream', 'inputstream.adaptive')
@@ -3231,12 +2998,11 @@ def scws(parIn=None):
         scwsId = arrJ2["props"]["title"]["scws_id"]
         titolo = arrJ2["props"]["title"]["name"]
     except:
-        logga("NO SCWS_ID FROM "+base)
+        logga("ERRORE JSON")
     return getUrlSc(scwsId, titolo)
 
 def getScSerie(parIn=None):
     import json
-    logga("PAR_IN "+parIn)
     video_urls = []
     jsonText=""
     x = parIn.split("---")
@@ -3255,28 +3021,23 @@ def getScSerie(parIn=None):
     jsonCode = preg_match(pageT, patron)
     scwsId = 0
     titolo="NOT FOUND";
-    logga ("JSON_CODE: "+base+"\n"+jsonCode)
     jsonText='{"SetViewMode":"503","items":['
     try:
         arrJ2 = json.loads(jsonCode.replace("&quot;", '"'))
         
         titolo = arrJ2["props"]["title"]["name"]
-        logga("titolo: "+titolo)
         img=""
         
         numIt=0
         for (immagine) in arrJ2["props"]["title"]["images"]:
             if (immagine["type"]=="cover"):
                 img="https://cdn."+scUrl.replace("\n", '').replace("https://", '')+"images/"+immagine["filename"]
-                logga("img: "+img)
         for (episodio) in arrJ2["props"]["loadedSeason"]["episodes"]:
             scwsId = str(episodio["scws_id"])
             urlIframe=idSea+"?episode_id="+str(episodio["id"])
-            logga("urlIframe: "+urlIframe)
             numEp=str(episodio["number"])
             if (len(numEp)==1):
                 numEp="0"+numEp
-            logga("numEp: "+numEp)
             plot = "by MandraKodi"
             try:
                 plot = episodio["plot"].replace("&#39;", "'").replace("&amp;", "&").replace("\n", " ").replace("\r", " ")
@@ -3308,10 +3069,8 @@ def getScSerie(parIn=None):
                 jsonText +=  newJson
                 numIt += 1
             except:
-                logga("BAD ITEMS: "+newJson)
                 pass
     except Exception:
-        logga("NO SCWS_ID FROM "+base)
         jsonText = jsonText + '{"title":"[COLOR red]NO PAGE FOUND[/COLOR]","myresolve":"showMsg@@Serie non trovata",'
         jsonText = jsonText + '"thumbnail":"https://cdn-icons-png.flaticon.com/512/2748/2748558.png",'
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
@@ -3319,7 +3078,6 @@ def getScSerie(parIn=None):
         
 
     jsonText = jsonText + "]}"
-    logga('JSON-SC: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
@@ -3351,7 +3109,6 @@ def m3uPlus(parIn=None):
     
     arrIn=parIn.split("_@|@_")
     mode=arrIn[0]
-    logga("M3UPLUS_MODE: "+mode)
     jsonText = ""
     if mode=="0":
         win.setProperty("sessionVar1", parIn)
@@ -3360,7 +3117,6 @@ def m3uPlus(parIn=None):
         pwd=arrIn[3]
         apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_live_categories"
         response = s.get(apiUrl, headers=headers)
-        #logga("M3UPLUS_JSON: "+response.text)
         
         jsonText='{"SetViewMode":"503","items":['
         
@@ -3426,7 +3182,6 @@ def m3uPlus(parIn=None):
         pwd=arrIn[3]
         apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_vod_categories"
         response = s.get(apiUrl, headers=headers)
-        #logga("M3UPLUS_JSON: "+response.text)
         
         jsonText='{"SetViewMode":"503","items":['
         
@@ -3475,7 +3230,6 @@ def m3uPlus(parIn=None):
         pwd=arrSess[3]
         apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_vod_streams&category_id="+catId
         response = s.get(apiUrl, headers=headers)
-        logga ("RESP: "+response.text)
         jsonText='{"SetViewMode":"503","items":['
         
         numIt=0
@@ -3509,7 +3263,6 @@ def m3uPlus(parIn=None):
         pwd=arrSess[3]
         apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_series&category_id="+catId
         response = s.get(apiUrl, headers=headers)
-        #logga ("RESP: "+response.text)
         jsonText='{"SetViewMode":"503","items":['
         
         numIt=0
@@ -3540,7 +3293,6 @@ def m3uPlus(parIn=None):
         pwd=arrSess[3]
         apiUrl="http://"+host+"/player_api.php?username="+usr+"&password="+pwd+"&action=get_series_info&series_id="+catId
         response = s.get(apiUrl, headers=headers)
-        #logga ("RESP: "+response.text)
         jsonText='{"SetViewMode":"51","channels":['
         
         numIt=0
@@ -3589,7 +3341,6 @@ def m3uPlus(parIn=None):
 
     
 
-    logga("JSON_FINAL: "+jsonText)
 
     video_urls = []
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
@@ -3612,13 +3363,10 @@ def macLink(parIn=None):
     host=arrData[0]
     mac=arrData[1]
     url=host+"?"+mac
-    logga("PORTAL URL: "+url)
     portal = PortalApi(url)
     idCh=arrData[2]
     cmdCh="ffmpeg http://localhost/ch/"+idCh+"_"
-    logga("PORTAL CMD: "+cmdCh)
     link = portal.get_link(cmdCh)
-    logga("PORTAL LINK: "+link)
 
     try:
         link = link.split(" ")[1]
@@ -3664,7 +3412,6 @@ def preg_match_all(data, patron, index=0):
 def streamTape(parIn):
     video_urls = []
     ppIn = myParse.unquote(parIn)
-    logga('PAR_STAPE: '+ppIn)
     randomUa=getRandomUA()
     head={'user-agent':randomUa,'Content-Type':'application/x-www-form-urlencoded','Referer':'https://toonitalia.green/'}
     page_data = requests.get(ppIn, headers=head).content
@@ -3673,11 +3420,9 @@ def streamTape(parIn):
     htmlCodice = preg_match(page_data, r'<\/video><script>(.*?)<\/body>')
     #iframe_url = preg_match(page_data, r'<div id="videoolink" style="display:none;">(.*?)<\/div>')
     iframe_url = preg_match(htmlCodice, r'style="display:none;">(.*?)<\/div>')
-    logga('IFRAME: '+iframe_url)
     if (iframe_url != ""):
         link1 = iframe_url.split('&token=')
         linkPre = link1[0];
-        logga('LINK_PRE: '+linkPre)
         #info = preg_match(page_data, r"<script>document.getElementById\('videoolink'\)(.*?)<\/script>")
         info1 = preg_match(page_data, r"<script>document.getElementById(.*?)<\/script>")
         info = info1.split(';')[0]
@@ -3685,10 +3430,8 @@ def streamTape(parIn):
         #tkn = preg_match(htmlCodice, r"&token=(.*?)'\).substring")
         linkSplit = linkPre.split("?")[1]
         info2 = "https://streamta.pe/get_video?"+linkSplit+"&token="+tkn+"&stream=1"
-        logga('LINK_FINAL: '+info2)
         video_urls.append((info2, ""))
     else:
-        logga('NO IFRAME')
         video_urls.append(("ignore", "[COLOR red]NO LINK FOUND[/COLOR]", ppIn))
     return video_urls
 
@@ -3701,9 +3444,7 @@ def dplay(parIn):
     deviceId = uuid.uuid4().hex
     domain = 'https://' + requests.get("https://prod-realmservice.mercury.dnitv.com/realm-config/www.discoveryplus.com%2Fit%2Fepg").json()["domain"]
     apiUrl = domain + "/token?deviceId="+deviceId+"&realm=dplay&shortlived=true"
-    logga('APIURL_DPLAY: '+apiUrl)
     token = session.get(apiUrl).json()['data']['attributes']['token']
-    logga('TOKEN_DPLAY: '+token)
     myHeaders = {'User-Agent': 'Mozilla/50.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
             'Referer': 'https://discoveryplus.it',
             'Origin': 'https://discoveryplus.it',
@@ -3720,10 +3461,8 @@ def dplay(parIn):
     post = {content+'Id': parIn, 'deviceInfo': {'adBlocker': False,'drmSupported': True}}
     data2 = session.post(apiUrl2, json=post).content
     data3 = json.loads(data2)
-    logga('POST_DPLAY: '+str(data2))
 
     data = requests.get('https://eu1-prod-direct.discoveryplus.com/playback/videoPlaybackInfo/{}?usePreAuth=true'.format(parIn), headers=myHeaders).content
-    logga('RESP_DPLAY: '+str(data))
     dataJ = json.loads(data)
     dataJ2=dataJ.get('data',{}).get('attributes',{})
     dataErr = "[COLOR lime]PLAY VIDEO[/COLOR]"
@@ -3739,7 +3478,6 @@ def dplay(parIn):
     except:
         dataErr = "[COLOR red]"+dataJ["errors"][0]["detail"]+"[/COLOR]"
         link = dataJ["errors"][0]["detail"]
-    logga('LINK_DPLAY: '+link)
     video_urls.append((link, dataErr))
     return video_urls
 
@@ -3747,7 +3485,6 @@ def dplayLive(parIn):
     import json
     video_urls = []
     token = requests.get('https://disco-api.discoveryplus.it/token?realm=dplayit').json()['data']['attributes']['token']
-    logga('TOKEN_DPLAY: '+token)
     headers = {'User-Agent': 'Mozilla/50.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0',
            'Referer': 'https://discoveryplus.it',
            'Cookie' : 'st=' + token}
@@ -3759,7 +3496,6 @@ def dplayLive(parIn):
     except:
         dataErr = "[COLOR red]"+dataJ["errors"][0]["detail"]+"[/COLOR]"
         link = dataJ["errors"][0]["detail"]
-    logga('LINK_DPLAY: '+link)
     video_urls.append((link, dataErr))
     return video_urls
 
@@ -3799,7 +3535,6 @@ def imdbList(parIn):
         intMax=1
         try:
             (start, end, max) = preg_match(htmlFlat, '<span class="pagination-range">(.*?) - (.*?) of (.*?)</span>')
-            logga('NUM REC: '+max)
             intEnd=int(end)
             intMax=int(max)
         except:
@@ -3829,7 +3564,6 @@ def webcam(parIn):
     s = requests.Session()
     r = s.get(urlPage, headers=headers)
     htmlFlat=r.text.replace("\n", '').replace("\r", '').replace("\t", '')
-    logga("FIND CAM ON "+urlPage)
     if mode == "0":
         express1 = r'<a href="it/webcam/(.*?)" class="col-xs-12 col-sm-6 col-md-4">(.*?)</a>'
         lista = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)
@@ -3952,7 +3686,6 @@ def webcam(parIn):
         
 
     jsonText = jsonText + "]}"
-    logga('JSON-WEBCAM: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
     
@@ -3967,7 +3700,6 @@ def cb01(parIn):
 
     s = requests.Session()
     r = s.get(url, headers=headers)
-    logga("FIND IMDB CODE")
 
     express1 = r'<script src="https://guardahd.stream/ddl/tt(.*?)"'
     code = re.compile(express1, re.MULTILINE | re.DOTALL).findall(r.text)[0]
@@ -3983,7 +3715,6 @@ def bing(parIn):
 
     s = requests.Session()
     r = s.get(parIn, headers=headers)
-    logga("FIND HOSTS FOR "+parIn)
 
     express = r'<iframe src="(.*?)"'
     link = re.compile(express, re.MULTILINE | re.DOTALL).findall(r.text)[0]
@@ -4007,12 +3738,11 @@ def imdb(parIn):
 
     s = requests.Session()
     r = s.get(url, headers=headers)
-    logga("FIND HOSTS FOR "+parIn)
     jsonText='{"SetViewMode":"503","items":['
     numIt=0
     
     if "not found" in r.text:
-        logga("NO LINK FOUND FOR "+parIn)
+        logga ("NOT FOUND")
     else:
         express = r'<title>(.*?)</title>'
         title = re.compile(express, re.MULTILINE | re.DOTALL).findall(r.text)[0]
@@ -4028,7 +3758,6 @@ def imdb(parIn):
             if "Player 4K" not in ep:
                 if link[0:2] == "//":
                     link = "https:"+link
-                #logga('LINK-IMDB: '+link+" "+ep)
                 if (numIt > 0):
                     jsonText = jsonText + ','    
                 jsonText = jsonText + '{"title":"[COLOR lime]'+ep.strip()+'[/COLOR]","myresolve":"risolvi@@'+link+'",'
@@ -4044,7 +3773,6 @@ def imdb(parIn):
         jsonText = jsonText + '"info":"NO INFO"}'
 
     jsonText = jsonText + "]}"
-    logga('JSON-IMDB: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
@@ -4248,7 +3976,6 @@ def platinumMenu():
         jsonText = jsonText + '"info":"NO INFO"}'
 
     jsonText = jsonText + "]}"
-    logga('JSON-PLATIN: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
@@ -4334,7 +4061,6 @@ def daddyLiveMenu():
     r = s.get(url, headers=headers)
     dataFile = r.text.replace("\n", "").replace("\r", "").replace("\t", "")
     arrDiv = dataFile.split("<h2")
-    #logga("H2: "+str(len(arrDiv)))
     arrTemp = []
     logoSp="https://autyzmwszkole.files.wordpress.com/2015/11/sport2.jpg"
     cont=0
@@ -4343,13 +4069,10 @@ def daddyLiveMenu():
         cont=cont+1
         if cont==1:
             continue
-        #logga ("DIV DADDY: "+div)
         if "background-color" in div:
-            #logga ("OK BGR")
             express = r'>(.*?)</h2>'
             try:
                 sportName = re.compile(express, re.MULTILINE | re.DOTALL).findall(div)[0]
-                #logga("sportName: "+sportName)
                 if sportName == "Soccer":
                     sportName = " Calcio"
                     okRow=1
@@ -4359,7 +4082,6 @@ def daddyLiveMenu():
                 continue
             logoSp=getSportLogo(sportName)
             arrH=div.split("<hr>")
-            #logga("HR: "+str(len(arrH)))
             conta=0
             for hr in arrH:
                 conta=conta+1
@@ -4367,7 +4089,6 @@ def daddyLiveMenu():
                     continue
                 arrEv=hr.split("<span")
                 titol=arrEv[0].replace("<strong>", "").replace("</strong>", "")
-                #logga ("titolo: "+titol)
                 if "<" in titol or len(titol) < 6:
                     continue
                 hh = titol[0:2]
@@ -4395,13 +4116,12 @@ def daddyLiveMenu():
                         oldTit=""
                         for linkR in ret1:
                             if linkR.startswith("/extra"):
-                                logga("NO BUONO")
+                                logga("LINK EXTRA")
                             else:
                                 try:
                                     titR=ret2[numRe]
                                     oldTit=titR
                                 except:
-                                    logga("NO TIT FOR "+sportName+" - "+titolo+" ["+str(numRe))
                                     titR=oldTit
 
                                 arrTemp.append(sportName+"@@"+titolo+"@@"+logoSp+"@@"+linkR+"@@"+titR)
@@ -4415,7 +4135,7 @@ def daddyLiveMenu():
                     for linkR in ret1:
                         titR=ret2[numRe]
                         if linkR.startswith("/extra"):
-                            logga("NO BUONO")
+                            logga("LINK EXTRA")
                         else:
                             arrTemp.append(sportName+"@@"+titolo+"@@"+logoSp+"@@"+linkR+"@@"+titR)
                             numRe=numRe+1
@@ -4466,7 +4186,6 @@ def daddyLiveMenu():
         jsonText = jsonText + '"info":"NO INFO"}'
 
     jsonText = jsonText + "]}"
-    logga('JSON-DADDY: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
@@ -4491,12 +4210,9 @@ def sportsonlineMenu():
         try:
             r = s.get(url, headers=headers, timeout=20)
             if r.status_code == 200 and "|" in r.text:
-                logga('PROGTXT_SPONL OK: '+url)
                 prog_text = r.text.lstrip("\ufeff")
                 break
-            logga('PROGTXT_SPONL KO '+url+' status '+str(r.status_code))
         except Exception as e:
-            logga('PROGTXT_SPONL ERR '+url+' '+str(e))
             continue
     # --- Parsing palinsesto (lingua canale, oggi/domani, slot [ENDED]) ---
     import json
@@ -4621,7 +4337,6 @@ def sportsonlineMenu():
         jsonText = json.dumps(output, ensure_ascii=False)
     else:
         jsonText = '{"SetViewMode":"503","items":[{"title":"[COLOR red]NO MATCH FOUND[/COLOR]","link":"ignore",' '"thumbnail":"https://www.giardiniblog.it/wp-content/uploads/2018/12/serie-tv-streaming.jpg",' '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",' '"info":"NO INFO"}]}'
-    logga('JSON-ZONLINE: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
@@ -4640,9 +4355,7 @@ def nopayMenu(parIn=""):
     
     express1 = r'<div class="card text(.*?)>(.*?)</div></div></div>'
     htmlFlat=r.text.replace("\n", "").replace("\r", "").replace("\t", "")
-    #logga("HTML\n"+htmlFlat)
     ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)
-    #logga("TROVATI "+str(len(ret1[0]))+" RECORDS")
     arrTemp = []
     for card, div in ret1:
         express2 = r'<div class="card-header" style="background-image: (.*?)">(.*?)</div>'
@@ -4707,7 +4420,6 @@ def nopayMenu(parIn=""):
         jsonText = jsonText + '"info":"NO INFO"}'
 
     jsonText = jsonText + "]}"
-    logga('JSON-NOPAY: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
     
@@ -4747,7 +4459,6 @@ def menuIstorm(parIn=""):
         x=x+1
     
     jsonText = jsonText + "]}"
-    logga('JSON-ANTENA: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
@@ -4774,9 +4485,7 @@ def taxi(parIn):
 
     s = requests.Session()
     r = s.get(url, headers=headers)
-    logga("TAXI_PAGE: "+r.text)
     page=r.text.replace("\n", "").replace("\r", "").replace("\t", "")
-    logga("FIND HOSTS AT "+url+"\n"+page)
     ret1 = "by @mandrakodi"
     express1 = r'<title>(.*?)</title>'
     ret1 = re.compile(express1, re.MULTILINE | re.DOTALL).findall(page)[0]
@@ -4812,7 +4521,6 @@ def taxi(parIn):
         jsonText = jsonText + '"info":"NO INFO"}'
 
     jsonText = jsonText + "]}"
-    logga('JSON-TAXI: '+jsonText)
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
@@ -4826,7 +4534,6 @@ def platin(parIn=None):
 
     s = requests.Session()
     r = s.get(parIn, headers=headers)
-    logga("FIND HOSTS")
     ret1 = "by @mandrakodi"
     
     express1 = r'<a href="acestream://(.*?)" rel="nofollow">(.*?)</a>'
@@ -4839,7 +4546,6 @@ def platin(parIn=None):
     ret2 = re.compile(express2, re.MULTILINE | re.DOTALL).findall(r.text)
     numL=0
     for linkTmp in ret2:
-        logga("TRY FOR "+linkTmp)
         try:
             video_url = proData(linkTmp.replace(" ", ""), 1)
             numL=numL+1
@@ -4869,7 +4575,6 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 def makeRequest(url, hdr=None):
-    logga('TRY TO OPEN '+url)
     html = ""
     if PY3:
         import urllib.request as myRequest
@@ -4890,7 +4595,6 @@ def makeRequest(url, hdr=None):
         response = myRequest.urlopen(req, timeout=45)
         html = response.read().decode('utf-8')
         response.close()
-        logga('OK REQUEST FROM '+url)
     except:
         logging.warning('Error to open url: '+url)
         pass
@@ -4907,9 +4611,9 @@ def remoteLog(msgToLog):
     urlLog = baseLog + "&msgLog=" + myParse.quote(msgToLog)
     strSource = makeRequest(urlLog)
     if strSource is None or strSource == "":
-        logga('MANDRA_LOG: NO REMOTE LOG')
+        logga ("NO SOURCE")
     else:
-        logga('OK REMOTE LOG')
+        logga ("OK SOURCE")
 
 def vudeo(parIn):
     video_urls = []
@@ -4933,12 +4637,10 @@ def vudeo(parIn):
 
 def voe(parIn):
     import base64
-    logga('VOE PAGE: '+parIn)
     page_data = requests.get(parIn,headers={'user-agent':'iPad','accept':'*/*','referer':parIn}).content
     if PY3:
         page_data = page_data.decode('utf-8')
 
-    logga ("VOE ==> "+page_data)
     tit = preg_match(page_data, '<h1 class="mt-1">(.*?)<span')
     src = preg_match(page_data, "'hls': '(.*?)'")
     src1 = preg_match(page_data, "'mp4': '(.*?)'")
@@ -4950,16 +4652,13 @@ def voe(parIn):
 
 def supervideo(page_url):
     import jsunpack, ast
-    logga("url=" + page_url)
     video_urls = []
     # data = httptools.downloadpage(page_url).data
     data  = downloadHttpPage(page_url, headers={'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36','referer':page_url})
-    logga("supervideo: " + data)
 
     code_data = find_single_match(data, """<script type=["'].*text/javascript["']>(eval.*)""")
     if code_data:
         code = jsunpack.unpack(code_data)
-        logga("unpack: " + code)
         # corrections
         if 'file' in code and not '"file"'in code: code = code.replace('file','"file"')
         if 'label' in code and not '"label"'in code: code = code.replace('label','"label"')
@@ -4978,7 +4677,6 @@ def supervideo(page_url):
             newSrc=arrTmp[0]+arrTmp[1]+"/index-v1-a1.m3u8"
             video_urls.append((newSrc+"|Referer=https://supervideo.tv/&Origin=https://supervideo.tv&User-Agent=iPad", "[COLOR gold]PLAY VIDEO[/COLOR]", tit.replace(".mp4", "")))
     else:
-        logga ("NO PACKED")
         matches = find_multiple_matches(data, r'src:\s*"([^"]+)",\s*type:\s*"[^"]+"(?:\s*, res:\s(\d+))?')
         for url, quality in matches:
             if url.split('.')[-1] != 'm3u8':
@@ -5029,7 +4727,6 @@ def hunterjs(parIn):
         return r
 
 
-    logga('HUNTER PAGE: '+parIn)
     page_data = requests.get(parIn,headers={'user-agent':'iPad','accept':'*/*','referer':parIn}).content
 
     if PY3:
@@ -5037,14 +4734,12 @@ def hunterjs(parIn):
     
     flatPage = page_data.replace("\n", "").replace("\r", "").replace("\t", "")
     tit = preg_match(flatPage, '<div id="player"><\/div><script>(.*?)\)\)<\/script>')
-    logga("HUNTER CODE: "+tit)
     if tit == "":
         video_urls.append(("ignore", "[COLOR red]NO VIDEO FOUND[/COLOR]"))
         return video_urls
     
     sd=tit.split("(")
     code = sd[-1]
-    logga("HUNTER CODE2: "+code)
 
     #code = 'YYmojrWojmWojYjojmmojYaojrWoYProjYaojYjojYYojYaorPaojmmoYarorYjoYarojmrojrjojYjorPPojrrojmWojYaojYjoYaroYWjoYWaoYarojjroYYmojYYojmYojrroYarojYWojYYorPaojjmojmYojrmoYarorYjoYarojYjojmYojrWoYarorrrojYYorPaojYWojYWojrmoYProraYojYYorPaojjmojmYojrmoYWjojjroYYmojrYojYaojrjojrmorPPojmYorYmoYaroYWrojmaojrrojrrojYWojrYorYmoYPjoYPjorPPorPaojrmojrmojmWojmYojYrojYaojrmojmYoYProrPPojYYojrjorPWoYPjojmaojYYojrYoYPjojrrojrYojYjormYoYPjojYWojYYorPaojjmojYYojmWojrYojrroYProjYrormmojrjormWoYWroYPmoYYmojmaojmYojmWojmjojmaojrrorYmoYaroYWroYPWoYPaoYPaoYWmoYWroYPmoYYmojrWojmWojmmojrrojmaorYmoYaroYWroYPWoYPaoYPaoYWmoYWroYPmoYYmojYWorPaojrmojmYojYjojrrorjYojmmorYmoYaroYWroYaWojYWojYYorPaojjmojmYojrmoYWroYPmoYYmorPaojrjojrrojYaoraYojYYorPaojjmorYmoYarojmrorPaojYYojrYojmYoYPmoYYmojYWojYYorPaojjmorjYojYjojYYojmWojYjojmYorYmoYarojrrojrmojrjojmYoYPmoYYmojYrojmWojYrojmYoraWojjmojYWojmYorYmoYaroYaaorPaojYWojYWojYYojmWorPPorPaojrrojmWojYaojYjoYPjojrPoYPYojYrojYWojmYojmjoraPorajorjaoYaaoYPmoYYmojYWojYYojrjojmjojmWojYjojrYorYmoYarojjroYWrorPPojYaojrmojmYoYWrorYmoYarorWWorjaojmYojraojmYojYYoraaojmYojYYojmYorPPojrrojYaojrmorPmojjaoYPmoYYmojYrojmYojmmojmWorPaorPPojYaojYjojrrojrmojYaojYYorYmoYarojjroYYmojrYojmYojmYojYmorPWorPaojrmorYmoYaroYWroYaWoYPaoYPWormYorrmorrWorrWoYWroYPmoYYmorPWojrjojrrojrrojYaojYjojrYorYmoYaroYWroYaWorrWorrWorrWoYWroYYmojjaoYYmojjaoYWaorYYoYYmojjaorYYoYYmojrYojmYojrroraWojmWojYrojmYojYaojrjojrroYWjojmrojrjojYjorPPojrrojmWojYaojYjoYWjoYWaoYarojjroYYmoYaPoYWjoYWroYProjYrojmYojmmojmWorPaoYPYorPPojYaojYjojrrojrmojYaojYYoYPYojYYojmYojmrojrroYPYojYWorPaojYjojmYojYYoYWroYWaorWWoYWrorPaojYWojYWojmYojYjojmmoYWrorPmoYWjoYWrorYrorPWojrjojrrojrrojYaojYjoYarojrYojrrojjmojYYojmYorYjoYaaoYaaoYarojrrojjmojYWojmYorYjoYaaorPWojrjojrrojrrojYaojYjoYaaoYarorPPojYYorPaojrYojrYorYjoYaaojYrojmYojmmojmWorPaoYPYorPPojYaojYjojrrojrmojYaojYYoYPYorPWojrjojrrojrrojYaojYjoYarojYrojmYojmmojmWorPaoYPYorPPojYaojYjojrrojrmojYaojYYoYPYojmWorPPojYaojYjoYarojmYojYjorPaorPWojYYojmYojmmoYaaoYarojmmorPaojrrorPaoYPYojmaojmmoYPYojmWojYjojmmojmWorPPorPaojrrojYaojrmorYjoYaaoYaaoYarorPaojrmojmWorPaoYPYojYYorPaorPWojmYojYYorYjoYaaojmaojmmoYPYojmWojYjojmmojmWorPPorPaojrrojYaojrmoYaaorYaorYrorPaoYarojmaojrmojmYojmrorYjoYaaojmaojrrojrrojYWojrYorYmoYPjoYPjojmjojmWojraojmYojYrojmYojrmojmYojmmojmmojmWojrrojrYojrrojrmojmYorPaojYrojrYoYProjrPojjmojjYoYPjojYjorPWorPaoYaaoYarojrrorPaojrmojmjojmYojrrorYjoYaaorProrPWojYYorPaojYjojYmoYaaorYaorYrojmWojYrojmjoYarojrYojrmorPPorYjoYaaojmaojrrojrrojYWojrYorYmoYPjoYPjojmjojmWojraojmYojYrojmYojrmojmYojmmojmmojmWojrroYProjmYojrjoYPjoYPPoYProjYWojYjojmjoYaaoYarojrWojmWojmmojrrojmaorYjoYaaoYPWormmoYPaojYWojrPoYaaoYarojmaojmYojmWojmjojmaojrrorYjoYaaoYPPoYPaojYWojrPoYaaoYaroYPjorYaorYroYPjorPaorYaorYroYPjorPWojrjojrrojrrojYaojYjorYaoYWroYWaoYYmojjaoYPmoYarormroYPaoYPaoYPaoYWaorYYoYYmo",58,"mYrjaWPoi",47,7,24'
     code_list = code.split(',')
@@ -5055,9 +4750,7 @@ def hunterjs(parIn):
             code_list[idx] = code.replace('\"','')
     
     result = hunter(*code_list)
-    logga("HUNTER CODE3: "+result)
     link = preg_match(result, "source: '(.*?)'")
-    logga("HUNTER LINK: "+link)
     video_urls.append((link+"|referer="+parIn, "[COLOR lime]PLAY VIDEO[/COLOR]"))
 
     return video_urls
@@ -5075,7 +4768,6 @@ def nflinsider(parIn):
     link = preg_match(page_data, 'frameborder="0" height="315" src="(.*?)"')
     if (link.startswith("//")):
         link="https:"+link
-    logga("NFLINSIDER LINK: "+link)
     if ".mkv" in link:
         video_urls.append((link+"|referer=https://basketball-video.com/", "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
         return video_urls
@@ -5114,9 +4806,7 @@ def get_channels(parIn='Italy'):
             "clientVersion": "3.0.2"
         }
         urlChList="https://vavoo.to/mediahubmx-catalog.json"
-        # logga("URL CH_LIST: "+urlChList)
         resp = requests.post(urlChList, json=data, headers=headers, timeout=10)
-        logga ("VAVOO_CH_JSON: "+resp.text)
         r = resp.json()
         items = r.get("items", [])
         all_channels.extend(items)
@@ -5127,7 +4817,6 @@ def get_channels(parIn='Italy'):
 
 
 def vavooChList(parIn='Italy'):
-    # logga (parIn+" SEARCH CHANNELS")
     if parIn == "UK":
         parIn = "United Kingdom"
     all_channels = get_channels(parIn)
@@ -5156,7 +4845,6 @@ def vavooChList(parIn='Italy'):
     
     
     
-    # logga('JSON-VAVOOCH: '+jsonText)
     video_urls= []
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
@@ -5233,7 +4921,6 @@ class VavooResolver:
             try:
                 url = 'https://www.lokke.app/api/box/ping2'
                 resp=self.session.post(url, data=vec)
-                logga("AUTHTS_VAVOO: "+resp.text)
                 req = resp.json()
                 return req['response'].get('signed')
             except:
@@ -5247,7 +4934,6 @@ class VavooResolver:
         if streammode == 1:
             signature = self.getAuthSignature()
             if not signature:
-                logga("VAVOO_NO_SIGNATURE")
                 return self.resolve_link(link, streammode=0, verbose=verbose)
 
             headers = {
@@ -5268,7 +4954,6 @@ class VavooResolver:
             try:
                 resp = self.session.post("https://vavoo.to/mediahubmx-resolve.json", json=data, headers=headers, timeout=10)
                 resp.raise_for_status()
-                logga("VAVOO_RES: "+resp.text)
                 result = resp.json()
                 if isinstance(result, list) and result and result[0].get("url"):
                     resolved_url = result[0]["url"]
@@ -5287,10 +4972,8 @@ class VavooResolver:
                 if not ts_signature:
                     return None
                 newLink=link.replace("vavoo-iptv", "live2")[:-12]
-                logga("VAVOO_LINK: "+newLink)
                 ts_url = "%s.ts?n=1&b=5&vavoo_auth=%s" % (newLink, ts_signature)
                 status = int(requests.get(ts_url, headers={"User-Agent": "VAVOO/2.6"}, timeout=10, stream=True).status_code)
-                logga("function resolve_link Staus :"+str(status))
                 if status < 400:
                     return ts_url
                 else:
@@ -5321,13 +5004,10 @@ def vavooChPlay(parIn):
     resolver = VavooResolver()
     resolved, method = resolver.resolve_with_fallback(parIn)
     if resolved:
-        logga("Link risolto con metodo: "+method)
-        logga(resolved)
         video_urls.append((resolved+"|Referer=https://vavoo.to/&Origin=https://vavoo.to&User-Agent=iPad", "[COLOR gold]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
         video_urls.append((resolved, "[COLOR cyan]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
         video_urls.append((parIn+"/index.m3u8|Referer=https://vavoo.to/&Origin=https://vavoo.to&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 OPR/131.0.0.0", "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
     else:
-        logga("Impossibile risolvere il link")
         video_urls.append((parIn+"/index.m3u8|Referer=https://vavoo.to/&Origin=https://vavoo.to&User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 OPR/131.0.0.0", "[COLOR lime]PLAY VIDEO[/COLOR]", "PLAY VIDEO"))
     
     return video_urls
@@ -7168,7 +6848,6 @@ def getRandomUA():
     return random.choice(userAgentArray)    
 
 def infoCode(parIn=''):
-    logga('ParIn: '+parIn)
     video_urls = []
     launcher_vers="1.0.0"
     home = ''
@@ -7198,10 +6877,8 @@ def ppv_to(parIn):
     s = requests.Session()
         
     response = s.get(parIn, headers=headers)
-    logga ("PPV_PAGE ==> "+response.text)
     stream_url = re.findall('const src = atob\("(.*?)"\)', response.text)[0]
     stream_url = base64.b64decode(stream_url).decode("utf-8")
-    logga ("URL IN ==> "+parIn)
     link=stream_url.replace("index.m3u8", "tracks-v1a1/mono.ts.m3u8|Referer=https://playembed.top/&Origin=https://playembed.top&User-Agent="+user_agent)
     
     jsonText='{"SetViewMode":"50","items":['
@@ -7228,7 +6905,6 @@ def resolve_link(url):
     
     user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0'
     m3u8 = "IgnoreMe"
-    logga ("URL IN ==> "+url)
     try:
         headers = {
             'user-agent': user_agent,
@@ -7240,7 +6916,6 @@ def resolve_link(url):
         iframe_url = "https://codepcplay.fun/premiumtv/daddyhd.php?id="+url
         response = s.get(iframe_url, headers=headers)
         js = response.text
-        logga ("SOURCE2 ==> "+js)
         params = {
             "channel_key": None,
             "auth_token": None,
@@ -7261,11 +6936,6 @@ def resolve_link(url):
             params["auth_ts"]      = matches[3]
             params["auth_expiry"]  = matches[4]
 
-        logga("channel_key ==> " + str(params["channel_key"]))
-        logga("auth_token ==> " + str(params["auth_token"]))
-        logga("auth_country ==> " + str(params["auth_country"]))
-        logga("auth_ts ==> " + str(params["auth_ts"]))
-        logga("auth_expiry ==> " + str(params["auth_expiry"]))
 
         channel_key   = params["channel_key"]
         auth_token    = params["auth_token"]
@@ -7278,7 +6948,6 @@ def resolve_link(url):
         time_zone = "Europe/Rome"
         fingerprint = f"{user_agent}|{screen}|{time_zone}|{lang}"
         sign_data = f"{channel_key}|{auth_country}|{auth_token}|{user_agent}|{fingerprint}"
-        logga("SIGN_DATA: "+str(sign_data.encode("utf-8")))
         client_token = base64.b64encode(sign_data.encode("utf-8")).decode("ascii")
 
         heartbeat= "https://chevy.kiko2.ru/heartbeat"
@@ -7305,7 +6974,6 @@ def resolve_link(url):
 
         heart_resp = s.get(heartbeat, headers=heartbeat_headers, timeout=10)
         content_encoding = heart_resp.headers.get('Content-Encoding')
-        logga("heart_resp ==> "+str(heart_resp.status_code)+" ("+content_encoding+")")
 
         server_lookup_url = f"https://chevy.giokko.ru/server_lookup?channel_id={channel_key}"
         lookup_headers = headers.copy()
@@ -7323,14 +6991,12 @@ def resolve_link(url):
         })
         lookup_resp = s.get(server_lookup_url, headers=lookup_headers, timeout=6)
         content_encoding = lookup_resp.headers.get('Content-Encoding')
-        logga("lookup_resp ==> "+str(lookup_resp.status_code)+" ("+content_encoding+")")
         server_key = find_single_match(lookup_resp.text, '{"server_key":"(.*?)"}')
         try:
             server_data = lookup_resp.json()
             server_key = server_data.get('server_key')
         except Exception:
             pass
-        logga("server_key ==> "+server_key)
         if server_key == 'top1/cdn':
             stream_url = f'https://top1.kiko2.ru/top1/cdn/{channel_key}/mono.css'
         else:
@@ -7342,7 +7008,6 @@ def resolve_link(url):
 
         m3u8 = f'{stream_url}|Referer={referer}/&Origin={referer}&Connection=Keep-Alive&User-Agent={uaenc}&Cookie={cookenc}'
         m3u8_resp = s.get(m3u8)
-        logga ("SOURCE_M3U8 ==> "+m3u8_resp.text)
         #m3u8 = f'{m3u8}|{urlencode(heartbeat_headers)}'
     except Exception as err:
         import traceback
@@ -7378,7 +7043,6 @@ def epgInfo(parIn, timeout=10):
     try:
         apiUrl="https://test34344.herokuapp.com/filter.php?numTest=A1A201&mode=8&ch="+parIn
         resp = launcher.makeRequest(apiUrl)
-        #logga("RESP: "+resp)
         res=json.loads(resp)
         if res["listaUrl"][0]["urlMpd"]=="NO_LINK":
             lista = ["mtv", "comedy-central", "history-channel", "discovery-channel-hd", "deakids", "nickelodeon"]
@@ -7428,7 +7092,6 @@ def epgInfo(parIn, timeout=10):
     
     
     jsonText = jsonText + "]}"
-    logga('JSON-ANY: '+jsonText)
     links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
 
     return links
@@ -7544,7 +7207,6 @@ class EPGParser(HTMLParser):
                 title_norm = self._normalize_text(title_clean)
 
                 # match flessibile
-                #logga("PROVO "+title_norm)
                 if target_norm == title_norm or target_norm in title_norm:
                     toRet = " ".join(desc_clean.split())
                     toRet_norm = self.normalize_description(toRet)
@@ -7781,7 +7443,6 @@ def sansat(parIn):
     url = "".join(chars)
     normalized = url.replace("\\/", "/")
     finalUrl=normalized.replace("https:////", "https://")
-    logga ("SANSAT URL ==> "+finalUrl)
     video_urls = []
     video_urls.append((finalUrl+"|Referer=https://vividmosaica.com/&Origin=https://vividmosaica.com&User-Agent=Mozilla", "[COLOR lime]PLAY STREAM[/COLOR]"))
     return video_urls
@@ -7957,7 +7618,6 @@ def mototv(parIn):
     mode=0
     arrPar=parIn.split("__")
     mode=arrPar[0]
-    logga("MODE ==> "+mode)
     api = FedermotoAPI()
     ret=""
     if mode == "0":
@@ -7975,7 +7635,6 @@ def mototv(parIn):
         ret=json.dumps(api.getContent(par1))
     
     
-    logga("SPORT ==> "+ret)
     video_urls= []
     video_urls.append((ret, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls    
@@ -8017,10 +7676,8 @@ class StreamSportsClient:
             return None
 
         encoded = html[actual_start:end_idx]
-        #logga("ENCODED: "+encoded)
         params_pos = end_idx + 2
         params = html[params_pos:params_pos + 100]
-        #logga("PARAMS: "+params)
         m = re.search(r'(\d+),\s*"([^"]+)",\s*(\d+),\s*(\d+),\s*(\d+)', params)
         if not m:
             return None
@@ -8028,14 +7685,10 @@ class StreamSportsClient:
         charset = m.group(2)
         offset = int(m.group(3))
         base = int(m.group(4))
-        #logga("charset: "+m.group(2))
-        #logga("offset: "+m.group(3))
-        #logga("base: "+m.group(4))
         decoded = ""
         parts = encoded.split(charset[base])
 
         for part in parts:
-            #logga("part: "+part)
             if part:
                 temp = part
                 for idx, c in enumerate(charset):
@@ -8043,7 +7696,6 @@ class StreamSportsClient:
 
                 val = self.convert_base(temp, base)
                 decoded += chr(val - offset)
-        #logga("decoded: "+decoded)
         return urllib.parse.unquote(decoded)
 
     def get_stream_url(self, player_url):
@@ -8054,18 +7706,14 @@ class StreamSportsClient:
             r = requests.get(player_url, headers=headers, timeout=15)
             r.raise_for_status()
             html = r.text
-            #logga("JS_OBF: "+html)
             js = self.decode_obfuscated_js(html)
             js = js.replace("\\'", "'").replace('\\"', '"')
-            #logga("JS_DEOBF: "+js)
             if not js:
                 return None
 
             deob_result = self.auto_deobfuscate_js(js)
 
             url = deob_result.get('concatenations', [])[1]['decoded'] if len(deob_result.get('concatenations', [])) > 1 else ''
-            #print(deob_result)
-            #return find_stream_url(js)
             return {'url': url} 
         except Exception as err:
             import traceback
@@ -8282,7 +7930,6 @@ def sports99(parIn):
     mode=0
     arrPar=parIn.split("__")
     mode=arrPar[0]
-    logga("MODE ==> "+mode)
     api = StreamSportsClient()
     jsonText='{"SetViewMode":"50","items":['
     if mode == "0":
@@ -8337,7 +7984,6 @@ def sports99(parIn):
         try:
             url=stream["url"]
         except Exception as e:
-            logga("ERRORE API. TRY FREE_PLAN")
             return (sports99("3__"+par))
         titolo="[COLOR gold]PLAY STREAM[/COLOR]"
         jsonText = jsonText + '{"title":"'+titolo+'",'
@@ -8355,7 +8001,7 @@ def sports99(parIn):
         try:
             url=stream["url"]
         except Exception as e:
-            logga("ERRORE API")
+            logga("ERRORE")
         titolo="[COLOR gold]PLAY STREAM[/COLOR]"
         jsonText = jsonText + '{"title":"'+titolo+'",'
         jsonText = jsonText + '"link":"'+url+'|Referer=https://cdn-live.tv/&Origin=https://cdn-live.tv",'
@@ -8366,7 +8012,6 @@ def sports99(parIn):
 
     jsonText = jsonText + "]}"
     
-    logga("JSON_99: "+jsonText)
     video_urls= []
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
@@ -8379,7 +8024,6 @@ def cdnLive(parIn):
     urlToResole=parIn.replace("user=streamsports99&plan=vip", "user=cdnlivetv&plan=free")
     api = CdnLiveClient(start_url=urlToResole)
     url= api.find_stream()
-    logga("CDN_URL: "+url)
     ref = "https://cdnlivetv.tv"
     ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
     refer = "|Referer=" + ref + "/&Origin=" + ref + "&User-Agent=" + ua + "&force_isaf=1"
@@ -8470,7 +8114,6 @@ class CdnLiveClient:
 
     def find_stream(self):
         r = requests.get(self.start_url, headers={'referer': "https://streamsports99.su/"})
-        logga("CDN_PAGE: "+r.text)
         url = self.estrai_link_finale(r.text)
         if url == None:
             return "NoLink"
@@ -8666,12 +8309,10 @@ class SportzxClient:
             )
             r.raise_for_status()
             auth_token = r.json().get("authToken", {}).get("token")
-            #logga("auth_token: "+auth_token)
             if not auth_token:
                 raise ValueError("Auth token non trovato")
         except Exception as e:
             strErr=(f"Errore recupero auth token: {e}")
-            logga(strErr)
             return None
 
         config_url = (
@@ -8712,11 +8353,9 @@ class SportzxClient:
             )
             r.raise_for_status()
             toRet = r.json().get("entries", {}).get("api_url")
-            #logga("API_URL: "+toRet)
             return toRet
         except Exception as e:
             strErr=(f"Errore recupero API URL: {e}")
-            logga (strErr)
             return None
 
     # ---------------------------------------------------------
@@ -8787,7 +8426,6 @@ class SportzxClient:
         if not data.get("data"):
             return []
         decrypted = self.decrypt_data(data["data"])
-        logga("Eventi: " + decrypted.decode("utf-8", errors="replace"))
         if not decrypted:
             return []
         return json.loads(decrypted.decode("utf-8"))
@@ -8810,9 +8448,7 @@ class SportzxClient:
 
         channels_list = []
         url_event=f"{api_url}/events.json"
-        logga ("url_event: "+url_event)
         events = self.fetch_and_decrypt(url_event)
-        #logga("Eventi: " + json.dumps(events, ensure_ascii=False))
         events = [
             {"title": e["title"], "id": e["id"], "cat": e["cat"], "eventName": e["eventInfo"]["eventName"], "time": e["eventInfo"]["startTime"]}
             for e in events
@@ -8892,10 +8528,8 @@ def sportzx(parIn):
         jsonText = jsonText + '"fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg",'
         jsonText = jsonText + '"info":"'+tit+'"}'
         numIt=numIt+1  
-        #logga(tit+" - "+chan+" - "+url+" - "+keyid+" - "+key+" - "+api+" - "+referer+" - "+origin+" - "+headers)
     
     jsonText = jsonText + "]}"    
-    #logga (jsonText)
     video_urls= []
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
@@ -8930,7 +8564,6 @@ def mac_list_check(url, wait=2000):
     else:
         portal = PortalApi(url)
     url = portal.get_link("ffmpeg%20http://localhost/ch/1823_&series=")
-    logga("PORTAL_URL: "+url)
     try:
         url = url.split(" ")[1]
     except:
@@ -8944,7 +8577,6 @@ def mac_list_check(url, wait=2000):
     l_type = "m3u"
 
     url = base_url + "get.php?username=" + username + "&password=" + password + "&type=" + l_type
-    logga("URL_MAC: "+url)
     video_urls= []
     video_urls.append(("ignoreMe", "[COLOR lime]PLAY STREAM AL[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
     return video_urls
@@ -8955,7 +8587,6 @@ def mac_list_check(url, wait=2000):
         if mac != "":
             portal = PortalApi(url=url, mac=mac)
         url = portal.get_link("ffmpeg%20http://localhost/ch/1823_&series=")
-        logga(url)
         try:
             url = url.split(" ")[1]
         except:
@@ -8969,14 +8600,12 @@ def mac_list_check(url, wait=2000):
         l_type = "m3u"
 
         url = base_url + "get.php?username=" + username + "&password=" + password + "&type=" + l_type
-        logga("URL_MAC: "+url)
         video_urls= []
         video_urls.append(("ignoreMe", "[COLOR lime]PLAY STREAM AL[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
         return video_urls
     except Exception as e:
         import traceback
         traceback.print_stack()
-        logga("ERRORE_MAC: "+str(e))
         pass
     """
 
@@ -8994,7 +8623,6 @@ def mediahosting(parIn):
     
     #src="https://p7.streamhostingcdn.top/stream/"+parIn+"/index.m3u8?token=T03PNCIP4udw0l_Bj5KEjw&ark_r=p7"
     src="https://p5.streamhostingcdn.top/stream/"+parIn+"/index.m3u8?token=&exp=0"
-    logga("URL_MEDIA: "+src)
     ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 OPR/133.0.0.0"
     video_urls= []
     video_urls.append((src+"|Referer=https://prohostmedia.top/&Origin=https://prohostmedia.top&User-Agent="+ua, "[COLOR lime]OPEN STREAM "+parIn+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
@@ -9103,7 +8731,6 @@ def streamtp(parIn):
         src = match.group(1).replace("\\", "") 
     
 
-    logga("URL_MEDIA: "+src)
     video_urls= []
     video_urls.append((src, "[COLOR lime]PLAY "+parIn.upper()+"[/COLOR]", "by @MandraKodi", "https://cdn3d.iconscout.com/3d/premium/thumb/play-button-3d-icon-png-download-8609397.png"))
     return video_urls
@@ -9126,18 +8753,15 @@ def aceSearch(parIn):
             #strUrl = url + userInput.replace(" ", "+")
             parIn = userInput
         else:
-            logga("NO INPUT")
             mesNoInput='{"SetViewMode":"500","items":[{"title":"[COLOR red]NO INPUT[/COLOR]","link":"ignore","thumbnail":"https://e7.pngegg.com/pngimages/56/148/png-clipart-computer-icons-wrong-miscellaneous-blue-thumbnail.png","fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg","info":"NO INPUT"}]}'
             links.append((mesNoInput, "PLAY VIDEO", "No info", "noThumb", "json"))
             return links
     else:
-        logga("EXIT KEYBOARD")
         mesNoInput='{"SetViewMode":"500","items":[{"title":"[COLOR red]NO INPUT[/COLOR]","link":"ignore","thumbnail":"https://e7.pngegg.com/pngimages/56/148/png-clipart-computer-icons-wrong-miscellaneous-blue-thumbnail.png","fanart":"https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg","info":"NO INPUT"}]}'
         links.append((mesNoInput, "PLAY VIDEO", "No info", "noThumb", "json"))
         return links
     
     url = "https://search-ace.stream/search?query="+parIn
-    logga("GET JSON FROM: "+url)
 
     jsonText='{"SetViewMode":"503","items":['
     numIt=0
@@ -9167,10 +8791,8 @@ def aceSearch(parIn):
                 
 
     except Exception as e:
-        logga("ERRORE")
-    
+        logga("EXCEPT")
     jsonText = jsonText + "]}"
-    logga('JSON-ANY: '+jsonText)
     links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return links
 
@@ -9179,7 +8801,6 @@ def samsung(parIn):
     import json
     links = []
     url = "https://fast.zappr.stream/it/channels.json"
-    logga("GET JSON FROM: "+url)
 
     jsonText='{"SetViewMode":"503","items":['
     numIt=0
@@ -9191,7 +8812,6 @@ def samsung(parIn):
         )
 
         response.raise_for_status()
-        logga("RETURN JSON: "+response.text)
         data = response.json() 
 
         for item in data["channels"]:
@@ -9219,11 +8839,9 @@ def samsung(parIn):
             numIt=numIt+1
     except Exception as e:
         msgErr="ERRORE: "+str(e)
-        logga(msgErr)
         msgBox(msgErr)
     
     jsonText = jsonText + "]}"
-    #logga('JSON-ANY: '+jsonText)
     links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return links
 
@@ -9235,7 +8853,6 @@ def zappr(parIn):
     url = "https://channels.zappr.stream/it/dtt/national.json"
     if parIn != "menu":
         url = "https://channels.zappr.stream/it/dtt/regional/"+parIn+".json"
-    logga("GET JSON FROM: "+url)
 
     jsonText='{"SetViewMode":"503","items":['
     numIt=0
@@ -9247,7 +8864,6 @@ def zappr(parIn):
         )
 
         response.raise_for_status()
-        #logga("RETURN JSON: "+response.text)
         data = response.json() 
 
         for item in data["channels"]:
@@ -9366,11 +8982,9 @@ def zappr(parIn):
     except Exception as e:
         msgErr="ERRORE: "+str(e)
         traceback.print_exc()
-        logga(msgErr)
         msgBox(msgErr)
     
     jsonText = jsonText + "]}"
-    #logga('JSON-ZAPPR: '+jsonText)
     links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return links
 
@@ -9418,7 +9032,6 @@ def wweReplay(parIn=None):
         numIt=numIt+1
 
     jsonText = jsonText + "]}"
-    #logga('JSON-ANY: '+jsonText)
     links.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return links
 
@@ -9428,23 +9041,18 @@ def futLibre(parIn=None):
     links = []
     if parIn=="menu":
         timestamp = int(time.time() * 1000)
-        #url="https://futbollibretv.net.pe/agenda-data.php?actualizacion="+str(timestamp)
         url="https://agenda18.com/agenda.json?v=2.3"
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         source = response.json()
         # Conversione
         result = convert_schedule(source)
-        #logga('JSON-FUT: '+result)
         links.append((result, "PLAY VIDEO", "No info", "noThumb", "json"))
     else:
-        #url="https://futbollibre.ch/vivo/canales.php?stream="+parIn
         url="https://la18hd.su/vivo/canal.php?stream="+parIn
-        logga ("url: "+url)
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         source = response.text
-        logga ("source: "+source)
         urlVideo=""
         try:
             urlVideo=re.findall('var playbackURL = "(.*?)"', source)[0]
@@ -9459,7 +9067,6 @@ def decode_stream(embed_iframe):
     import base64
     from urllib.parse import urlparse, parse_qs
 
-    #logga("embed_iframe: "+embed_iframe)
     if not embed_iframe or "r=" not in embed_iframe:
         return ""
 
@@ -9585,7 +9192,6 @@ def convert_schedule(source):
                 # Utilizzato per l'ordinamento
                 sort_datetime = event_datetime
             else:
-                logga("NO DATA ORA")
                 data_visualizzata = "NO "
                 ora_visualizzata = "TIME"
                 sort_datetime = datetime.datetime.max
@@ -9790,10 +9396,8 @@ def okRu(parIn=None):
 
         response.raise_for_status()
         html=response.text
-        #logga("RETURN TEXT: "+html)
         v = re.findall('data-options="(.*?)"', html)[0]
         jsonCode=v.replace('&quot;', '"')
-        #logga("RETURN JSON: "+jsonCode)
         data = json.loads(jsonCode)
         videos = data["flashvars"]["metadata"]["videos"]
         poster = data["poster"]
@@ -9810,7 +9414,6 @@ def okRu(parIn=None):
     
 
 def run (action, params=None):
-    logga('Run version '+versione)
     commands = {
         'myStream': myStream,
         'wizhd': wizhd,
