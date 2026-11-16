@@ -1,5 +1,5 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.3.0'
+versione='1.3.1'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
@@ -936,7 +936,7 @@ def sky(parIn=None):
     SECRET = "my_secret_key"
 
     
-    apiUrl="https://test34344.herokuapp.com/filter.php?numTest=A1A159&id="+parIn
+    apiUrl="https://test34344.herokuapp.com/filter.php?numTest=A1A159S&id="+parIn
     resp = launcher.makeRequest(apiUrl)
     res=json.loads(resp)
     decrypted = xor_decrypt(res["data"], SECRET)
