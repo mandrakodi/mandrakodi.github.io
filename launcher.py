@@ -1,8 +1,8 @@
-versione='1.3.0'
+versione='1.3.1'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 16.11.2026
+# Last update: 19.11.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -102,7 +102,6 @@ def makeRequest(url, hdr=None, tout=30):
 
 def getSource():
     startUrl = "https://raw.githubusercontent.com/mandrakodi/mandrakodi.github.io/main/data/disclaimer.json"
-    #startUrl = "https://www.dropbox.com/s/igyq58cnpjq0fq4/disclaimer.json?dl=1"
     try:
         strSource = makeRequest(startUrl)
         if strSource is None or strSource == "":
@@ -1435,6 +1434,30 @@ def deleteSettings(parIn):
     else:
         msgBox("File settings non presente")
 
+def checkPwd():
+    pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
+    msgBox(pwd)
+    if (pwd == "" or pwd == "MandraKodi3"):
+        msgBox("E' necessario inserire la password generata dal bot di telegram")
+        clipB=""
+        keyboard = xbmc.Keyboard(clipB,'Inserisci Valore')
+        keyboard.doModal()
+        if not (keyboard.isConfirmed() == False):
+            userInput = keyboard.getText().replace(" ", "")
+            if (len(userInput)==10):
+                apiUrl="https://test34344.herokuapp.com/filter.php?numTest=A1A666&id="+userInput
+                resp = makeRequest(apiUrl)
+                if (resp=="OK"):
+                    xbmcaddon.Addon(id=addon_id).setSetting("password", userInput)
+                    msgBox("Password aggiornata.")
+                else:
+                    msgBox("Password non valida. Alcune sezioni dell'addon potrebbero non funzionare")
+                    xbmcaddon.Addon(id=addon_id).setSetting("password", "MandraKodi3")
+            else:
+                msgBox("Formato Password non valido")
+                return checkPwd()
+
+
 def run():
     action = "start"
     url = "start"
@@ -1446,6 +1469,7 @@ def run():
                 #checkPortalPy()
                 checkDns()
                 #checkMandraScript()
+            checkPwd()
             checkSkin()
             getSource()
         else:
