@@ -1,4 +1,4 @@
-versione='1.3.1'
+versione='1.3.2'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
@@ -1436,7 +1436,6 @@ def deleteSettings(parIn):
 
 def checkPwd():
     pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
-    msgBox(pwd)
     if (pwd == "" or pwd == "MandraKodi3"):
         msgBox("E' necessario inserire la password generata dal bot di telegram")
         clipB=""
