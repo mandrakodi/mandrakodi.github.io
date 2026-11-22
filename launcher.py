@@ -1,8 +1,8 @@
-versione='1.3.2'
+versione='1.3.3'
 # Module: launcher
 # Author: ElSupremo
 # Created on: 22.02.2021
-# Last update: 19.11.2026
+# Last update: 22.11.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
@@ -1437,25 +1437,20 @@ def deleteSettings(parIn):
 def checkPwd():
     pwd = xbmcaddon.Addon(id=addon_id).getSetting("password")
     if (pwd == "" or pwd == "MandraKodi3"):
-        msgBox("E' necessario inserire la password generata dal bot di telegram")
-        clipB=""
-        keyboard = xbmc.Keyboard(clipB,'Inserisci Valore')
-        keyboard.doModal()
-        if not (keyboard.isConfirmed() == False):
-            userInput = keyboard.getText().replace(" ", "")
-            if (len(userInput)==10):
-                apiUrl="https://test34344.herokuapp.com/filter.php?numTest=A1A666&id="+userInput
-                resp = makeRequest(apiUrl)
-                if (resp=="OK"):
-                    xbmcaddon.Addon(id=addon_id).setSetting("password", userInput)
-                    msgBox("Password aggiornata.")
-                else:
-                    msgBox("Password non valida. Alcune sezioni dell'addon potrebbero non funzionare")
-                    xbmcaddon.Addon(id=addon_id).setSetting("password", "MandraKodi3")
-            else:
-                msgBox("Formato Password non valido")
-                return checkPwd()
-
+        msgBox("E' necessario inserire nelle impostazioni dell'addon la password generata dal bot di telegram")
+        return
+    
+    apiUrl="https://test34344.herokuapp.com/filter.php?numTest=A1A666&id="+pwd
+    resp = makeRequest(apiUrl)
+    if (resp!="OK"):
+        risposta = xbmcgui.Dialog().yesno(
+            "MandraKodi",
+            "Password non valida. \nPremere SI per visualizzare la password e confrontarla con quella del bot. \nSul bot premere nuovamente il pulsante GENERA/MOSTRA password."
+        )
+        if risposta:
+            # Premuto SI
+            msgBox("Password inserita: "+pwd)
+    
 
 def run():
     action = "start"
@@ -1465,9 +1460,7 @@ def run():
             if (checkMsgOnLog()):
                 checkResolver()
                 checkJsunpack()
-                #checkPortalPy()
                 checkDns()
-                #checkMandraScript()
             checkPwd()
             checkSkin()
             getSource()
