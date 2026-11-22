@@ -1,14 +1,15 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.3.1'
+versione='1.3.2'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 16.11.2026
+# Last update: 22.11.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
 import os
 import string
+import time
 import random
 import traceback
 
@@ -3564,6 +3565,7 @@ def webcam(parIn):
     s = requests.Session()
     r = s.get(urlPage, headers=headers)
     htmlFlat=r.text.replace("\n", '').replace("\r", '').replace("\t", '')
+    logga(urlPage+"\n\n"+htmlFlat)
     if mode == "0":
         express1 = r'<a href="it/webcam/(.*?)" class="col-xs-12 col-sm-6 col-md-4">(.*?)</a>'
         lista = re.compile(express1, re.MULTILINE | re.DOTALL).findall(htmlFlat)
@@ -9413,6 +9415,413 @@ def okRu(parIn=None):
     return video_urls
     
 
+UA_CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+UA_IOS = "Mozilla/5.0 (iPad; CPU OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1"
+
+_SESSIONI = {}
+
+
+def _headers(profilo):
+    if profilo == "ios":
+        return [
+            ("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"),
+            ("Sec-Fetch-Site", "none"),
+            ("Sec-Fetch-Mode", "navigate"),
+            ("Sec-Fetch-Dest", "document"),
+            ("User-Agent", UA_IOS),
+            ("Accept-Language", "en-US,en;q=0.9"),
+            ("Accept-Encoding", "gzip, deflate"),
+            ("Connection", "keep-alive"),
+        ]
+    return [
+        ("Connection", "keep-alive"),
+        ("sec-ch-ua", '"Chromium";v="140", "Not=A?Brand";v="24", "Google Chrome";v="140"'),
+        ("sec-ch-ua-mobile", "?0"),
+        ("sec-ch-ua-platform", '"Windows"'),
+        ("Upgrade-Insecure-Requests", "1"),
+        ("User-Agent", UA_CHROME),
+        ("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"),
+        ("Sec-Fetch-Site", "none"),
+        ("Sec-Fetch-Mode", "navigate"),
+        ("Sec-Fetch-User", "?1"),
+        ("Sec-Fetch-Dest", "document"),
+        ("Accept-Encoding", "gzip, deflate"),
+        ("Accept-Language", "en-US,en;q=0.9"),
+    ]
+
+
+def _cloudflare(r):
+    # True se la risposta e' la pagina di sfida di Cloudflare
+    try:
+        t = r.text[:4000].lower()
+        if r.status_code in (403, 429, 503) and ("cloudflare" in t or "just a moment" in t or "cf-chl" in t):
+            return True
+        if "just a moment" in t and "challenge" in t:
+            return True
+        if r.headers.get("cf-mitigated"):
+            return True
+    except Exception:
+        pass
+    return False
+
+
+def get_html(url, referer=None, profilo="chrome", tentativi=2):
+    """Restituisce l'html di url (stringa) oppure "" se la richiesta fallisce o Cloudflare blocca.
+
+    url      pagina da scaricare (nfl-video.com o qualunque altro sito)
+    referer  pagina da cui si "arriva" (es. "https://nfl-video.com/"); se manca non viene inviato
+    profilo  "chrome" (default) oppure "ios" (Safari su iPad, per i siti dei player)
+    """
+    host = urlparse(url).netloc
+    chiave = profilo + "@" + host
+    try:
+        sess = _SESSIONI.get(chiave)
+        nuova = sess is None
+        if nuova:
+            sess = requests.Session()
+            sess.headers.clear()
+            _SESSIONI[chiave] = sess
+        base = _headers(profilo)
+
+        # primo contatto con il dominio: passo dalla home come un browser, cosi' prendo i cookie
+        if nuova and url.rstrip("/") != ("https://" + host):
+            try:
+                sess.get("https://" + host + "/", headers=dict(base), timeout=20)
+                time.sleep(random.uniform(0.5, 1.2))
+            except Exception:
+                pass
+
+        head = dict(base)
+        if referer:
+            head["Referer"] = referer
+            head["Sec-Fetch-Site"] = "same-origin" if urlparse(referer).netloc == host else "cross-site"
+
+        for n in range(tentativi):
+            r = sess.get(url, headers=head, timeout=25, allow_redirects=True)
+            if not _cloudflare(r):
+                toRet=r.text
+                logga(url+"\n\n"+toRet)
+                return toRet
+            logga("get_html: Cloudflare ha risposto %s su %s (tentativo %s)" % (r.status_code, host, n + 1))
+            time.sleep(random.uniform(1.5, 3.0))
+        _SESSIONI.pop(chiave, None)
+    except Exception as e:
+        logga("get_html errore: " + str(e))
+    return ""
+
+
+def nflReplay(parIn):
+    import json
+    ret = {"SetViewMode": "50",
+           "items": []}
+    if parIn.startswith("menu"):
+        arrP=parIn.split("_")
+        numP=int(arrP[1])
+        url="https://nfl-video.com/2026?page"+str(numP)
+        page=get_html(url)
+        pageFlat=page.replace("\n", "").replace("\r", "").replace("\t", "")
+        ff = re.findall(
+            r'<div class="poster"> <a href="(.*?)" title="(.*?)"> <img src="(.*?)" alt="(.*?)" loading="lazy"> </a>',
+            pageFlat,
+            re.I | re.S
+        )
+
+        cnt = len(ff)
+
+        
+        numIt = 0
+
+        if numP > 1:
+            prevP = numP - 1
+
+            ret["items"].append({
+                "title": "[COLOR gold]PREVIOUS PAGE ["+str(prevP)+"][/COLOR]",
+                "myresolve": "nflReplay@@menu_" + str(prevP),
+                "thumbnail": "https://hdclipartall.com/images/previous-button-clipart-download-this-image-as-600.png",
+                "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+            })
+
+            numIt += 1
+
+        for x in range(cnt):
+            tit = ff[x][1].replace("Full Game Replay", "")
+            arrT = tit.split("-")
+            tit = arrT[0].replace("Watch", "")
+            when = arrT[-1]
+            link = ff[x][0]
+            img = "https://nfl-video.com" + ff[x][2]
+            ret["items"].append({
+                "title": "[COLOR gold]" + when + "[/COLOR] [COLOR lime]" + tit + "[/COLOR]",
+                "myresolve": "nflReplay@@" + link+"___"+img,
+                "thumbnail": img + "|verifypeer=false",
+                "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+            })
+            numIt += 1
+
+        nextP = numP + 1
+        ret["items"].append({
+            "title": "[COLOR gold]NEXT PAGE ["+str(nextP)+"][/COLOR]",
+            "myresolve": "nflReplay@@menu_" + str(nextP),
+            "thumbnail": "https://freepngimg.com/thumb/next_button/25467-5-next-button-hd.png",
+            "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        })
+
+        numIt += 1
+    else:
+        arrP=parIn.split("___")
+        matchUrl=arrP[0]
+        img=arrP[1]
+        url="https://nfl-video.com"+matchUrl
+        page=get_html(url)
+        pageFlat=page.replace("\n", "").replace("\r", "").replace("\t", "")
+        numIt = 0
+
+        # Estrazione server e relativi link
+        ff = re.findall(
+            r'>Server (.*?)</span></span><br /><span style="font-size:36px;"><a class="su-button su-button-style-default" href="(.*?)" rel="noopener noreferrer"',
+            pageFlat,
+            re.I | re.S
+        )
+
+        for server, find in ff:
+            item = {
+                "title": "[COLOR lime]PLAYER " + str(numIt + 1) + "[/COLOR]"
+            }
+            if "ok.ru" in find:
+                if find.startswith("/"):
+                    find = "https:" + find
+                item["myresolve"] = "risolvi@@" + find
+            else:
+                page1=page=get_html(find)
+                page1 = page1.replace("\n", "").replace("\r", "").replace("\t", "")
+
+                # Cerca OK.RU
+                match = re.search(
+                    r'src="//ok\.ru/videoembed/(.*?)"',
+                    page1,
+                    re.I | re.S
+                )
+
+                if match:
+                    item["myresolve"] = "risolvi@@https://ok.ru/videoembed/" + match.group(1)
+                else:
+                    # Cerca Dailymotion o altri iframe
+                    match = re.search(
+                        r'frameborder="0" height="315" src="(.*?)"',
+                        page1,
+                        re.I | re.S
+                    )
+                    if match:
+                        find2 = match.group(1)
+                        if "geo.dailymotion" in find2:
+                            arrT = find2.split("=")
+                            dailyId = arrT[1]
+                            item["title"] = "[COLOR lime]STREAM " + str(numIt + 1) + "[/COLOR]"
+                            item["myresolve"] = "ffmpeg_daily@@" + dailyId
+                        else:
+                            item["myresolve"] = "risolvi@@" + find2
+
+            item["thumbnail"] = "https://nfl-video.com" + img + "|verifypeer=false"
+            item["fanart"] = "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+
+            ret["items"].append(item)
+
+            numIt += 1
+
+
+        # Se non sono stati trovati link, cerca direttamente OK.RU
+        if numIt == 0:
+            ff = re.findall(
+                r'<a class="su-button su-button-style-default" href="//ok\.ru/videoembed/(.*?)" rel="noopener noreferrer" style="',
+                page,
+                re.I | re.S
+            )
+            for find in ff:
+                ret["items"].append({
+                    "title": "[COLOR gold]PLAYER " + str(numIt + 1) + "[/COLOR]",
+                    "myresolve": "risolvi@@https://ok.ru/videoembed/" + find,
+                    "thumbnail": "https://nfl-video.com" + img + "|verifypeer=false",
+                    "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+                })
+                numIt += 1
+
+
+        # Nessun link trovato
+        if numIt == 0:
+            ret["items"].append({
+                "title": "[COLOR red]NO LINK FOUND[/COLOR]",
+                "link": "ignore",
+                "thumbnail": "https://nfl-video.com" + img + "|verifypeer=false",
+                "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+            })
+            numIt += 1
+
+
+
+    jsonText = json.dumps(ret,ensure_ascii=False,indent=4)
+    video_urls=[]
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
+
+
+def nbaReplay(parIn):
+    import json
+    ret = {"SetViewMode": "50",
+           "items": []}
+    if parIn.startswith("menu"):
+        arrP=parIn.split("_")
+        numP=int(arrP[1])
+        url="https://basketball-video.com/?page"+str(numP)
+        page=get_html(url)
+        pageFlat=page.replace("\n", "").replace("\r", "").replace("\t", "")
+        ff = re.findall(
+            r'<div class="poster"> <a href="(.*?)"><img src="(.*?)" alt=""></a> </div>  <div class="short_content"> <h3><a href="(.*?)">(.*?)</a></h3> ',
+            pageFlat,
+            re.I | re.S
+        )
+
+        cnt = len(ff)
+        numIt = 0
+
+        # Pagina precedente
+        if numP > 1:
+            prevP = numP - 1
+            ret["items"].append({
+                "title": "[COLOR gold]PREVIOUS PAGE ["+str(prevP)+"][/COLOR]",
+                "myresolve": "nbaReplay@@menu_" + str(prevP),
+                "thumbnail": "https://hdclipartall.com/images/previous-button-clipart-download-this-image-as-600.png",
+                "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+            })
+            numIt += 1
+
+        # Elenco partite
+        for x in range(cnt):
+            tit = ff[x][3].replace("Full Game Replay", "")
+            arrT=tit.split("-")
+            tit = arrT[0].replace("Watch", "")
+            when = arrT[-1]
+            link = ff[x][0]
+            img = "https://basketball-video.com" + ff[x][1]
+
+            ret["items"].append({
+                "title": "[COLOR gold]" + when + "[/COLOR] [COLOR lime]" + tit + "[/COLOR]",
+                "myresolve": "nbaReplay@@" + link + "___" + img,
+                "thumbnail": img + "|verifypeer=false",
+                "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+            })
+            numIt += 1
+
+
+        # Pagina successiva
+        nextP = numP + 1
+
+        ret["items"].append({
+            "title": "[COLOR gold]NEXT PAGE ["+str(nextP)+"][/COLOR]",
+            "myresolve": "nbaReplay@@menu_" + str(nextP),
+            "thumbnail": "https://freepngimg.com/thumb/next_button/25467-5-next-button-hd.png",
+            "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        })
+
+        numIt += 1
+    else:
+        arrP=parIn.split("___")
+        matchUrl=arrP[0]
+        img=arrP[1]
+        url="https://basketball-video.com"+matchUrl
+        page=get_html(url)
+        pageFlat=page.replace("\n", "").replace("\r", "").replace("\t", "")
+        numIt = 0
+
+        # Estrazione server e relativi link
+        ff = re.findall(
+            r'>Server (.*?)</b><\/span><\/p><p style="text-align: center;"><span style="font-size:36px;"><strong><a class="su-button su-button-style-default" href="(.*?)" rel="noopener noreferrer"',
+            pageFlat,
+            re.I | re.S
+        )
+
+        for server, find in ff:
+            item = {
+                "title": "[COLOR lime]PLAYER " + str(numIt + 1) + "[/COLOR]"
+            }
+            if "ok.ru" in find:
+                if find.startswith("/"):
+                    find = "https:" + find
+                item["myresolve"] = "risolvi@@" + find
+            else:
+                page1=page=get_html(find)
+                page1 = page1.replace("\n", "").replace("\r", "").replace("\t", "")
+
+                # Cerca OK.RU
+                match = re.search(
+                    r'src="//ok\.ru/videoembed/(.*?)"',
+                    page1,
+                    re.I | re.S
+                )
+
+                if match:
+                    item["myresolve"] = "risolvi@@https://ok.ru/videoembed/" + match.group(1)
+                else:
+                    # Cerca Dailymotion o altri iframe
+                    match = re.search(
+                        r'frameborder="0" height="315" src="(.*?)"',
+                        page1,
+                        re.I | re.S
+                    )
+                    if match:
+                        find2 = match.group(1)
+                        if "geo.dailymotion" in find2:
+                            arrT = find2.split("=")
+                            dailyId = arrT[1]
+                            item["title"] = "[COLOR lime]STREAM " + str(numIt + 1) + "[/COLOR]"
+                            item["myresolve"] = "ffmpeg_daily@@" + dailyId
+                        else:
+                            item["myresolve"] = "risolvi@@" + find2
+
+            item["thumbnail"] = "https://nfl-video.com" + img + "|verifypeer=false"
+            item["fanart"] = "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+
+            ret["items"].append(item)
+
+            numIt += 1
+
+
+        # Se non sono stati trovati link, cerca direttamente OK.RU
+        if numIt == 0:
+            ff = re.findall(
+                r'<a class="su-button su-button-style-default" href="//ok\.ru/videoembed/(.*?)" rel="noopener noreferrer" style="',
+                page,
+                re.I | re.S
+            )
+            for find in ff:
+                ret["items"].append({
+                    "title": "[COLOR gold]PLAYER " + str(numIt + 1) + "[/COLOR]",
+                    "myresolve": "risolvi@@https://ok.ru/videoembed/" + find,
+                    "thumbnail": "https://nfl-video.com" + img + "|verifypeer=false",
+                    "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+                })
+                numIt += 1
+
+
+        # Nessun link trovato
+        if numIt == 0:
+            ret["items"].append({
+                "title": "[COLOR red]NO LINK FOUND[/COLOR]",
+                "link": "ignore",
+                "thumbnail": "https://nfl-video.com" + img + "|verifypeer=false",
+                "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+            })
+            numIt += 1
+
+
+
+    jsonText = json.dumps(ret,ensure_ascii=False,indent=4)
+    video_urls=[]
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
+
+
+
+
 def run (action, params=None):
     commands = {
         'myStream': myStream,
@@ -9499,6 +9908,8 @@ def run (action, params=None):
         "cdnLive":cdnLive,
         "futLibre":futLibre,
         "okru":okRu,
+        "nflReplay":nflReplay,
+        "nbaReplay":nbaReplay,
         'showMsg':showMsg
     }
 
