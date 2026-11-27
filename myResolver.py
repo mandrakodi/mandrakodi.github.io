@@ -1,9 +1,9 @@
 from __future__ import unicode_literals # turns everything to unicode
-versione='1.3.2'
+versione='1.3.3'
 # Module: myResolve
 # Author: ElSupremo and Supporters
 # Created on: 10.04.2021
-# Last update: 22.11.2026
+# Last update: 27.11.2026
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import re, requests, sys, logging, uuid
@@ -2193,6 +2193,7 @@ def amstaffTest(parIn):
     else:
         parametro=base64.b64decode(fix_base64_padding(parIn)).decode("utf-8")
     
+    logga("PAR: "+parametro)
     win = xbmcgui.Window(10000)
     sessionVar1 = win.getProperty("sessionVar1")
     arrT=parametro.split("|")
@@ -9819,7 +9820,51 @@ def nbaReplay(parIn):
     video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
     return video_urls
 
+def kooltv(parIn):
+    import json
+    ret = {"SetViewMode": "50", "items": []}
+    if parIn=="menu":
+        apiUrl="https://vavoo.papadipeppe.workers.dev/channels"
+        response = requests.get(
+            apiUrl,
+            timeout=15,
+            headers={"User-Agent": "Mozilla/5.0"}
+        )
 
+        response.raise_for_status()
+        data = response.json() 
+
+        for item in data["items"]:
+            name=item["name"]
+            img="https://cdn.freebiesupply.com/logos/large/2x/kool-logo-png-transparent.png"
+            code=item["id"]
+            ret["items"].append({
+                "title": "[COLOR gold]" + name + "[/COLOR]",
+                "myresolve": "kooltv@@" + code,
+                "thumbnail": img,
+                "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+            })
+    else:
+        apiUrl="https://vavoo.papadipeppe.workers.dev/resolve?url=https://kool.to/live/play/"+parIn
+        response = requests.get(
+            apiUrl,
+            timeout=15,
+            headers={"User-Agent": "Mozilla/5.0"}
+        )
+
+        response.raise_for_status()
+        data = response.json()
+        link=data["url"]
+        ret["items"].append({
+            "title": "[COLOR lime]PLAY STREAM[/COLOR]",
+            "link": link,
+            "thumbnail": "https://cdn3d.iconscout.com/3d/premium/thumb/watching-movie-4843361-4060927.png",
+            "fanart": "https://www.stadiotardini.it/wp-content/uploads/2016/12/mandrakata.jpg"
+        })
+    jsonText = json.dumps(ret,ensure_ascii=False,indent=4)
+    video_urls=[]
+    video_urls.append((jsonText, "PLAY VIDEO", "No info", "noThumb", "json"))
+    return video_urls
 
 
 def run (action, params=None):
@@ -9910,6 +9955,7 @@ def run (action, params=None):
         "okru":okRu,
         "nflReplay":nflReplay,
         "nbaReplay":nbaReplay,
+        "kooltv":kooltv,
         'showMsg':showMsg
     }
 
